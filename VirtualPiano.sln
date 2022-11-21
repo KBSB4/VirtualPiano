@@ -3,6 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{A6FC113C-589D-4843-9415-0327C85A1A75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Controller.csproj", "{6A7DCD0C-11DC-41E0-BC21-F9D8BE1D85F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{69303C30-91D7-485A-85E2-5F6AD169B892}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PianoHero", "PianoHeroWPF\PianoHero.csproj", "{D41C4546-DDCF-4EB6-8FDF-972A455D1F7A}"
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualPiano", "VirtualPiano\VirtualPiano.csproj", "{6CFF15F4-0083-430E-ADEC-10ED5CFC51FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfView", "WpfView\WpfView.csproj", "{8C72BE4F-E014-46F1-9122-BB7C223A4589}"
@@ -13,6 +20,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6FC113C-589D-4843-9415-0327C85A1A75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6FC113C-589D-4843-9415-0327C85A1A75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6FC113C-589D-4843-9415-0327C85A1A75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6FC113C-589D-4843-9415-0327C85A1A75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A7DCD0C-11DC-41E0-BC21-F9D8BE1D85F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A7DCD0C-11DC-41E0-BC21-F9D8BE1D85F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A7DCD0C-11DC-41E0-BC21-F9D8BE1D85F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A7DCD0C-11DC-41E0-BC21-F9D8BE1D85F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69303C30-91D7-485A-85E2-5F6AD169B892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69303C30-91D7-485A-85E2-5F6AD169B892}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69303C30-91D7-485A-85E2-5F6AD169B892}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69303C30-91D7-485A-85E2-5F6AD169B892}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D41C4546-DDCF-4EB6-8FDF-972A455D1F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D41C4546-DDCF-4EB6-8FDF-972A455D1F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D41C4546-DDCF-4EB6-8FDF-972A455D1F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D41C4546-DDCF-4EB6-8FDF-972A455D1F7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6CFF15F4-0083-430E-ADEC-10ED5CFC51FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6CFF15F4-0083-430E-ADEC-10ED5CFC51FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CFF15F4-0083-430E-ADEC-10ED5CFC51FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
