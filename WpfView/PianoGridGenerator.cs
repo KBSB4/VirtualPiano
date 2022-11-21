@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace WpfView
 {
@@ -17,6 +18,7 @@ namespace WpfView
             SetColumnWidth(grid);
         }
 
+        //Alleen witte toetsen specificeren bij de columnAmount
         private static void AddPianoKeys(Grid grid, int columnAmount)
         {
             grid.ColumnDefinitions.Clear();
@@ -24,14 +26,18 @@ namespace WpfView
             for (int i = 0; i < columnAmount; i++)
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-                Button element = new()
+                //Button element = new()
+                //{
+                //    Background = Brushes.White,
+                //    Content = (i+1).ToString(),
+                //};
+                Rectangle rect = new ()
                 {
-                    Background = Brushes.White,
-                    Content = i.ToString(),
+                    Fill = Brushes.Black,
                 };
-                Grid.SetColumn(element, i);
-                Grid.SetRow(element, 0);
-                grid.Children.Add(element);
+                Grid.SetColumn(rect, i);
+                Grid.SetRow(rect, 0);
+                grid.Children.Add(rect);
             }
         }
 

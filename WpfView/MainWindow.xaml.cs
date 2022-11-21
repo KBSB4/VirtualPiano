@@ -10,7 +10,7 @@ namespace WpfView
         public MainWindow()
         {
             InitializeComponent();
-            _ = new PianoGridGenerator(TestGrid, 100);
+            _ = new PianoGridGenerator(TestGrid, 28);
         }
     }
 }
