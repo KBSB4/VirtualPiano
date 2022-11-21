@@ -6,29 +6,41 @@ namespace WpfView
 {
     internal class PianoGridGenerator
     {
-
-        public PianoGridGenerator(Grid grid, int rowAmount, int columnAmount)
+        public PianoGridGenerator(Grid grid, int columnAmount)
         {
-            if (rowAmount < 0 || columnAmount < 0)
+            if (columnAmount < 0)
             {
                 return;
             }
 
-            grid.RowDefinitions.Clear();
-            grid.ColumnDefinitions.Clear(); ;
+            AddPianoKeys(grid, columnAmount);
+            SetColumnWidth(grid);
+        }
 
-            for (int i = 0; i < rowAmount; i++)
-            {
-                grid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-            }
+        private static void AddPianoKeys(Grid grid, int columnAmount)
+        {
+            grid.ColumnDefinitions.Clear();
+
             for (int i = 0; i < columnAmount; i++)
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+                Button element = new()
+                {
+                    Background = Brushes.White,
+                    Content = i.ToString(),
+                };
+                Grid.SetColumn(element, i);
+                Grid.SetRow(element, 0);
+                grid.Children.Add(element);
             }
+        }
 
-            Button element = new Button() { Background = Brushes.Aqua, Width =  };
-            Grid.SetColumn(element, 4);
-            grid.Children.Add(element);
+        private static void SetColumnWidth(Grid grid)
+        {
+            for (int i = 0; i < grid.ColumnDefinitions.Count; i++)
+            {
+                grid.ColumnDefinitions[i].Width = new GridLength(1, GridUnitType.Star);
+            }
         }
     }
 }
