@@ -43,7 +43,7 @@ namespace VirtualPiano.PianoSoundPlayer
         public void PlayNote(NoteName noteName, int octave)
         {
             float frequency = GetOctaveFrequency(octave);
-			string pianoNoteString = noteName.ToString();
+            string pianoNoteString = noteName.ToString();
             string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
             PlaySoundOneshot(pathToFile, frequency);
         }
@@ -85,37 +85,37 @@ namespace VirtualPiano.PianoSoundPlayer
             return sourceVoice;
         }
 
-		/// <summary>
-		/// Gets a new instance of <see cref="FadingAudio"/> using <paramref name="noteName"/> to get the correct file associated to the note. 
-		/// Increases or decreases the pitch of the audio according to <paramref name="octave"/>
-		/// <para>
-		/// <i>
+        /// <summary>
+        /// Gets a new instance of <see cref="FadingAudio"/> using <paramref name="noteName"/> to get the correct file associated to the note. 
+        /// Increases or decreases the pitch of the audio according to <paramref name="octave"/>
+        /// <para>
+        /// <i>
         /// <see cref="FadingAudio"/> can be used to Play, Stop and Stop(Fade-out) a <see cref="SourceVoice"/>
         /// </i>
-		/// </para>
-		/// </summary>
-		/// <param name="noteName"></param>
-		/// <param name="octave"></param>
-		/// <returns></returns>
-		public FadingAudio GetFadingAudio(NoteName noteName, int octave)
+        /// </para>
+        /// </summary>
+        /// <param name="noteName"></param>
+        /// <param name="octave"></param>
+        /// <returns></returns>
+        public FadingAudio GetFadingAudio(NoteName noteName, int octave)
         {
             float frequency = GetOctaveFrequency(octave);
-			string pianoNoteString = noteName.ToString();
+            string pianoNoteString = noteName.ToString();
             string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
             return new FadingAudio(GetAudioClip(pathToFile, frequency));
         }
 
-		/// <summary>
-		/// Gets the currect pitchshift for each octave specifiek by <paramref name="octave"/>.
-		/// <para>
-		/// <i><b>5</b> and <b>* 100</b> is added so that the user doesn't have to input a high amount</i>
-		/// </para>
-		/// </summary>
-		/// <param name="octave"></param>
-		/// <returns></returns>
-		private float GetOctaveFrequency(int octave)
+        /// <summary>
+        /// Gets the currect pitchshift for each octave specifiek by <paramref name="octave"/>.
+        /// <para>
+        /// <i><b>5</b> and <b>* 100</b> is added so that the user doesn't have to input a high amount</i>
+        /// </para>
+        /// </summary>
+        /// <param name="octave"></param>
+        /// <returns></returns>
+        private float GetOctaveFrequency(int octave)
         {
-            return (float)((float)1 / 1024 * (((float)octave + 5) * 100));
-		}
+            return (float)(1d / 1024d * ((octave + 5d) * 100d));
+        }
     }
 }

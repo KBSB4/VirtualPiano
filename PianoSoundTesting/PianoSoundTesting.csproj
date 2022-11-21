@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PianoSoundPlayer\PianoSoundPlayer.csproj" />
-    <ProjectReference Include="..\VirtualPiano\Example_PianoSoundPlayer_Console.csproj" />
+    <!--<ProjectReference Include="..\PianoSoundTesting\PianoSoundTesting.csproj" />-->
   </ItemGroup>
 
 </Project>

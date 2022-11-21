@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Melanchall.DryWetMidi.MusicTheory;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using Melanchall.DryWetMidi.MusicTheory;
 using VirtualPiano.PianoSoundPlayer;
 
 namespace PianoSoundTesting
@@ -43,7 +43,7 @@ namespace PianoSoundTesting
 			if (!currentPlayingAudio.ContainsKey(e.Key))
 			{
 				FadingAudio? fadingAudio = new FadingAudio();
-				switch(e.Key)
+				switch (e.Key)
 				{
 					case Key.Q:
 						fadingAudio = _player.GetFadingAudio(NoteName.C, 4);
