@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VirtualPiano\VirtualPiano.csproj" />
+    <ProjectReference Include="..\PianoSoundPlayer\PianoSoundPlayer.csproj" />
+    <ProjectReference Include="..\VirtualPiano\Example_PianoSoundPlayer_Console.csproj" />
   </ItemGroup>
 
 </Project>

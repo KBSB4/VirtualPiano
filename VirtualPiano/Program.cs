@@ -7,14 +7,14 @@ using SharpDX.XAudio2.Fx;
 using System;
 using System.Media;
 using System.Windows.Input;
-using VirtualPiano;
+using VirtualPiano.PianoSoundPlayer;
 
 internal class Program
 {
 
 	private const string _pianoFilesFolder = "../../../Sounds/Piano/";
-	private const string _pianoFileSuffix = "";
-	private const string _pianoFilePrefix = ".wav";
+	private const string _pianoFilePrefix = "";
+	private const string _pianoFileSuffix = ".wav";
 
 	private static void Main(string[] args)
 	{
