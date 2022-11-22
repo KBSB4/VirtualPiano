@@ -22,7 +22,7 @@ namespace Model
         {
             if (currentNote.Equals(NoteName.B))
             {
-                currentNote = NoteName.A;
+                currentNote = NoteName.C;
                 currentOctave++;
             }
         }
