@@ -9,7 +9,7 @@ namespace VirtualPiano.PianoSoundPlayer
 {
     public class FadingAudio
     {
-        private SourceVoice sourceVoice;
+        public SourceVoice sourceVoice { get; private set; }
 
 		public FadingAudio()
         {

@@ -10,6 +10,8 @@ namespace VirtualPiano.PianoSoundPlayer
         private string pianoSoundPrefix;
         private string pianoSoundSuffix;
 
+        private XAudio2 device;
+
         /// <summary>
         /// The <paramref name="soundsFolder"/> is the folder that contains all the piano files.
         /// <para>
@@ -33,6 +35,8 @@ namespace VirtualPiano.PianoSoundPlayer
             pianoFilesFolder = soundsFolder;
             this.pianoSoundPrefix = pianoSoundPrefix;
             this.pianoSoundSuffix = pianoSoundSuffix;
+            device = new XAudio2();
+            MasteringVoice masteringVoice = new MasteringVoice(device);
         }
 
         /// <summary>
@@ -42,7 +46,7 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <param name="octave"></param>
         public void PlayNote(NoteName noteName, int octave)
         {
-            float frequency = GetOctaveFrequency(octave);
+            float frequency = GetOctaveFrequencyRatio(octave);
 			string pianoNoteString = noteName.ToString();
             string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
             PlaySoundOneshot(pathToFile, frequency);
@@ -66,8 +70,6 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <returns></returns>
         public SourceVoice GetAudioClip(string audioFile, float frequency)
         {
-            XAudio2 device = new XAudio2();
-            MasteringVoice masteringVoice = new MasteringVoice(device);
             var stream = new SoundStream(File.OpenRead(audioFile));
             var waveFormat = stream.Format;
             var buffer = new AudioBuffer
@@ -99,7 +101,7 @@ namespace VirtualPiano.PianoSoundPlayer
 		/// <returns></returns>
 		public FadingAudio GetFadingAudio(NoteName noteName, int octave)
         {
-            float frequency = GetOctaveFrequency(octave);
+            float frequency = GetOctaveFrequencyRatio(octave);
 			string pianoNoteString = noteName.ToString();
             string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
             return new FadingAudio(GetAudioClip(pathToFile, frequency));
@@ -108,14 +110,26 @@ namespace VirtualPiano.PianoSoundPlayer
 		/// <summary>
 		/// Gets the currect pitchshift for each octave specifiek by <paramref name="octave"/>.
 		/// <para>
-		/// <i><b>5</b> and <b>* 100</b> is added so that the user doesn't have to input a high amount</i>
+	    /// Min <paramref name="octave"/> = 2, Max <paramref name="octave"/> = 5 else returns 0
 		/// </para>
 		/// </summary>
 		/// <param name="octave"></param>
 		/// <returns></returns>
-		private float GetOctaveFrequency(int octave)
+		private float GetOctaveFrequencyRatio(int octave)
         {
-            return (float)((float)1 / 1024 * (((float)octave + 5) * 100));
+            switch (octave)
+            {
+                case 2:
+                    return 0.125f;
+                case 3:
+                    return 0.25f;
+				case 4:
+					return 0.5f;
+				case 5:
+					return 1;
+				default:
+                    return 0;
+            }
 		}
     }
 }
