@@ -1,10 +1,13 @@
-﻿namespace Model
+﻿using Melanchall.DryWetMidi.MusicTheory;
+namespace Model
 {
-    public enum Octaves
+    public enum Octaves : int
     {
-        Two,
-        Three,
-        Four,
-        Five
+        Two = 2,
+        Three = 3,
+        Four = 4,
+        Five = 5
     }
+
+
 }

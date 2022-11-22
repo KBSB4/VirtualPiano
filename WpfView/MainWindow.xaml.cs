@@ -69,7 +69,7 @@ namespace WpfView
                     if (!currentPlayingAudio.ContainsKey(e.Key))
                     {
                         FadingAudio? fadingAudio = new FadingAudio();
-                        fadingAudio = PianoSoundPlayer.GetFadingAudio(key.Note, int.Parse(key.Octave.ToString()));
+                        fadingAudio = PianoSoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
 
                         if (fadingAudio != null)
                         {
