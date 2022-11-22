@@ -7,18 +7,16 @@ namespace Controller
     {
         public static Piano Piano { get; set; }
         private static PianoSoundPlayer _player { get; set; }
-        private static Dictionary<PianoKey, FadingAudio> currentPlayingAudio = new();
+        public static Dictionary<PianoKey, FadingAudio> currentPlayingAudio = new();
 
         /// <summary>
         /// Creates the piano for the program
         /// </summary>
         /// <returns>Piano object</returns>
-        public static Piano CreatePiano()
+        public static void CreatePiano()
         {
-            Piano piano = new Piano();
+            Piano = new Piano();
             _player = new("../../../../Controller/Audio/Sounds/Piano/", "", ".wav");
-
-            return piano;
         }
 
         /// <summary>
@@ -47,13 +45,18 @@ namespace Controller
         /// <param name="pianokey"></param>
         public static void PlayKey(PianoKey pianokey)
         {
-            if (!currentPlayingAudio.ContainsKey(pianokey) && pianokey is not null)
+            if (pianokey is not null)
             {
-                FadingAudio? fadingAudio = new FadingAudio();
-                if (fadingAudio != null)
+                if (!currentPlayingAudio.ContainsKey(pianokey))
                 {
-                    fadingAudio.StartPlaying();
-                    currentPlayingAudio.Add(pianokey, fadingAudio);
+                    FadingAudio? fadingAudio = new FadingAudio();
+                    fadingAudio = _player.GetFadingAudio(pianokey.Note, (int)pianokey.Octave);
+
+                    if (fadingAudio != null)
+                    {
+                        fadingAudio.StartPlaying();
+                        currentPlayingAudio.Add(pianokey, fadingAudio);
+                    }
                 }
             }
         }

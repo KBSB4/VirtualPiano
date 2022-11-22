@@ -8,6 +8,4 @@ namespace Model
         Four = 4,
         Five = 5
     }
-
-
 }
