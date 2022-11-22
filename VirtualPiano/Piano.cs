@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtualPiano
+﻿namespace VirtualPiano
 {
     public class Piano
     {
@@ -12,7 +6,7 @@ namespace VirtualPiano
 
         static bool up;
 
-        public List<CustomKey> CustomKeys { get; set; }
+        public List<PianoKey> CustomKeys { get; set; }
 
 
         public Piano()
@@ -35,11 +29,11 @@ namespace VirtualPiano
         {
             if (!up)
             {
-                CustomKeys.Add(new CustomKey(octave, note, getal) { KeyBindChar = (char)((char)getal + 53) });
+                CustomKeys.Add(new PianoKey(octave, note, getal) { KeyBindChar = (char)((char)getal + 53) });
             }
             else
             {
-                CustomKeys.Add(new CustomKey(octave, note, getal) { KeyBindChar = (char)((char)getal + 21) });
+                CustomKeys.Add(new PianoKey(octave, note, getal) { KeyBindChar = (char)((char)getal + 21) });
 
             }
             note++;
