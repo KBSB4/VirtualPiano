@@ -66,12 +66,30 @@ namespace WpfView
             }
         }
 
-        /// <summary>
-        /// Get the key that got pressed and check if it has been pressed with SHIFT. Updates the string accordingly
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="intValue"></param>
-        /// <param name="keyValue"></param>
+        private void UpdateKey(KeyEventArgs e, int intValue, Boolean PressDown)
+        {
+            foreach (var key in Piano.PianoKeys)
+            {
+                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString()))
+                {
+                    key.PressedDown = PressDown;
+
+                    //Speel noot af
+                    if (!currentPlayingAudio.ContainsKey(e.Key))
+                    {
+                        FadingAudio? fadingAudio = new FadingAudio();
+                        fadingAudio = PianoSoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
+
+                        if (fadingAudio != null)
+                        {
+                            fadingAudio.StartPlaying();
+                            currentPlayingAudio.Add(e.Key, fadingAudio);
+                        }
+                    }
+                }
+            }
+        }
+
         private static void GetKeyWithShift(KeyEventArgs e, out int intValue, out string keyValue)
         {
             intValue = (int)e.Key;

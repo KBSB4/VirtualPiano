@@ -26,9 +26,9 @@ namespace Model
         /// <param name="currentOctave"></param>
         public void UpdateOctaveAndNote(ref NoteName currentNote, ref Octaves currentOctave)
         {
-            if (currentNote.Equals(NoteName.Unknown))
+            if (currentNote.Equals(NoteName.B))
             {
-                currentNote = NoteName.A;
+                currentNote = NoteName.C;
                 currentOctave++;
             }
         }
