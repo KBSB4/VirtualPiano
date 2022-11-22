@@ -42,17 +42,6 @@ namespace WpfView
             GetKeyWithShift(e, out intValue, out keyValue);
             UpdateKey(e, intValue, true);
 
-            if (!currentPlayingAudio.ContainsKey(e.Key))
-            {
-                FadingAudio? fadingAudio = new FadingAudio();
-                fadingAudio = PianoSoundPlayer.GetFadingAudio(NoteName.C, 4);
-
-                if (fadingAudio != null)
-                {
-                    fadingAudio.StartPlaying();
-                    currentPlayingAudio.Add(e.Key, fadingAudio);
-                }
-            }
         }
         public void KeyReleased(object source, KeyEventArgs e)
         {
@@ -75,6 +64,19 @@ namespace WpfView
                 if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString()))
                 {
                     key.PressedDown = PressDown;
+
+                    //Speel noot af
+                    if (!currentPlayingAudio.ContainsKey(e.Key))
+                    {
+                        FadingAudio? fadingAudio = new FadingAudio();
+                        fadingAudio = PianoSoundPlayer.GetFadingAudio(key.Note, int.Parse(key.Octave.ToString()));
+
+                        if (fadingAudio != null)
+                        {
+                            fadingAudio.StartPlaying();
+                            currentPlayingAudio.Add(e.Key, fadingAudio);
+                        }
+                    }
                 }
             }
         }

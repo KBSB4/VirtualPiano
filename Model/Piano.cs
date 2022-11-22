@@ -59,10 +59,5 @@ namespace Model
 
             }
         }
-
-        public PianoKey GetKeyWithBind()
-        {
-
-        }
     }
 }
