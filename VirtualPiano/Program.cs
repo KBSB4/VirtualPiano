@@ -1,9 +1,20 @@
-﻿using System.Media;
+﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
+using Melanchall.DryWetMidi.Multimedia;
+using Melanchall.DryWetMidi.MusicTheory;
+using Note = Melanchall.DryWetMidi.Interaction.Note;
 
-internal class Program
+
+using (var outputDevice = OutputDevice.GetByIndex(0))
 {
-    private static void Main(string[] args)
+    var midiFile = MidiFile.Read("C:\\Users\\keesw\\source\\repos\\MIDITESTING\\MIDITESTING\\MIDI-files\\test3.mid");
+    Console.WriteLine("test");
+    midiFile.Play(outputDevice);
+    Console.WriteLine("test");
+    var chords = midiFile.GetChords();
+    foreach (var chord in chords)
     {
+
 
 
 
@@ -32,3 +43,20 @@ internal class Program
         //}
     }
 }
+        for (; ; )
+        {
+            Thread.Sleep(100);
+        }
+        //Test
+        Console.WriteLine(chord.Notes.GetEnumerator().Current.GetMusicTheoryNote().NoteName);
+        //chord.Notes.Play();
+    }
+
+    Note note1 = new Note(NoteName.CSharp, 100);
+}
+
+//foreach (var chord in chords)
+//{
+
+//}
+
