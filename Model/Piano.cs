@@ -1,5 +1,4 @@
 ﻿using Melanchall.DryWetMidi.MusicTheory;
-using System.Diagnostics;
 
 namespace Model
 {
@@ -21,7 +20,7 @@ namespace Model
 
         public void UpdateOctaveAndNote(ref NoteName currentNote, ref Octaves currentOctave)
         {
-            if (currentNote.Equals(NoteName.Unknown))
+            if (currentNote.Equals(NoteName.B))
             {
                 currentNote = NoteName.A;
                 currentOctave++;
