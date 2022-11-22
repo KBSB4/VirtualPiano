@@ -22,11 +22,6 @@ namespace VirtualPiano
 
         }
 
-
-
-
-
-
         public void UpdateOctaveAndNote(ref Notes currentNote, ref Octaves currentOctave)
         {
             if (currentNote.Equals(Notes.Unknown))
@@ -50,7 +45,6 @@ namespace VirtualPiano
             note++;
         }
 
-
         public void AssembleKeyBindings()
         {
             Octaves currentoctave = 0;  // first octave two
@@ -67,10 +61,6 @@ namespace VirtualPiano
                 up = false;
 
             }
-
-
         }
-
-
     }
 }

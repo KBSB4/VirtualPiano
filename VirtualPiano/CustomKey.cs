@@ -26,9 +26,6 @@ namespace VirtualPiano
 
     }
 
-
-
-
         public enum Octaves
         {
             Two,
