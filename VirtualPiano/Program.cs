@@ -14,11 +14,35 @@ using (var outputDevice = OutputDevice.GetByIndex(0))
     var chords = midiFile.GetChords();
     foreach (var chord in chords)
     {
-        Console.WriteLine("Hello, World!");
-        Test(1);
-        SoundPlayer snd = new SoundPlayer("../../../Sounds/639466__timouse__piano-loop-7.wav");
-        snd.Play();
 
+
+
+
+        //    Console.WriteLine("Hello, World!");
+        //    Test(1);
+        //    SoundPlayer snd = new SoundPlayer("../../../Sounds/639466__timouse__piano-loop-7.wav");
+        //    snd.Play();
+
+        //    for (; ; )
+        //    {
+        //        Thread.Sleep(100);
+        //    }
+        //    //Test
+        //}
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="x"></param>
+        ///// <returns>The number zero</returns>
+        //public static int Test(int x)
+        //{
+        //    if (true) Console.WriteLine("test");
+        //    Console.WriteLine(x);
+        //    return 0;
+        //}
+    }
+}
         for (; ; )
         {
             Thread.Sleep(100);
@@ -35,3 +59,4 @@ using (var outputDevice = OutputDevice.GetByIndex(0))
 //{
 
 //}
+
