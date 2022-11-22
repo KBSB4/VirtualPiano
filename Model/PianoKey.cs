@@ -5,7 +5,7 @@ namespace Model
 
     public class PianoKey
     {
-        
+
         public Octaves Octave { get; set; }
         public Boolean PressedDown { get; set; }
         public NoteName Note { get; set; }

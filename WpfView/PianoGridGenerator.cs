@@ -6,7 +6,7 @@ using System.Windows.Shapes;
 
 namespace WpfView
 {
-    internal class PianoGridGenerator
+    public class PianoGridGenerator
     {
         public PianoGridGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
         {
@@ -31,7 +31,7 @@ namespace WpfView
             for (int i = 0; i < columnAmount; i++)
             {
                 whiteKeyGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-                Rectangle rect = new ()
+                Rectangle rect = new()
                 {
                     Fill = CreateColor(),
                     Margin = new Thickness(0, 0, 0, 0),

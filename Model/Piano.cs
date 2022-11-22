@@ -1,5 +1,4 @@
 ﻿using Melanchall.DryWetMidi.MusicTheory;
-using System.Diagnostics;
 
 namespace Model
 {
@@ -19,6 +18,12 @@ namespace Model
             AssembleKeyBindings();
         }
 
+        //TODO Naar Pianocontroller?
+        /// <summary>
+        /// Sets octave and note for each key
+        /// </summary>
+        /// <param name="currentNote"></param>
+        /// <param name="currentOctave"></param>
         public void UpdateOctaveAndNote(ref NoteName currentNote, ref Octaves currentOctave)
         {
             if (currentNote.Equals(NoteName.Unknown))
@@ -28,6 +33,12 @@ namespace Model
             }
         }
 
+        /// <summary>
+        /// Creates the PianoKeys for the piano
+        /// </summary>
+        /// <param name="octave"></param>
+        /// <param name="note"></param>
+        /// <param name="getal"></param>
         public void CreateKey(Octaves octave, ref NoteName note, int getal)
         {
             if (!up)
@@ -42,6 +53,9 @@ namespace Model
             note++;
         }
 
+        /// <summary>
+        /// Sets keybindings for each key
+        /// </summary>
         public void AssembleKeyBindings()
         {
             Octaves currentoctave = 0;  // first octave two

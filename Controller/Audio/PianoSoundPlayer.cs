@@ -1,7 +1,6 @@
 ﻿using Melanchall.DryWetMidi.MusicTheory;
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
-using System.IO;
 
 namespace VirtualPiano.PianoSoundPlayer
 {
