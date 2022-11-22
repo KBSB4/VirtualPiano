@@ -1,9 +1,7 @@
 ﻿using Controller;
 using Model;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using VirtualPiano.PianoSoundPlayer;
 
 namespace WpfView
 {
@@ -12,20 +10,12 @@ namespace WpfView
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Piano Piano { get; set; }
 
-        private PianoSoundPlayer PianoSoundPlayer { get; set; }
-        private Dictionary<Key, FadingAudio> currentPlayingAudio = new();
-
-        //TODO Naar PianoController
         public MainWindow()
         {
             InitializeComponent();
             _ = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
-
-            //Create piano
-            Piano = PianoController.CreatePiano();
-            PianoSoundPlayer = new("../../../../WpfView/Sounds/Piano/", "", ".wav");
+            PianoController.CreatePiano();
 
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
@@ -56,40 +46,26 @@ namespace WpfView
         {
             int intValue;
             string keyValue;
+            PianoKey pianoKey;
             GetKeyWithShift(e, out intValue, out keyValue);
-            PianoController.UpdateKey(e.Key.ToString(), intValue, false);
+            pianoKey = PianoController.UpdateKey(e.Key.ToString(), intValue, false);
 
-            if (currentPlayingAudio.ContainsKey(e.Key))
+            if (pianoKey is not null)
             {
-                currentPlayingAudio[e.Key].StopPlaying(50);
-                currentPlayingAudio.Remove(e.Key);
-            }
-        }
-
-        private void UpdateKey(KeyEventArgs e, int intValue, Boolean PressDown)
-        {
-            foreach (var key in Piano.PianoKeys)
-            {
-                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString()))
+                if (PianoController.currentPlayingAudio.ContainsKey(pianoKey))
                 {
-                    key.PressedDown = PressDown;
-
-                    //Speel noot af
-                    if (!currentPlayingAudio.ContainsKey(e.Key))
-                    {
-                        FadingAudio? fadingAudio = new FadingAudio();
-                        fadingAudio = PianoSoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
-
-                        if (fadingAudio != null)
-                        {
-                            fadingAudio.StartPlaying();
-                            currentPlayingAudio.Add(e.Key, fadingAudio);
-                        }
-                    }
+                    PianoController.currentPlayingAudio[pianoKey].StopPlaying(50);
+                    PianoController.currentPlayingAudio.Remove(pianoKey);
                 }
             }
         }
 
+        /// <summary>
+        /// Get the key lowercase or uppercase depending on if SHIFT is pressed.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="intValue"></param>
+        /// <param name="keyValue"></param>
         private static void GetKeyWithShift(KeyEventArgs e, out int intValue, out string keyValue)
         {
             intValue = (int)e.Key;
