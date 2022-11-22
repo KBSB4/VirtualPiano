@@ -1,20 +1,21 @@
 ﻿namespace Model
 {
 
-    public class Key
+    public class PianoKey
     {
         
         public Octaves Octave { get; set; }
         public Boolean PressedDown { get; set; }
         public Notes Note { get; set; }
         public double Frequency { get; set; }
-        public char KeyBind { get; set; }
+        public char KeyBindChar { get; set; }
+        public int MicrosoftBind { get; set; }
 
-        public Key(Octaves octave, Notes note, char keyBind)
+        public PianoKey(Octaves octave, Notes note, int bind)
         {
             Octave = octave;
             Note = note;
-            KeyBind = keyBind;
+            MicrosoftBind = bind;
         }
     }
 }

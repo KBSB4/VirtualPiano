@@ -3,9 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualPiano", "VirtualPiano\VirtualPiano.csproj", "{6CFF15F4-0083-430E-ADEC-10ED5CFC51FE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PianoView", "PianoView\PianoView.csproj", "{F644D281-821F-4619-ACB0-9175252479BD}"
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj", "{A6FC113C-589D-4843-9415-0327C85A1A75}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controller", "Controller\Controller.csproj", "{6A7DCD0C-11DC-41E0-BC21-F9D8BE1D85F2}"
@@ -14,25 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "TestProject\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfView", "WpfView\WpfView.csproj", "{8C72BE4F-E014-46F1-9122-BB7C223A4589}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PianoSoundPlayer", "PianoSoundPlayer\PianoSoundPlayer.csproj", "{A1A31E3F-645F-4D34-935D-BE11EE6A4FE3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PianoSoundTesting", "PianoSoundTesting\PianoSoundTesting.csproj", "{A2A31E3F-645F-4D34-935D-BE11EE6A4FE3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-
-		{6CFF15F4-0083-430E-ADEC-10ED5CFC51FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CFF15F4-0083-430E-ADEC-10ED5CFC51FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CFF15F4-0083-430E-ADEC-10ED5CFC51FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CFF15F4-0083-430E-ADEC-10ED5CFC51FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F644D281-821F-4619-ACB0-9175252479BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F644D281-821F-4619-ACB0-9175252479BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F644D281-821F-4619-ACB0-9175252479BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F644D281-821F-4619-ACB0-9175252479BD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A6FC113C-589D-4843-9415-0327C85A1A75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A6FC113C-589D-4843-9415-0327C85A1A75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6FC113C-589D-4843-9415-0327C85A1A75}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,14 +33,6 @@ Global
 		{8C72BE4F-E014-46F1-9122-BB7C223A4589}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C72BE4F-E014-46F1-9122-BB7C223A4589}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C72BE4F-E014-46F1-9122-BB7C223A4589}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1A31E3F-645F-4D34-935D-BE11EE6A4FE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1A31E3F-645F-4D34-935D-BE11EE6A4FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1A31E3F-645F-4D34-935D-BE11EE6A4FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1A31E3F-645F-4D34-935D-BE11EE6A4FE3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2A31E3F-645F-4D34-935D-BE11EE6A4FE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2A31E3F-645F-4D34-935D-BE11EE6A4FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2A31E3F-645F-4D34-935D-BE11EE6A4FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2A31E3F-645F-4D34-935D-BE11EE6A4FE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

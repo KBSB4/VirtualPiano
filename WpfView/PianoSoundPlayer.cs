@@ -1,6 +1,7 @@
 ﻿using Melanchall.DryWetMidi.MusicTheory;
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
+using System.IO;
 
 namespace VirtualPiano.PianoSoundPlayer
 {
@@ -79,7 +80,7 @@ namespace VirtualPiano.PianoSoundPlayer
 
             var sourceVoice = new SourceVoice(device, waveFormat, true);
             sourceVoice.SetFrequencyRatio(frequency);
-            sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
+            //sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
             sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
 
             return sourceVoice;
