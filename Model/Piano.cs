@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Melanchall.DryWetMidi.MusicTheory;
+using System.Diagnostics;
 
 namespace Model
 {
@@ -14,22 +15,20 @@ namespace Model
         /// </summary>
         public Piano()
         {
-
             PianoKeys = new();
             AssembleKeyBindings();
-
         }
 
-        public void UpdateOctaveAndNote(ref Notes currentNote, ref Octaves currentOctave)
+        public void UpdateOctaveAndNote(ref NoteName currentNote, ref Octaves currentOctave)
         {
-            if (currentNote.Equals(Notes.Unknown))
+            if (currentNote.Equals(NoteName.Unknown))
             {
-                currentNote = Notes.A;
+                currentNote = NoteName.A;
                 currentOctave++;
             }
         }
 
-        public void CreateKey(Octaves octave, ref Notes note, int getal)
+        public void CreateKey(Octaves octave, ref NoteName note, int getal)
         {
             if (!up)
             {
@@ -46,7 +45,7 @@ namespace Model
         public void AssembleKeyBindings()
         {
             Octaves currentoctave = 0;  // first octave two
-            Notes currentnote = Notes.C; // first key of the virtual keyboard
+            NoteName currentnote = NoteName.C; // first key of the virtual keyboard
 
             for (int j = 0; j < 24; j++)
             {
@@ -59,6 +58,11 @@ namespace Model
                 up = false;
 
             }
+        }
+
+        public PianoKey GetKeyWithBind()
+        {
+
         }
     }
 }

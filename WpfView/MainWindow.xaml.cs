@@ -1,8 +1,13 @@
 ﻿using Controller;
+using Melanchall.DryWetMidi.MusicTheory;
+using Melanchall.DryWetMidi.Tools;
 using Model;
 using System;
+using System.Collections.Generic;
+using System.Media;
 using System.Windows;
 using System.Windows.Input;
+using VirtualPiano.PianoSoundPlayer;
 
 namespace WpfView
 {
@@ -13,6 +18,9 @@ namespace WpfView
     {
         public Piano Piano { get; set; }
 
+        private PianoSoundPlayer PianoSoundPlayer { get; set; }
+        private Dictionary<Key, FadingAudio> currentPlayingAudio = new();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -20,6 +28,8 @@ namespace WpfView
 
             //Create piano
             Piano = PianoController.CreatePiano();
+            PianoSoundPlayer = new("../../../../WpfView/Sounds/Piano/", "", ".wav");
+
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
@@ -31,6 +41,18 @@ namespace WpfView
             string keyValue;
             GetKeyWithShift(e, out intValue, out keyValue);
             UpdateKey(e, intValue, true);
+
+            if (!currentPlayingAudio.ContainsKey(e.Key))
+            {
+                FadingAudio? fadingAudio = new FadingAudio();
+                fadingAudio = PianoSoundPlayer.GetFadingAudio(NoteName.C, 4);
+
+                if (fadingAudio != null)
+                {
+                    fadingAudio.StartPlaying();
+                    currentPlayingAudio.Add(e.Key, fadingAudio);
+                }
+            }
         }
         public void KeyReleased(object source, KeyEventArgs e)
         {
@@ -38,6 +60,12 @@ namespace WpfView
             string keyValue;
             GetKeyWithShift(e, out intValue, out keyValue);
             UpdateKey(e, intValue, false);
+
+            if (currentPlayingAudio.ContainsKey(e.Key))
+            {
+                currentPlayingAudio[e.Key].StopPlaying(50);
+                currentPlayingAudio.Remove(e.Key);
+            }
         }
 
         private void UpdateKey(KeyEventArgs e, int intValue, Boolean PressDown)
