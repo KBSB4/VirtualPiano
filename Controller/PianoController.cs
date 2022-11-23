@@ -43,8 +43,6 @@ namespace Controller
 
         private static void PlayKey(string KeybordKey, PianoKey key)
         {
-
-
             if (!currentPlayingAudio.ContainsKey(KeybordKey))
             {
                 FadingAudio fadingAudio = _player.GetFadingAudio(key.Note, (int)key.Octave);
@@ -64,16 +62,16 @@ namespace Controller
         /// <param name="pressedKey"></param>
         public static void ReleaseKeyStopAudio(int intValue, string pressedKey)
         {
-            foreach (var key in PianoController.Piano.PianoKeys)
+            foreach (var key in Piano.PianoKeys)
             {
                 if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(pressedKey.ToLower()))
                 {
                     key.PressedDown = false;
                     //Stop playing
-                    if (PianoController.currentPlayingAudio.ContainsKey(pressedKey))
+                    if (currentPlayingAudio.ContainsKey(pressedKey))
                     {
-                        PianoController.currentPlayingAudio[pressedKey].StopPlaying(50);
-                        PianoController.currentPlayingAudio.Remove(pressedKey);
+                        currentPlayingAudio[pressedKey].StopPlaying(50);
+                        currentPlayingAudio.Remove(pressedKey);
                     }
                 }
             }

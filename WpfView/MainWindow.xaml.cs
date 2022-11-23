@@ -17,15 +17,16 @@ namespace WpfView
 
         private PianoSoundPlayer PianoSoundPlayer { get; set; }
         private Dictionary<Key, FadingAudio> currentPlayingAudio = new();
+        private PianoGridGenerator PianoGrid { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            _ = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
 
             //Create piano
             Piano = PianoController.CreatePiano();
             PianoSoundPlayer = new("../../../../Controller/Audio/Sounds/Piano/", "", ".wav");
+            PianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
 
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
@@ -42,6 +43,9 @@ namespace WpfView
                     if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString().ToUpper()))
                     {
                         key.PressedDown = true;
+
+                        PianoGrid.DisplayPianoKey(key, true);
+
                         if (!currentPlayingAudio.ContainsKey(e.Key))
                         {
                             FadingAudio? fadingAudio = new FadingAudio();
@@ -63,6 +67,7 @@ namespace WpfView
                     if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString().ToLower()))
                     {
                         key.PressedDown = true;
+                        PianoGrid.DisplayPianoKey(key, true);
                         if (!currentPlayingAudio.ContainsKey(e.Key))
                         {
                             FadingAudio? fadingAudio = new FadingAudio();
@@ -87,9 +92,10 @@ namespace WpfView
 
             foreach (var key in Piano.PianoKeys)
             {
-                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString().ToLower()))
+                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString().ToLower()) || key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString().ToUpper()))
                 {
                     key.PressedDown = false;
+                    PianoGrid.DisplayPianoKey(key, false);
                     if (currentPlayingAudio.ContainsKey(e.Key))
                     {
                         currentPlayingAudio[e.Key].StopPlaying(50);

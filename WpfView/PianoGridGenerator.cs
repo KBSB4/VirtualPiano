@@ -1,5 +1,6 @@
 ﻿using Model;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,6 +9,8 @@ namespace WpfView
 {
     internal class PianoGridGenerator
     {
+        private List<Button> buttons;
+
         /// <summary>
         /// Generate whitekeys and blackkeys for the WPF
         /// </summary>
@@ -21,14 +24,40 @@ namespace WpfView
                 return;
             }
 
-            List<Button> buttons = AddPianoKeys(whiteKeyGrid, blackKeyGrid, columnAmount);
+            buttons = AddPianoKeys(whiteKeyGrid, blackKeyGrid, columnAmount);
         }
 
-        public void DisplayPianoKey(PianoKey key)
+        public void DisplayPianoKey(PianoKey key, bool pressed)
         {
-            //Button test = buttons[1];
-            //Debug.WriteLine(test.Background);
-            //test.Background = new SolidColorBrush(Color.FromRgb(90, 100, 255));
+            int note = (((int)key.Octave) * 12) + ((int)key.Note);
+
+            Button test = buttons[note];
+            Debug.WriteLine(test.Background);
+
+            switch (key.Note)
+            {
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.C:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.D:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.E:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.F:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.G:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.A:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.B:
+
+                    test.Background = pressed ? new SolidColorBrush(Color.FromRgb(90, 120, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    break;
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.CSharp:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.DSharp:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.FSharp:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.GSharp:
+                case Melanchall.DryWetMidi.MusicTheory.NoteName.ASharp:
+                    test.Background = pressed ? new SolidColorBrush(Color.FromRgb(50, 50, 150)) : new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                    break;
+                default:
+                    test.Background = pressed ? new SolidColorBrush(Color.FromRgb(90, 100, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    break;
+            }
+
         }
 
         /// <summary>
