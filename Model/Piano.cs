@@ -104,6 +104,7 @@ namespace Model
 			PianoKeys.Add(CreateKey(Octave.Two, NoteName.GSharp, MicrosoftKeybind.H));
 			PianoKeys.Add(CreateKey(Octave.Two, NoteName.A, MicrosoftKeybind.N));
 			PianoKeys.Add(CreateKey(Octave.Two, NoteName.ASharp, MicrosoftKeybind.J));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.B, MicrosoftKeybind.M));
 			PianoKeys.Add(CreateKey(Octave.Three, NoteName.C, MicrosoftKeybind.Q));
 			PianoKeys.Add(CreateKey(Octave.Three, NoteName.CSharp, MicrosoftKeybind.D2));
 			PianoKeys.Add(CreateKey(Octave.Three, NoteName.D, MicrosoftKeybind.W));
