@@ -18,7 +18,7 @@ namespace Controller
         public static void CreatePiano()
         {
             Piano = new Piano();
-            _player = new("../../../../Controller/Audio/Sounds/Piano/", "", ".wav");
+            _player = new("../../../../Controller/PianoSoundPlayer/Sounds/Piano/", "", ".wav");
         }
 
         /// <summary>
