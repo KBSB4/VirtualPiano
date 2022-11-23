@@ -1,4 +1,5 @@
 ﻿using Controller;
+using Model;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,11 +10,12 @@ namespace WpfView
     /// </summary>
     public partial class MainWindow : Window
     {
+        PianoGridGenerator pianoGrid;
 
-        public MainWindow()
+		public MainWindow()
         {
             InitializeComponent();
-            _ = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
+			pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             PianoController.CreatePiano();
 
             //Add keydown event for the keys
@@ -29,28 +31,25 @@ namespace WpfView
         public void KeyPressed(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
-            string key = e.Key.ToString();
 
-            //Check if shift is held down and change the pressedKey accordingly to lowercase
-            if (Keyboard.IsKeyDown(Key.RightShift) || Keyboard.IsKeyDown(Key.LeftShift))
-            {
-                PianoController.GetPressedPianoKey(key, intValue, key);
-            }
-            else
-            {
-                PianoController.GetPressedPianoKey(key, intValue, key.ToLower());
-            }
-        }
+			PianoKey? key = PianoController.GetPressedPianoKey(intValue);
+            pianoGrid.DisplayPianoKey(key, true);
 
-        /// <summary>
-        /// If pressed down keyboard key gets released, stop the audio playing for the pianokey and unpress it
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="e"></param>
-        public void KeyReleased(object source, KeyEventArgs e)
+            if (e.Key == Key.CapsLock) 
+                PianoController.Piano.SwapOctave();
+		}
+
+		/// <summary>
+		/// If pressed down keyboard key gets released, stop the audio playing for the pianokey and unpress it
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="e"></param>
+		public void KeyReleased(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
-            PianoController.ReleaseKeyStopAudio(intValue, e.Key.ToString());
+            PianoKey? key = PianoController.GetReleasedKey(intValue);
+            pianoGrid.DisplayPianoKey(key, false);
+
         }
     }
 }

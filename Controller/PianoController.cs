@@ -9,7 +9,7 @@ namespace Controller
         public static PianoSoundPlayer _player { get; set; }
 
         //Used to play multiple keys at once, also tracks the playing keys
-        public static Dictionary<string, FadingAudio> currentPlayingAudio = new();
+        public static Dictionary<PianoKey, FadingAudio> currentPlayingAudio = new();
 
         /// <summary>
         /// Creates the piano and soundplayer for the program
@@ -24,51 +24,52 @@ namespace Controller
         /// <summary>
         /// Set PressedDown for the pianokey to true and play the key
         /// </summary>
-        /// <param name="KeybordKey"></param>
         /// <param name="intValue"></param>
-        /// <param name="PressedKey"></param>
-        public static void GetPressedPianoKey(string KeybordKey, int intValue, string PressedKey)
+        public static PianoKey? GetPressedPianoKey(int intValue)
         {
-            foreach (var key in PianoController.Piano.PianoKeys)
+            foreach (var key in Piano.PianoKeys)
             {
-                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(PressedKey))
+                if ((int)key.MicrosoftBind == intValue)
                 {
                     key.PressedDown = true;
                     //Play 
-                    if (!PianoController.currentPlayingAudio.ContainsKey(KeybordKey))
+                    if (!currentPlayingAudio.ContainsKey(key))
                     {
-                        FadingAudio fadingAudio = PianoController._player.GetFadingAudio(key.Note, (int)key.Octave);
+                        FadingAudio fadingAudio = _player.GetFadingAudio(key.Note, (int)key.Octave);
 
                         if (fadingAudio != null)
                         {
                             fadingAudio.StartPlaying();
-                            PianoController.currentPlayingAudio.Add(KeybordKey, fadingAudio);
+							currentPlayingAudio.Add(key, fadingAudio);
                         }
-                    }
-                }
+					}
+					return key;
+				}
             }
+            return null;
         }
 
         /// <summary>
         /// Set PressedDown for the pianokey to false and stop playing the key
         /// </summary>
         /// <param name="intValue"></param>
-        /// <param name="pressedKey"></param>
-        public static void ReleaseKeyStopAudio(int intValue, string pressedKey)
+        public static PianoKey? GetReleasedKey(int intValue)
         {
-            foreach (var key in PianoController.Piano.PianoKeys)
+            foreach (var key in Piano.PianoKeys)
             {
-                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(pressedKey.ToLower()))
+                if ((int)key.MicrosoftBind == intValue)
                 {
                     key.PressedDown = false;
                     //Stop playing
-                    if (PianoController.currentPlayingAudio.ContainsKey(pressedKey))
+                    if (currentPlayingAudio.ContainsKey(key))
                     {
-                        PianoController.currentPlayingAudio[pressedKey].StopPlaying(50);
-                        PianoController.currentPlayingAudio.Remove(pressedKey);
+						currentPlayingAudio[key].StopPlaying(50);
+						currentPlayingAudio.Remove(key);
                     }
+                    return key;
                 }
             }
+            return null;
         }
     }
 }

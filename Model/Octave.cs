@@ -1,7 +1,7 @@
 ﻿using Melanchall.DryWetMidi.MusicTheory;
 namespace Model
 {
-    public enum Octaves : int
+    public enum Octave : int
     {
         Two = 2,
         Three = 3,
