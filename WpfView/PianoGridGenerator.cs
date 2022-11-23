@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace WpfView
 {
-    internal class PianoGridGenerator
+    public class PianoGridGenerator
     {
         /// <summary>
         /// Generate whitekeys and blackkeys for the WPF
@@ -38,6 +38,7 @@ namespace WpfView
                 //Create key
                 whiteKeyGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
                 Button rect = new()
+
                 {
                     Background = new SolidColorBrush(new Random().Next(8) == 1 ? Color.FromRgb(90, 100, 255) : Color.FromRgb(255, 255, 255)),
                     Margin = new Thickness(0, 0, 0, 0),
