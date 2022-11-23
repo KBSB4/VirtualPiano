@@ -6,7 +6,7 @@ namespace Controller
     public class PianoController
     {
         public static Piano Piano { get; set; }
-        public static PianoSoundPlayer _player { get; set; }
+        public static PianoSoundPlayer SoundPlayer { get; set; }
 
         //Used to play multiple keys at once, also tracks the playing keys
         public static Dictionary<PianoKey, FadingAudio> currentPlayingAudio = new();
@@ -18,7 +18,7 @@ namespace Controller
         public static void CreatePiano()
         {
             Piano = new Piano();
-            _player = new("../../../../Controller/PianoSoundPlayer/Sounds/Piano/", "", ".wav");
+            SoundPlayer = new("../../../../Controller/PianoSoundPlayer/Sounds/Piano/", "", ".wav");
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Controller
                     //Play 
                     if (!currentPlayingAudio.ContainsKey(key))
                     {
-                        FadingAudio fadingAudio = _player.GetFadingAudio(key.Note, (int)key.Octave);
+                        FadingAudio fadingAudio = SoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
 
                         if (fadingAudio != null)
                         {
