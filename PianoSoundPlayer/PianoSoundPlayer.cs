@@ -11,32 +11,44 @@ namespace VirtualPiano.PianoSoundPlayer
         private string pianoSoundSuffix;
 
         private XAudio2 device;
+        MasteringVoice masteringVoice;
 
-        /// <summary>
-        /// The <paramref name="soundsFolder"/> is the folder that contains all the piano files.
-        /// <para>
-        /// 
-        /// </para>
-        /// <example>
-        /// 
-        /// File example: <b>"myPiano-CSharp.wav"</b>
-        /// <code>
-        /// The <paramref name="pianoSoundSuffix"/> is first part of the file (<b>"myPiano-"</b> in example.)
-        /// The <paramref name="pianoSoundSuffix"/> is the last part / extension of the file. (<b>".wav"</b> in example)
-        /// </code>
-        /// </example>
-        /// Make sure the note name part is spelled according to the <see cref="NoteName"/> enum from DryWetMidi
-        /// </summary>
-        /// <param name="soundsFolder"></param>
-        /// <param name="pianoSoundPrefix"></param>
-        /// <param name="pianoSoundSuffix"></param>
-        public PianoSoundPlayer(string soundsFolder, string pianoSoundPrefix, string pianoSoundSuffix)
+		/// <summary>
+		/// The <paramref name="soundsFolder"/> is the folder that contains all the piano files.
+		/// <para>
+		/// 
+		/// </para>
+		/// <example>
+		/// 
+		/// File example: <b>"myPiano-CSharp.wav"</b>
+		/// <code>
+		/// The <paramref name="pianoSoundSuffix"/> is first part of the file (<b>"myPiano-"</b> in example.)
+		/// The <paramref name="pianoSoundSuffix"/> is the last part / extension of the file. (<b>".wav"</b> in example)
+		/// </code>
+		/// </example>
+		/// Make sure the note name part is spelled according to the <see cref="NoteName"/> enum from DryWetMidi
+		/// </summary>
+		/// <param name="soundsFolder"></param>
+		/// <param name="pianoSoundPrefix"></param>
+		/// <param name="pianoSoundSuffix"></param>
+		public PianoSoundPlayer(string soundsFolder, string pianoSoundPrefix, string pianoSoundSuffix)
         {
             pianoFilesFolder = soundsFolder;
             this.pianoSoundPrefix = pianoSoundPrefix;
             this.pianoSoundSuffix = pianoSoundSuffix;
+            VerifyDirectory();
             device = new XAudio2();
-            MasteringVoice masteringVoice = new MasteringVoice(device);
+			masteringVoice = new MasteringVoice(device);
+		}
+
+        /// <summary>
+        /// Verifies that the chosen directory actualy exists.
+        /// </summary>
+        /// <exception cref="DirectoryNotFoundException"></exception>
+        private void VerifyDirectory()
+        {
+            if (!Directory.Exists(pianoFilesFolder))
+                throw new DirectoryNotFoundException(pianoFilesFolder + " was not found");
         }
 
         /// <summary>
@@ -131,5 +143,14 @@ namespace VirtualPiano.PianoSoundPlayer
                     return 0;
             }
 		}
+
+        /// <summary>
+        /// Nullafies the object and remove unncessary objects 
+        /// </summary>
+        public void Dispose()
+        {
+            device.Dispose();
+            masteringVoice.Dispose();
+        }
     }
 }
