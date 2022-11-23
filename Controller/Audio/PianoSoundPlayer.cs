@@ -10,6 +10,9 @@ namespace VirtualPiano.PianoSoundPlayer
         private string pianoSoundPrefix;
         private string pianoSoundSuffix;
 
+        private XAudio2 device;
+        MasteringVoice masteringVoice;
+
         /// <summary>
         /// The <paramref name="soundsFolder"/> is the folder that contains all the piano files.
         /// <para>
@@ -33,6 +36,20 @@ namespace VirtualPiano.PianoSoundPlayer
             pianoFilesFolder = soundsFolder;
             this.pianoSoundPrefix = pianoSoundPrefix;
             this.pianoSoundSuffix = pianoSoundSuffix;
+
+            VerifyDirectory();
+            device = new XAudio2();
+            masteringVoice = new MasteringVoice(device);
+        }
+
+        /// <summary>
+        /// Verifies that the chosen directory actualy exists.
+        /// </summary>
+        /// <exception cref="DirectoryNotFoundException"></exception>
+        private void VerifyDirectory()
+        {
+            if (!Directory.Exists(pianoFilesFolder))
+                throw new DirectoryNotFoundException(pianoFilesFolder + " was not found");
         }
 
         /// <summary>
@@ -66,8 +83,6 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <returns></returns>
         public SourceVoice GetAudioClip(string audioFile, float frequency)
         {
-            XAudio2 device = new XAudio2();
-            MasteringVoice masteringVoice = new MasteringVoice(device);
             var stream = new SoundStream(File.OpenRead(audioFile));
             var waveFormat = stream.Format;
             var buffer = new AudioBuffer
@@ -79,7 +94,7 @@ namespace VirtualPiano.PianoSoundPlayer
 
             var sourceVoice = new SourceVoice(device, waveFormat, true);
             sourceVoice.SetFrequencyRatio(frequency);
-            //sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
+            sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
             sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
 
             return sourceVoice;
@@ -106,16 +121,25 @@ namespace VirtualPiano.PianoSoundPlayer
         }
 
         /// <summary>
-        /// Gets the currect pitchshift for each octave specifiek by <paramref name="octave"/>.
-        /// <para>
-        /// <i><b>5</b> and <b>* 100</b> is added so that the user doesn't have to input a high amount</i>
-        /// </para>
-        /// </summary>
-        /// <param name="octave"></param>
-        /// <returns></returns>
+		/// Gets the currect pitchshift for each octave specifiek by <paramref name="octave"/>.
+		/// <para>
+	    /// Min <paramref name="octave"/> = 2, Max <paramref name="octave"/> = 5 else returns 0
+		/// </para>
+		/// </summary>
+		/// <param name="octave"></param>
+		/// <returns></returns>
         private float GetOctaveFrequency(int octave)
         {
             return (float)(1d / 1024d * ((octave + 5d) * 100d));
+        }
+
+        /// <summary>
+        /// Nullafies the object and remove unncessary objects 
+        /// </summary>
+        public void Dispose()
+        {
+            device.Dispose();
+            masteringVoice.Dispose();
         }
     }
 }
