@@ -1,11 +1,6 @@
 ﻿using Controller;
-using Model;
-
-using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using VirtualPiano.PianoSoundPlayer;
 
 namespace WpfView
 {
@@ -14,15 +9,12 @@ namespace WpfView
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static PianoSoundPlayer _player { get; set; }
-        public static Dictionary<Key, FadingAudio> currentPlayingAudio = new();
 
         public MainWindow()
         {
             InitializeComponent();
             _ = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             PianoController.CreatePiano();
-            _player = new("../../../../Controller/Audio/Sounds/Piano/", "", ".wav");
 
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
@@ -37,58 +29,28 @@ namespace WpfView
         public void KeyPressed(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
-            string pressedKey;
-            Key key = e.Key;
+            string key = e.Key.ToString();
+
+            //Check if shift is held down and change the pressedKey accordingly to lowercase
             if (Keyboard.IsKeyDown(Key.RightShift) || Keyboard.IsKeyDown(Key.LeftShift))
             {
-                pressedKey = e.Key.ToString().ToUpper();
-                GetPressedPianoKey(key, intValue, pressedKey);
+                PianoController.GetPressedPianoKey(key, intValue, key);
             }
             else
             {
-                pressedKey = e.Key.ToString().ToLower();
-                GetPressedPianoKey(key, intValue, pressedKey);
+                PianoController.GetPressedPianoKey(key, intValue, key.ToLower());
             }
         }
 
-        public static void GetPressedPianoKey(Key e, int intValue, string PressedKey)
-        {
-            foreach (var key in PianoController.Piano.PianoKeys)
-            {
-                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(PressedKey))
-                {
-                    key.PressedDown = true;
-                    if (!currentPlayingAudio.ContainsKey(e))
-                    {
-                        FadingAudio? fadingAudio = new FadingAudio();
-                        fadingAudio = _player.GetFadingAudio(key.Note, (int)key.Octave);
-
-                        if (fadingAudio != null)
-                        {
-                            fadingAudio.StartPlaying();
-                            currentPlayingAudio.Add(e, fadingAudio);
-                        }
-                    }
-                }
-            }
-        }
-
+        /// <summary>
+        /// If pressed down keyboard key gets released, stop the audio playing for the pianokey and unpress it
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         public void KeyReleased(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
-
-            foreach (var key in PianoController.Piano.PianoKeys)
-            {
-                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString().ToLower()))
-                {
-                    key.PressedDown = false;
-                    if (currentPlayingAudio.ContainsKey(e.Key))
-                    {
-                        currentPlayingAudio[e.Key].StopPlaying(50);
-                        currentPlayingAudio.Remove(e.Key);
-                    }
-                }
-            }
+            PianoController.ReleaseKeyStopAudio(intValue, e.Key.ToString());
         }
     }
 }
