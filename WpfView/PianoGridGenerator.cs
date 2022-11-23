@@ -29,8 +29,8 @@ namespace WpfView
 
         public void DisplayPianoKey(PianoKey key, bool pressed)
         {
-            int note = (((int)key.Octave) * 12) + ((int)key.Note);//berekening uitleggen
-
+            if (key is null) return;
+            int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
             Button currentButton = buttons[note];
 
             switch (key.Note)

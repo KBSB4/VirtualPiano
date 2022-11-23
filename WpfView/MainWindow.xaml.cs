@@ -1,4 +1,5 @@
 ﻿using Controller;
+using Model;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,11 +10,12 @@ namespace WpfView
     /// </summary>
     public partial class MainWindow : Window
     {
+        PianoGridGenerator pianoGrid;
 
-        public MainWindow()
+		public MainWindow()
         {
             InitializeComponent();
-            _ = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
+			pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             PianoController.CreatePiano();
 
             //Add keydown event for the keys
@@ -30,7 +32,11 @@ namespace WpfView
         {
             int intValue = (int)e.Key;
 
-			PianoController.GetPressedPianoKey(intValue);
+			PianoKey? key = PianoController.GetPressedPianoKey(intValue);
+            pianoGrid.DisplayPianoKey(key, true);
+
+            if (e.Key == Key.CapsLock) 
+                PianoController.Piano.SwapOctave();
 		}
 
 		/// <summary>
@@ -41,7 +47,9 @@ namespace WpfView
 		public void KeyReleased(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
-            PianoController.ReleaseKeyStopAudio(intValue);
+            PianoKey? key = PianoController.GetReleasedKey(intValue);
+            pianoGrid.DisplayPianoKey(key, false);
+
         }
     }
 }

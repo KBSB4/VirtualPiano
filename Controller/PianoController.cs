@@ -25,7 +25,7 @@ namespace Controller
         /// Set PressedDown for the pianokey to true and play the key
         /// </summary>
         /// <param name="intValue"></param>
-        public static void GetPressedPianoKey(int intValue)
+        public static PianoKey? GetPressedPianoKey(int intValue)
         {
             foreach (var key in Piano.PianoKeys)
             {
@@ -42,16 +42,18 @@ namespace Controller
                             fadingAudio.StartPlaying();
 							currentPlayingAudio.Add(key, fadingAudio);
                         }
-                    }
-                }
+					}
+					return key;
+				}
             }
+            return null;
         }
 
         /// <summary>
         /// Set PressedDown for the pianokey to false and stop playing the key
         /// </summary>
         /// <param name="intValue"></param>
-        public static void ReleaseKeyStopAudio(int intValue)
+        public static PianoKey? GetReleasedKey(int intValue)
         {
             foreach (var key in Piano.PianoKeys)
             {
@@ -64,8 +66,10 @@ namespace Controller
 						currentPlayingAudio[key].StopPlaying(50);
 						currentPlayingAudio.Remove(key);
                     }
+                    return key;
                 }
             }
+            return null;
         }
     }
 }
