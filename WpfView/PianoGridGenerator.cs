@@ -23,10 +23,14 @@ namespace WpfView
             {
                 return;
             }
-
             buttons = AddPianoKeys(whiteKeyGrid, blackKeyGrid, columnAmount);
         }
 
+        /// <summary>
+        /// Display pianokey if they are pressed down
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="pressed"></param>
         public void DisplayPianoKey(PianoKey key, bool pressed)
         {
             if (key is null) return;
@@ -67,7 +71,6 @@ namespace WpfView
         private List<Button> AddPianoKeys(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
         {
             List<Button> buttons = new();
-
 
             blackKeyGrid.ColumnDefinitions.Clear();
             whiteKeyGrid.ColumnDefinitions.Clear();

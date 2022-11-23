@@ -22,9 +22,10 @@ namespace Controller
         }
 
         /// <summary>
-        /// Set PressedDown for the pianokey to true and play the key
+        /// Figures out which key is pressed and set it to true + play audio
         /// </summary>
         /// <param name="intValue"></param>
+        /// <returns>Piano key pressed</returns>
         public static PianoKey? GetPressedPianoKey(int intValue)
         {
             foreach (var key in Piano.PianoKeys)
@@ -50,9 +51,10 @@ namespace Controller
         }
 
         /// <summary>
-        /// Set PressedDown for the pianokey to false and stop playing the key
+        /// Figures out which key is pressed and set it to false + stop audio
         /// </summary>
         /// <param name="intValue"></param>
+        /// <returns>Pianokey released</returns>
         public static PianoKey? GetReleasedKey(int intValue)
         {
             foreach (var key in Piano.PianoKeys)

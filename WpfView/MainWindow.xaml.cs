@@ -12,10 +12,10 @@ namespace WpfView
     {
         PianoGridGenerator pianoGrid;
 
-		public MainWindow()
+        public MainWindow()
         {
             InitializeComponent();
-			pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
+            pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             PianoController.CreatePiano();
 
             //Add keydown event for the keys
@@ -25,6 +25,7 @@ namespace WpfView
 
         /// <summary>
         /// Eventhandler for when the key gets pressed. Updates key and plays the audio
+        /// Updates the view
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
@@ -32,19 +33,20 @@ namespace WpfView
         {
             int intValue = (int)e.Key;
 
-			PianoKey? key = PianoController.GetPressedPianoKey(intValue);
+            PianoKey? key = PianoController.GetPressedPianoKey(intValue);
             pianoGrid.DisplayPianoKey(key, true);
 
-            if (e.Key == Key.CapsLock) 
+            if (e.Key == Key.CapsLock)
                 PianoController.Piano.SwapOctave();
-		}
+        }
 
-		/// <summary>
-		/// If pressed down keyboard key gets released, stop the audio playing for the pianokey and unpress it
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="e"></param>
-		public void KeyReleased(object source, KeyEventArgs e)
+        /// <summary>
+        /// If pressed down keyboard key gets released, stop the audio playing for the pianokey and unpress it.
+        /// Updates the view
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        public void KeyReleased(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
             PianoKey? key = PianoController.GetReleasedKey(intValue);

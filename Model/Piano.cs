@@ -4,49 +4,8 @@ namespace Model
 {
 	public class Piano
 	{
+		//Sets which octave is active. Lower or upper
 		private bool lowerOctaveActive = true;
-
-		public enum MicrosoftKeybind
-		{
-			D1 = 35,
-			D2 = 36,
-			D3 = 37,
-			D4 = 38,
-			D5 = 39,
-			D6 = 40,
-			D7 = 41,
-			D8 = 42,
-			D9 = 43,
-			D0 = 44,
-			Q = 60, 
-			W = 66, 
-			E = 48, 
-			R = 61, 
-			T = 63, 
-			Y = 68, 
-			U = 64, 
-			I = 52, 
-			O = 58, 
-			P = 59, 
-			A = 44, 
-			S = 62, 
-			D = 47, 
-			F = 49, 
-			G = 50, 
-			H = 51, 
-			J = 53, 
-			K = 54, 
-			L = 55, 
-			Z = 69, 
-			X = 67, 
-			C = 46, 
-			V = 65, 
-			B = 45, 
-			N = 57, 
-			M = 56
-		}
-
-		//private int[] MicrosoftKeybinds = { 60, 66, 48, 61, 63, 68, 64, 52, 58, 59, 44, 62, 47, 49, 50, 51, 53, 54, 55, 69, 67, 46, 65, 45, 57, 56 };
 		public List<PianoKey> PianoKeys { get; set; }
 
 		/// <summary>
@@ -58,7 +17,7 @@ namespace Model
 			AssembleKeyBindings();
 		}
 
-		//TODO Naar Pianocontroller?
+		//TODO Naar controller?
 		/// <summary>
 		/// Sets octave and note for each key
 		/// </summary>
@@ -79,48 +38,48 @@ namespace Model
 		/// <param name="octave"></param>
 		/// <param name="note"></param>
 		/// <param name="getal"></param>
-		public PianoKey CreateKey(Octave octave, NoteName note, MicrosoftKeybind keyBind)
+		public PianoKey CreateKey(Octave octave, NoteName note, MicrosoftKeybinds keyBind)
 		{
 			PianoKey key = new PianoKey(octave, note, keyBind);
 			return key;
 		}
 
 		/// <summary>
-		/// Sets keybindings for each key
+		/// Hardcoded PianoKeys with keybinding
 		/// </summary>
 		public void AssembleKeyBindings()
 		{
-			Octave currentoctave = 0;  // first octave two
-			NoteName currentnote = NoteName.C; // first key of the virtual keyboard
-
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.C, MicrosoftKeybind.Z));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.CSharp, MicrosoftKeybind.S));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.D, MicrosoftKeybind.X));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.DSharp, MicrosoftKeybind.D));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.E, MicrosoftKeybind.C));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.F, MicrosoftKeybind.V));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.FSharp, MicrosoftKeybind.G));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.G, MicrosoftKeybind.B));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.GSharp, MicrosoftKeybind.H));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.A, MicrosoftKeybind.N));
-			PianoKeys.Add(CreateKey(Octave.Two, NoteName.ASharp, MicrosoftKeybind.J));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.C, MicrosoftKeybind.Q));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.CSharp, MicrosoftKeybind.D2));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.D, MicrosoftKeybind.W));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.DSharp, MicrosoftKeybind.D3));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.E, MicrosoftKeybind.E));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.F, MicrosoftKeybind.R));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.FSharp, MicrosoftKeybind.D5));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.G, MicrosoftKeybind.T));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.GSharp, MicrosoftKeybind.D6));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.A, MicrosoftKeybind.Y));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.ASharp, MicrosoftKeybind.D7));
-			PianoKeys.Add(CreateKey(Octave.Three, NoteName.B, MicrosoftKeybind.U));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.C, MicrosoftKeybinds.Z));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.CSharp, MicrosoftKeybinds.S));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.D, MicrosoftKeybinds.X));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.DSharp, MicrosoftKeybinds.D));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.E, MicrosoftKeybinds.C));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.F, MicrosoftKeybinds.V));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.FSharp, MicrosoftKeybinds.G));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.G, MicrosoftKeybinds.B));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.GSharp, MicrosoftKeybinds.H));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.A, MicrosoftKeybinds.N));
+			PianoKeys.Add(CreateKey(Octave.Two, NoteName.ASharp, MicrosoftKeybinds.J));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.C, MicrosoftKeybinds.Q));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.CSharp, MicrosoftKeybinds.D2));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.D, MicrosoftKeybinds.W));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.DSharp, MicrosoftKeybinds.D3));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.E, MicrosoftKeybinds.E));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.F, MicrosoftKeybinds.R));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.FSharp, MicrosoftKeybinds.D5));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.G, MicrosoftKeybinds.T));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.GSharp, MicrosoftKeybinds.D6));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.A, MicrosoftKeybinds.Y));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.ASharp, MicrosoftKeybinds.D7));
+			PianoKeys.Add(CreateKey(Octave.Three, NoteName.B, MicrosoftKeybinds.U));
 		}
 
+		/// <summary>
+		/// Swap octave to higher or lower to keep amount of keybindings low
+		/// </summary>
 		public void SwapOctave()
 		{
-			foreach(PianoKey key in PianoKeys)
+			foreach (PianoKey key in PianoKeys)
 			{
 				if (lowerOctaveActive) key.Octave += 2;
 				else key.Octave -= 2;

@@ -1,5 +1,4 @@
-﻿using Melanchall.DryWetMidi.MusicTheory;
-namespace Model
+﻿namespace Model
 {
     public enum Octave : int
     {
