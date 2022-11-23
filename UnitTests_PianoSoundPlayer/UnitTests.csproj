@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PianoSoundPlayer\PianoSoundPlayer.csproj" />
+    <ProjectReference Include="..\Controller\Controller.csproj" />
   </ItemGroup>
 
 </Project>
