@@ -15,10 +15,11 @@ namespace Controller
         /// Creates the piano and soundplayer for the program
         /// </summary>
         /// <returns>Piano object</returns>
-        public static void CreatePiano()
+        public static Piano CreatePiano()
         {
             Piano = new Piano();
             _player = new("../../../../Controller/Audio/Sounds/Piano/", "", ".wav");
+            return Piano;
         }
 
         /// <summary>
@@ -27,24 +28,31 @@ namespace Controller
         /// <param name="KeybordKey"></param>
         /// <param name="intValue"></param>
         /// <param name="PressedKey"></param>
-        public static void GetPressedPianoKey(string KeybordKey, int intValue, string PressedKey)
+        public static void PlayPressedPianoKey(string KeybordKey, int intValue, string PressedKey)
         {
-            foreach (var key in PianoController.Piano.PianoKeys)
+            foreach (var key in Piano.PianoKeys)
             {
                 if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(PressedKey))
                 {
                     key.PressedDown = true;
                     //Play 
-                    if (!PianoController.currentPlayingAudio.ContainsKey(KeybordKey))
-                    {
-                        FadingAudio fadingAudio = PianoController._player.GetFadingAudio(key.Note, (int)key.Octave);
+                    PlayKey(KeybordKey, key);
+                }
+            }
+        }
 
-                        if (fadingAudio != null)
-                        {
-                            fadingAudio.StartPlaying();
-                            PianoController.currentPlayingAudio.Add(KeybordKey, fadingAudio);
-                        }
-                    }
+        private static void PlayKey(string KeybordKey, PianoKey key)
+        {
+
+
+            if (!currentPlayingAudio.ContainsKey(KeybordKey))
+            {
+                FadingAudio fadingAudio = _player.GetFadingAudio(key.Note, (int)key.Octave);
+
+                if (fadingAudio != null)
+                {
+                    fadingAudio.StartPlaying();
+                    currentPlayingAudio.Add(KeybordKey, fadingAudio);
                 }
             }
         }

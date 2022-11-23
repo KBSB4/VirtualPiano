@@ -25,7 +25,7 @@ namespace WpfView
 
             //Create piano
             Piano = PianoController.CreatePiano();
-            PianoSoundPlayer = new("../../../../WpfView/Sounds/Piano/", "", ".wav");
+            PianoSoundPlayer = new("../../../../Controller/Audio/Sounds/Piano/", "", ".wav");
 
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
