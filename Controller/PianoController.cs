@@ -3,7 +3,7 @@ using VirtualPiano.PianoSoundPlayer;
 
 namespace Controller
 {
-    public class PianoController
+    public static class PianoController
     {
         public static Piano Piano { get; set; }
         public static PianoSoundPlayer _player { get; set; }
@@ -14,7 +14,7 @@ namespace Controller
         /// <summary>
         /// Creates the piano and soundplayer for the program
         /// </summary>
-        /// <returns>Piano object</returns>
+        /// <returns></returns>
         public static void CreatePiano()
         {
             Piano = new Piano();

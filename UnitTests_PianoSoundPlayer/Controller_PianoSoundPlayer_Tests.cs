@@ -1,4 +1,3 @@
-
 using VirtualPiano.PianoSoundPlayer;
 using Melanchall.DryWetMidi.MusicTheory;
 using SharpDX.XAudio2;
@@ -6,7 +5,7 @@ using System.Diagnostics;
 
 namespace UnitTests
 {
-	public class Tests
+	public class Controller_PianoSoundPlayer_Tests
 	{
 		[SetUp]
 		public void Setup()

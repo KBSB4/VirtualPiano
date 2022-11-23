@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace WpfView
 {
-    internal class PianoGridGenerator
+    public class PianoGridGenerator
     {
         private List<Button> buttons;
 
