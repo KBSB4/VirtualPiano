@@ -5,7 +5,7 @@ namespace Model
 	public class Piano
 	{
 		//Sets which octave is active. Lower or upper
-		private bool lowerOctaveActive = true;
+		public bool lowerOctaveActive = true;
 		public List<PianoKey> PianoKeys { get; set; }
 
 		/// <summary>

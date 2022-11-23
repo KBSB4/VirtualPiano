@@ -44,7 +44,7 @@ namespace UnitTests
         [TestCase(23, MicrosoftKeybinds.U)]
        
 
-        public void PianoGetsCorrectKeys(int index, MicrosoftKeybinds m)
+        public void PianokeysAreCorrectlyBind(int index, MicrosoftKeybinds m)
         {
 
             MicrosoftKeybinds test= piano.PianoKeys[index].MicrosoftBind;
@@ -55,7 +55,7 @@ namespace UnitTests
         [TestCase(1, MicrosoftKeybinds.Y)]
         [TestCase(2, MicrosoftKeybinds.D7)]
         [TestCase(3, MicrosoftKeybinds.U)]
-        public void IsInvalidKeyBind(int index, MicrosoftKeybinds m)
+        public void KeyIsNotBoundToPianoKey(int index, MicrosoftKeybinds m)
         {
             MicrosoftKeybinds test = piano.PianoKeys[index].MicrosoftBind;
             Assert.AreNotEqual(m, test);
