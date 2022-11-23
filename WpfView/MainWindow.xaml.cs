@@ -29,28 +29,19 @@ namespace WpfView
         public void KeyPressed(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
-            string key = e.Key.ToString();
 
-            //Check if shift is held down and change the pressedKey accordingly to lowercase
-            if (Keyboard.IsKeyDown(Key.RightShift) || Keyboard.IsKeyDown(Key.LeftShift))
-            {
-                PianoController.GetPressedPianoKey(key, intValue, key);
-            }
-            else
-            {
-                PianoController.GetPressedPianoKey(key, intValue, key.ToLower());
-            }
-        }
+			PianoController.GetPressedPianoKey(intValue);
+		}
 
-        /// <summary>
-        /// If pressed down keyboard key gets released, stop the audio playing for the pianokey and unpress it
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="e"></param>
-        public void KeyReleased(object source, KeyEventArgs e)
+		/// <summary>
+		/// If pressed down keyboard key gets released, stop the audio playing for the pianokey and unpress it
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="e"></param>
+		public void KeyReleased(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
-            PianoController.ReleaseKeyStopAudio(intValue, e.Key.ToString());
+            PianoController.ReleaseKeyStopAudio(intValue);
         }
     }
 }
