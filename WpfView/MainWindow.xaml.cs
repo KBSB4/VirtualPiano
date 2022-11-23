@@ -1,10 +1,10 @@
 ﻿using Controller;
 using Model;
+
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using VirtualPiano.PianoSoundPlayer;
 
 namespace WpfView
 {
@@ -13,25 +13,23 @@ namespace WpfView
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Piano Piano { get; set; }
-
-        private PianoSoundPlayer PianoSoundPlayer { get; set; }
-        private Dictionary<Key, FadingAudio> currentPlayingAudio = new();
 
         public MainWindow()
         {
             InitializeComponent();
             _ = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
-
-            //Create piano
-            Piano = PianoController.CreatePiano();
-            PianoSoundPlayer = new("../../../../WpfView/Sounds/Piano/", "", ".wav");
+            PianoController.CreatePiano();
 
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
         }
 
+        /// <summary>
+        /// Eventhandler for when the key gets pressed. Updates key and plays the audio
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         public void KeyPressed(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
@@ -137,6 +135,12 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Get the key lowercase or uppercase depending on if SHIFT is pressed.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="intValue"></param>
+        /// <param name="keyValue"></param>
         private static void GetKeyWithShift(KeyEventArgs e, out int intValue, out string keyValue)
         {
             intValue = (int)e.Key;
