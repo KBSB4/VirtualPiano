@@ -46,14 +46,14 @@ namespace WpfView
                 case NoteName.G:
                 case NoteName.A:
                 case NoteName.B:
-                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(90, 120, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(72, 91, 190)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
                     break;
                 case NoteName.CSharp:
                 case NoteName.DSharp:
                 case NoteName.FSharp:
                 case NoteName.GSharp:
                 case NoteName.ASharp:
-                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(50, 50, 150)) : new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(40, 57, 149)) : new SolidColorBrush(Color.FromRgb(30, 30, 30));
                     break;
                 default:
                     currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(90, 100, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
@@ -83,6 +83,8 @@ namespace WpfView
                 {
                     Background = new SolidColorBrush(Color.FromRgb(255, 255, 255)), //new SolidColorBrush(new Random().Next(8) == 1 ? Color.FromRgb(90, 100, 255) : Color.FromRgb(255, 255, 255)),
                     Margin = new Thickness(0, 0, 0, 0),
+                    BorderThickness = new Thickness(1, 0, 1, 0),
+                    BorderBrush = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
                 };
 
                 //Add key
@@ -97,8 +99,9 @@ namespace WpfView
                 {
                     Button blackKeyButton = new()
                     {
-                        Background = Brushes.Black,
-                        Margin = new Thickness((1920 / columnAmount) / 1.75d, 0, -15, 30) //68.57 is the exact pixel width of one key 68.57 x 28 = 1920 pixels
+                        Background = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
+                        Margin = new Thickness((1920 / columnAmount) / 1.75d, 0, -15, 30), //68.57 is the exact pixel width of one key 68.57 x 28 = 1920 pixels
+                        BorderThickness = new Thickness(0, 0, 0, 0),
                     };
 
                     //Add key
