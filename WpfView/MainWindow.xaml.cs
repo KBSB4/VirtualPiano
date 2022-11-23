@@ -1,5 +1,8 @@
 ﻿using Controller;
 using Model;
+
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 
@@ -29,33 +32,105 @@ namespace WpfView
         /// <param name="e"></param>
         public void KeyPressed(object source, KeyEventArgs e)
         {
-            int intValue;
-            string keyValue;
-            PianoKey pianoKey;
-            GetKeyWithShift(e, out intValue, out keyValue);
-            pianoKey = PianoController.UpdateKey(e.Key.ToString(), intValue, true);
-            PianoController.PlayKey(pianoKey);
+            int intValue = (int)e.Key;
+            if (Keyboard.IsKeyDown(Key.RightShift) || Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                foreach (var key in Piano.PianoKeys)
+                {
+                    if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString().ToUpper()))
+                    {
+                        key.PressedDown = true;
+                        if (!currentPlayingAudio.ContainsKey(e.Key))
+                        {
+                            FadingAudio? fadingAudio = new FadingAudio();
+                            fadingAudio = PianoSoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
+
+                            if (fadingAudio != null)
+                            {
+                                fadingAudio.StartPlaying();
+                                currentPlayingAudio.Add(e.Key, fadingAudio);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var key in Piano.PianoKeys)
+                {
+                    if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString().ToLower()))
+                    {
+                        key.PressedDown = true;
+                        if (!currentPlayingAudio.ContainsKey(e.Key))
+                        {
+                            FadingAudio? fadingAudio = new FadingAudio();
+                            fadingAudio = PianoSoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
+
+                            if (fadingAudio != null)
+                            {
+                                fadingAudio.StartPlaying();
+                                currentPlayingAudio.Add(e.Key, fadingAudio);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        /// <summary>
-        /// Eventhandler for when the key no longer gets pressed. Updates key and stops playing the audio
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="e"></param>
+
         public void KeyReleased(object source, KeyEventArgs e)
         {
-            int intValue;
-            string keyValue;
-            PianoKey pianoKey;
-            GetKeyWithShift(e, out intValue, out keyValue);
-            pianoKey = PianoController.UpdateKey(e.Key.ToString(), intValue, false);
+            int intValue = (int)e.Key;
 
-            if (pianoKey is not null)
+
+            foreach (var key in Piano.PianoKeys)
             {
-                if (PianoController.currentPlayingAudio.ContainsKey(pianoKey))
+                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString().ToLower()))
                 {
-                    PianoController.currentPlayingAudio[pianoKey].StopPlaying(50);
-                    PianoController.currentPlayingAudio.Remove(pianoKey);
+                    key.PressedDown = false;
+                    if (currentPlayingAudio.ContainsKey(e.Key))
+                    {
+                        currentPlayingAudio[e.Key].StopPlaying(50);
+                        currentPlayingAudio.Remove(e.Key);
+                    }
+                }
+            }
+        }
+
+        //public void KeyReleased(object source, KeyEventArgs e)
+        //{
+        //    int intValue;
+        //    string keyValue;
+        //    GetKeyWithShift(e, out intValue, out keyValue);
+        //    UpdateKey(e, intValue, false);
+
+        //    if (currentPlayingAudio.ContainsKey(e.Key))
+        //    {
+        //        currentPlayingAudio[e.Key].StopPlaying(50);
+        //        currentPlayingAudio.Remove(e.Key);
+        //    }
+        //}
+
+        private void UpdateKey(KeyEventArgs e, int intValue, Boolean PressDown)
+        {
+            foreach (var key in Piano.PianoKeys)
+            {
+                if (key.MicrosoftBind == intValue && key.KeyBindChar.ToString().Equals(e.Key.ToString()))
+                {
+                    key.PressedDown = PressDown;
+
+                    //Speel noot af
+                    if (!currentPlayingAudio.ContainsKey(e.Key))
+                    {
+                        FadingAudio? fadingAudio = new FadingAudio();
+                        fadingAudio = PianoSoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
+
+                        if (fadingAudio != null)
+                        {
+                            fadingAudio.StartPlaying();
+                            currentPlayingAudio.Add(e.Key, fadingAudio);
+                        }
+                    }
                 }
             }
         }
