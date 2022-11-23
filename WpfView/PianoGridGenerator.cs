@@ -1,6 +1,6 @@
-﻿using Model;
+﻿using Melanchall.DryWetMidi.MusicTheory;
+using Model;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -29,43 +29,42 @@ namespace WpfView
 
         public void DisplayPianoKey(PianoKey key, bool pressed)
         {
-            int note = (((int)key.Octave) * 12) + ((int)key.Note);
+            int note = (((int)key.Octave) * 12) + ((int)key.Note);//berekening uitleggen
 
-            Button test = buttons[note];
-            Debug.WriteLine(test.Background);
+            Button currentButton = buttons[note];
 
             switch (key.Note)
             {
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.C:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.D:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.E:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.F:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.G:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.A:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.B:
-
-                    test.Background = pressed ? new SolidColorBrush(Color.FromRgb(90, 120, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                case NoteName.C:
+                case NoteName.D:
+                case NoteName.E:
+                case NoteName.F:
+                case NoteName.G:
+                case NoteName.A:
+                case NoteName.B:
+                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(90, 120, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
                     break;
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.CSharp:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.DSharp:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.FSharp:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.GSharp:
-                case Melanchall.DryWetMidi.MusicTheory.NoteName.ASharp:
-                    test.Background = pressed ? new SolidColorBrush(Color.FromRgb(50, 50, 150)) : new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                case NoteName.CSharp:
+                case NoteName.DSharp:
+                case NoteName.FSharp:
+                case NoteName.GSharp:
+                case NoteName.ASharp:
+                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(50, 50, 150)) : new SolidColorBrush(Color.FromRgb(0, 0, 0));
                     break;
                 default:
-                    test.Background = pressed ? new SolidColorBrush(Color.FromRgb(90, 100, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(90, 100, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
                     break;
             }
 
         }
 
         /// <summary>
-        /// columnAmount is the amount of white keys
+        /// Adds the amount of white keys specified and places black keys in between
         /// </summary>
         /// <param name="grid"></param>
         /// <param name="columnAmount"></param>
-        private static List<Button> AddPianoKeys(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
+        /// <returns>A list with the placed buttons</returns>
+        private List<Button> AddPianoKeys(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
         {
             List<Button> buttons = new();
 
