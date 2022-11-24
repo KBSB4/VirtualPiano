@@ -1,9 +1,4 @@
 ﻿using Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UnitTests
 {
@@ -42,12 +37,12 @@ namespace UnitTests
         [TestCase(21, MicrosoftKeybinds.Y)]
         [TestCase(22, MicrosoftKeybinds.D7)]
         [TestCase(23, MicrosoftKeybinds.U)]
-       
+
 
         public void PianoGetsCorrectKeys(int index, MicrosoftKeybinds m)
         {
 
-            MicrosoftKeybinds test= piano.PianoKeys[index].MicrosoftBind;
+            MicrosoftKeybinds test = piano.PianoKeys[index].MicrosoftBind;
             Assert.AreEqual(m, test);
 
         }
