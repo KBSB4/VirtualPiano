@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Controller;
+using Model;
 
 namespace UnitTests
 {
@@ -15,7 +17,14 @@ namespace UnitTests
         }
 
         [Test]
-        public void Test()
+        public void CreatePiano_()
+        {
+            PianoController.CreatePiano();
+            Assert.IsNotNull(PianoController.Piano);
+        }
+
+        [Test]
+        public void CreatePiano_SoundPlayer_IsNotNull()
         {
 
         }

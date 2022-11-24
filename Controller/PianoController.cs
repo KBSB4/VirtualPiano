@@ -4,7 +4,7 @@ using VirtualPiano.PianoSoundPlayer;
 
 namespace Controller
 {
-    public class PianoController
+    public static class PianoController
     {
         public static Piano Piano { get; set; }
         public static PianoSoundPlayer SoundPlayer { get; set; }
