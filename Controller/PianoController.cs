@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using BusinessLogic;
+using Model;
 using VirtualPiano.PianoSoundPlayer;
 
 namespace Controller
@@ -19,6 +20,7 @@ namespace Controller
         {
             Piano = new Piano();
             SoundPlayer = new("../../../../Controller/PianoSoundPlayer/Sounds/Piano/", "", ".wav");
+            PianoLogic.AssembleKeyBindings(Piano);
         }
 
         #region Piano Creation

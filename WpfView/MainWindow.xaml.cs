@@ -1,7 +1,9 @@
-﻿using Controller;
+﻿using BusinessLogic;
+using Controller;
 using Model;
 using System.Windows;
 using System.Windows.Input;
+using BusinessLogic;
 
 namespace WpfView
 {
@@ -37,7 +39,7 @@ namespace WpfView
             pianoGrid.DisplayPianoKey(key, true);
 
             if (e.Key == Key.CapsLock)
-                PianoController.Piano.SwapOctave();
+                PianoLogic.SwapOctave(PianoController.Piano);
         }
 
         /// <summary>
