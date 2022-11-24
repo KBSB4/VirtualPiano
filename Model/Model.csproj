@@ -6,7 +6,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Melanchall.DryWetMidi" Version="6.1.3" />
-  </ItemGroup>
 </Project>
