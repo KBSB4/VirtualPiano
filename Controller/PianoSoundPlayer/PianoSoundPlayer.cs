@@ -1,4 +1,5 @@
 ﻿using Melanchall.DryWetMidi.MusicTheory;
+using Model;
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
 
@@ -71,7 +72,7 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <param name="frequency"></param>
         public void PlaySoundOneshot(string audioFile, float frequency)
         {
-            GetAudioClip(audioFile, frequency).Start();
+            GetSourceVoice(audioFile, frequency).Start();
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <param name="audioFile"></param>
         /// <param name="frequency"></param>
         /// <returns></returns>
-        public SourceVoice GetAudioClip(string audioFile, float frequency)
+        public SourceVoice GetSourceVoice(string audioFile, float frequency)
         {
             SoundStream stream = new(File.OpenRead(audioFile));
             WaveFormat waveFormat = stream.Format;
@@ -100,24 +101,52 @@ namespace VirtualPiano.PianoSoundPlayer
             return sourceVoice;
         }
 
-        /// <summary>
-        /// Gets a new instance of <see cref="FadingAudio"/> using <paramref name="noteName"/> to get the correct file associated to the note. 
-        /// Increases or decreases the pitch of the audio according to <paramref name="octave"/>
-        /// <para>
-        /// <i>
-        /// <see cref="FadingAudio"/> can be used to Play, Stop and Stop(Fade-out) a <see cref="SourceVoice"/>
-        /// </i>
-        /// </para>
-        /// </summary>
-        /// <param name="noteName"></param>
-        /// <param name="octave"></param>
-        /// <returns></returns>
-        public FadingAudio GetFadingAudio(NoteName noteName, int octave)
+		/// <summary>
+		/// Instantiates a new <see cref="SourceVoice"/> that contains the audiofile found by "<see cref="pianoFilesFolder"/> + 
+        /// <see cref="pianoSoundPrefix"/> + <paramref name="noteName"/> + <paramref name="octave"/> + <see cref="pianoSoundPrefix"/>"
+		/// </summary>
+		/// <param name="noteName"></param>
+		/// <param name="octave"></param>
+		/// <returns></returns>
+		public SourceVoice GetSourceVoice(NoteName noteName, int octave)
+		{
+            string file = pianoFilesFolder + pianoSoundPrefix + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
+			SoundStream stream = new(File.OpenRead(file));
+			WaveFormat waveFormat = stream.Format;
+			AudioBuffer buffer = new()
+			{
+				Stream = stream.ToDataStream(),
+				AudioBytes = (int)stream.Length,
+				Flags = BufferFlags.EndOfStream
+			};
+
+			SourceVoice sourceVoice = new SourceVoice(device, waveFormat, true);
+
+			sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
+			sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
+
+			return sourceVoice;
+		}
+
+		/// <summary>
+		/// Gets a new instance of <see cref="FadingAudio"/> using <paramref name="noteName"/> to get the correct file associated to the note. 
+		/// Increases or decreases the pitch of the audio according to <paramref name="octave"/>
+		/// <para>
+		/// <i>
+		/// <see cref="FadingAudio"/> can be used to Play, Stop and Stop(Fade-out) a <see cref="SourceVoice"/>
+		/// </i>
+		/// </para>
+		/// </summary>
+		/// <param name="noteName"></param>
+		/// <param name="octave"></param>
+		/// <returns></returns>
+		public FadingAudio GetFadingAudio(NoteName noteName, int octave)
         {
             float frequency = GetOctaveFrequencyRatio(octave);
             string pianoNoteString = noteName.ToString();
             string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
-            return new FadingAudio(GetAudioClip(pathToFile, frequency));
+            //return new FadingAudio(GetSourceVoice(pathToFile, frequency));
+            return new FadingAudio(GetSourceVoice(noteName, octave));
         }
 
         /// <summary>
