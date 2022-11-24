@@ -7,18 +7,18 @@ namespace BusinessLogic
     public class PianoLogic
     {
         /// <summary>
-		/// Sets octave and note for each key
-		/// </summary>
-		/// <param name="currentNote"></param>
-		/// <param name="currentOctave"></param>
-		public void UpdateOctaveAndNote(ref NoteName currentNote, ref Octave currentOctave)
-        {
-            if (currentNote.Equals(NoteName.B))
-            {
-                currentNote = NoteName.C;
-                currentOctave++;
-            }
-        }
+        /// Sets octave and note for each key
+        /// </summary>
+        /// <param name="currentNote"></param>
+        /// <param name="currentOctave"></param>
+        //public void UpdateOctaveAndNote(ref NoteName currentNote, ref Octave currentOctave)
+        //      {
+        //          if (currentNote.Equals(NoteName.B))
+        //          {
+        //              currentNote = NoteName.C;
+        //              currentOctave++;
+        //          }
+        //      }
 
         /// <summary>
         /// Creates the PianoKeys for the piano

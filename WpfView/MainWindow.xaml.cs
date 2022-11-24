@@ -3,7 +3,6 @@ using Controller;
 using Model;
 using System.Windows;
 using System.Windows.Input;
-using BusinessLogic;
 
 namespace WpfView
 {
@@ -36,7 +35,10 @@ namespace WpfView
             int intValue = (int)e.Key;
 
             PianoKey? key = PianoController.GetPressedPianoKey(intValue);
-            pianoGrid.DisplayPianoKey(key, true);
+            if (key is not null)
+            {
+                pianoGrid.DisplayPianoKey(key, true);
+            }
 
             if (e.Key == Key.CapsLock)
                 PianoLogic.SwapOctave(PianoController.Piano);
@@ -52,7 +54,10 @@ namespace WpfView
         {
             int intValue = (int)e.Key;
             PianoKey? key = PianoController.GetReleasedKey(intValue);
-            pianoGrid.DisplayPianoKey(key, false);
+            if (key is not null)
+            {
+                pianoGrid.DisplayPianoKey(key, false);
+            }
 
         }
     }
