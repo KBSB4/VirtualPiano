@@ -3,7 +3,7 @@
 namespace UnitTests
 {
     [TestFixture]
-    internal class Model_Piano_Keybindings_Unittest
+    internal class Model_Piano_Keybindings_Tests
     {
         private Piano piano;
 
@@ -39,7 +39,7 @@ namespace UnitTests
         [TestCase(23, MicrosoftKeybinds.U)]
 
 
-        public void PianoGetsCorrectKeys(int index, MicrosoftKeybinds m)
+        public void Piano_GetsCorrectKeys(int index, MicrosoftKeybinds m)
         {
 
             MicrosoftKeybinds test = piano.PianoKeys[index].MicrosoftBind;
