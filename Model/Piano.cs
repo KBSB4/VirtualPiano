@@ -17,7 +17,7 @@ namespace Model
 			AssembleKeyBindings();
 		}
 
-		//TODO Naar controller?
+		//TODO Naar controller!!!
 		/// <summary>
 		/// Sets octave and note for each key
 		/// </summary>

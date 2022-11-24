@@ -21,6 +21,12 @@ namespace Controller
             SoundPlayer = new("../../../../Controller/PianoSoundPlayer/Sounds/Piano/", "", ".wav");
         }
 
+        #region Piano Creation
+
+        //TODO Hier alle functies van Piano in model?
+
+        #endregion
+
         /// <summary>
         /// Figures out which key is pressed and set it to true + play audio
         /// </summary>
