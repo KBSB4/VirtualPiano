@@ -69,6 +69,7 @@ namespace WpfView
                     BorderThickness = new Thickness(1, 0, 1, 0),
                     BorderBrush = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
                 };
+
                 AddKey(whiteKeyGrid, buttons, i, whiteKeyButton);
 
                 blackKeyGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
