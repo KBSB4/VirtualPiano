@@ -17,13 +17,13 @@
                 <MenuItem x:Name="IsolatedPiano" Header="_Isolate Piano" IsCheckable="true"/>
             </MenuItem>
         </Menu>
-
     <Grid Background="#FF292929">
         <Grid.RowDefinitions>
             <RowDefinition Height="70*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
+            <Image x:Name="MainImage" Margin="1,1,1,1"/>
+            <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
         <Grid Name="BlackKeysGrid" Grid.Row="1" ZIndex="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="70*"></RowDefinition>
