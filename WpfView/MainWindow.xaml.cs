@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace WpfView
 {
@@ -239,6 +240,18 @@ namespace WpfView
                 MessageBox.Show("There is no MIDI playing right now.",
                 "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void UpdateMainImage(object sender, EventArgs e)
+        {
+                this.MainImage.Dispatcher.BeginInvoke(
+
+                    DispatcherPriority.Render,
+                    new Action(() =>
+                    {
+                        this.MainImage.Source = null;
+                        this.MainImage.Source = PianoGridGenerator.CreateBitmapSourceFromGdiBitmap(GraphicalVisualisation.DrawTrack(e.Track)); ;
+                    }));
         }
         #endregion
     }
