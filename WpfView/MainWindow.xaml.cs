@@ -16,8 +16,8 @@ namespace WpfView
         public MainWindow()
         {
             InitializeComponent();
-            pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             PianoController.CreatePiano();
+            pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
 
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;

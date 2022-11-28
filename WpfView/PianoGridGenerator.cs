@@ -1,5 +1,7 @@
-﻿using Model;
+﻿using Controller;
+using Model;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -68,6 +70,7 @@ namespace WpfView
                     Margin = new Thickness(0, 0, 0, 0),
                     BorderThickness = new Thickness(1, 0, 1, 0),
                     BorderBrush = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
+                    Padding = new Thickness(0, 200, 0, 0),
                 };
 
                 AddKey(whiteKeyGrid, buttons, i, whiteKeyButton);
@@ -80,12 +83,26 @@ namespace WpfView
                         Background = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
                         Margin = new Thickness((1920 / columnAmount) / 1.75d, 0, -15, 30),
                         BorderThickness = new Thickness(0, 0, 0, 0),
+                        Padding = new Thickness(0, 100, 0, 0),
+                        Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255))
                     };
                     AddKey(blackKeyGrid, buttons, i, blackKeyButton);
                 }
             }
             SetColumnWidth(whiteKeyGrid);
             SetColumnWidth(blackKeyGrid);
+
+            //todo: IMPROVE CODE
+            for (int i = 0; i < buttons.Count / 2; i++)
+            {
+                if (i < PianoController.Piano.PianoKeys.Count)
+                {
+                    //Ugly code
+                    buttons[i].Content = PianoController.Piano.PianoKeys[i].MicrosoftBind.ToString().ToLower().Last();
+                    buttons[i + 24].Content = PianoController.Piano.PianoKeys[i].MicrosoftBind.ToString().ToUpper().Last();
+                }
+            }
+
             return buttons;
         }
 
