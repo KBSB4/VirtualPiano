@@ -22,6 +22,12 @@ namespace WpfView
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
+
+            new MainMenu().Show();
+
+            //MainMenu page = new MainMenu();
+            //page.Show();
+            //service.Navigate(page);
         }
 
         /// <summary>

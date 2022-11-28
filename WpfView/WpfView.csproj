@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\DarkBackgroundStage.jpg" />
+    <None Remove="Images\PianoHeroLogo.png" />
+    <None Remove="Images\pianoIcon.png" />
+    <None Remove="Images\settingsIcon.png" />
     <None Remove="PianoHeroLogo.png" />
   </ItemGroup>
 
@@ -17,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\DarkBackgroundStage.jpg" />
+    <Resource Include="Images\PianoHeroLogo.png" />
+    <Resource Include="Images\pianoIcon.png" />
+    <Resource Include="Images\settingsIcon.png" />
     <Resource Include="PianoHeroLogo.png" />
   </ItemGroup>
 
