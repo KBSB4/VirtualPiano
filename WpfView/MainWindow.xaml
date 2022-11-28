@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="Piano Hero" Height="540" Width="960" Icon="/PianoHeroLogo.png"
         WindowState="Maximized" WindowStyle="SingleBorderWindow">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_MIDI">
+                <MenuItem Header="_Open" Click="OpenMIDIFileDialog" />
+                <MenuItem Header="_Play" Click="PlayMIDIFile" />
+                <MenuItem Header="_Stop" Click="StopMIDIFile" />
+                <Separator />
+                <MenuItem x:Name="IsolatedPiano" Header="_Isolate Piano" IsCheckable="true"/>
+            </MenuItem>
+        </Menu>
+
     <Grid Background="#FF292929">
         <Grid.RowDefinitions>
             <RowDefinition Height="70*"></RowDefinition>
@@ -20,5 +31,5 @@
             </Grid.RowDefinitions>
         </Grid>
     </Grid>
-
+    </DockPanel>
 </Window>
