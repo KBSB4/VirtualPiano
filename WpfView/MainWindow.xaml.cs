@@ -250,7 +250,7 @@ namespace WpfView
                     new Action(() =>
                     {
                         this.MainImage.Source = null;
-                        this.MainImage.Source = PianoGridGenerator.CreateBitmapSourceFromGdiBitmap(GraphicalVisualisation.DrawTrack(e.Track)); ;
+                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes());
                     }));
         }
         #endregion
