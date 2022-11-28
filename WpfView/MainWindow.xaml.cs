@@ -1,7 +1,10 @@
 ﻿using BusinessLogic;
 using Controller;
+using Microsoft.Win32;
 using Melanchall.DryWetMidi.Multimedia;
 using Model;
+using System;
+using System.Threading;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -152,5 +155,91 @@ namespace WpfView
             }
 
         }
+
+        #region MIDI
+        /// <summary>
+        /// Opens the dialog to select a MIDI file and open it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenMIDIFileDialog(object sender, RoutedEventArgs e)
+        {
+            if (t is null)
+            {
+                var openFileDialog = new OpenFileDialog();
+
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "MIDI Files (*.mid)|*.mid";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if ((bool)openFileDialog.ShowDialog())
+                {
+                    //Get the path of specified file
+                    MIDIController.OpenMidi(openFileDialog.FileName);
+                }
+            } else
+            {
+                MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
+                    "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        
+        //To play MIDIs without hogging the main thread
+        Thread t = null;
+
+        /// <summary>
+        /// Play MIDI File
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlayMIDIFile(object sender, RoutedEventArgs e)
+        {
+            Boolean isisolated = IsolatedPiano.IsChecked;
+            if (MIDIController.OriginalMIDI is not null && t is null)
+            {
+                //Play MIDI when program starts
+                t = new Thread(() =>
+                {
+                    MIDIController.PlayMidi(isisolated);
+                    t = null;
+                });
+                //Makes the thread close when application close
+                t.IsBackground = true;
+                t.Start();
+            } else
+            {
+                if(MIDIController.OriginalMIDI is null)
+                {
+                    MessageBox.Show("Select a MIDI File first before playing",
+                    "No MIDI selected", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
+                if(t is not null)
+                {
+                    MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
+                    "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Stop playing the MIDI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StopMIDIFile(object sender, RoutedEventArgs e)
+        {
+            if (t is not null)
+            {
+                t.Interrupt();
+                t = null;
+            } else
+            {
+                MessageBox.Show("There is no MIDI playing right now.",
+                "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
     }
 }
