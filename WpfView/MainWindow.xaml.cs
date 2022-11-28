@@ -23,7 +23,9 @@ namespace WpfView
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
-            new MainMenu().Show();
+            //new MainMenu().Show();
+
+            //Content = new MainMenu();
 
             //MainMenu page = new MainMenu();
             //page.Show();
