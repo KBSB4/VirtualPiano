@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Timer = System.Timers.Timer;
 
 namespace WpfView
 {
@@ -20,6 +21,7 @@ namespace WpfView
     public partial class MainWindow : Window
     {
         PianoGridGenerator pianoGrid;
+        Timer drawtimer = new Timer(33.33333);
 
         private static IInputDevice _inputDevice;
 
@@ -33,53 +35,10 @@ namespace WpfView
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
-            SongController.LoadSong();
-            SongController.PlaySong();
-            SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
-
-            _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
-            _inputDevice.EventReceived += OnMidiEventReceived;
-            _inputDevice.StartEventsListening();
-        }
-
-        private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
-        {
-            Dispatcher.Invoke(new Action(() =>
-            {
-                pianoGrid.DisplayPianoKey(e.Key);
-                //e.Key.PressedDown = true;
-
-                //PlayNote(e.Key);
-
-                //Thread t = new Thread(new ParameterizedThreadStart(PlayNote));
-                //t.Start(e.Key);
-
-                //new Thread(new ParameterizedThreadStart(PlayNote)).Start(e.Key);
-
-                //Debug.WriteLine("EventReceived!");
-                //PianoKey? pianoKey = PianoController.Piano.PianoKeys.Find(x => (e.Key.Note == x.Note) && (e.Key.Octave == x.Octave));
-                //if (pianoKey is null)
-                //{
-                //    Debug.WriteLine("But key is null");
-                //}
-                //else
-                //{
-                //    pianoKey.PressedDown = true;
-                //    Debug.WriteLine("Displaying key: " + pianoKey + " Pressed: " + pianoKey.PressedDown);
-                //    pianoGrid.DisplayPianoKey(pianoKey);
-                //}
-            }));
-        }
-
-        private void PlayNote(object? objec)
-        {
-            PianoKey pianoKey = (PianoKey)objec;
-
-            pianoGrid.DisplayPianoKey(pianoKey);
-
-            Thread.Sleep(pianoKey.Duration);
-            pianoKey.PressedDown = false;
-            pianoGrid.DisplayPianoKey(pianoKey);
+            //30FPS for practice notes
+            drawtimer.Elapsed += UpdateMainImage;
+            drawtimer.AutoReset = false;
+            drawtimer.Start();
         }
 
         /// <summary>
@@ -157,6 +116,7 @@ namespace WpfView
 
         }
 
+        //TODO Move functions to MIDIController
         #region MIDI
         /// <summary>
         /// Opens the dialog to select a MIDI file and open it
@@ -241,18 +201,18 @@ namespace WpfView
                 "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        #endregion
 
         private void UpdateMainImage(object sender, EventArgs e)
         {
                 this.MainImage.Dispatcher.BeginInvoke(
-
                     DispatcherPriority.Render,
                     new Action(() =>
                     {
                         this.MainImage.Source = null;
-                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes());
+                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano));
                     }));
+            drawtimer.Start();
         }
-        #endregion
     }
 }
