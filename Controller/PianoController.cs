@@ -63,7 +63,10 @@ namespace Controller
             int octave = (number / 12) - 1;
             int noteIndex = (number % 12);
 
-            PianoKey? key = Piano.PianoKeys.Find(x => (int)x.Note == noteIndex && (int)x.Octave == octave);
+
+
+
+			PianoKey? key = Piano.PianoKeys.Find(x => x.MicrosoftBind == (MicrosoftKeybinds)(99 + octave * noteIndex));
             if (key is not null)
             {
                 key.PressedDown = pressed;

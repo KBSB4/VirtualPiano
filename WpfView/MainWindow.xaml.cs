@@ -16,7 +16,7 @@ namespace WpfView
     {
         PianoGridGenerator pianoGrid;
 
-        //private static IInputDevice _inputDevice;
+        private static IInputDevice _inputDevice;
 
         public MainWindow()
         {
@@ -29,9 +29,9 @@ namespace WpfView
             this.KeyUp += KeyReleased;
             //this.KeyDown += OnEventReceived;
 
-            //_inputDevice = InputDevice.GetByName("Launchkey 49");
-            //_inputDevice.EventReceived += OnEventReceived;
-            //_inputDevice.StartEventsListening();
+            _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Keystation Mini 32");
+            _inputDevice.EventReceived += OnEventReceived;
+            _inputDevice.StartEventsListening();
         }
 
 
@@ -49,23 +49,25 @@ namespace WpfView
                 {
                     if (key.PressedDown)
                     {
+						PianoController.PlayPianoSound(key);
+						/*
+												//KeyPressed(null, new KeyEventArgs( , new PresentationSource(), 1, (Key)((int)key.MicrosoftBind)));
 
-                        //KeyPressed(null, new KeyEventArgs( , new PresentationSource(), 1, (Key)((int)key.MicrosoftBind)));
-                        PianoController.PlayPianoSound(key);
-                        pianoGrid.DisplayPianoKey(key);
+												pianoGrid.DisplayPianoKey(key);
 
-                        PianoKey testKey = new PianoKey(Octave.Two, Melanchall.DryWetMidi.MusicTheory.NoteName.C, MicrosoftKeybinds.D1);
-                        testKey.PressedDown = true;
-                        pianoGrid.DisplayPianoKey(testKey);
+												PianoKey testKey = new PianoKey(Octave.Two, Melanchall.DryWetMidi.MusicTheory.NoteName.C, MicrosoftKeybinds.D1);
+												testKey.PressedDown = true;
+												pianoGrid.DisplayPianoKey(testKey);
 
-                        KeyPressed(null, CreateKeyEVentArgs(key));
-                        WhiteKeysGrid.InvalidateVisual();
-                        //WhiteKeysGrid.Dispatcher.Invoke(EmptyDelegate, DispatcherPriority.Render);
-                    }
+												KeyPressed(null, CreateKeyEVentArgs(key));
+												WhiteKeysGrid.InvalidateVisual();
+												//WhiteKeysGrid.Dispatcher.Invoke(EmptyDelegate, DispatcherPriority.Render);
+						*/
+					}
                     else
                     {
                         PianoController.StopPianoSound(key);
-                        pianoGrid.DisplayPianoKey(key);
+                        //pianoGrid.DisplayPianoKey(key);
                     }
                 }
             }
