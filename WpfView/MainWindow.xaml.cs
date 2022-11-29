@@ -4,9 +4,11 @@ using Microsoft.Win32;
 using Model;
 using System;
 using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Timer = System.Timers.Timer;
 
 namespace WpfView
 {
@@ -16,6 +18,7 @@ namespace WpfView
     public partial class MainWindow : Window
     {
         PianoGridGenerator pianoGrid;
+        Timer drawtimer = new Timer(33.33333);
 
         public MainWindow()
         {
@@ -26,6 +29,11 @@ namespace WpfView
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
+
+            //30FPS for practice notes
+            drawtimer.Elapsed += UpdateMainImage;
+            drawtimer.AutoReset = false;
+            drawtimer.Start();
         }
 
         /// <summary>
@@ -65,6 +73,7 @@ namespace WpfView
 
         }
 
+        //TODO Move functions to MIDIController
         #region MIDI
         /// <summary>
         /// Opens the dialog to select a MIDI file and open it
@@ -149,18 +158,18 @@ namespace WpfView
                 "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        #endregion
 
         private void UpdateMainImage(object sender, EventArgs e)
         {
                 this.MainImage.Dispatcher.BeginInvoke(
-
                     DispatcherPriority.Render,
                     new Action(() =>
                     {
                         this.MainImage.Source = null;
-                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes());
+                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano));
                     }));
+            drawtimer.Start();
         }
-        #endregion
     }
 }
