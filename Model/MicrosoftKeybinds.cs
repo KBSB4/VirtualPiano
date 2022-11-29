@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Model
+﻿namespace Model
 {
     public enum MicrosoftKeybinds
     {
@@ -17,7 +11,7 @@ namespace Model
         D7 = 41,
         D8 = 42,
         D9 = 43,
-        D0 = 44,
+        D0 = 34,
         Q = 60,
         W = 66,
         E = 48,

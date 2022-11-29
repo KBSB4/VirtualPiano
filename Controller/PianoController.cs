@@ -1,4 +1,5 @@
 ﻿using BusinessLogic;
+using Melanchall.DryWetMidi.Core;
 using Model;
 using VirtualPiano.PianoSoundPlayer;
 
@@ -41,21 +42,47 @@ namespace Controller
                 if ((int)key.MicrosoftBind == intValue)
                 {
                     key.PressedDown = true;
-                    //Play 
-                    if (!currentPlayingAudio.ContainsKey(key))
-                    {
-                        FadingAudio fadingAudio = SoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
-
-                        if (fadingAudio != null)
-                        {
-                            fadingAudio.StartPlaying();
-							currentPlayingAudio.Add(key, fadingAudio);
-                        }
-					}
-					return key;
-				}
+                    return key;
+                }
             }
             return null;
+        }
+
+        public static PianoKey? ParseMidiNote(MidiEvent midiEvent)
+        {
+            //TODO if notenumber is not 2 characters
+            int number = int.Parse(midiEvent.ToString().Substring(13, 2));
+            //Debug.WriteLine(midiEvent);
+            bool pressed = int.Parse(midiEvent.ToString().Substring(17, 1)) != 0;
+
+            if (midiEvent.EventType == MidiEventType.NoteOff)
+            {
+                pressed = false;
+            }
+
+            int octave = (number / 12) - 1;
+            int noteIndex = (number % 12);
+
+            PianoKey? key = Piano.PianoKeys.Find(x => (int)x.Note == noteIndex && (int)x.Octave == octave);
+            if (key is not null)
+            {
+                key.PressedDown = pressed;
+            }
+            return key;
+        }
+
+        public static void PlayPianoSound(PianoKey key)
+        {
+            if (!currentPlayingAudio.ContainsKey(key))
+            {
+                FadingAudio fadingAudio = SoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
+
+                if (fadingAudio != null)
+                {
+                    fadingAudio.StartPlaying();
+                    currentPlayingAudio.Add(key, fadingAudio);
+                }
+            }
         }
 
         /// <summary>
@@ -70,16 +97,19 @@ namespace Controller
                 if ((int)key.MicrosoftBind == intValue)
                 {
                     key.PressedDown = false;
-                    //Stop playing
-                    if (currentPlayingAudio.ContainsKey(key))
-                    {
-						currentPlayingAudio[key].StopPlaying(50);
-						currentPlayingAudio.Remove(key);
-                    }
                     return key;
                 }
             }
             return null;
+        }
+
+        public static void StopPianoSound(PianoKey key)
+        {
+            if (currentPlayingAudio.ContainsKey(key))
+            {
+                currentPlayingAudio[key].StopPlaying(50);
+                currentPlayingAudio.Remove(key);
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Controller;
 using Model;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,11 +33,14 @@ namespace WpfView
         /// </summary>
         /// <param name="key"></param>
         /// <param name="pressed"></param>
-        public void DisplayPianoKey(PianoKey key, bool pressed)
+        public void DisplayPianoKey(PianoKey key)
         {
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
             Button currentButton = buttons[note];
+            bool pressed = key.PressedDown;
+
+            Debug.WriteLine("Key updated: " + pressed + key.Note + key.Octave);
 
             if (key.Note.ToString().Contains("Sharp"))
             {
@@ -46,6 +50,7 @@ namespace WpfView
             {
                 currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(72, 91, 190)) : new SolidColorBrush(Colors.White);
             }
+            currentButton.InvalidateVisual();
         }
 
         /// <summary>

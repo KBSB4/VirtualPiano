@@ -1,6 +1,9 @@
 ﻿using BusinessLogic;
 using Controller;
+using Melanchall.DryWetMidi.Multimedia;
 using Model;
+using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -13,6 +16,8 @@ namespace WpfView
     {
         PianoGridGenerator pianoGrid;
 
+        //private static IInputDevice _inputDevice;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -22,7 +27,50 @@ namespace WpfView
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
+            //this.KeyDown += OnEventReceived;
+
+            //_inputDevice = InputDevice.GetByName("Launchkey 49");
+            //_inputDevice.EventReceived += OnEventReceived;
+            //_inputDevice.StartEventsListening();
         }
+
+
+        private void OnEventReceived(object? sender, EventArgs e)
+        {
+            //var midiDevice = (MidiDevice)sender;
+
+            if (e is MidiEventReceivedEventArgs a)
+            {
+
+                Debug.WriteLine($"{a.Event}");
+                PianoKey? key = PianoController.ParseMidiNote(a.Event);
+
+                if (key is not null)
+                {
+                    if (key.PressedDown)
+                    {
+
+                        //KeyPressed(null, new KeyEventArgs( , new PresentationSource(), 1, (Key)((int)key.MicrosoftBind)));
+                        PianoController.PlayPianoSound(key);
+                        pianoGrid.DisplayPianoKey(key);
+
+                        PianoKey testKey = new PianoKey(Octave.Two, Melanchall.DryWetMidi.MusicTheory.NoteName.C, MicrosoftKeybinds.D1);
+                        testKey.PressedDown = true;
+                        pianoGrid.DisplayPianoKey(testKey);
+
+                        KeyPressed(null, CreateKeyEVentArgs(key));
+                        WhiteKeysGrid.InvalidateVisual();
+                        //WhiteKeysGrid.Dispatcher.Invoke(EmptyDelegate, DispatcherPriority.Render);
+                    }
+                    else
+                    {
+                        PianoController.StopPianoSound(key);
+                        pianoGrid.DisplayPianoKey(key);
+                    }
+                }
+            }
+        }
+        private static Action EmptyDelegate = delegate () { };
 
         /// <summary>
         /// Eventhandler for when the key gets pressed. Updates key and plays the audio
@@ -30,18 +78,38 @@ namespace WpfView
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        public void KeyPressed(object source, KeyEventArgs e)
+        public void KeyPressed(object? source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
 
             PianoKey? key = PianoController.GetPressedPianoKey(intValue);
             if (key is not null)
             {
-                pianoGrid.DisplayPianoKey(key, true);
+                pianoGrid.DisplayPianoKey(key);
+                PianoController.PlayPianoSound(key);
             }
 
             if (e.Key == Key.CapsLock)
                 PianoLogic.SwapOctave(PianoController.Piano);
+        }
+
+        public KeyEventArgs CreateKeyEVentArgs(PianoKey key)
+        {
+            switch (key.MicrosoftBind)
+            {
+                case MicrosoftKeybinds.D1:
+                    return new KeyEventArgs(null, null, 0, Key.D1);
+                    break;
+                case MicrosoftKeybinds.D2:
+                    return new KeyEventArgs(null, null, 0, Key.D2);
+                    break;
+                case MicrosoftKeybinds.D3:
+                    return new KeyEventArgs(null, null, 0, Key.D3);
+                    break;
+                default:
+                    return new KeyEventArgs(null, null, 0, Key.D5);
+                    break;
+            }
         }
 
         /// <summary>
@@ -56,7 +124,8 @@ namespace WpfView
             PianoKey? key = PianoController.GetReleasedKey(intValue);
             if (key is not null)
             {
-                pianoGrid.DisplayPianoKey(key, false);
+                PianoController.StopPianoSound(key);
+                pianoGrid.DisplayPianoKey(key);
             }
 
         }
