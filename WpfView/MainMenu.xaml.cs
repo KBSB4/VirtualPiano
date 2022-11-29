@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace WpfView
 {
@@ -10,6 +12,11 @@ namespace WpfView
         public MainMenu()
         {
             InitializeComponent();
+        }
+
+        private void FreePlay_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.NavigationService.Navigate(new Uri("FreePlayPiano.xaml", UriKind.Relative));
         }
     }
 }

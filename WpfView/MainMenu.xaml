@@ -5,12 +5,10 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfView"
       mc:Ignorable="d" 
-      d:DesignHeight="1080" d:DesignWidth="1920"
-      Title="MainMenu"
-        Name="test">
+      d:DesignHeight="1080" d:DesignWidth="1920">
 
     <Grid>
-        <Image HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Source="/Images/DarkBackgroundStage.jpg" Stretch="Fill"/>
+        <Image HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Source="/Images/PianoHeroMenuBackground.png" Stretch="Fill"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
@@ -26,41 +24,29 @@
             </Grid.RowDefinitions>
 
 
-            <Button Grid.Column="1" Grid.Row="1" Margin="20" Background="#00ffffff" BorderBrush="#00ffffff" Style="{StaticResource MenuButton}">
+            <Button Grid.Column="1" Grid.Row="1" Style="{StaticResource MenuButton}">
                 <Grid>
                     <Ellipse Fill="White"></Ellipse>
-                    <Image Source="/Images/SettingsIcon.png" Grid.Row="0" Margin="30"></Image>
+                    <Image Source="/Images/SettingsIcon.png" Margin="30"></Image>
                 </Grid>
             </Button>
             <Label Content="Admin" Grid.Row="1" Grid.Column="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50"></Label>
 
-
-            <Button Grid.Column="2" Grid.Row="1" Margin="20" Background="#00ffffff" BorderBrush="#00ffffff" Style="{StaticResource MenuButton}">
+            <Button Grid.Column="2" Grid.Row="1" Style="{StaticResource MenuButton}">
                 <Grid>
                     <Ellipse Fill="White"></Ellipse>
-                    <Image Source="/Images/PianoHeroLogo.png" Grid.Row="0" Margin="40"></Image>
+                    <Image Source="/Images/PianoHeroLogo.png" Margin="40"></Image>
                 </Grid>
             </Button>
             <Label Content="Play" Grid.Row="1" Grid.Column="2" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50"></Label>
 
-
-            <!--<Button Grid.Column="2" Grid.Row="1" Margin="20" Background="#00ffffff">
-                <Image Source="/Images/PianoHeroLogo.png"></Image>
-            </Button>-->
-
-            <Button Grid.Column="3" Grid.Row="1" Margin="20" Background="#00ffffff" BorderBrush="#00ffffff" Style="{StaticResource MenuButton}">
+            <Button Grid.Column="3" Grid.Row="1" Style="{StaticResource MenuButton}" Click="FreePlay_Button_Click">
                 <Grid>
                     <Ellipse Fill="White"></Ellipse>
-                    <Image Source="/Images/pianoIcon.png" Grid.Row="0" Margin="60"></Image>
+                    <Image Source="/Images/pianoIcon.png" Margin="60"></Image>
                 </Grid>
             </Button>
             <Label Content="Free-play" Grid.Row="1" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50"></Label>
-
-
-
-            <!--<Button Grid.Column="3" Grid.Row="1" Margin="20">
-                <Image Source="/Images/pianoIcon.png"></Image>
-            </Button>-->
         </Grid>
     </Grid>
 </Page>

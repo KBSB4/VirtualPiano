@@ -5,20 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfView"
         mc:Ignorable="d"
-        Title="Piano Hero" Height="540" Width="960" Icon="/PianoHeroLogo.png"
+        Title="Piano Hero" Height="540" Width="960" Icon="/PianoHeroLogo.png" 
         WindowState="Maximized" WindowStyle="SingleBorderWindow">
-    <Grid Background="#FF292929">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="70*"></RowDefinition>
-            <RowDefinition Height="30*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
-        <Grid Name="BlackKeysGrid" Grid.Row="1" ZIndex="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="70*"></RowDefinition>
-                <RowDefinition Height="30*"></RowDefinition>
-            </Grid.RowDefinitions>
-        </Grid>
-    </Grid>
+
+    <DockPanel>
+        <Frame x:Name="_NavigationFrame" NavigationUIVisibility="Hidden" />
+    </DockPanel>
 
 </Window>
