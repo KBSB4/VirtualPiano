@@ -27,18 +27,19 @@ namespace WpfView
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
-            //this.KeyDown += OnEventReceived;
 
-            _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Keystation Mini 32");
-            _inputDevice.EventReceived += OnEventReceived;
+            _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
+            _inputDevice.EventReceived += OnMidiEventReceived;
             _inputDevice.StartEventsListening();
         }
 
-
-        private void OnEventReceived(object? sender, EventArgs e)
+        /// <summary>
+        /// Event fired on MIDI-input
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMidiEventReceived(object? sender, EventArgs e)
         {
-            //var midiDevice = (MidiDevice)sender;
-
             if (e is MidiEventReceivedEventArgs a)
             {
 
@@ -49,25 +50,19 @@ namespace WpfView
                 {
                     if (key.PressedDown)
                     {
-						PianoController.PlayPianoSound(key);
-						/*
-												//KeyPressed(null, new KeyEventArgs( , new PresentationSource(), 1, (Key)((int)key.MicrosoftBind)));
-
-												pianoGrid.DisplayPianoKey(key);
-
-												PianoKey testKey = new PianoKey(Octave.Two, Melanchall.DryWetMidi.MusicTheory.NoteName.C, MicrosoftKeybinds.D1);
-												testKey.PressedDown = true;
-												pianoGrid.DisplayPianoKey(testKey);
-
-												KeyPressed(null, CreateKeyEVentArgs(key));
-												WhiteKeysGrid.InvalidateVisual();
-												//WhiteKeysGrid.Dispatcher.Invoke(EmptyDelegate, DispatcherPriority.Render);
-						*/
-					}
+                        PianoController.PlayPianoSound(key);
+                        Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            pianoGrid.DisplayPianoKey(key);
+                        }));
+                    }
                     else
                     {
                         PianoController.StopPianoSound(key);
-                        //pianoGrid.DisplayPianoKey(key);
+                        Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            pianoGrid.DisplayPianoKey(key);
+                        }));
                     }
                 }
             }
@@ -93,25 +88,6 @@ namespace WpfView
 
             if (e.Key == Key.CapsLock)
                 PianoLogic.SwapOctave(PianoController.Piano);
-        }
-
-        public KeyEventArgs CreateKeyEVentArgs(PianoKey key)
-        {
-            switch (key.MicrosoftBind)
-            {
-                case MicrosoftKeybinds.D1:
-                    return new KeyEventArgs(null, null, 0, Key.D1);
-                    break;
-                case MicrosoftKeybinds.D2:
-                    return new KeyEventArgs(null, null, 0, Key.D2);
-                    break;
-                case MicrosoftKeybinds.D3:
-                    return new KeyEventArgs(null, null, 0, Key.D3);
-                    break;
-                default:
-                    return new KeyEventArgs(null, null, 0, Key.D5);
-                    break;
-            }
         }
 
         /// <summary>

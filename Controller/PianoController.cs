@@ -48,25 +48,35 @@ namespace Controller
             return null;
         }
 
+        /// <summary>
+        /// Takes an MIDIevent as input and detects whether the key is pressed and what key this is
+        /// </summary>
+        /// <param name="midiEvent"></param>
+        /// <returns>The resulting pianokey</returns>
         public static PianoKey? ParseMidiNote(MidiEvent midiEvent)
         {
-            //TODO if notenumber is not 2 characters
-            int number = int.Parse(midiEvent.ToString().Substring(13, 2));
-            //Debug.WriteLine(midiEvent);
-            bool pressed = int.Parse(midiEvent.ToString().Substring(17, 1)) != 0;
-
-            if (midiEvent.EventType == MidiEventType.NoteOff)
+            int number;
+            bool pressed;
+            if (midiEvent is NoteOnEvent noteOnEvent)
             {
+                number = noteOnEvent.NoteNumber;
+                pressed = noteOnEvent.Velocity != 0;
+            }
+            else if (midiEvent is NoteOffEvent noteOffEvent)
+            {
+                number = noteOffEvent.NoteNumber;
                 pressed = false;
+            }
+            else
+            {
+                return null;
             }
 
             int octave = (number / 12) - 1;
             int noteIndex = (number % 12);
 
-
-
-
-			PianoKey? key = Piano.PianoKeys.Find(x => x.MicrosoftBind == (MicrosoftKeybinds)(99 + octave * noteIndex));
+            //PianoKey? key = Piano.PianoKeys.Find(x => x.MicrosoftBind == (MicrosoftKeybinds)(99 + octave * noteIndex));
+            PianoKey? key = Piano.PianoKeys.Find(x => ((int)x.Octave == octave) && ((int)x.Note == noteIndex));
             if (key is not null)
             {
                 key.PressedDown = pressed;

@@ -1,5 +1,4 @@
 ﻿using Melanchall.DryWetMidi.MusicTheory;
-using Model;
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
 
@@ -101,46 +100,48 @@ namespace VirtualPiano.PianoSoundPlayer
             return sourceVoice;
         }
 
-		/// <summary>
-		/// Instantiates a new <see cref="SourceVoice"/> that contains the audiofile found by "<see cref="pianoFilesFolder"/> + 
+        /// <summary>
+        /// Instantiates a new <see cref="SourceVoice"/> that contains the audiofile found by "<see cref="pianoFilesFolder"/> + 
         /// <see cref="pianoSoundPrefix"/> + <paramref name="noteName"/> + <paramref name="octave"/> + <see cref="pianoSoundPrefix"/>"
-		/// </summary>
-		/// <param name="noteName"></param>
-		/// <param name="octave"></param>
-		/// <returns></returns>
-		public SourceVoice GetSourceVoice(NoteName noteName, int octave)
-		{
+        /// </summary>
+        /// <param name="noteName"></param>
+        /// <param name="octave"></param>
+        /// <returns></returns>
+        public SourceVoice GetSourceVoice(NoteName noteName, int octave)
+        {
             string file = pianoFilesFolder + pianoSoundPrefix + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
-			SoundStream stream = new(File.OpenRead(file));
-			WaveFormat waveFormat = stream.Format;
-			AudioBuffer buffer = new()
-			{
-				Stream = stream.ToDataStream(),
-				AudioBytes = (int)stream.Length,
-				Flags = BufferFlags.EndOfStream
-			};
+            SoundStream stream = new(File.OpenRead(file));
+            WaveFormat waveFormat = stream.Format;
+            AudioBuffer buffer = new()
+            {
+                Stream = stream.ToDataStream(),
+                AudioBytes = (int)stream.Length,
+                Flags = BufferFlags.EndOfStream
+            };
 
-			SourceVoice sourceVoice = new SourceVoice(device, waveFormat, true);
+            SourceVoice sourceVoice = new SourceVoice(device, waveFormat, true);
 
-			sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
-			sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
+            sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
+            sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
 
-			return sourceVoice;
-		}
+            stream.Close();
 
-		/// <summary>
-		/// Gets a new instance of <see cref="FadingAudio"/> using <paramref name="noteName"/> to get the correct file associated to the note. 
-		/// Increases or decreases the pitch of the audio according to <paramref name="octave"/>
-		/// <para>
-		/// <i>
-		/// <see cref="FadingAudio"/> can be used to Play, Stop and Stop(Fade-out) a <see cref="SourceVoice"/>
-		/// </i>
-		/// </para>
-		/// </summary>
-		/// <param name="noteName"></param>
-		/// <param name="octave"></param>
-		/// <returns></returns>
-		public FadingAudio GetFadingAudio(NoteName noteName, int octave)
+            return sourceVoice;
+        }
+
+        /// <summary>
+        /// Gets a new instance of <see cref="FadingAudio"/> using <paramref name="noteName"/> to get the correct file associated to the note. 
+        /// Increases or decreases the pitch of the audio according to <paramref name="octave"/>
+        /// <para>
+        /// <i>
+        /// <see cref="FadingAudio"/> can be used to Play, Stop and Stop(Fade-out) a <see cref="SourceVoice"/>
+        /// </i>
+        /// </para>
+        /// </summary>
+        /// <param name="noteName"></param>
+        /// <param name="octave"></param>
+        /// <returns></returns>
+        public FadingAudio GetFadingAudio(NoteName noteName, int octave)
         {
             float frequency = GetOctaveFrequencyRatio(octave);
             string pianoNoteString = noteName.ToString();

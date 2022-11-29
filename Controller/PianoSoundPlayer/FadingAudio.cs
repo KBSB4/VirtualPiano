@@ -41,29 +41,48 @@ namespace VirtualPiano.PianoSoundPlayer
                 if (fadeOutSpeed == 0 || fadeOutSpeed > 1000)
                 {
                     sourceVoice.Stop();
-                    // sourceVoice.Dispose();
+                    //sourceVoice.Dispose();
                     // Disabled due to bug when playing many piano keys.
                     // Not needed because of GC
                 }
                 else
                 {
-                    new Thread(() =>
-                    {
-                        float volume = 0;
-                        sourceVoice.GetVolume(out volume);
-                        while (volume > 0)
-                        {
-                            volume -= fadeOutSpeed / 1000;
-                            sourceVoice.SetVolume(volume);
-                            Thread.Sleep(10);
-                        }
-                        sourceVoice.Stop();
-                        // sourceVoice.Dispose();
-                        // Disabled due to bug when playing many piano keys.
-                        // Not needed because of GC
-                    }).Start();
+                    ThreadPool.QueueUserWorkItem(DecreaseVolume, new object[] { fadeOutSpeed, sourceVoice });
+                    //new Thread(() =>
+                    //{
+                    //sourceVoice.GetVolume(out float volume);
+                    //while (volume > 0)
+                    //{
+                    //    volume -= fadeOutSpeed / 1000;
+                    //    sourceVoice.SetVolume(volume);
+                    //    Thread.Sleep(10);
+                    //}
+                    //sourceVoice.Stop();
+                    // sourceVoice.Dispose();
+                    // Disabled due to bug when playing many piano keys.
+                    // Not needed because of GC
+                    //}).Start();
                 }
             }
+        }
+
+        public static void DecreaseVolume(object? state)
+        {
+            if (state is not object[] array)
+            {
+                return;
+            }
+            float fadeOutSpeed = (float)array[0];
+            SourceVoice sourceVoice = (SourceVoice)array[1];
+            sourceVoice.GetVolume(out float volume);
+            while (volume > 0)
+            {
+                volume -= fadeOutSpeed / 1000;
+                sourceVoice.SetVolume(volume);
+                Thread.Sleep(10);
+            }
+            sourceVoice.Stop();
+            //sourceVoice.Dispose();
         }
     }
 }
