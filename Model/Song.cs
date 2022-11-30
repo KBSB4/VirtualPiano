@@ -1,4 +1,5 @@
 ﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Multimedia;
 using System.Diagnostics;
 
 namespace Model
@@ -30,7 +31,13 @@ namespace Model
         {
             SongTimerThread.Start();
             NotePlayed += Song_NotePlayed;
-            //File.Play(OutputDevice.GetByIndex(0));
+            new Thread(new ParameterizedThreadStart(PlayFile)).Start(File);
+        }
+
+        private void PlayFile(object? obj)
+        {
+            Thread.Sleep(70);
+            File.Play(OutputDevice.GetByIndex(0));
         }
 
         private void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
