@@ -26,6 +26,7 @@ namespace Model
             Note = note;
             TimeStamp = timeStamp;
             Duration = duration;
+            PressedDown = true;
         }
 
         public override string ToString()

@@ -4,6 +4,7 @@ using Melanchall.DryWetMidi.Multimedia;
 using Model;
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
@@ -28,9 +29,53 @@ namespace WpfView
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
+            SongController.LoadSong();
+            SongController.PlaySong();
+            SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
+
             _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
             _inputDevice.EventReceived += OnMidiEventReceived;
             _inputDevice.StartEventsListening();
+        }
+
+        private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                pianoGrid.DisplayPianoKey(e.Key);
+                //e.Key.PressedDown = true;
+
+                //PlayNote(e.Key);
+
+                //Thread t = new Thread(new ParameterizedThreadStart(PlayNote));
+                //t.Start(e.Key);
+
+                //new Thread(new ParameterizedThreadStart(PlayNote)).Start(e.Key);
+
+                //Debug.WriteLine("EventReceived!");
+                //PianoKey? pianoKey = PianoController.Piano.PianoKeys.Find(x => (e.Key.Note == x.Note) && (e.Key.Octave == x.Octave));
+                //if (pianoKey is null)
+                //{
+                //    Debug.WriteLine("But key is null");
+                //}
+                //else
+                //{
+                //    pianoKey.PressedDown = true;
+                //    Debug.WriteLine("Displaying key: " + pianoKey + " Pressed: " + pianoKey.PressedDown);
+                //    pianoGrid.DisplayPianoKey(pianoKey);
+                //}
+            }));
+        }
+
+        private void PlayNote(object? objec)
+        {
+            PianoKey pianoKey = (PianoKey)objec;
+
+            pianoGrid.DisplayPianoKey(pianoKey);
+
+            Thread.Sleep(pianoKey.Duration);
+            pianoKey.PressedDown = false;
+            pianoGrid.DisplayPianoKey(pianoKey);
         }
 
         /// <summary>

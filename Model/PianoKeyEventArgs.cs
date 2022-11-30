@@ -2,19 +2,17 @@
 {
     public class PianoKeyEventArgs : EventArgs
     {
-        private PianoKey pianoKey;
-
-        public PianoKey Keys { get; set; }
+        public PianoKey Key { get; set; }
         public TimeSpan Offset { get; set; }
-        public PianoKeyEventArgs(PianoKey keys, TimeSpan offset)
+        public PianoKeyEventArgs(PianoKey key, TimeSpan offset)
         {
-            Keys = keys;
+            Key = key;
             Offset = offset;
         }
 
         public PianoKeyEventArgs(PianoKey pianoKey)
         {
-            this.pianoKey = pianoKey;
+            Key = pianoKey;
         }
     }
 }

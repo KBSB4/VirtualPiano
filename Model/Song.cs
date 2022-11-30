@@ -1,5 +1,5 @@
 ﻿using Melanchall.DryWetMidi.Core;
-using Melanchall.DryWetMidi.Multimedia;
+using System.Diagnostics;
 
 namespace Model
 {
@@ -28,15 +28,29 @@ namespace Model
 
         public void Play()
         {
-            NotePlayed += Song_NotePlayed;
             SongTimerThread.Start();
-            File.Play(OutputDevice.GetByIndex(0));
+            NotePlayed += Song_NotePlayed;
+            //File.Play(OutputDevice.GetByIndex(0));
         }
 
         private void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
-            Console.WriteLine("Note Played");
-            Console.WriteLine(e.Keys);
+            Debug.WriteLine("Note Played");
+            if (e.Key.PressedDown)
+            {
+                new Thread(new ParameterizedThreadStart(PlayNote)).Start(e.Key);
+
+            }
+            //Console.WriteLine(e.Key.ToString());
+        }
+
+        private void PlayNote(object? obj)
+        {
+            PianoKey pianoKey = (PianoKey)obj;
+
+            Thread.Sleep(pianoKey.Duration);
+            pianoKey.PressedDown = false;
+            NotePlayed?.Invoke(this, new PianoKeyEventArgs(pianoKey));
         }
 
         public void Stop()
@@ -54,11 +68,10 @@ namespace Model
             while (PianoKeys.Count > 0)
             {
                 PianoKey pianoKey = PianoKeys.Dequeue();
-                //TimeInSong = File.
+                NotePlayed?.Invoke(this, new PianoKeyEventArgs(pianoKey));
                 Thread.Sleep(pianoKey.TimeStamp - TimeInSong);
                 TimeInSong = pianoKey.TimeStamp;
-                Console.WriteLine(pianoKey.ToString());
-                NotePlayed?.Invoke(this, new PianoKeyEventArgs(pianoKey));
+                Debug.WriteLine(pianoKey.ToString());
             }
         }
     }

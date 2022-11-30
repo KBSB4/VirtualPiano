@@ -8,7 +8,7 @@ namespace Model
 
         public static MidiFile? RetrieveMidiFile()
         {
-            return MidiFile.Read("..\\..\\..\\PianoSoundPlayer\\testMidiFile.mid");
+            return MidiFile.Read("..\\..\\..\\..\\Controller\\PianoSoundPlayer\\twinkle-twinkle-little-star.mid");
             //return null;
             //Midibestanden ophalen
         }
