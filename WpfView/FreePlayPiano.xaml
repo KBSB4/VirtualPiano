@@ -14,7 +14,7 @@
             <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
-        <Grid Name="BlackKeysGrid" Grid.Row="1" ZIndex="1">
+        <Grid Name="BlackKeysGrid" Grid.Row="1" ZIndex="1" Focusable="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="70*"></RowDefinition>
                 <RowDefinition Height="30*"></RowDefinition>

@@ -3,6 +3,7 @@ using Controller;
 using Melanchall.DryWetMidi.Multimedia;
 using Model;
 using System;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -15,22 +16,34 @@ namespace WpfView
     {
         PianoGridGenerator pianoGrid;
 
-        private static IInputDevice _inputDevice;
+        private static IInputDevice? _inputDevice;
 
         public FreePlayPiano()
         {
             InitializeComponent();
-            pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
 
             //Add keydown event for the keys
+            Debug.WriteLine(WhiteKeysGrid.Focus());
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
-            _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
-            _inputDevice.EventReceived += OnMidiEventReceived;
-            _inputDevice.StartEventsListening();
+            try
+            {
+                _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
+                _inputDevice.EventReceived += OnMidiEventReceived;
+                _inputDevice.StartEventsListening();
+            }
+            catch (ArgumentException e)
+            {
+                Debug.WriteLine("No midi device found");
+                Debug.WriteLine("Exception information:");
+                Debug.IndentLevel = 1;
+                Debug.WriteLine(e.Message);
+                Debug.IndentLevel = 0;
+                _inputDevice = null;
+            }
         }
 
         /// <summary>

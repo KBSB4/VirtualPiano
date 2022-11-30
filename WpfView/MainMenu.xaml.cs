@@ -17,6 +17,7 @@ namespace WpfView
         private void FreePlay_Button_Click(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new Uri("FreePlayPiano.xaml", UriKind.Relative));
+            //MoveFocus(new TraversalRequest(0));
             //Also possible (no string usage) but might make a new one every time
             //this.NavigationService.Navigate(new FreePlayPiano());
         }
