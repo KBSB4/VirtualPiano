@@ -107,6 +107,7 @@ namespace WpfView
                     buttons[i + 24].Content = PianoController.Piano.PianoKeys[i].MicrosoftBind.ToString().ToUpper().Last();
                 }
             }
+            buttons[0].Focus();
 
             return buttons;
         }

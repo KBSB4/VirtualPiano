@@ -25,7 +25,10 @@ namespace WpfView
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
 
             //Add keydown event for the keys
-            Debug.WriteLine(WhiteKeysGrid.Focus());
+            //this.Loaded += (s, e) => WhiteKeysGrid.Focus();
+
+            //this.Focus();
+            //Debug.WriteLine(WhiteKeysGrid.Focus());
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
