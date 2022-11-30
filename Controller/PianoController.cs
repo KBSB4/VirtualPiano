@@ -39,7 +39,7 @@ namespace Controller
         {
             foreach (var key in Piano.PianoKeys)
             {
-                if ((int)key.MicrosoftBind == intValue)
+                if ((int)key.KeyBind == intValue)
                 {
                     key.PressedDown = true;
                     return key;
@@ -107,7 +107,7 @@ namespace Controller
         {
             foreach (var key in Piano.PianoKeys)
             {
-                if ((int)key.MicrosoftBind == intValue)
+                if ((int)key.KeyBind == intValue)
                 {
                     key.PressedDown = false;
                     return key;

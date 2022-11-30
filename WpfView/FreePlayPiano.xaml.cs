@@ -35,6 +35,7 @@ namespace WpfView
             try
             {
                 _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
+                //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetAll();
                 _inputDevice.EventReceived += OnMidiEventReceived;
                 _inputDevice.StartEventsListening();
             }

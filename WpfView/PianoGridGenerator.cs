@@ -103,8 +103,8 @@ namespace WpfView
                 if (i < PianoController.Piano.PianoKeys.Count)
                 {
                     //Ugly code
-                    buttons[i].Content = PianoController.Piano.PianoKeys[i].MicrosoftBind.ToString().ToLower().Last();
-                    buttons[i + 24].Content = PianoController.Piano.PianoKeys[i].MicrosoftBind.ToString().ToUpper().Last();
+                    buttons[i].Content = PianoController.Piano.PianoKeys[i].KeyBind.ToString().ToLower().Last();
+                    buttons[i + 24].Content = PianoController.Piano.PianoKeys[i].KeyBind.ToString().ToUpper().Last();
                 }
             }
             buttons[0].Focus();

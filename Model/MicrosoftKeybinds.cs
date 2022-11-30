@@ -1,6 +1,6 @@
 ﻿namespace Model
 {
-    public enum MicrosoftKeybinds
+    public enum KeyBind
     {
         D1 = 35,
         D2 = 36,
