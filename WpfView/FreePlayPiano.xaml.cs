@@ -1,6 +1,8 @@
 ﻿using BusinessLogic;
 using Controller;
+using Melanchall.DryWetMidi.Multimedia;
 using Model;
+using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -13,15 +15,51 @@ namespace WpfView
     {
         PianoGridGenerator pianoGrid;
 
+        private static IInputDevice _inputDevice;
+
         public FreePlayPiano()
         {
             InitializeComponent();
-            pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             PianoController.CreatePiano();
+            pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
 
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
+
+            _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
+            _inputDevice.EventReceived += OnMidiEventReceived;
+            _inputDevice.StartEventsListening();
+        }
+
+        /// <summary>
+        /// Event fired on MIDI-input
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
+        {
+            PianoKey? key = PianoController.ParseMidiNote(e.Event);
+
+            if (key is not null)
+            {
+                if (key.PressedDown)
+                {
+                    PianoController.PlayPianoSound(key);
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        pianoGrid.DisplayPianoKey(key);
+                    }));
+                }
+                else
+                {
+                    PianoController.StopPianoSound(key);
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        pianoGrid.DisplayPianoKey(key);
+                    }));
+                }
+            }
         }
 
         /// <summary>
@@ -30,14 +68,15 @@ namespace WpfView
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        public void KeyPressed(object source, KeyEventArgs e)
+        public void KeyPressed(object? source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
 
             PianoKey? key = PianoController.GetPressedPianoKey(intValue);
             if (key is not null)
             {
-                pianoGrid.DisplayPianoKey(key, true);
+                pianoGrid.DisplayPianoKey(key);
+                PianoController.PlayPianoSound(key);
             }
 
             if (e.Key == Key.CapsLock)
@@ -56,7 +95,8 @@ namespace WpfView
             PianoKey? key = PianoController.GetReleasedKey(intValue);
             if (key is not null)
             {
-                pianoGrid.DisplayPianoKey(key, false);
+                PianoController.StopPianoSound(key);
+                pianoGrid.DisplayPianoKey(key);
             }
 
         }
