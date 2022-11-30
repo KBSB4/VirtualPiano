@@ -57,14 +57,7 @@ namespace WpfView
         {
             if (MIDIController.OriginalMIDI is null || MIDIController.AllNotes is null || MainWindow.t is null) { return bitmap; };
 
-            //TODO We need to keep tempo changes in check
-
-            //Check notes for next 3 seconds
-            //Save them
-            //Check which ones should be gone
-            //Move current ones down
-            //Add new ones at top
-
+            //TODO Is this fast enough to keep up with the MIDI?
             foreach (Note note in MIDIController.AllNotes)
             {
                 if (note.Time > (int)MIDIController.CurrentTick && note.Time <= (int)MIDIController.CurrentTick + 5000)
