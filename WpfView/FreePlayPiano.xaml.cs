@@ -1,12 +1,4 @@
-﻿using BusinessLogic;
-using Controller;
-using Melanchall.DryWetMidi.Multimedia;
-using Model;
-using System;
-using System.Windows.Controls;
-using System.Windows.Input;
-
-namespace WpfView
+﻿namespace WpfView
 {
     /// <summary>
     /// Interaction logic for FreePlayPiano.xaml
@@ -20,6 +12,7 @@ namespace WpfView
         public FreePlayPiano()
         {
             InitializeComponent();
+            pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
 
