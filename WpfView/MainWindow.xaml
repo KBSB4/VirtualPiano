@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfView"
         mc:Ignorable="d"
-        Title="Piano Hero" Height="540" Width="960"
+        Title="Piano Hero" Height="540" Width="960" Icon="/PianoHeroLogo.png"
         WindowState="Maximized" WindowStyle="SingleBorderWindow">
-    <Grid Background="#FF444242">
+    <Grid Background="#FF292929">
         <Grid.RowDefinitions>
             <RowDefinition Height="70*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
