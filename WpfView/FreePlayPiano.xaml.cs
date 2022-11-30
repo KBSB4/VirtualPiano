@@ -118,5 +118,10 @@ namespace WpfView
             }
 
         }
+
+        private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new MainMenu());
+        }
     }
 }

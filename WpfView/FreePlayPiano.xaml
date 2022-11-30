@@ -20,5 +20,15 @@
                 <RowDefinition Height="30*"></RowDefinition>
             </Grid.RowDefinitions>
         </Grid>
+
+        <Menu Grid.Row="0" DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
+            <MenuItem Header="PianoHero MainMenu" Height="30" Click="MainMenu_Click" Foreground="White"  >
+                <MenuItem.Icon>
+                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+
+
     </Grid>
 </Page>

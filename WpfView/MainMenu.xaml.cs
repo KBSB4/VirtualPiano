@@ -19,5 +19,10 @@ namespace WpfView
             //Also possible (no string usage) but might make a new one every time
             this.NavigationService.Navigate(new FreePlayPiano());
         }
+
+        private void Admin_Button_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new AdminPanel());
+        }
     }
 }
