@@ -1,5 +1,7 @@
 ﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
+using System.Diagnostics;
 
 namespace Controller
 {
@@ -8,6 +10,9 @@ namespace Controller
         public static MidiFile OriginalMIDI { get; set; }
         private static MidiFile MIDI { get; set; }
         private static MidiFile MIDIPianoIsolated { get; set; }
+        public static Note[] AllNotes { get; set; }
+        public static MidiTimeSpan CurrentTick { get; set; }
+
 
         //Note PlayBack has events notesplaybackstarted and notesplaybackfinished
 
@@ -20,9 +25,9 @@ namespace Controller
             OriginalMIDI = MidiFile.Read(MIDIpath);
 
             //Get all tracks in the MIDI
-            List<TrackChunk> trackChunks = TrackChunkUtilities.GetTrackChunks(OriginalMIDI).ToList();
+            List<TrackChunk> trackChunks = Melanchall.DryWetMidi.Core.TrackChunkUtilities.GetTrackChunks(OriginalMIDI).ToList();
 
-            //UNDONE Figure out which track is piano (might be impossible, must be done in database or get highest amount of notes)
+            //UNDONE Figure out which track is piano/sythensizer (might be impossible, must be done in database)
             TrackChunk pianoTrackChunks = trackChunks[1];
             MIDIPianoIsolated = new(pianoTrackChunks);
 
@@ -50,13 +55,50 @@ namespace Controller
                     }
                     else
                     {
-                        OriginalMIDI?.Play(outputDevice);
+                        var _playback = OriginalMIDI?.GetPlayback(outputDevice, new PlaybackSettings
+                        {
+                            ClockSettings = new MidiClockSettings
+                            {
+                                CreateTickGeneratorCallback = () => new RegularPrecisionTickGenerator()
+                            }
+                        });
+
+                        _playback.NotesPlaybackStarted += OnNotesPlaybackStarted;
+                        PlaybackCurrentTimeWatcher.Instance.AddPlayback(_playback, TimeSpanType.Midi);
+                        PlaybackCurrentTimeWatcher.Instance.CurrentTimeChanged += OnCurrentTimeChanged;
+                        PlaybackCurrentTimeWatcher.Instance.Start();
+
+                        AllNotes = MIDIController.OriginalMIDI.GetNotes().ToArray();
+                        _playback.Start();
+
+                        SpinWait.SpinUntil(() => !_playback.IsRunning);
+
+                        Console.WriteLine("Playback stopped or finished.");
+
+                        outputDevice.Dispose();
+                        _playback.Dispose();
                     }
                 }
                 catch (ThreadInterruptedException ex)
                 {
                     //Ignore
                 }
+            }
+        }
+
+        private static void OnNotesPlaybackStarted(object sender, NotesEventArgs e)
+        {
+            //For the future
+        }
+
+        private static void OnCurrentTimeChanged(object sender, PlaybackCurrentTimeChangedEventArgs e)
+        {
+            //Current tick
+            foreach (var playbackTime in e.Times)
+            {
+                CurrentTick = (MidiTimeSpan)playbackTime.Time;
+
+                Debug.WriteLine($"Current time is {CurrentTick}.");
             }
         }
     }

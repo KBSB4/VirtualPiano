@@ -1,5 +1,6 @@
 ﻿using BusinessLogic;
 using Controller;
+using Melanchall.DryWetMidi.Interaction;
 using Microsoft.Win32;
 using Model;
 using System;
@@ -18,7 +19,8 @@ namespace WpfView
     public partial class MainWindow : Window
     {
         PianoGridGenerator pianoGrid;
-        Timer drawtimer = new Timer(33.33333);
+        // 30 frames / 1 second = 33.3333... ms
+        Timer drawtimer = new(1000);
 
         public MainWindow()
         {
@@ -30,6 +32,7 @@ namespace WpfView
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
+            //UNDONE CRASHES APPLICATION WHEN DOING MULTIPLE NOTES
             //30FPS for practice notes
             drawtimer.Elapsed += UpdateMainImage;
             drawtimer.AutoReset = false;
@@ -104,7 +107,8 @@ namespace WpfView
         }
         
         //To play MIDIs without hogging the main thread
-        Thread t = null;
+        //TODO is this smart?
+        public static Thread t = null;
 
         /// <summary>
         /// Play MIDI File
