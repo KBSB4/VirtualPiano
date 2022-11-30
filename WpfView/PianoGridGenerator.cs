@@ -27,6 +27,7 @@ namespace WpfView
         {
             if (columnAmount < 0)
             {
+                buttons = new();
                 return;
             }
             buttons = AddPianoKeys(whiteKeyGrid, blackKeyGrid, columnAmount);

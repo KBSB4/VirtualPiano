@@ -1,4 +1,12 @@
-﻿namespace WpfView
+﻿using BusinessLogic;
+using Controller;
+using Melanchall.DryWetMidi.Multimedia;
+using Model;
+using System;
+using System.Windows.Controls;
+using System.Windows.Input;
+
+namespace WpfView
 {
     /// <summary>
     /// Interaction logic for FreePlayPiano.xaml

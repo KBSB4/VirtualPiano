@@ -1,4 +1,6 @@
-﻿namespace WpfView
+﻿using System.Windows;
+
+namespace WpfView
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
