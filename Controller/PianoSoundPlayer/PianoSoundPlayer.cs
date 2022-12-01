@@ -109,6 +109,7 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <returns></returns>
         public SourceVoice GetSourceVoice(NoteName noteName, int octave)
         {
+            //TODO Make cache of sourceVoice so we dont keep pulling it from files
             string file = pianoFilesFolder + pianoSoundPrefix + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
             SoundStream stream = new(File.OpenRead(file));
             WaveFormat waveFormat = stream.Format;

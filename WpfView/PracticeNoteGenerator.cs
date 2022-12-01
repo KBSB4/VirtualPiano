@@ -5,24 +5,35 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace WpfView
 {
-    //UNDONE Work In Progress
     public static class PracticeNoteGenerator
     {
-        //TODO Dicitonary with object for display?
         private static Dictionary<PianoKey, Rectangle> CurrentNotesDisplaying { get; set; } = new();
 
+        /// <summary>
+        /// Main function that calls the rest
+        /// </summary>
+        /// <param name="piano"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static Bitmap DrawNotes(Piano piano, PianoKey key)
         {
             Bitmap bitmap = new(550, 200);
 
             bitmap = DrawInitialScreen(bitmap, piano);
-            bitmap = DrawPracticeNotes(bitmap, piano, key);
+
+            //Prevents flicker
+            if (key is not null)
+            {
+                AddNewNotes(piano, key);
+                return null;
+            }
+
+            bitmap = UpdateView(bitmap);
             //TODO Function: Key visualisation (show if correct pressed or not)
             bitmap = DrawKeyVisualisation(bitmap);
 
@@ -30,10 +41,11 @@ namespace WpfView
         }
 
         /// <summary>
-        /// This could be used to draw lines to better visualise the 'lanes' for the practice notes
+        /// Draw lines that act as lanes for the practice notes
         /// </summary>
         /// <param name="bitmap"></param>
-        /// <returns>The same bitmap in the parameter but edited</returns>
+        /// <param name="piano"></param>
+        /// <returns><param name="bitmap"></param></returns>
         private static Bitmap DrawInitialScreen(Bitmap bitmap, Piano piano)
         {
             using (Graphics g = Graphics.FromImage(bitmap))
@@ -42,7 +54,7 @@ namespace WpfView
                 for (int i = 1; i <= 48; i++)
                 {
                     //TODO Fix line positions
-                    g.DrawLine(new System.Drawing.Pen(new SolidBrush(System.Drawing.Color.Black)), 19 * i, 0, 19 * i, 200);
+                    g.DrawLine(new System.Drawing.Pen(new SolidBrush(System.Drawing.Color.Black)), 20 * i, -500, 20 * i, 500);
                     //TODO add sharps
                 }
             }
@@ -50,36 +62,36 @@ namespace WpfView
         }
 
         /// <summary>
-        /// This will be used to draw practice notes on the screen including the movement down and deletion
+        /// Adds new notes to display to the player
         /// </summary>
-        /// <param name="bitmap"></param>
-        /// <returns>The same bitmap in the parameter but edited</returns>
-        private static Bitmap DrawPracticeNotes(Bitmap bitmap, Piano piano, PianoKey? pianokey)
+        /// <param name="piano"></param>
+        /// <param name="pianokey"></param>
+        private static void AddNewNotes(Piano piano, PianoKey? pianokey)
         {
-            if (MIDIController.OriginalMIDI is null || MIDIController.AllNotes is null || MainWindow.t is null) { return bitmap; };
+            if (MIDIController.OriginalMIDI is null || MIDIController.AllNotes is null || MainWindow.t is null) { return; };
 
             if (pianokey is not null && !CurrentNotesDisplaying.ContainsKey(pianokey))
             {
-                    //Add new notes
-                    //Set x and size
-                    int x = 0;
-                    int size = (int)pianokey.Duration / 100;
-                    //TODO SHARPS
-                    x = piano.PianoKeys.FindIndex(x => x.Note == pianokey.Note)*19;
-                   
-                    //Create a new rectangle that visualises the note
-                    //Offset by its size so it plays at the start of the note and not at the end
-                    Rectangle rect = new Rectangle(x, 0 - size, 18, size);
-                    CurrentNotesDisplaying.Add(pianokey, rect);
-            } else
-            {
-                UpdateExistingNotes(bitmap);
-            }
+                //Add new notes
+                //Set x and size
+                int x = 0;
+                int size = (int)pianokey.Duration / 100;
+                //TODO SHARPS
+                x = piano.PianoKeys.FindIndex(x => x.Note == pianokey.Note) * 20 + 1;
 
-            return bitmap;
+                //Create a new rectangle that visualises the note
+                //Offset by its size so it plays at the start of the note and not at the end
+                Rectangle rect = new Rectangle(x, 0 - size, 18, size);
+                CurrentNotesDisplaying.Add(pianokey, rect);
+            }
         }
 
-        private static void UpdateExistingNotes(Bitmap bitmap)
+        /// <summary>
+        /// Updates the bitmap to show all notes that are placed
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns><param name="bitmap"></param></returns>
+        private static Bitmap UpdateView(Bitmap bitmap)
         {
             foreach (PianoKey pk in CurrentNotesDisplaying.Keys)
             {
@@ -94,15 +106,22 @@ namespace WpfView
                     using (Graphics g = Graphics.FromImage(bitmap))
                     {
                         Rectangle rect = CurrentNotesDisplaying[pk];
-                        rect.Y += 5; //TODO This should be based on the tempo
+                        //TODO This should be based on the tempo, however this might need to be done with a faster timer. Unfortunately a faster timer also crashes the program
+                        rect.Y += 5;
                         g.FillRectangle(GetPianoKeyColour(pk), rect);
                         //Save new position
                         CurrentNotesDisplaying[pk] = rect;
                     }
                 }
             }
+            return bitmap;
         }
 
+        /// <summary>
+        /// Finds the right colour for the right note
+        /// </summary>
+        /// <param name="pianokey"></param>
+        /// <returns>SolidBrush</returns>
         private static SolidBrush GetPianoKeyColour(PianoKey pianokey)
         {
             SolidBrush solidBrush;
@@ -174,7 +193,7 @@ namespace WpfView
         public static BitmapSource CreateBitmapSourceFromGdiBitmap(Bitmap bitmap)
         {
             if (bitmap == null)
-                throw new ArgumentNullException(nameof(bitmap));
+                return null;
 
             var rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 
