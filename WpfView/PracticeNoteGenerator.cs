@@ -71,12 +71,15 @@ namespace WpfView
                             Rectangle rect = new Rectangle(i*19, 20, 19, (int)note.Length/ 100); //TODO Calculate position and colour
                             g.FillRectangle(new System.Drawing.SolidBrush(System.Drawing.Color.Red), rect);
                             CurrentNotesDisplaying.Add(note, rect);
+
+                            //Note: Will get deleted when positions are added
                             i++;
 
                             if(i>= 48)
                             {
                                 i = 0;
                             }
+                            //
                         }
                     } else
                     {
