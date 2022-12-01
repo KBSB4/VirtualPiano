@@ -41,7 +41,7 @@ namespace Model
 		{
 			SongTimerThread = new Thread(() =>
 			{
-				Stopwatch.StartNew();
+				SongTimer = Stopwatch.StartNew();
 				PianoKey nextKey = PianoKeys.Dequeue();
 
 				while (nextKey != null)

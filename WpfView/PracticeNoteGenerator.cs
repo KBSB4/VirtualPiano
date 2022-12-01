@@ -65,13 +65,13 @@ namespace WpfView
                     //Set x and size
                     int x = 0;
                     int size = (int)pianokey.Duration / 100;
-                    //x = piano.PianoKeys.IndexOf(pianokey) * 19;
-                    x = 20;
-                    int y = 20;
+                    x = piano.PianoKeys.IndexOf(pianokey) * 19;
+                    x = 20
+                    
 
                     //Create a new rectangle that visualises the note
                     //Offset by its size so it plays at the start of the note and not at the end
-                    Rectangle rect = new Rectangle(x, y, 18, size);
+                    Rectangle rect = new Rectangle(x, 0 - size, 18, size);
 
                     //g.FillRectangle(GetPianoKeyColour(pianokey), rect);
                     CurrentNotesDisplaying.Add(pianokey, rect);
@@ -88,7 +88,7 @@ namespace WpfView
             foreach (PianoKey pk in CurrentNotesDisplaying.Keys)
             {
                 //If it has been played -> delete, otherwise move it down
-                if (pk.TimeStamp <= (int)MIDIController.CurrentTick)
+                if (pk.TimeStamp >= SongController.CurrentSong.SongTimer.ElapsedMilliseconds)
                 {
                     CurrentNotesDisplaying.Remove(pk);
                 }
