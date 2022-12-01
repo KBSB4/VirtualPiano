@@ -30,7 +30,7 @@
                     <Image Source="/Images/SettingsIcon.png" Margin="30"></Image>
                 </Grid>
             </Button>
-            <Label Grid.Row="1" Grid.Column="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Admin</Label>
+            <Label Grid.Row="1" Grid.Column="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Settings</Label>
 
             <Button Grid.Column="2" Grid.Row="1" Style="{StaticResource MenuButton}">
                 <Grid>

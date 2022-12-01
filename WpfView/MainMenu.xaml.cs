@@ -9,12 +9,12 @@ namespace WpfView
     public partial class MainMenu : Page
     {
         private FreePlayPiano _freeplay;
-        private AdminPanel _adminPanel;
+        private SettingsPage _adminPanel;
         public MainMenu()
         {
             InitializeComponent();
             _freeplay = new FreePlayPiano(this);
-            _adminPanel = new AdminPanel(this);
+            _adminPanel = new SettingsPage(this);
 
         }
 

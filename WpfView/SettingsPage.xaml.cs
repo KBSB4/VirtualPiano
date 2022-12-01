@@ -16,12 +16,12 @@ using System.Windows.Shapes;
 namespace WpfView
 {
     /// <summary>
-    /// Interaction logic for AdminPanel.xaml
+    /// Interaction logic for SettingsPage.xaml
     /// </summary>
-    public partial class AdminPanel : Page
+    public partial class SettingsPage : Page
     {
         private MainMenu _mainMenu;
-        public AdminPanel(MainMenu mainMenu)
+        public SettingsPage(MainMenu mainMenu)
         {
             InitializeComponent();
             _mainMenu = mainMenu;
