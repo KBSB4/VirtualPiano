@@ -53,10 +53,11 @@ namespace WpfView
         /// </summary>
         /// <param name="bitmap"></param>
         /// <returns>The same bitmap in the parameter but edited</returns>
+
         private static Bitmap DrawPracticeNotes(Bitmap bitmap)
         {
+            int i = 0;
             if (MIDIController.OriginalMIDI is null || MIDIController.AllNotes is null || MainWindow.t is null) { return bitmap; };
-
             //TODO Is this fast enough to keep up with the MIDI?
             foreach (Note note in MIDIController.AllNotes)
             {
@@ -67,9 +68,15 @@ namespace WpfView
                         using (Graphics g = Graphics.FromImage(bitmap))
                         {
                             //Add new notes
-                            Rectangle rect = new Rectangle(30, 20, 19, (int)note.Length/ 100); //TODO Calculate position and colour
+                            Rectangle rect = new Rectangle(i*19, 20, 19, (int)note.Length/ 100); //TODO Calculate position and colour
                             g.FillRectangle(new System.Drawing.SolidBrush(System.Drawing.Color.Red), rect);
                             CurrentNotesDisplaying.Add(note, rect);
+                            i++;
+
+                            if(i>= 48)
+                            {
+                                i = 0;
+                            }
                         }
                     } else
                     {
@@ -84,9 +91,10 @@ namespace WpfView
                             {
                                 //Move old ones down
                                 Rectangle rect = CurrentNotesDisplaying[note];
-                                rect.Y += 20; //TODO This should be based on the tempo
+                                rect.Y += 6; //TODO This should be based on the tempo
                                 g.FillRectangle(new System.Drawing.SolidBrush(System.Drawing.Color.Red), rect);
-
+                                //Save new position
+                                CurrentNotesDisplaying[note] = rect;
                             }
                         }
                     }
