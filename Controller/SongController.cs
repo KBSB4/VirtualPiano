@@ -19,7 +19,8 @@ namespace Controller
 
         public static void LoadSong(MidiTimeSpan Offset)
         {
-
+            LoadSong();
+            CurrentSong.Offset = Offset;
         }
 
         /// <summary>

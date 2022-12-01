@@ -14,6 +14,7 @@ namespace Model
 		public Queue<PianoKey> PianoKeys { get; set; }
 		public Queue<PianoKey> PianoKeysPlayed { get; set; }
 		public MidiTimeSpan TimeInSong { get; set; }
+		public MidiTimeSpan Offset { get; set; }
 
 		public Thread SongTimerThread { get; set; }
 
@@ -27,8 +28,13 @@ namespace Model
 			Duration = duration;
 			PianoKeys = pianoKeys;
 			TimeInSong = new MidiTimeSpan(0);
+			Offset = new MidiTimeSpan(0);
 		}
 
+		/// <summary>
+		/// Starts a new <see cref="Thread"/> that keeps going until the song is done. This method <b>Invokes</b> <see cref="NotePlayed"/> 
+		/// then adds the <see cref="PianoKey"/>s to <see cref="PianoKeysPlayed"/>
+		/// </summary>
 		public void Play()
 		{
 			SongTimerThread = new Thread(() =>
@@ -39,13 +45,17 @@ namespace Model
 
 				while (nextKey != null)
 				{
-					if (sw.ElapsedMilliseconds >= nextKey.TimeStamp)
+					if (sw.ElapsedMilliseconds >= nextKey.TimeStamp - Offset)
 					{
 						PianoKeyEventArgs keyEventArgs = new PianoKeyEventArgs(nextKey);
+						keyEventArgs.Offset = Offset;
 						NotePlayed.Invoke(this, keyEventArgs);
 						nextKey = PianoKeys.Dequeue();
+						PianoKeysPlayed.Enqueue(nextKey);
 					}
 				}
+
+				sw.Stop();
 			});
 			SongTimerThread.Start();
 		}
