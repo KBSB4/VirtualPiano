@@ -22,7 +22,7 @@ namespace UnitTests
         [Test]
         public void PianoController_Piano_CorrectAmountOfKeys()
         {
-            Assert.That(piano.PianoKeys, Has.Count.EqualTo(24));
+            Assert.That(piano.PianoKeys, Has.Count.EqualTo(72));
         }
 
         [TestCase(999991235, -1)]
