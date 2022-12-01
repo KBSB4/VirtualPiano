@@ -13,6 +13,7 @@ namespace WpfView
     //UNDONE Work In Progress
     public static class PracticeNoteGenerator
     {
+        //TODO Dicitonary with object for display?
         private static Dictionary<Note, Rectangle> CurrentNotesDisplaying { get; set; } = new();
 
         public static Bitmap DrawNotes(Piano piano, Song song)
@@ -38,6 +39,7 @@ namespace WpfView
         {
             using (Graphics g = Graphics.FromImage(bitmap))
             {
+                //g.DrawRectangle(new System.Drawing.Pen(System.Drawing.Color.Black, 3), new Rectangle(0, 0, 550, 200));
                 for (int i = 1; i <= 48; i++)
                 {
                     //TODO Fix line positions
@@ -58,6 +60,7 @@ namespace WpfView
         {
             int i = 0;
             if (MIDIController.OriginalMIDI is null || MIDIController.AllNotes is null || MainWindow.t is null) { return bitmap; };
+            //TODO Is this fast enough to keep up with the MIDI?
             foreach (Note note in MIDIController.AllNotes)
             {
                 if (note.Time > (int)MIDIController.CurrentTick && note.Time <= (int)MIDIController.CurrentTick + 5000)
@@ -102,7 +105,8 @@ namespace WpfView
                             }
                         }
                     }
-                }
+
+                } 
             }
             return bitmap;
         }
