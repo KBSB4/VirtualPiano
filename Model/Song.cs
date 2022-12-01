@@ -44,7 +44,7 @@ namespace Model
 				SongTimer = Stopwatch.StartNew();
 				PianoKey nextKey = PianoKeys.Dequeue();
 
-				while (nextKey != null)
+				while (PianoKeys.Count > 0)
 				{
 					if (SongTimer.ElapsedMilliseconds >= nextKey.TimeStamp + Offset)
 					{
