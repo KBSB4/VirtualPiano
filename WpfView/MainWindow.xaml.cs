@@ -21,8 +21,9 @@ namespace WpfView
     public partial class MainWindow : Window
     {
         PianoGridGenerator pianoGrid;
-        //Note: Needs to be this high to prevent exception in xaudio
-        Timer drawtimer = new(500);
+        //Note: Needs to be this high to prevent exception in xaudio and to show all notes
+        //TODO HOW TO FIX ABOVE NOTE?
+        Timer drawtimer = new(50);
 
         private static IInputDevice _inputDevice;
         public static Thread t = null;
