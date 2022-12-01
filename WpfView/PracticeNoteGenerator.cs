@@ -16,12 +16,12 @@ namespace WpfView
         //TODO Dicitonary with object for display?
         private static Dictionary<PianoKey, Rectangle> CurrentNotesDisplaying { get; set; } = new();
 
-        public static Bitmap DrawNotes(Piano piano, Song song)
+        public static Bitmap DrawNotes(Piano piano, PianoKey key)
         {
             Bitmap bitmap = new(550, 200);
 
             bitmap = DrawInitialScreen(bitmap, piano);
-            bitmap = DrawPracticeNotes(bitmap, piano, null);
+            bitmap = DrawPracticeNotes(bitmap, piano, key);
             //TODO Function: Key visualisation (show if correct pressed or not)
             bitmap = DrawKeyVisualisation(bitmap);
 
@@ -53,94 +53,103 @@ namespace WpfView
         /// </summary>
         /// <param name="bitmap"></param>
         /// <returns>The same bitmap in the parameter but edited</returns>
-        private static Bitmap DrawPracticeNotes(Bitmap bitmap, Piano piano, PianoKey pianokey)
+        private static Bitmap DrawPracticeNotes(Bitmap bitmap, Piano piano, PianoKey? pianokey)
         {
             if (MIDIController.OriginalMIDI is null || MIDIController.AllNotes is null || MainWindow.t is null) { return bitmap; };
 
-            if (!CurrentNotesDisplaying.ContainsKey(pianokey))
+            if (pianokey is not null && !CurrentNotesDisplaying.ContainsKey(pianokey))
             {
-                using (Graphics g = Graphics.FromImage(bitmap))
-                {
+               // using (Graphics g = Graphics.FromImage(bitmap))
+               // {
                     //Add new notes
                     //Set x and size
                     int x = 0;
                     int size = (int)pianokey.Duration / 100;
-                    x = piano.PianoKeys.IndexOf(pianokey) * 19;
+                    //x = piano.PianoKeys.IndexOf(pianokey) * 19;
+                    x = 20;
+                    int y = 20;
 
                     //Create a new rectangle that visualises the note
                     //Offset by its size so it plays at the start of the note and not at the end
-                    Rectangle rect = new Rectangle(x, 0 - size, 18, size);
+                    Rectangle rect = new Rectangle(x, y, 18, size);
 
-                    g.FillRectangle(GetPianoKeyColour(pianokey), rect);
+                    //g.FillRectangle(GetPianoKeyColour(pianokey), rect);
                     CurrentNotesDisplaying.Add(pianokey, rect);
-                }
+                //}
             }
-            else
+
+            UpdateExistingNotes(bitmap);
+
+            return bitmap;
+        }
+
+        private static void UpdateExistingNotes(Bitmap bitmap)
+        {
+            foreach (PianoKey pk in CurrentNotesDisplaying.Keys)
             {
-                //If it has been played delete, otherwise move it down
-                if (pianokey.TimeStamp <= (int)MIDIController.CurrentTick)
+                //If it has been played -> delete, otherwise move it down
+                if (pk.TimeStamp <= (int)MIDIController.CurrentTick)
                 {
-                    CurrentNotesDisplaying.Remove(pianokey);
+                    CurrentNotesDisplaying.Remove(pk);
                 }
                 else
                 {
-                    //Move old ones down
+                    //Move down?
                     using (Graphics g = Graphics.FromImage(bitmap))
                     {
-                        Rectangle rect = CurrentNotesDisplaying[pianokey];
+                        Rectangle rect = CurrentNotesDisplaying[pk];
                         rect.Y += 6; //TODO This should be based on the tempo
-                        g.FillRectangle(GetPianoKeyColour(pianokey), rect);
+                        g.FillRectangle(GetPianoKeyColour(pk), rect);
                         //Save new position
-                        CurrentNotesDisplaying[pianokey] = rect;
+                        CurrentNotesDisplaying[pk] = rect;
                     }
                 }
             }
-            return bitmap;
         }
 
         private static SolidBrush GetPianoKeyColour(PianoKey pianokey)
         {
-            SolidBrush solidBrush = null;
+            SolidBrush solidBrush;
             switch (pianokey.Note)
             {
                 case NoteName.C:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
+                    solidBrush = new SolidBrush(System.Drawing.Color.Red);
                     break;
                 case NoteName.CSharp:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.DarkRed);
+                    solidBrush = new SolidBrush(System.Drawing.Color.DarkRed);
                     break;
                 case NoteName.D:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Green);
+                    solidBrush = new SolidBrush(System.Drawing.Color.Green);
                     break;
                 case NoteName.DSharp:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.DarkGreen);
+                    solidBrush = new SolidBrush(System.Drawing.Color.DarkGreen);
                     break;
                 case NoteName.E:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.DeepSkyBlue);
+                    solidBrush = new SolidBrush(System.Drawing.Color.DeepSkyBlue);
                     break;
                 case NoteName.F:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Blue);
+                    solidBrush = new SolidBrush(System.Drawing.Color.Blue);
                     break;
                 case NoteName.FSharp:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.DarkBlue);
+                    solidBrush = new SolidBrush(System.Drawing.Color.DarkBlue);
                     break;
                 case NoteName.G:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Yellow);
+                    solidBrush = new SolidBrush(System.Drawing.Color.Yellow);
                     break;
                 case NoteName.GSharp:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.LightYellow);
+                    solidBrush = new SolidBrush(System.Drawing.Color.LightYellow);
                     break;
                 case NoteName.A:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Purple);
+                    solidBrush = new SolidBrush(System.Drawing.Color.Purple);
                     break;
                 case NoteName.ASharp:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.MediumPurple);
+                    solidBrush = new SolidBrush(System.Drawing.Color.MediumPurple);
                     break;
                 case NoteName.B:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.DarkTurquoise);
+                    solidBrush = new SolidBrush(System.Drawing.Color.DarkTurquoise);
                     break;
                 default:
-                    solidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.DarkSeaGreen);
+                    solidBrush = new SolidBrush(System.Drawing.Color.DarkSeaGreen);
                     break;
             }
             return solidBrush;

@@ -27,6 +27,7 @@ namespace Model
 			Difficulty = difficulty;
 			Duration = duration;
 			PianoKeys = pianoKeys;
+			PianoKeysPlayed = new();
 			TimeInSong = new MidiTimeSpan(0);
 			Offset = new MidiTimeSpan(0);
 		}
@@ -45,7 +46,7 @@ namespace Model
 
 				while (nextKey != null)
 				{
-					if (sw.ElapsedMilliseconds >= nextKey.TimeStamp - Offset)
+					if (sw.ElapsedMilliseconds >= nextKey.TimeStamp + Offset)
 					{
 						PianoKeyEventArgs keyEventArgs = new PianoKeyEventArgs(nextKey);
 						keyEventArgs.Offset = Offset;
