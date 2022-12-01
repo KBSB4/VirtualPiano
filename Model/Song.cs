@@ -58,6 +58,7 @@ namespace Model
 
 				SongTimer.Stop();
 			});
+			//TODO The program does not close properly when exiting it due to this thread not exiting when closing
 			SongTimerThread.Start();
 		}
 
