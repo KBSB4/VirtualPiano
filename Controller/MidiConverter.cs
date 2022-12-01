@@ -57,7 +57,7 @@ namespace Controller
 				return null;
 			}
 			MidiTimeSpan timeStamp = midiNote.TimeAs<MidiTimeSpan>(TempoMap);
-			MidiTimeSpan duration = (MidiTimeSpan)(midiNote.LengthAs<MidiTimeSpan>(TempoMap) * 10);
+			MidiTimeSpan duration = midiNote.LengthAs<MidiTimeSpan>(TempoMap);
 			var noteName = midiNote.NoteName;
 			var octave = midiNote.Octave;
 			return new PianoKey((Octave)octave, noteName, timeStamp, duration);

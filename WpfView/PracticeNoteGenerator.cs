@@ -75,9 +75,9 @@ namespace WpfView
                 //Add new notes
                 //Set x and size
                 int x = 0;
-                int size = (int)pianokey.Duration / 100;
+                int size = (int)pianokey.Duration / 10;
                 //TODO SHARPS
-                x = piano.PianoKeys.FindIndex(x => x.Note == pianokey.Note) * 20 + 1;
+                x = piano.PianoKeys.FindIndex(x => x.Note == pianokey.Note && x.Octave == pianokey.Octave) * 20 + 1;
 
                 //Create a new rectangle that visualises the note
                 //Offset by its size so it plays at the start of the note and not at the end
