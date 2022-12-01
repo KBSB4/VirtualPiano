@@ -23,7 +23,7 @@ namespace WpfView
     {
         PianoGridGenerator pianoGrid;
         // 30 frames / 1 second = 33.3333... ms
-        Timer drawtimer = new(1000);
+        Timer drawtimer = new(33.3333333333333);
 
         private static IInputDevice _inputDevice;
 
