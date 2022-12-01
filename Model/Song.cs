@@ -55,7 +55,7 @@ namespace Model
         {
             PianoKey pianoKey = (PianoKey)obj;
 
-            Thread.Sleep(pianoKey.Duration);
+            Thread.Sleep((int)pianoKey.Duration);
             pianoKey.PressedDown = false;
             NotePlayed?.Invoke(this, new PianoKeyEventArgs(pianoKey));
         }
