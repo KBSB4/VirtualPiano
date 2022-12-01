@@ -48,7 +48,7 @@ namespace Controller
 		public static void PlayMidi(Boolean PlayIsolated = false)
 		{
 			//Get first available device and play it
-			using (var outputDevice = OutputDevice.GetAll().ToArray()[0])
+			using (var outputDevice = OutputDevice.GetByIndex(0))
 			{
 				try
 				{
@@ -101,7 +101,7 @@ namespace Controller
 			{
 				CurrentTick = (MidiTimeSpan)playbackTime.Time;
 				//CurrentTick += (MidiTimeSpan)100;
-				Debug.WriteLine($"Current time is {CurrentTick}.");
+				//Debug.WriteLine($"Current time is {CurrentTick}.");
 			}
 		}
 	}
