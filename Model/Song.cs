@@ -29,20 +29,21 @@ namespace Model
 
         public void Play()
         {
-            SongTimerThread.Start();
             NotePlayed += Song_NotePlayed;
             new Thread(new ParameterizedThreadStart(PlayFile)).Start(File);
         }
 
         private void PlayFile(object? obj)
         {
-            Thread.Sleep(70);
+            SongTimerThread.Start();
+            Thread.Sleep(2700);
+            //Thread.Sleep(200);
             File.Play(OutputDevice.GetByIndex(0));
         }
 
         private void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
-            Debug.WriteLine("Note Played");
+            //Debug.WriteLine("Note Played");
             if (e.Key.PressedDown)
             {
                 new Thread(new ParameterizedThreadStart(PlayNote)).Start(e.Key);
@@ -72,12 +73,16 @@ namespace Model
 
         private void PlaySong()
         {
+            Thread.Sleep(1000);
             while (PianoKeys.Count > 0)
             {
                 PianoKey pianoKey = PianoKeys.Dequeue();
                 NotePlayed?.Invoke(this, new PianoKeyEventArgs(pianoKey));
-                Thread.Sleep(pianoKey.TimeStamp - TimeInSong);
-                TimeInSong = pianoKey.TimeStamp;
+                if (PianoKeys.TryPeek(out PianoKey? nextKey))
+                {
+                    Thread.Sleep(nextKey.TimeStamp - TimeInSong);
+                    TimeInSong = nextKey.TimeStamp;
+                }
                 Debug.WriteLine(pianoKey.ToString());
             }
         }

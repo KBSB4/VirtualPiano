@@ -16,6 +16,7 @@ namespace WpfView
     public partial class MainWindow : Window
     {
         PianoGridGenerator pianoGrid;
+        PracticeNotesGenerator practiceNotes;
 
         private static IInputDevice _inputDevice;
 
@@ -24,6 +25,7 @@ namespace WpfView
             InitializeComponent();
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
+            practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
 
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
@@ -33,49 +35,35 @@ namespace WpfView
             SongController.PlaySong();
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
 
-            _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
-            _inputDevice.EventReceived += OnMidiEventReceived;
-            _inputDevice.StartEventsListening();
+            //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
+            //_inputDevice.EventReceived += OnMidiEventReceived;
+            //_inputDevice.StartEventsListening();
+
+            new Thread(new ParameterizedThreadStart(UpdateVisualNotes)).Start();
+        }
+
+        private void UpdateVisualNotes(object? obj)
+        {
+            while (true)
+            {
+                Thread.Sleep(25);
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    practiceNotes.UpdateExampleNotes();
+                }));
+            }
         }
 
         private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
             Dispatcher.Invoke(new Action(() =>
             {
-                pianoGrid.DisplayPianoKey(e.Key);
-                //e.Key.PressedDown = true;
-
-                //PlayNote(e.Key);
-
-                //Thread t = new Thread(new ParameterizedThreadStart(PlayNote));
-                //t.Start(e.Key);
-
-                //new Thread(new ParameterizedThreadStart(PlayNote)).Start(e.Key);
-
-                //Debug.WriteLine("EventReceived!");
-                //PianoKey? pianoKey = PianoController.Piano.PianoKeys.Find(x => (e.Key.Note == x.Note) && (e.Key.Octave == x.Octave));
-                //if (pianoKey is null)
-                //{
-                //    Debug.WriteLine("But key is null");
-                //}
-                //else
-                //{
-                //    pianoKey.PressedDown = true;
-                //    Debug.WriteLine("Displaying key: " + pianoKey + " Pressed: " + pianoKey.PressedDown);
-                //    pianoGrid.DisplayPianoKey(pianoKey);
-                //}
+                if (e.Key.PressedDown)
+                {
+                    practiceNotes.StartExampleNote(e.Key);
+                }
+                //pianoGrid.DisplayPianoKey(e.Key);
             }));
-        }
-
-        private void PlayNote(object? objec)
-        {
-            PianoKey pianoKey = (PianoKey)objec;
-
-            pianoGrid.DisplayPianoKey(pianoKey);
-
-            Thread.Sleep(pianoKey.Duration);
-            pianoKey.PressedDown = false;
-            pianoGrid.DisplayPianoKey(pianoKey);
         }
 
         /// <summary>
@@ -83,36 +71,27 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMidiEventReceived(object? sender, EventArgs e)
+        private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
         {
-            if (e is MidiEventReceivedEventArgs a)
+            Debug.WriteLine($"{e.Event}");
+            PianoKey? key = PianoController.ParseMidiNote(e.Event);
+
+            if (key is not null)
             {
-
-                Debug.WriteLine($"{a.Event}");
-                PianoKey? key = PianoController.ParseMidiNote(a.Event);
-
-                if (key is not null)
+                Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    if (key.PressedDown)
-                    {
-                        PianoController.PlayPianoSound(key);
-                        Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            pianoGrid.DisplayPianoKey(key);
-                        }));
-                    }
-                    else
-                    {
-                        PianoController.StopPianoSound(key);
-                        Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            pianoGrid.DisplayPianoKey(key);
-                        }));
-                    }
+                    pianoGrid.DisplayPianoKey(key);
+                }));
+                if (key.PressedDown)
+                {
+                    PianoController.PlayPianoSound(key);
+                }
+                else
+                {
+                    PianoController.StopPianoSound(key);
                 }
             }
         }
-        private static Action EmptyDelegate = delegate () { };
 
         /// <summary>
         /// Eventhandler for when the key gets pressed. Updates key and plays the audio
@@ -132,7 +111,9 @@ namespace WpfView
             }
 
             if (e.Key == Key.CapsLock)
+            {
                 PianoLogic.SwapOctave(PianoController.Piano);
+            }
         }
 
         /// <summary>
@@ -150,7 +131,6 @@ namespace WpfView
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
             }
-
         }
     }
 }

@@ -88,9 +88,9 @@ namespace Controller
         {
             if (!currentPlayingAudio.ContainsKey(key))
             {
-                FadingAudio fadingAudio = SoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
+                FadingAudio? fadingAudio = SoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
 
-                if (fadingAudio != null)
+                if (fadingAudio is not null)
                 {
                     fadingAudio.StartPlaying();
                     currentPlayingAudio.Add(key, fadingAudio);

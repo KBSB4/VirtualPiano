@@ -107,9 +107,13 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <param name="noteName"></param>
         /// <param name="octave"></param>
         /// <returns></returns>
-        public SourceVoice GetSourceVoice(NoteName noteName, int octave)
+        public SourceVoice? GetSourceVoice(NoteName noteName, int octave)
         {
             string file = pianoFilesFolder + pianoSoundPrefix + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
+            if (!File.Exists(file))
+            {
+                return null;
+            }
             SoundStream stream = new(File.OpenRead(file));
             WaveFormat waveFormat = stream.Format;
             AudioBuffer buffer = new()
@@ -141,13 +145,18 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <param name="noteName"></param>
         /// <param name="octave"></param>
         /// <returns></returns>
-        public FadingAudio GetFadingAudio(NoteName noteName, int octave)
+        public FadingAudio? GetFadingAudio(NoteName noteName, int octave)
         {
             float frequency = GetOctaveFrequencyRatio(octave);
             string pianoNoteString = noteName.ToString();
             string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
             //return new FadingAudio(GetSourceVoice(pathToFile, frequency));
-            return new FadingAudio(GetSourceVoice(noteName, octave));
+            SourceVoice? sourceVoice = GetSourceVoice(noteName, octave);
+            if (sourceVoice is not null)
+            {
+                return new FadingAudio(sourceVoice);
+            }
+            return null;
         }
 
         /// <summary>
