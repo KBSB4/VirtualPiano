@@ -20,14 +20,16 @@ namespace WpfView
     /// </summary>
     public partial class AdminPanel : Page
     {
-        public AdminPanel()
+        private MainMenu _mainMenu;
+        public AdminPanel(MainMenu mainMenu)
         {
             InitializeComponent();
+            _mainMenu = mainMenu;
         }
 
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new MainMenu());
+            NavigationService?.Navigate(_mainMenu);
         }
     }
 }

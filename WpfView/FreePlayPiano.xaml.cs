@@ -14,30 +14,28 @@ namespace WpfView
     /// </summary>
     public partial class FreePlayPiano : Page
     {
-        PianoGridGenerator pianoGrid;
-
+        private PianoGridGenerator pianoGrid;
         private static IInputDevice? _inputDevice;
-
-        public FreePlayPiano()
+        private MainMenu _mainMenu;
+      
+        public FreePlayPiano(MainMenu _mainMenu)
         {
+            this._mainMenu = _mainMenu;
             InitializeComponent();
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
-
-            //Add keydown event for the keys
-            //this.Loaded += (s, e) => WhiteKeysGrid.Focus();
-
-            //this.Focus();
-            //Debug.WriteLine(WhiteKeysGrid.Focus());
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
             try
             {
-                _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
-                //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetAll();
-                _inputDevice.EventReceived += OnMidiEventReceived;
-                _inputDevice.StartEventsListening();
+                if (_inputDevice is null)
+                {
+                    _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByIndex(0);
+                    //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetAll();
+                    _inputDevice.EventReceived += OnMidiEventReceived;
+                    _inputDevice.StartEventsListening();
+                }
             }
             catch (ArgumentException e)
             {
@@ -121,7 +119,8 @@ namespace WpfView
 
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            NavigationService?.Navigate(new MainMenu());
+            NavigationService?.Navigate(_mainMenu);
+
         }
     }
 }
