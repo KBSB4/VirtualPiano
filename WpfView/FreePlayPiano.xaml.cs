@@ -135,12 +135,12 @@ namespace WpfView
                     _inputDevice.StartEventsListening();
                 }
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
                 Debug.WriteLine("No midi device found");
                 Debug.WriteLine("Exception information:");
                 Debug.IndentLevel = 1;
-                Debug.WriteLine(e.Message);
+                Debug.WriteLine(ex.Message);
                 Debug.IndentLevel = 0;
                 _inputDevice = null;
             }
