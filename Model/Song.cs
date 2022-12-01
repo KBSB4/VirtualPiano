@@ -15,6 +15,7 @@ namespace Model
 		public Queue<PianoKey> PianoKeysPlayed { get; set; }
 		public MidiTimeSpan TimeInSong { get; set; }
 		public MidiTimeSpan Offset { get; set; }
+		public Stopwatch SongTimer { get; set; }
 
 		public Thread SongTimerThread { get; set; }
 
@@ -39,13 +40,12 @@ namespace Model
 		{
 			SongTimerThread = new Thread(() =>
 			{
-				Stopwatch sw = Stopwatch.StartNew();
+				Stopwatch.StartNew();
 				PianoKey nextKey = PianoKeys.Dequeue();
-				sw.Start();
 
 				while (nextKey != null)
 				{
-					if (sw.ElapsedMilliseconds >= nextKey.TimeStamp - Offset)
+					if (SongTimer.ElapsedMilliseconds >= nextKey.TimeStamp + Offset)
 					{
 						PianoKeyEventArgs keyEventArgs = new PianoKeyEventArgs(nextKey);
 						keyEventArgs.Offset = Offset;
@@ -55,7 +55,7 @@ namespace Model
 					}
 				}
 
-				sw.Stop();
+				SongTimer.Stop();
 			});
 			SongTimerThread.Start();
 		}
