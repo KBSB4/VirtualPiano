@@ -27,6 +27,11 @@
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Header="Refresh" Height="30" Click="Refresh_Click" Foreground="White"  >
+                <MenuItem.Icon>
+                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                </MenuItem.Icon>
+            </MenuItem>
         </Menu>
 
 

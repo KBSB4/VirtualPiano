@@ -17,7 +17,7 @@ namespace WpfView
         private PianoGridGenerator pianoGrid;
         private static IInputDevice? _inputDevice;
         private MainMenu _mainMenu;
-      
+
         public FreePlayPiano(MainMenu _mainMenu)
         {
             this._mainMenu = _mainMenu;
@@ -121,6 +121,29 @@ namespace WpfView
         {
             NavigationService?.Navigate(_mainMenu);
 
+        }
+
+        private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            try
+            {
+                if (_inputDevice is null)
+                {
+                    _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByIndex(0);
+                    //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetAll();
+                    _inputDevice.EventReceived += OnMidiEventReceived;
+                    _inputDevice.StartEventsListening();
+                }
+            }
+            catch (ArgumentException e)
+            {
+                Debug.WriteLine("No midi device found");
+                Debug.WriteLine("Exception information:");
+                Debug.IndentLevel = 1;
+                Debug.WriteLine(e.Message);
+                Debug.IndentLevel = 0;
+                _inputDevice = null;
+            }
         }
     }
 }
