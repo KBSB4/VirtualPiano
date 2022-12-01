@@ -23,7 +23,7 @@ namespace WpfView
     {
         PianoGridGenerator pianoGrid;
         // 30 frames / 1 second = 33.3333... ms
-        Timer drawtimer = new(33.3333333333333);
+        Timer drawtimer = new(100);
 
         private static IInputDevice _inputDevice;
         public static Thread t = null;
@@ -40,11 +40,16 @@ namespace WpfView
 
             //UNDONE CRASHES APPLICATION WHEN DOING MULTIPLE NOTES
             //30FPS for practice notes
-            drawtimer.Elapsed += UpdateMainImage;
+            drawtimer.Elapsed += ElapsedMethod;
             drawtimer.AutoReset = false;
-            //drawtimer.Start();
+            drawtimer.Start();
 
-            
+
+        }
+
+        private void ElapsedMethod(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            UpdateMainImage(this, null);
         }
 
         /// <summary>
@@ -144,7 +149,7 @@ namespace WpfView
                 {
                     //Get the path of specified file
                     MIDIController.OpenMidi(openFileDialog.FileName);
-					SongController.LoadSong();
+					SongController.LoadSong((MidiTimeSpan)500);
 				}
             } else
             {
@@ -174,8 +179,8 @@ namespace WpfView
                 //Makes the thread close when application close
                 t.IsBackground = true;
                 t.Start();
-                SongController.PlaySong();
 				SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
+                SongController.PlaySong();
             } else
             {
                 if(MIDIController.OriginalMIDI is null)
@@ -194,7 +199,8 @@ namespace WpfView
 
 		private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
 		{
-            Debug.WriteLine("YEAH THIS SHIT IS WORKING MANN " + e.Key.Note.ToString() + "  -  " + e.Key.TimeStamp);
+            UpdateMainImage(this, e);
+            Debug.WriteLine("Called");
 		}
 
 		/// <summary>
@@ -216,14 +222,20 @@ namespace WpfView
         }
 		#endregion
 
-		private void UpdateMainImage(object sender, EventArgs e)
+		private void UpdateMainImage(object sender, PianoKeyEventArgs e)
         {
                 this.MainImage.Dispatcher.BeginInvoke(
                     DispatcherPriority.Render,
                     new Action(() =>
                     {
                         this.MainImage.Source = null;
-                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano, null)); ; ;
+                        PianoKey pk = null;
+
+                        if(e is not null)
+                        {
+                            pk = e.Key;
+                        }
+                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano, pk)); ; ;
                     }));
             drawtimer.Start();
         }

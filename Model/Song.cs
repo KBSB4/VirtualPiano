@@ -28,6 +28,7 @@ namespace Model
 			Difficulty = difficulty;
 			Duration = duration;
 			PianoKeys = pianoKeys;
+			PianoKeysPlayed = new();
 			TimeInSong = new MidiTimeSpan(0);
 			Offset = new MidiTimeSpan(0);
 		}
