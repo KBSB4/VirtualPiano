@@ -10,7 +10,7 @@ namespace Controller
 
 		public static void LoadSong()
         {
-            MidiFile? file = PlayList.RetrieveMidiFile();
+            MidiFile file = MIDIController.OriginalMIDI;
             if (file is not null)
             {
                 CurrentSong = MidiConverter.Convert(file);

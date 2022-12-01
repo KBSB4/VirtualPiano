@@ -24,7 +24,7 @@ namespace Controller
             }
 
             MidiTimeSpan duration = file.GetDuration<MidiTimeSpan>();
-            return new Song(file, "TempName", Difficulty.Easy, duration, pianoKeyList);
+            return new Song(file, "temp", Difficulty.Easy, duration, pianoKeyList);
         }
 
         private static PianoKey? ConvertPianoKey(Note? midiNote)
