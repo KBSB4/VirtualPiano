@@ -13,17 +13,16 @@ namespace WpfView
     //UNDONE Work In Progress
     public static class PracticeNoteGenerator
     {
-        //TODO Dicitonary with object for display?
         private static Dictionary<Note, Rectangle> CurrentNotesDisplaying { get; set; } = new();
 
-        public static Bitmap DrawNotes(Piano piano)
+        public static Bitmap DrawNotes(Piano piano, Song song)
         {
             Bitmap bitmap = new(550, 200);
 
             //TODO Function: Initial screen
             bitmap = DrawInitialScreen(bitmap, piano);
             //TODO Function: Notes
-            bitmap = DrawPracticeNotes(bitmap);
+            bitmap = DrawPracticeNotes(bitmap, song);
             //TODO Function: Key visualisation (show if correct pressed or not)
             bitmap = DrawKeyVisualisation(bitmap);
 
@@ -39,10 +38,11 @@ namespace WpfView
         {
             using (Graphics g = Graphics.FromImage(bitmap))
             {
-                //g.DrawRectangle(new System.Drawing.Pen(System.Drawing.Color.Black, 3), new Rectangle(0, 0, 550, 200));
                 for (int i = 1; i <= 48; i++)
                 {
+                    //TODO Fix line positions
                     g.DrawLine(new System.Drawing.Pen(System.Drawing.Color.Black, 1), 19 * i, 0, 19 * i, 200);
+                    //TODO Add lines for sharps
                 }
             }
             return bitmap;
@@ -54,11 +54,10 @@ namespace WpfView
         /// <param name="bitmap"></param>
         /// <returns>The same bitmap in the parameter but edited</returns>
 
-        private static Bitmap DrawPracticeNotes(Bitmap bitmap)
+        private static Bitmap DrawPracticeNotes(Bitmap bitmap, Song song)
         {
             int i = 0;
             if (MIDIController.OriginalMIDI is null || MIDIController.AllNotes is null || MainWindow.t is null) { return bitmap; };
-            //TODO Is this fast enough to keep up with the MIDI?
             foreach (Note note in MIDIController.AllNotes)
             {
                 if (note.Time > (int)MIDIController.CurrentTick && note.Time <= (int)MIDIController.CurrentTick + 5000)
@@ -68,20 +67,22 @@ namespace WpfView
                         using (Graphics g = Graphics.FromImage(bitmap))
                         {
                             //Add new notes
-                            Rectangle rect = new Rectangle(i*19, 20, 19, (int)note.Length/ 100); //TODO Calculate position and colour
+                            //TODO Add offset for the size
+                            Rectangle rect = new Rectangle(i * 19, 20, 19, (int)note.Length / 100); //TODO Calculate position and colour
                             g.FillRectangle(new System.Drawing.SolidBrush(System.Drawing.Color.Red), rect);
                             CurrentNotesDisplaying.Add(note, rect);
 
                             //Note: Will get deleted when positions are added
                             i++;
 
-                            if(i>= 48)
+                            if (i >= 48)
                             {
                                 i = 0;
                             }
                             //
                         }
-                    } else
+                    }
+                    else
                     {
                         //If it has been played delete, otherwise move it down
                         if (note.EndTime < (int)MIDIController.CurrentTick)
@@ -101,8 +102,7 @@ namespace WpfView
                             }
                         }
                     }
-
-                } 
+                }
             }
             return bitmap;
         }

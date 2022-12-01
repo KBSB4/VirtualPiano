@@ -97,7 +97,7 @@ namespace Controller
             foreach (var playbackTime in e.Times)
             {
                 CurrentTick = (MidiTimeSpan)playbackTime.Time;
-
+                //CurrentTick += (MidiTimeSpan)100;
                 Debug.WriteLine($"Current time is {CurrentTick}.");
             }
         }
