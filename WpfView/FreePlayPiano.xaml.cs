@@ -6,6 +6,8 @@ using System;
 using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Usb.Events;
+using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
 namespace WpfView
 {
@@ -27,25 +29,15 @@ namespace WpfView
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
-            try
-            {
-                if (_inputDevice is null)
-                {
-                    _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByIndex(0);
-                    //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetAll();
-                    _inputDevice.EventReceived += OnMidiEventReceived;
-                    _inputDevice.StartEventsListening();
-                }
-            }
-            catch (ArgumentException e)
-            {
-                Debug.WriteLine("No midi device found");
-                Debug.WriteLine("Exception information:");
-                Debug.IndentLevel = 1;
-                Debug.WriteLine(e.Message);
-                Debug.IndentLevel = 0;
-                _inputDevice = null;
-            }
+            using IUsbEventWatcher usbEventWatcher = new UsbEventWatcher();
+            usbEventWatcher.UsbDriveMounted += UsbEventWatcher_UsbDriveMounted;
+
+            CheckInputDevice();
+        }
+
+        private void UsbEventWatcher_UsbDriveMounted(object? sender, string e)
+        {
+            CheckInputDevice();
         }
 
         /// <summary>
@@ -125,15 +117,17 @@ namespace WpfView
 
         private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            CheckInputDevice();
+        }
+
+        private void CheckInputDevice()
+        {
             try
             {
-                if (_inputDevice is null)
-                {
-                    _inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByIndex(0);
-                    //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetAll();
-                    _inputDevice.EventReceived += OnMidiEventReceived;
-                    _inputDevice.StartEventsListening();
-                }
+                _inputDevice?.Dispose();
+                _inputDevice = InputDevice.GetByIndex(0);
+                _inputDevice.EventReceived += OnMidiEventReceived;
+                _inputDevice.StartEventsListening();
             }
             catch (ArgumentException ex)
             {
