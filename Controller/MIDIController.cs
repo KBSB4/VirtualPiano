@@ -69,6 +69,7 @@ namespace Controller
                         PlaybackCurrentTimeWatcher.Instance.Start();
 
                         AllNotes = MIDIController.OriginalMIDI.GetNotes().ToArray();
+
                         _playback.Start();
 
                         SpinWait.SpinUntil(() => !_playback.IsRunning);

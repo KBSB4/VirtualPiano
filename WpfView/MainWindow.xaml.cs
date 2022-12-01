@@ -26,6 +26,7 @@ namespace WpfView
         Timer drawtimer = new(33.3333333333333);
 
         private static IInputDevice _inputDevice;
+        public static Thread t = null;
 
         public MainWindow()
         {
@@ -150,8 +151,6 @@ namespace WpfView
         }
         
         //To play MIDIs without hogging the main thread
-        //TODO is this smart?
-        public static Thread t = null;
 
         /// <summary>
         /// Play MIDI File
@@ -205,96 +204,8 @@ namespace WpfView
                 "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-        }
-
-        //TODO Move functions to MIDIController
-        #region MIDI
-        /// <summary>
-        /// Opens the dialog to select a MIDI file and open it
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OpenMIDIFileDialog(object sender, RoutedEventArgs e)
-        {
-            if (t is null)
-            {
-                var openFileDialog = new OpenFileDialog();
-
-                openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "MIDI Files (*.mid)|*.mid";
-                openFileDialog.FilterIndex = 2;
-                openFileDialog.RestoreDirectory = true;
-
-                if ((bool)openFileDialog.ShowDialog())
-                {
-                    //Get the path of specified file
-                    MIDIController.OpenMidi(openFileDialog.FileName);
-                }
-            } else
-            {
-                MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
-                    "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        
-        //To play MIDIs without hogging the main thread
-        //TODO is this smart?
-        public static Thread t = null;
-
-        /// <summary>
-        /// Play MIDI File
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PlayMIDIFile(object sender, RoutedEventArgs e)
-        {
-            Boolean isisolated = IsolatedPiano.IsChecked;
-            if (MIDIController.OriginalMIDI is not null && t is null)
-            {
-                //Play MIDI when program starts
-                t = new Thread(() =>
-                {
-                    MIDIController.PlayMidi(isisolated);
-                    t = null;
-                });
-                //Makes the thread close when application close
-                t.IsBackground = true;
-                t.Start();
-            } else
-            {
-                if(MIDIController.OriginalMIDI is null)
-                {
-                    MessageBox.Show("Select a MIDI File first before playing",
-                    "No MIDI selected", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                
-                if(t is not null)
-                {
-                    MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
-                    "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Stop playing the MIDI
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StopMIDIFile(object sender, RoutedEventArgs e)
-        {
-            if (t is not null)
-            {
-                t.Interrupt();
-                t = null;
-            } else
-            {
-                MessageBox.Show("There is no MIDI playing right now.",
-                "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
         #endregion
-
         private void UpdateMainImage(object sender, EventArgs e)
         {
                 this.MainImage.Dispatcher.BeginInvoke(
@@ -302,7 +213,7 @@ namespace WpfView
                     new Action(() =>
                     {
                         this.MainImage.Source = null;
-                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano));
+                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano, null));
                     }));
             drawtimer.Start();
         }
