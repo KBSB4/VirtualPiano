@@ -42,7 +42,9 @@ namespace WpfView
             //30FPS for practice notes
             drawtimer.Elapsed += UpdateMainImage;
             drawtimer.AutoReset = false;
-            drawtimer.Start();
+            //drawtimer.Start();
+
+            
         }
 
         /// <summary>
@@ -142,7 +144,8 @@ namespace WpfView
                 {
                     //Get the path of specified file
                     MIDIController.OpenMidi(openFileDialog.FileName);
-                }
+					SongController.LoadSong();
+				}
             } else
             {
                 MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
@@ -171,6 +174,8 @@ namespace WpfView
                 //Makes the thread close when application close
                 t.IsBackground = true;
                 t.Start();
+                SongController.PlaySong();
+				SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
             } else
             {
                 if(MIDIController.OriginalMIDI is null)
@@ -187,12 +192,17 @@ namespace WpfView
             }
         }
 
-        /// <summary>
-        /// Stop playing the MIDI
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StopMIDIFile(object sender, RoutedEventArgs e)
+		private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
+		{
+            Debug.WriteLine("YEAH THIS SHIT IS WORKING MANN " + e.Key.Note.ToString() + "  -  " + e.Key.TimeStamp);
+		}
+
+		/// <summary>
+		/// Stop playing the MIDI
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void StopMIDIFile(object sender, RoutedEventArgs e)
         {
             if (t is not null)
             {
@@ -203,17 +213,17 @@ namespace WpfView
                 MessageBox.Show("There is no MIDI playing right now.",
                 "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
-        #endregion
-        private void UpdateMainImage(object sender, EventArgs e)
+		#endregion
+
+		private void UpdateMainImage(object sender, EventArgs e)
         {
                 this.MainImage.Dispatcher.BeginInvoke(
                     DispatcherPriority.Render,
                     new Action(() =>
                     {
                         this.MainImage.Source = null;
-                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano, null));
+                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano, null)); ; ;
                     }));
             drawtimer.Start();
         }

@@ -21,7 +21,7 @@ namespace Model
             MicrosoftBind = bind;
         }
 
-        public PianoKey(Octave octave, NoteName note, TimeSpan timeStamp, MidiTimeSpan duration)
+        public PianoKey(Octave octave, NoteName note, MidiTimeSpan timeStamp, MidiTimeSpan duration)
         {
             Octave = octave;
             Note = note;

@@ -1,94 +1,77 @@
 ﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using System.Diagnostics;
 
 namespace Model
 {
-    public class Song
-    {
-        public Song(MidiFile file, string name, Difficulty difficulty, TimeSpan duration, Queue<PianoKey> pianoKeys)
-        {
-            File = file;
-            Name = name;
-            Difficulty = difficulty;
-            Duration = duration;
-            PianoKeys = pianoKeys;
-            TimeInSong = TimeSpan.Zero;
-            SongTimerThread = new Thread(new ThreadStart(PlaySong));
-        }
+	public class Song
+	{
+		public MidiFile File { get; set; }
+		public string Name { get; set; }
+		public Difficulty Difficulty { get; set; }
+		public MidiTimeSpan Duration { get; set; }
+		public Queue<PianoKey> PianoKeys { get; set; }
+		public Queue<PianoKey> PianoKeysPlayed { get; set; }
+		public MidiTimeSpan TimeInSong { get; set; }
 
-        public MidiFile File { get; set; }
-        public string Name { get; set; }
-        public Difficulty Difficulty { get; set; }
-        public TimeSpan Duration { get; set; }
-        public Queue<PianoKey> PianoKeys { get; set; }
-        public TimeSpan TimeInSong { get; set; }
-        public Thread SongTimerThread { get; set; }
+		public Thread SongTimerThread { get; set; }
 
-        public event EventHandler<PianoKeyEventArgs> NotePlayed;
+		public event EventHandler<PianoKeyEventArgs> NotePlayed;
 
-        public void Play()
-        {
-            SongTimerThread.Start();
-            NotePlayed += Song_NotePlayed;
-            new Thread(new ParameterizedThreadStart(PlayFile)).Start(File);
-        }
+		public Song(MidiFile file, string name, Difficulty difficulty, MidiTimeSpan duration, Queue<PianoKey> pianoKeys)
+		{
+			File = file;
+			Name = name;
+			Difficulty = difficulty;
+			Duration = duration;
+			PianoKeys = pianoKeys;
+			TimeInSong = new MidiTimeSpan(0);
+		}
 
-        private void PlayFile(object? obj)
-        {
-            Thread.Sleep(70);
-            File.Play(OutputDevice.GetByIndex(0));
-        }
+		public void Play()
+		{
+			SongTimerThread = new Thread(() =>
+			{
+				Stopwatch sw = Stopwatch.StartNew();
+				PianoKey nextKey = PianoKeys.Dequeue();
+				sw.Start();
 
-        private void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
-        {
-            Debug.WriteLine("Note Played");
-            if (e.Key.PressedDown)
-            {
-                new Thread(new ParameterizedThreadStart(PlayNote)).Start(e.Key);
+				while (nextKey != null)
+				{
+					if (sw.ElapsedMilliseconds >= nextKey.TimeStamp)
+					{
+						PianoKeyEventArgs keyEventArgs = new PianoKeyEventArgs(nextKey);
+						NotePlayed.Invoke(this, keyEventArgs);
+						nextKey = PianoKeys.Dequeue();
+					}
+				}
+			});
+			SongTimerThread.Start();
+		}
 
-            }
-            //Console.WriteLine(e.Key.ToString());
-        }
+		public void Stop()
+		{
 
-        private void PlayNote(object? obj)
-        {
-            PianoKey pianoKey = (PianoKey)obj;
+		}
 
-            Thread.Sleep((int)pianoKey.Duration);
-            pianoKey.PressedDown = false;
-            NotePlayed?.Invoke(this, new PianoKeyEventArgs(pianoKey));
-        }
+		public void Reset()
+		{
 
-        public void Stop()
-        {
+		}
 
-        }
+		public PianoKey[] GetNextPianoKeys()
+		{
+			return PianoKeys.Take(1).ToArray();
+		}
+	}
 
-        public PianoKey[] GetNextPianoKeys()
-        {
-            return PianoKeys.Take(1).ToArray();
-        }
-
-        private void PlaySong()
-        {
-            while (PianoKeys.Count > 0)
-            {
-                PianoKey pianoKey = PianoKeys.Dequeue();
-                NotePlayed?.Invoke(this, new PianoKeyEventArgs(pianoKey));
-                Thread.Sleep(pianoKey.TimeStamp - TimeInSong);
-                TimeInSong = pianoKey.TimeStamp;
-                Debug.WriteLine(pianoKey.ToString());
-            }
-        }
-    }
-
-    public enum Difficulty
-    {
-        Easy,
-        Medium,
-        Hard,
-        Extreme,
-        ExtremeHeroSuperDeluxe
-    }
+	public enum Difficulty
+	{
+		Easy,
+		Medium,
+		Hard,
+		Extreme,
+		ExtremeHeroSuperDeluxe
+	}
 }

@@ -23,8 +23,8 @@ namespace Controller
                 }
             }
 
-            MetricTimeSpan duration = file.GetDuration<MetricTimeSpan>();
-            return new Song(file, "TempName", Difficulty.Easy, duration, pianoKeyList);
+            MidiTimeSpan duration = file.GetDuration<MidiTimeSpan>();
+            return new Song(file, "temp", Difficulty.Easy, duration, pianoKeyList);
         }
 
         private static PianoKey? ConvertPianoKey(Note? midiNote)
@@ -33,8 +33,8 @@ namespace Controller
             {
                 return null;
             }
-            MetricTimeSpan timeStamp = midiNote.TimeAs<MetricTimeSpan>(TempoMap);
-            MetricTimeSpan duration = midiNote.LengthAs<MetricTimeSpan>(TempoMap);
+			MidiTimeSpan timeStamp = midiNote.TimeAs<MidiTimeSpan>(TempoMap);
+			MidiTimeSpan duration = midiNote.LengthAs<MidiTimeSpan>(TempoMap);
             var noteName = midiNote.NoteName;
             var octave = midiNote.Octave;
             return new PianoKey((Octave)octave, noteName, timeStamp, duration);
