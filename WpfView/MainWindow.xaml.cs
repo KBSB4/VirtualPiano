@@ -203,17 +203,17 @@ namespace WpfView
                 MessageBox.Show("There is no MIDI playing right now.",
                 "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
-        #endregion
-        private void UpdateMainImage(object sender, EventArgs e)
+		#endregion
+
+		private void UpdateMainImage(object sender, EventArgs e)
         {
                 this.MainImage.Dispatcher.BeginInvoke(
                     DispatcherPriority.Render,
                     new Action(() =>
                     {
                         this.MainImage.Source = null;
-                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano, null));
+                        this.MainImage.Source = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano, null)); ; ;
                     }));
             drawtimer.Start();
         }
