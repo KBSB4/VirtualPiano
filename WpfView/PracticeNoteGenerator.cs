@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -59,26 +60,21 @@ namespace WpfView
 
             if (pianokey is not null && !CurrentNotesDisplaying.ContainsKey(pianokey))
             {
-               // using (Graphics g = Graphics.FromImage(bitmap))
-               // {
                     //Add new notes
                     //Set x and size
                     int x = 0;
                     int size = (int)pianokey.Duration / 100;
-                    x = piano.PianoKeys.IndexOf(pianokey) * 19;
-                    x = 20
-                    
-
+                    //TODO SHARPS
+                    x = piano.PianoKeys.FindIndex(x => x.Note == pianokey.Note)*19;
+                   
                     //Create a new rectangle that visualises the note
                     //Offset by its size so it plays at the start of the note and not at the end
                     Rectangle rect = new Rectangle(x, 0 - size, 18, size);
-
-                    //g.FillRectangle(GetPianoKeyColour(pianokey), rect);
                     CurrentNotesDisplaying.Add(pianokey, rect);
-                //}
+            } else
+            {
+                UpdateExistingNotes(bitmap);
             }
-
-            UpdateExistingNotes(bitmap);
 
             return bitmap;
         }
@@ -98,7 +94,7 @@ namespace WpfView
                     using (Graphics g = Graphics.FromImage(bitmap))
                     {
                         Rectangle rect = CurrentNotesDisplaying[pk];
-                        rect.Y += 6; //TODO This should be based on the tempo
+                        rect.Y += 5; //TODO This should be based on the tempo
                         g.FillRectangle(GetPianoKeyColour(pk), rect);
                         //Save new position
                         CurrentNotesDisplaying[pk] = rect;
