@@ -6,28 +6,30 @@
       xmlns:local="clr-namespace:WpfView"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AdminPanel">
+      Title="SettingsPage">
 
     <Grid Background="#FF292929">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
+
+        <Rectangle HorizontalAlignment="Left" Height="250" Margin="71,0,0,0" Fill="#FF3D3D3D" VerticalAlignment="Center" Width="287"/>
 
         <DockPanel Grid.ColumnSpan="3" Background="#FF292929" VerticalAlignment="Top" Height="30">
             <Menu DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
-                <MenuItem Header="PianoHero MainMenu" Height="30" Click="MainMenu_Click" Foreground="White"  >
+                <MenuItem Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                     <MenuItem.Icon>
                         <Image Source="Images/previous.png" Margin="3,-4,0,0" />
                     </MenuItem.Icon>
                 </MenuItem>
             </Menu>
         </DockPanel>
+        <Rectangle Fill="#FF292929" Margin="146,107,514,300" StrokeThickness="5">
+            <Rectangle.Effect>
+                <DropShadowEffect/>
+            </Rectangle.Effect>
+        </Rectangle>
+        <Label Content="Settings" HorizontalAlignment="Left" Height="43" Margin="172,107,0,0" VerticalAlignment="Top" Width="88" Foreground="White" FontSize="20"/>
+        <Rectangle Stroke="Black" Margin="172,172,454,254"/>
+        <Rectangle Stroke="Black" Margin="172,230,454,196"/>
+        <Rectangle Stroke="Black" Margin="172,201,454,225"/>
+        <Label Content="Volume:" HorizontalAlignment="Left" Height="24" Margin="71,172,0,0" VerticalAlignment="Top" Width="96" Foreground="White" FontSize="20"/>
     </Grid>
 </Page>
