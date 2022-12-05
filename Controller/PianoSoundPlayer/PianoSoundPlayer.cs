@@ -71,7 +71,7 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <param name="frequency"></param>
         public void PlaySoundOneshot(string audioFile, float frequency)
         {
-            GetAudioClip(audioFile, frequency).Start();
+            GetSourceVoice(audioFile, frequency).Start();
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <param name="audioFile"></param>
         /// <param name="frequency"></param>
         /// <returns></returns>
-        public SourceVoice GetAudioClip(string audioFile, float frequency)
+        public SourceVoice GetSourceVoice(string audioFile, float frequency)
         {
             SoundStream stream = new(File.OpenRead(audioFile));
             WaveFormat waveFormat = stream.Format;
@@ -96,6 +96,35 @@ namespace VirtualPiano.PianoSoundPlayer
             sourceVoice.SetFrequencyRatio(frequency);
             sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
             sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
+
+            return sourceVoice;
+        }
+
+        /// <summary>
+        /// Instantiates a new <see cref="SourceVoice"/> that contains the audiofile found by "<see cref="pianoFilesFolder"/> + 
+        /// <see cref="pianoSoundPrefix"/> + <paramref name="noteName"/> + <paramref name="octave"/> + <see cref="pianoSoundPrefix"/>"
+        /// </summary>
+        /// <param name="noteName"></param>
+        /// <param name="octave"></param>
+        /// <returns></returns>
+        public SourceVoice GetSourceVoice(NoteName noteName, int octave)
+        {
+            string file = pianoFilesFolder + pianoSoundPrefix + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
+            SoundStream stream = new(File.OpenRead(file));
+            WaveFormat waveFormat = stream.Format;
+            AudioBuffer buffer = new()
+            {
+                Stream = stream.ToDataStream(),
+                AudioBytes = (int)stream.Length,
+                Flags = BufferFlags.EndOfStream
+            };
+
+            SourceVoice sourceVoice = new SourceVoice(device, waveFormat, true);
+
+            sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
+            sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
+
+            stream.Close();
 
             return sourceVoice;
         }
@@ -117,7 +146,8 @@ namespace VirtualPiano.PianoSoundPlayer
             float frequency = GetOctaveFrequencyRatio(octave);
             string pianoNoteString = noteName.ToString();
             string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
-            return new FadingAudio(GetAudioClip(pathToFile, frequency));
+            //return new FadingAudio(GetSourceVoice(pathToFile, frequency));
+            return new FadingAudio(GetSourceVoice(noteName, octave));
         }
 
         /// <summary>

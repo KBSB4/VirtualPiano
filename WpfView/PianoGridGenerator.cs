@@ -1,15 +1,21 @@
-﻿using Melanchall.DryWetMidi.MusicTheory;
+﻿using Controller;
 using Model;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace WpfView
 {
-    internal class PianoGridGenerator
+    public class PianoGridGenerator
     {
         private List<Button> buttons;
+
+        private Color blackKeyPressedColor = Color.FromRgb(40, 57, 149);
+        private Color blackKeyReleasedColor = Color.FromRgb(30, 30, 30);
+        private Color whiteKeyPressedColor = Color.FromRgb(72, 91, 190);
+        private Color whiteKeyReleasedColor = Color.FromRgb(255, 255, 255);
 
         /// <summary>
         /// Generate whitekeys and blackkeys for the WPF
@@ -27,39 +33,24 @@ namespace WpfView
         }
 
         /// <summary>
-        /// Display pianokey if they are pressed down
+        /// Updates pianokey to current <see cref="PianoKey.PressedDown"> state
         /// </summary>
         /// <param name="key"></param>
-        /// <param name="pressed"></param>
-        public void DisplayPianoKey(PianoKey key, bool pressed)
+        public void DisplayPianoKey(PianoKey key)
         {
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
             Button currentButton = buttons[note];
+            bool pressed = key.PressedDown;
 
-            switch (key.Note)
+            if (key.Note.ToString().Contains("Sharp"))
             {
-                case NoteName.C:
-                case NoteName.D:
-                case NoteName.E:
-                case NoteName.F:
-                case NoteName.G:
-                case NoteName.A:
-                case NoteName.B:
-                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(72, 91, 190)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    break;
-                case NoteName.CSharp:
-                case NoteName.DSharp:
-                case NoteName.FSharp:
-                case NoteName.GSharp:
-                case NoteName.ASharp:
-                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(40, 57, 149)) : new SolidColorBrush(Color.FromRgb(30, 30, 30));
-                    break;
-                default:
-                    currentButton.Background = pressed ? new SolidColorBrush(Color.FromRgb(90, 100, 255)) : new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    break;
+                currentButton.Background = new SolidColorBrush(pressed ? blackKeyPressedColor : blackKeyReleasedColor);
             }
-
+            else
+            {
+                currentButton.Background = new SolidColorBrush(pressed ? whiteKeyPressedColor : whiteKeyReleasedColor);
+            }
         }
 
         /// <summary>
@@ -77,43 +68,61 @@ namespace WpfView
 
             for (int i = 0; i < columnAmount; i++)
             {
-                //Create key
                 whiteKeyGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
                 Button whiteKeyButton = new()
                 {
-                    Background = new SolidColorBrush(Color.FromRgb(255, 255, 255)), //new SolidColorBrush(new Random().Next(8) == 1 ? Color.FromRgb(90, 100, 255) : Color.FromRgb(255, 255, 255)),
+                    Background = new SolidColorBrush(whiteKeyReleasedColor),
                     Margin = new Thickness(0, 0, 0, 0),
                     BorderThickness = new Thickness(1, 0, 1, 0),
-                    BorderBrush = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
+                    BorderBrush = new SolidColorBrush(blackKeyReleasedColor),
+                    Padding = new Thickness(0, 200, 0, 0),
                 };
-
-                //Add key
-                Grid.SetColumn(whiteKeyButton, i);
-                Grid.SetRow(whiteKeyButton, 0);
-                whiteKeyGrid.Children.Add(whiteKeyButton);
-                buttons.Add(whiteKeyButton);
-
+                AddKey(whiteKeyGrid, buttons, i, whiteKeyButton);
 
                 blackKeyGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
                 if (!(i % 7 == 2 || i % 7 == 6))
                 {
                     Button blackKeyButton = new()
                     {
-                        Background = new SolidColorBrush(Color.FromRgb(30, 30, 30)),
-                        Margin = new Thickness((1920 / columnAmount) / 1.75d, 0, -15, 30), //68.57 is the exact pixel width of one key 68.57 x 28 = 1920 pixels
+                        Background = new SolidColorBrush(blackKeyReleasedColor),
+                        Margin = new Thickness((1920 / columnAmount) / 1.75d, 0, -15, 30),
                         BorderThickness = new Thickness(0, 0, 0, 0),
+                        Padding = new Thickness(0, 100, 0, 0),
+                        Foreground = new SolidColorBrush(whiteKeyReleasedColor)
                     };
-
-                    //Add key
-                    Grid.SetColumn(blackKeyButton, i);
-                    Grid.SetRow(blackKeyButton, 0);
-                    blackKeyGrid.Children.Add(blackKeyButton);
-                    buttons.Add(blackKeyButton);
+                    AddKey(blackKeyGrid, buttons, i, blackKeyButton);
                 }
             }
             SetColumnWidth(whiteKeyGrid);
             SetColumnWidth(blackKeyGrid);
+
+            //todo: IMPROVE CODE
+            for (int i = 0; i < buttons.Count / 2; i++)
+            {
+                if (i < PianoController.Piano.PianoKeys.Count)
+                {
+                    //Ugly code
+                    buttons[i].Content = PianoController.Piano.PianoKeys[i].MicrosoftBind.ToString().ToLower().Last();
+                    buttons[i + 24].Content = PianoController.Piano.PianoKeys[i].MicrosoftBind.ToString().ToUpper().Last();
+                }
+            }
+
             return buttons;
+        }
+
+        /// <summary>
+        /// Adds a key to the provided grid
+        /// </summary>
+        /// <param name="keyGrid"></param>
+        /// <param name="buttons"></param>
+        /// <param name="i"></param>
+        /// <param name="keyButton"></param>
+        private static void AddKey(Grid keyGrid, List<Button> buttons, int i, Button keyButton)
+        {
+            Grid.SetColumn(keyButton, i);
+            Grid.SetRow(keyButton, 0);
+            keyGrid.Children.Add(keyButton);
+            buttons.Add(keyButton);
         }
 
         /// <summary>
