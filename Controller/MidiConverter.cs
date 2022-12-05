@@ -21,14 +21,14 @@ namespace Controller
 				PianoKey? pianoKey = ConvertPianoKey(midiKey);
 				if (pianoKey is not null)
 				{
-					if (IsPianoChannel(trackList, midiKey.Channel))
-					{
+					//if (IsPianoChannel(trackList, midiKey.Channel))
+					//{
 						pianoKeyList.Enqueue(pianoKey);
-					}
+					//}
 				}
 			}
 
-			MidiTimeSpan duration = file.GetDuration<MidiTimeSpan>();
+			MetricTimeSpan duration = file.GetDuration<MetricTimeSpan>();
 			return new Song(file, "temp", Difficulty.Easy, duration, pianoKeyList);
 		}
 
@@ -56,8 +56,9 @@ namespace Controller
 			{
 				return null;
 			}
-			MidiTimeSpan timeStamp = midiNote.TimeAs<MidiTimeSpan>(TempoMap);
-			MidiTimeSpan duration = midiNote.LengthAs<MidiTimeSpan>(TempoMap);
+			MetricTimeSpan timeStamp = midiNote.TimeAs<MetricTimeSpan>(TempoMap);
+			MetricTimeSpan duration = midiNote.LengthAs<MetricTimeSpan>(TempoMap);
+
 			var noteName = midiNote.NoteName;
 			var octave = midiNote.Octave;
 			return new PianoKey((Octave)octave, noteName, timeStamp, duration);

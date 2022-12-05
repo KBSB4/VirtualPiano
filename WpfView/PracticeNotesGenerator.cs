@@ -1,9 +1,12 @@
-﻿using Model;
+﻿using Melanchall.DryWetMidi.MusicTheory;
+using Model;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace WpfView
 {
@@ -31,7 +34,7 @@ namespace WpfView
             double rectHeight = key.Duration.TotalSeconds * noteLength;
             Rectangle rectangle = new()
             {
-                Fill = new SolidColorBrush(Colors.AliceBlue),
+                Fill = GetPianoKeyColour(key),
                 Height = rectHeight,
                 Width = currentColumn.ActualWidth,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -109,6 +112,59 @@ namespace WpfView
             {
                 grid.ColumnDefinitions[i].Width = new GridLength(1, GridUnitType.Star);
             }
+        }
+
+        /// <summary>
+        /// Finds the right colour for the right note
+        /// </summary>
+        /// <param name="pianokey"></param>
+        /// <returns>SolidBrush</returns>
+        private static SolidColorBrush GetPianoKeyColour(PianoKey pianokey)
+        {
+            SolidColorBrush solidBrush;
+            switch (pianokey.Note)
+            {
+                case NoteName.C:
+                    solidBrush = new SolidColorBrush(Colors.Red);
+                    break;
+                case NoteName.CSharp:
+                    solidBrush = new SolidColorBrush(Colors.DarkRed);
+                    break;
+                case NoteName.D:
+                    solidBrush = new SolidColorBrush(Colors.Green);
+                    break;
+                case NoteName.DSharp:
+                    solidBrush = new SolidColorBrush(Colors.DarkGreen);
+                    break;
+                case NoteName.E:
+                    solidBrush = new SolidColorBrush(Colors.DeepSkyBlue);
+                    break;
+                case NoteName.F:
+                    solidBrush = new SolidColorBrush(Colors.Blue);
+                    break;
+                case NoteName.FSharp:
+                    solidBrush = new SolidColorBrush(Colors.DarkBlue);
+                    break;
+                case NoteName.G:
+                    solidBrush = new SolidColorBrush(Colors.Yellow);
+                    break;
+                case NoteName.GSharp:
+                    solidBrush = new SolidColorBrush(Colors.LightYellow);
+                    break;
+                case NoteName.A:
+                    solidBrush = new SolidColorBrush(Colors.Purple);
+                    break;
+                case NoteName.ASharp:
+                    solidBrush = new SolidColorBrush(Colors.MediumPurple);
+                    break;
+                case NoteName.B:
+                    solidBrush = new SolidColorBrush(Colors.DarkTurquoise);
+                    break;
+                default:
+                    solidBrush = new SolidColorBrush(Colors.DarkSeaGreen);
+                    break;
+            }
+            return solidBrush;
         }
     }
 }

@@ -7,11 +7,10 @@ using Model;
 using System;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using Timer = System.Timers.Timer;
 
 namespace WpfView
 {
@@ -21,8 +20,6 @@ namespace WpfView
     public partial class MainWindow : Window
     {
         PianoGridGenerator pianoGrid;
-        //Note: Needs to be this high to prevent exception in xaudio and to show all notes
-        Timer drawtimer = new(50);
         PracticeNotesGenerator practiceNotes;
 
         private static IInputDevice _inputDevice;
@@ -38,10 +35,6 @@ namespace WpfView
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
-
-            drawtimer.Elapsed += ElapsedMethod;
-            drawtimer.AutoReset = false;
-            drawtimer.Start();
 
             SongController.LoadSong();
             SongController.PlaySong();
@@ -59,10 +52,16 @@ namespace WpfView
             while (true)
             {
                 Thread.Sleep(25);
-                Dispatcher.Invoke(new Action(() =>
+                try
                 {
-                    practiceNotes.UpdateExampleNotes();
-                }));
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        practiceNotes.UpdateExampleNotes();
+                    }));
+                } catch (TaskCanceledException ex)
+                {
+                    //ignore
+                }
             }
         }
 
@@ -167,7 +166,7 @@ namespace WpfView
                 {
                     //Get the path of specified file
                     MIDIController.OpenMidi(openFileDialog.FileName);
-                    SongController.LoadSong((MidiTimeSpan)500);
+                    SongController.LoadSong(new MetricTimeSpan(500));
                 }
             }
             else
@@ -237,52 +236,5 @@ namespace WpfView
             }
         }
         #endregion
-
-        //TODO Can this be done nicer?
-        private void ElapsedMethod(object? sender, System.Timers.ElapsedEventArgs e)
-        {
-            UpdateMainImage(this, null);
-        }
-        private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
-        {
-            UpdateMainImage(this, e);
-        }
-
-
-        /// <summary>
-        /// Updates MainImage in the WPF with new practice notes. rememberSource is used to prevent flickering
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        BitmapSource rememberSource;
-        private void UpdateMainImage(object sender, PianoKeyEventArgs e)
-        {
-            this.MainImage.Dispatcher.BeginInvoke(
-                DispatcherPriority.Render,
-                new Action(() =>
-                {
-                    this.MainImage.Source = null;
-                    PianoKey pk = null;
-                    //This is done so when we add a new key, it will not update the view as well
-                    //TODO Can this be done nicer?
-                    if (e is not null)
-                    {
-                        pk = e.Key;
-                    }
-                    BitmapSource bitmapSource = PracticeNoteGenerator.CreateBitmapSourceFromGdiBitmap(PracticeNoteGenerator.DrawNotes(PianoController.Piano, pk));
-
-                    if (bitmapSource is not null)
-                    {
-                        this.MainImage.Source = bitmapSource;
-                        rememberSource = bitmapSource;
-                    }
-                    else
-                    {
-                        this.MainImage.Source = rememberSource;
-                    }
-
-                }));
-            drawtimer.Start();
-        }
     }
 }

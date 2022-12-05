@@ -10,14 +10,14 @@ namespace Controller
 
 		public static void LoadSong()
         {
-            MidiFile file = MIDIController.OriginalMIDI;
+            MidiFile file = PlayList.RetrieveMidiFile();
             if (file is not null)
             {
                 CurrentSong = MidiConverter.Convert(file);
             }
         }
 
-        public static void LoadSong(MidiTimeSpan Offset)
+        public static void LoadSong(MetricTimeSpan Offset)
         {
             LoadSong();
             CurrentSong.Offset = Offset;

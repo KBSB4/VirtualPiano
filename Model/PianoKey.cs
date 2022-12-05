@@ -11,8 +11,8 @@ namespace Model
         public NoteName Note { get; set; }
         public MicrosoftKeybinds MicrosoftBind { get; set; }
 
-        public MidiTimeSpan TimeStamp { get; set; }
-        public MidiTimeSpan Duration { get; set; }
+        public MetricTimeSpan TimeStamp { get; set; }
+        public MetricTimeSpan Duration { get; set; }
 
         public PianoKey(Octave octave, NoteName note, MicrosoftKeybinds bind)
         {
@@ -21,7 +21,7 @@ namespace Model
             MicrosoftBind = bind;
         }
 
-        public PianoKey(Octave octave, NoteName note, MidiTimeSpan timeStamp, MidiTimeSpan duration)
+        public PianoKey(Octave octave, NoteName note, MetricTimeSpan timeStamp, MetricTimeSpan duration)
         {
             Octave = octave;
             Note = note;
