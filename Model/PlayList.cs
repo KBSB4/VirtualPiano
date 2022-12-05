@@ -4,13 +4,15 @@ namespace Model
 {
     public class PlayList
     {
-        List<MidiFile> midiFiles;
+        Queue<MidiFile> midiFiles;
 
+        /// <summary>
+        /// Selfexplanatory, not used right now
+        /// </summary>
+        /// <returns></returns>
         public static MidiFile? RetrieveMidiFile()
         {
             return MidiFile.Read("..\\..\\..\\..\\Controller\\PianoSoundPlayer\\twinkle-twinkle-little-star.mid");
-            //return null;
-            //Midibestanden ophalen
         }
     }
 }

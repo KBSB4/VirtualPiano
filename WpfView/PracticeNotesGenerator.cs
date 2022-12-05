@@ -39,7 +39,12 @@ namespace WpfView
         {
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);
-            Grid currentColumn = practiceNoteColumns[note];
+
+            Grid currentColumn = practiceNoteColumns[0];
+			if (practiceNoteColumns.Count > note)
+            {
+				currentColumn = practiceNoteColumns[note];
+            }
 
             double rectHeight = key.Duration.TotalSeconds * noteLength;
             Rectangle rectangle = new()
