@@ -1,5 +1,4 @@
-﻿using Melanchall.DryWetMidi.Interaction;
-using Melanchall.DryWetMidi.MusicTheory;
+﻿using Melanchall.DryWetMidi.MusicTheory;
 
 namespace Model
 {
@@ -11,8 +10,8 @@ namespace Model
         public NoteName Note { get; set; }
         public MicrosoftKeybinds MicrosoftBind { get; set; }
 
-        public MidiTimeSpan TimeStamp { get; set; }
-        public MidiTimeSpan Duration { get; set; }
+        public TimeSpan TimeStamp { get; set; }
+        public TimeSpan Duration { get; set; }
 
         public PianoKey(Octave octave, NoteName note, MicrosoftKeybinds bind)
         {
@@ -21,7 +20,7 @@ namespace Model
             MicrosoftBind = bind;
         }
 
-        public PianoKey(Octave octave, NoteName note, MidiTimeSpan timeStamp, MidiTimeSpan duration)
+        public PianoKey(Octave octave, NoteName note, TimeSpan timeStamp, TimeSpan duration)
         {
             Octave = octave;
             Note = note;
