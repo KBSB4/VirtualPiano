@@ -55,6 +55,26 @@ namespace Model
 						PianoKeysPlayed.Enqueue(nextKey);
 					}
 				}
+        public void Play()
+        {
+            NotePlayed += Song_NotePlayed;
+            new Thread(new ParameterizedThreadStart(PlayFile)).Start(File);
+        }
+
+        private void PlayFile(object? obj)
+        {
+            SongTimerThread.Start();
+            Thread.Sleep(2700);
+            //Thread.Sleep(200);
+            File.Play(OutputDevice.GetByIndex(0));
+        }
+
+        private void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
+        {
+            //Debug.WriteLine("Note Played");
+            if (e.Key.PressedDown)
+            {
+                new Thread(new ParameterizedThreadStart(PlayNote)).Start(e.Key);
 
 				SongTimer.Stop();
 			});
@@ -78,12 +98,30 @@ namespace Model
 		}
 	}
 
-	public enum Difficulty
-	{
-		Easy,
-		Medium,
-		Hard,
-		Extreme,
-		ExtremeHeroSuperDeluxe
-	}
+
+        private void PlaySong()
+        {
+            Thread.Sleep(1000);
+            while (PianoKeys.Count > 0)
+            {
+                PianoKey pianoKey = PianoKeys.Dequeue();
+                NotePlayed?.Invoke(this, new PianoKeyEventArgs(pianoKey));
+                if (PianoKeys.TryPeek(out PianoKey? nextKey))
+                {
+                    Thread.Sleep(nextKey.TimeStamp - TimeInSong);
+                    TimeInSong = nextKey.TimeStamp;
+                }
+                Debug.WriteLine(pianoKey.ToString());
+            }
+        }
+    }
+
+    public enum Difficulty
+    {
+        Easy,
+        Medium,
+        Hard,
+        Extreme,
+        ExtremeHeroSuperDeluxe
+    }
 }

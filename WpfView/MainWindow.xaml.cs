@@ -22,8 +22,8 @@ namespace WpfView
     {
         PianoGridGenerator pianoGrid;
         //Note: Needs to be this high to prevent exception in xaudio and to show all notes
-        //TODO HOW TO FIX ABOVE NOTE?
         Timer drawtimer = new(50);
+        PracticeNotesGenerator practiceNotes;
 
         private static IInputDevice _inputDevice;
         public static Thread t = null;
@@ -33,6 +33,7 @@ namespace WpfView
             InitializeComponent();
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
+            practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
 
             //Add keydown event for the keys
             this.KeyDown += KeyPressed;
@@ -41,6 +42,41 @@ namespace WpfView
             drawtimer.Elapsed += ElapsedMethod;
             drawtimer.AutoReset = false;
             drawtimer.Start();
+
+            SongController.LoadSong();
+            SongController.PlaySong();
+            SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
+
+            //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
+            //_inputDevice.EventReceived += OnMidiEventReceived;
+            //_inputDevice.StartEventsListening();
+
+            new Thread(new ParameterizedThreadStart(UpdateVisualNotes)).Start();
+        }
+
+        private void UpdateVisualNotes(object? obj)
+        {
+            while (true)
+            {
+                Thread.Sleep(25);
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    practiceNotes.UpdateExampleNotes();
+                }));
+            }
+        }
+
+        private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                if (e.Key.PressedDown)
+                {
+                    practiceNotes.StartExampleNote(e.Key);
+                }
+                //pianoGrid.DisplayPianoKey(e.Key);
+            }));
+
         }
         //TODO Move functions to MIDIController?
         #region MIDI
@@ -49,32 +85,24 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMidiEventReceived(object? sender, EventArgs e)
+        private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
         {
-            if (e is MidiEventReceivedEventArgs a)
+            Debug.WriteLine($"{e.Event}");
+            PianoKey? key = PianoController.ParseMidiNote(e.Event);
+
+            if (key is not null)
             {
-
-                Debug.WriteLine($"{a.Event}");
-                PianoKey? key = PianoController.ParseMidiNote(a.Event);
-
-                if (key is not null)
+                Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    if (key.PressedDown)
-                    {
-                        PianoController.PlayPianoSound(key);
-                        Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            pianoGrid.DisplayPianoKey(key);
-                        }));
-                    }
-                    else
-                    {
-                        PianoController.StopPianoSound(key);
-                        Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            pianoGrid.DisplayPianoKey(key);
-                        }));
-                    }
+                    pianoGrid.DisplayPianoKey(key);
+                }));
+                if (key.PressedDown)
+                {
+                    PianoController.PlayPianoSound(key);
+                }
+                else
+                {
+                    PianoController.StopPianoSound(key);
                 }
             }
         }
@@ -97,7 +125,9 @@ namespace WpfView
             }
 
             if (e.Key == Key.CapsLock)
+            {
                 PianoLogic.SwapOctave(PianoController.Piano);
+            }
         }
 
         /// <summary>
@@ -115,7 +145,6 @@ namespace WpfView
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
             }
-
         }
 
         /// <summary>

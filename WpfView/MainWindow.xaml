@@ -22,8 +22,10 @@
             <RowDefinition Height="70*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
-            <Image x:Name="MainImage" Margin="0,0,0,0"/>
-            <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
+            <!-- <Image x:Name="MainImage" Margin="0,0,0,0"/> -->
+        <Grid Name="PracticeColumnWhiteKeys" Grid.Row="0" ZIndex="0"></Grid>
+        <Grid Name="PracticeColumnBlackKeys" Grid.Row="0" ZIndex="1"></Grid>
+        <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
         <Grid Name="BlackKeysGrid" Grid.Row="1" ZIndex="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="70*"></RowDefinition>
