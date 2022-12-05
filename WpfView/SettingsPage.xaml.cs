@@ -31,5 +31,7 @@ namespace WpfView
         {
             NavigationService?.Navigate(_mainMenu);
         }
+
+       
     }
 }

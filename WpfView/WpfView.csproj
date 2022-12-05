@@ -10,7 +10,9 @@
   <ItemGroup>
     <None Remove="Images\PianoHeroLogo.png" />
     <None Remove="Images\PianoHeroMenuBackground.png" />
+    <None Remove="Images\PianoHeroMenuBackground.psd" />
     <None Remove="Images\PianoHeroMenuBackground.psd.crswap" />
+    <None Remove="Images\PianoHeroMenuBackground_1.png" />
     <None Remove="Images\pianoIcon.png" />
     <None Remove="Images\previous.png" />
     <None Remove="Images\settingsIcon.png" />
@@ -32,6 +34,8 @@
 
   <ItemGroup>
     <Resource Include="Images\PianoHeroLogo.png" />
+    <Resource Include="Images\PianoHeroMenuBackground.psd" />
+    <Resource Include="Images\PianoHeroMenuBackground_1.png" />
     <Resource Include="Images\pianoIcon.png" />
     <Resource Include="Images\previous.png" />
     <Resource Include="Images\settingsIcon.png" />
