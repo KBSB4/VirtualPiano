@@ -1,5 +1,4 @@
-﻿using Melanchall.DryWetMidi.Interaction;
-using Melanchall.DryWetMidi.MusicTheory;
+﻿using Melanchall.DryWetMidi.MusicTheory;
 
 namespace Model
 {

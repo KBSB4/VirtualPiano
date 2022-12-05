@@ -1,8 +1,6 @@
 ﻿using BusinessLogic;
 using Controller;
-using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
-using Microsoft.Win32;
 using Model;
 using System;
 using System.Diagnostics;
@@ -23,7 +21,6 @@ namespace WpfView
         PracticeNotesGenerator practiceNotes;
 
         private static IInputDevice _inputDevice;
-        public static Thread t = null;
 
         public MainWindow()
         {
@@ -75,10 +72,8 @@ namespace WpfView
                 }
                 //pianoGrid.DisplayPianoKey(e.Key);
             }));
-
         }
-        //TODO Move functions to MIDIController?
-        #region MIDI
+
         /// <summary>
         /// Event fired on MIDI-input
         /// </summary>
@@ -146,6 +141,7 @@ namespace WpfView
             }
         }
 
+        #region MIDI
         /// <summary>
         /// Opens the dialog to select a MIDI file and open it
         /// </summary>
