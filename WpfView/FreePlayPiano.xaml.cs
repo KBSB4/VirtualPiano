@@ -4,8 +4,12 @@ using Melanchall.DryWetMidi.Multimedia;
 using Model;
 using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
 using Usb.Events;
 using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
@@ -29,16 +33,12 @@ namespace WpfView
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
-            using IUsbEventWatcher usbEventWatcher = new UsbEventWatcher();
-            usbEventWatcher.UsbDriveMounted += UsbEventWatcher_UsbDriveMounted;
+           
 
-            CheckInputDevice();
+            //CheckInputDevice(0);
         }
 
-        private void UsbEventWatcher_UsbDriveMounted(object? sender, string e)
-        {
-            CheckInputDevice();
-        }
+       
 
         /// <summary>
         /// Event fired on MIDI-input
@@ -117,15 +117,55 @@ namespace WpfView
 
         private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            CheckInputDevice();
+           
+            MainItem.Items.Clear();
+            AddInputDevices();
+           
+            //CheckInputDevice();
         }
 
-        private void CheckInputDevice()
+       
+
+
+        /// <summary>
+        /// Adds all the connected MIDI-keyboards to MenuItem "Connect MIDI-keyboard" 
+        /// </summary>
+        private void AddInputDevices()
         {
+           
+            foreach (var input in InputDevice.GetAll())
+            {
+                var x = new MenuItem { Header = input.Name };
+                MainItem.Items.Add(x);
+               
+                x.Click += X_Click;
+            }
+
+            
+        }
+
+        private void X_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem) {
+               int x = MainItem.Items.IndexOf(sender as MenuItem);
+               CheckInputDevice(x);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Connects MIDI-keyboard
+        /// </summary>
+        private void CheckInputDevice(int x)
+        {
+
+
             try
             {
+               
                 _inputDevice?.Dispose();
-                _inputDevice = InputDevice.GetByIndex(0);
+                _inputDevice = InputDevice.GetByIndex(x);
                 _inputDevice.EventReceived += OnMidiEventReceived;
                 _inputDevice.StartEventsListening();
             }
