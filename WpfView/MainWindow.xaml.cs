@@ -1,6 +1,8 @@
 ﻿using BusinessLogic;
 using Controller;
+using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
+using Microsoft.Win32;
 using Model;
 using System;
 using System.Diagnostics;
@@ -33,10 +35,6 @@ namespace WpfView
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
-            SongController.LoadSong();
-            SongController.PlaySong();
-            SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
-
             //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
             //_inputDevice.EventReceived += OnMidiEventReceived;
             //_inputDevice.StartEventsListening();
@@ -64,14 +62,21 @@ namespace WpfView
 
         private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
-            Dispatcher.Invoke(new Action(() =>
+            try
             {
-                if (e.Key.PressedDown)
+                Dispatcher.Invoke(new Action(() =>
                 {
-                    practiceNotes.StartExampleNote(e.Key);
-                }
-                //pianoGrid.DisplayPianoKey(e.Key);
-            }));
+                    if (e.Key.PressedDown)
+                    {
+                        practiceNotes.StartExampleNote(e.Key);
+                    }
+                    //pianoGrid.DisplayPianoKey(e.Key);
+                }));
+            } catch (TaskCanceledException ex)
+            {
+                //TODO Does not work check: https://developercommunity.visualstudio.com/t/taskcanceledexception-during-application-shutdown/284294
+                //On closure stop all events?
+            }
         }
 
         /// <summary>
@@ -179,20 +184,22 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        Thread t;
         private void PlayMIDIFile(object sender, RoutedEventArgs e)
         {
             Boolean isisolated = IsolatedPiano.IsChecked;
             if (MIDIController.OriginalMIDI is not null && t is null)
             {
-                //Play MIDI when program starts
-                t = new Thread(() =>
-                {
-                    MIDIController.PlayMidi(isisolated);
-                    t = null;
-                });
-                //Makes the thread close when application close
-                t.IsBackground = true;
-                t.Start();
+                ////Play MIDI when program starts
+                //t = new Thread(() =>
+                //{
+                //    MIDIController.PlayMidi(isisolated);
+                //    t = null;
+                //});
+                ////Makes the thread close when application close
+                //t.IsBackground = true;
+                //t.Start();
+
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
                 SongController.PlaySong();
             }
