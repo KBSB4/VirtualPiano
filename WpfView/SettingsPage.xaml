@@ -45,15 +45,35 @@
                     </Grid.RowDefinitions>
                        
 
-                     <Label Grid.Row="0"  Content="Volume:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalContentAlignment="Center"></Label>
-                     <Slider Grid.Row="0" Grid.Column="1" Width="300"  HorizontalAlignment="Center" VerticalAlignment="Center"  ></Slider>
+                    <Label Grid.Row="0"  Content="Volume:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalContentAlignment="Center"></Label>
+                    <Slider Grid.Row="0" Grid.Column="1" Width="300"  HorizontalAlignment="Center" VerticalAlignment="Center" Maximum="100" TickPlacement="BottomRight" TickFrequency="20" IsSnapToTickEnabled="True" Foreground="White"></Slider>
                     <Label Grid.Row="1"  Content="Input device:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalAlignment="Center"  ></Label>
-                    <ComboBox Grid.Row="1" Grid.Column="1">
-                        <ComboBoxItem Content="test" Background="Transparent"></ComboBoxItem>
+
+                    <ComboBox Name="input" Grid.Row="1" Grid.Column="1" Height="50" Width="300" Background="Black" Opacity="0.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" FontWeight="Bold">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
                     </ComboBox>
-                        
+
                     <Label Grid.Row="2"  Content="Output device:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalAlignment="Center" ></Label>
-                        
+                    <ComboBox Name="output" Grid.Row="2" Grid.Column="1" Height="50" Width="300" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Opacity="0.5" FontSize="15" FontWeight="Bold">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+
                 </Grid>
              
             </DockPanel>

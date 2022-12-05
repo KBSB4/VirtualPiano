@@ -23,19 +23,18 @@ namespace WpfView
         private PianoGridGenerator pianoGrid;
         private static IInputDevice? _inputDevice;
         private MainMenu _mainMenu;
+        private SettingsPage _settingsPage;
 
-        public FreePlayPiano(MainMenu _mainMenu)
+        public FreePlayPiano(MainMenu _mainMenu, SettingsPage settingsPage)
         {
             this._mainMenu = _mainMenu;
+            _settingsPage = settingsPage;
             InitializeComponent();
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
-           
-
-            //CheckInputDevice(0);
         }
 
        
@@ -148,6 +147,7 @@ namespace WpfView
         {
             if (sender is MenuItem) {
                int x = MainItem.Items.IndexOf(sender as MenuItem);
+                _settingsPage.IndexInputDevice = x;
                CheckInputDevice(x);
             }
         }
@@ -157,17 +157,20 @@ namespace WpfView
         /// <summary>
         /// Connects MIDI-keyboard
         /// </summary>
-        private void CheckInputDevice(int x)
+        public void CheckInputDevice(int x)
         {
 
 
             try
             {
-               
-                _inputDevice?.Dispose();
-                _inputDevice = InputDevice.GetByIndex(x);
-                _inputDevice.EventReceived += OnMidiEventReceived;
-                _inputDevice.StartEventsListening();
+                if (_settingsPage.IndexInputDevice >= 0)
+                {
+                    Debug.Write("send!");
+                    _inputDevice?.Dispose();
+                    _inputDevice = InputDevice.GetByIndex(x);
+                    _inputDevice.EventReceived += OnMidiEventReceived;
+                    _inputDevice.StartEventsListening();
+                }
             }
             catch (ArgumentException ex)
             {

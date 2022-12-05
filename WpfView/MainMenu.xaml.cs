@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace WpfView
@@ -13,8 +14,9 @@ namespace WpfView
         public MainMenu()
         {
             InitializeComponent();
-            _freeplay = new FreePlayPiano(this);
+            
             _adminPanel = new SettingsPage(this);
+            _freeplay = new FreePlayPiano(this,_adminPanel);
 
         }
 
@@ -22,11 +24,16 @@ namespace WpfView
         {
             //this.NavigationService.Navigate(new Uri("FreePlayPiano.xaml", UriKind.Relative));
             //Also possible (no string usage) but might make a new one every time
+           
+            _freeplay.CheckInputDevice(_adminPanel.IndexInputDevice);  // Checks if input device has been selected!
             this.NavigationService.Navigate(_freeplay);
+            
         }
 
         private void Admin_Button_Click(object sender, RoutedEventArgs e)
         {
+            _adminPanel.GenerateOutputDevices(); // Gets all the output devices
+            _adminPanel.GenerateInputDevices(); // Gets all input devices
             NavigationService?.Navigate(_adminPanel);
         }
     }
