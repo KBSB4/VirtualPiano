@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\DifficultyIconEZ.png" />
+    <None Remove="Images\DifficultyIconMedium.png" />
     <None Remove="Images\PianoHeroLogo.png" />
     <None Remove="Images\PianoHeroMenuBackground.png" />
     <None Remove="Images\PianoHeroMenuBackground.psd" />
@@ -16,6 +18,8 @@
     <None Remove="Images\pianoIcon.png" />
     <None Remove="Images\previous.png" />
     <None Remove="Images\settingsIcon.png" />
+    <None Remove="Images\SongCardBackground.png" />
+    <None Remove="Images\SongSelectBackGround.png" />
     <None Remove="PianoHeroLogo.png" />
   </ItemGroup>
 
@@ -24,6 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\DifficultyIconEZ.png" />
+    <Resource Include="Images\DifficultyIconMedium.png" />
     <Resource Include="Images\PianoHeroMenuBackground.png" />
   </ItemGroup>
 
@@ -39,6 +45,8 @@
     <Resource Include="Images\pianoIcon.png" />
     <Resource Include="Images\previous.png" />
     <Resource Include="Images\settingsIcon.png" />
+    <Resource Include="Images\SongCardBackground.png" />
+    <Resource Include="Images\SongSelectBackGround.png" />
     <Resource Include="PianoHeroLogo.png" />
   </ItemGroup>
 
