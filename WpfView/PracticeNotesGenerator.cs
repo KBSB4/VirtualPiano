@@ -1,11 +1,9 @@
 ﻿using Melanchall.DryWetMidi.MusicTheory;
 using Model;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace WpfView
@@ -14,7 +12,15 @@ namespace WpfView
     {
         private List<Grid> practiceNoteColumns;
         private const int noteLength = 390;
+        //TODO do this base do tempomap
         private const int noteSpeed = 10;
+
+        /// <summary>
+        /// Prepare grids for practice notes
+        /// </summary>
+        /// <param name="whiteKeyGrid"></param>
+        /// <param name="blackKeyGrid"></param>
+        /// <param name="columnAmount"></param>
         public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
         {
             if (columnAmount < 0)
@@ -25,6 +31,10 @@ namespace WpfView
             practiceNoteColumns = AddPracticeNoteColumns(whiteKeyGrid, blackKeyGrid, columnAmount);
         }
 
+        /// <summary>
+        /// Adds upcoming note
+        /// </summary>
+        /// <param name="key"></param>
         public void StartExampleNote(PianoKey? key)
         {
             if (key is null) return;
@@ -44,6 +54,9 @@ namespace WpfView
             currentColumn.Children.Add(rectangle);
         }
 
+        /// <summary>
+        /// Update each note to fall down
+        /// </summary>
         public void UpdateExampleNotes()
         {
             foreach (var column in practiceNoteColumns)
@@ -58,6 +71,7 @@ namespace WpfView
                             rectangle.Margin = new Thickness(0, rectangle.Margin.Top + noteSpeed, 0, 0);
                             if (rectangle.Margin.Top > column.Height)
                             {
+                                //Remove
                                 column.Children.Remove(rectangle);
                             }
                         }
@@ -66,6 +80,13 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Add columns to each grid
+        /// </summary>
+        /// <param name="whiteKeyGrid"></param>
+        /// <param name="blackKeyGrid"></param>
+        /// <param name="columnAmount"></param>
+        /// <returns></returns>
         private List<Grid> AddPracticeNoteColumns(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
         {
             List<Grid> columns = new();
@@ -98,6 +119,13 @@ namespace WpfView
             return columns;
         }
 
+        /// <summary>
+        /// Add key to grid
+        /// </summary>
+        /// <param name="keyGrid"></param>
+        /// <param name="gridColumns"></param>
+        /// <param name="i"></param>
+        /// <param name="keyColumnGrid"></param>
         private static void AddKey(Grid keyGrid, List<Grid> gridColumns, int i, Grid keyColumnGrid)
         {
             Grid.SetColumn(keyColumnGrid, i);
@@ -106,6 +134,10 @@ namespace WpfView
             gridColumns.Add(keyColumnGrid);
         }
 
+        /// <summary>
+        /// Set width of column
+        /// </summary>
+        /// <param name="grid"></param>
         private static void SetColumnWidth(Grid grid)
         {
             for (int i = 0; i < grid.ColumnDefinitions.Count; i++)

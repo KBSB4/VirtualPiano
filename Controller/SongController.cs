@@ -1,4 +1,5 @@
-﻿using Melanchall.DryWetMidi.Core;
+﻿using BusinessLogic;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Model;
 
@@ -10,17 +11,22 @@ namespace Controller
 
         public static void LoadSong()
         {
-            //MidiFile? file = PlayList.RetrieveMidiFile();
             MidiFile? file = MIDIController.OriginalMIDI;
             if (file is not null)
             {
-                CurrentSong = MidiConverter.Convert(file);
+                CurrentSong = MIDIController.Convert(file);
+                CurrentSong.SongTimerThread = new Thread(() => SongLogic.PlaySong(CurrentSong));
             }
         }
 
+        /// <summary>
+        /// Load song and set offset
+        /// </summary>
+        /// <param name="Offset"></param>
         public static void LoadSong(MetricTimeSpan Offset)
         {
             LoadSong();
+            //TODO NOT USED RIGHT NOW
             CurrentSong.Offset = Offset;
         }
 
@@ -29,10 +35,24 @@ namespace Controller
         /// </summary>
         public static void PlaySong()
         {
-            if (CurrentSong is not null)
+            if (CurrentSong is not null && !CurrentSong.IsPlaying)
             {
-                CurrentSong.Play();
+                SongLogic.Play(CurrentSong);
+
             }
+        }
+
+        /// <summary>
+        /// Stops the song by making a new queue which sets its count to 0
+        /// </summary>
+        public static void StopSong()
+        {
+            //Stops the keys from appearing
+            CurrentSong.PianoKeys = new();
+
+            SongLogic.PlaybackDevice.Stop();
+            SongLogic.PlaybackDevice.Dispose();
+            SongLogic.OutputDevice.Dispose();
         }
     }
 }

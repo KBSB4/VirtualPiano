@@ -1,20 +1,19 @@
-﻿using Melanchall.DryWetMidi.Core;
+﻿using Melanchall.DryWetMidi.Common;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
-using Melanchall.DryWetMidi.Multimedia;
-using System.Diagnostics;
+using Melanchall.DryWetMidi.MusicTheory;
+using Model;
+using Note = Melanchall.DryWetMidi.Interaction.Note;
+using Octave = Model.Octave;
 
 namespace Controller
 {
     public static class MIDIController
     {
-        public static MidiFile OriginalMIDI { get; set; }
-        private static MidiFile MIDI { get; set; }
-        private static MidiFile MIDIPianoIsolated { get; set; }
-        public static Note[] AllNotes { get; set; }
-        public static MidiTimeSpan CurrentTick { get; set; }
-
-
-        //Note PlayBack has events notesplaybackstarted and notesplaybackfinished
+        private static TempoMap TempoMap;
+        public static MidiFile OriginalMIDI { get; set; } //Full MIDI
+        private static MidiFile MIDI { get; set; } //MIDI without the track in MIDITrackIsolated
+        private static MidiFile MIDITrackIsolated { get; set; } //Selfexplanatory, depends on which track we use which should be set in database
 
         /// <summary>
         /// Read MIDI File and get karoake MIDIs out of it as well.
@@ -24,86 +23,78 @@ namespace Controller
         {
             OriginalMIDI = MidiFile.Read(MIDIpath);
             SongController.LoadSong();
-
-            //In case of isolation: 
-            /*
-						//Get all tracks in the MIDI
-						List<TrackChunk> trackChunks = Melanchall.DryWetMidi.Core.TrackChunkUtilities.GetTrackChunks(OriginalMIDI).ToList();
-
-						//UNDONE Figure out which track is piano/sythensizer (might be impossible, must be done in database)
-						//TrackChunk pianoTrackChunks = trackChunks[1];
-						//MIDIPianoIsolated = new(pianoTrackChunks);
-
-						//Delete the piano track in trackChunks and make that the new midi file
-						trackChunks.RemoveAt(1);
-						IEnumerable<TrackChunk> newTrackChunks = trackChunks.AsEnumerable();
-						MIDI = new(newTrackChunks);
-			*/
         }
 
         /// <summary>
-        /// Play MIDI File and check if PlayIsolated is true. 
-        /// To prevent exception when thread gets interuppted, it is encased in a try catch
+        /// Convert MIDI to Song and its notes to PianoKeys
         /// </summary>
-        /// <param name="PlayIsolated"></param>
-        public static void PlayMidi(Boolean PlayIsolated = false)
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static Song Convert(MidiFile file)
         {
-            //Get first available device and play it
-            using (var outputDevice = OutputDevice.GetAll().ToArray()[0])
+            var trackList = file.GetTrackChunks().ToList();
+            TempoMap = file.GetTempoMap();
+            Queue<PianoKey> pianoKeyList = new();
+            foreach (Note? midiKey in file.GetNotes())
             {
-                try
+                PianoKey? pianoKey = ConvertPianoKey(midiKey);
+                if (pianoKey is not null)
                 {
-                    if (PlayIsolated)
-                    {
-                        MIDI?.Play(outputDevice);
-                    }
-                    else
-                    {
-                        var _playback = OriginalMIDI?.GetPlayback(outputDevice, new PlaybackSettings
-                        {
-                            ClockSettings = new MidiClockSettings
-                            {
-                                CreateTickGeneratorCallback = () => new RegularPrecisionTickGenerator()
-                            }
-                        });
-
-                        _playback.NotesPlaybackStarted += OnNotesPlaybackStarted;
-                        PlaybackCurrentTimeWatcher.Instance.AddPlayback(_playback, TimeSpanType.Midi);
-                        PlaybackCurrentTimeWatcher.Instance.CurrentTimeChanged += OnCurrentTimeChanged;
-                        PlaybackCurrentTimeWatcher.Instance.Start();
-
-                        AllNotes = MIDIController.OriginalMIDI.GetNotes().ToArray();
-                        _playback.Start();
-
-                        SpinWait.SpinUntil(() => !_playback.IsRunning);
-
-                        Console.WriteLine("Playback stopped or finished.");
-
-                        outputDevice.Dispose();
-                        _playback.Dispose();
-                    }
-                }
-                catch (ThreadInterruptedException ex)
-                {
-                    //Ignore
+                    //TODO Later for database
+                    //if (IsPianoChannel(trackList, midiKey.Channel))
+                    //{
+                    pianoKeyList.Enqueue(pianoKey);
+                    //}
                 }
             }
+
+            MetricTimeSpan duration = file.GetDuration<MetricTimeSpan>();
+            return new Song(file, "temp", Difficulty.Easy, duration, pianoKeyList);
         }
 
-        private static void OnNotesPlaybackStarted(object sender, NotesEventArgs e)
+        /// <summary>
+        /// Find piano channel - NOT USED RIGHT NOW
+        /// </summary>
+        /// <param name="trackList"></param>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        private static bool IsPianoChannel(List<TrackChunk> trackList, FourBitNumber channel)
         {
-            //For the future
-        }
-
-        private static void OnCurrentTimeChanged(object sender, PlaybackCurrentTimeChangedEventArgs e)
-        {
-            //Current tick
-            foreach (var playbackTime in e.Times)
+            foreach (TrackChunk chunk in trackList)
             {
-                CurrentTick = (MidiTimeSpan)playbackTime.Time;
-                //CurrentTick += (MidiTimeSpan)100;
-                //Debug.WriteLine($"Current time is {CurrentTick}.");
+                var programNumbers = chunk
+                    .Events
+                    .OfType<ProgramChangeEvent>()
+                    .Select(e => new { e.ProgramNumber, e.Channel })
+                    .ToArray();
+                foreach (var test in programNumbers)
+                {
+                    if (test.Channel == channel)
+                        //See Wikipedia General MIDI - Everything under 8 is Piano
+                        if (test.ProgramNumber < 8)
+                            return true;
+                }
             }
+            return false;
+        }
+
+        /// <summary>
+        /// Convert note to PianoKey for visualisation and plays
+        /// </summary>
+        /// <param name="midiNote"></param>
+        /// <returns></returns>
+        private static PianoKey? ConvertPianoKey(Note? midiNote)
+        {
+            if (midiNote is null)
+            {
+                return null;
+            }
+            MetricTimeSpan timeStamp = midiNote.TimeAs<MetricTimeSpan>(TempoMap);
+            MetricTimeSpan duration = midiNote.LengthAs<MetricTimeSpan>(TempoMap);
+
+            var noteName = midiNote.NoteName;
+            var octave = midiNote.Octave;
+            return new PianoKey((Octave)octave, noteName, timeStamp, duration);
         }
     }
 }

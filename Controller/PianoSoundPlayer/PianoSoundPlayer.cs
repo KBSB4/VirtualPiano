@@ -11,6 +11,7 @@ namespace VirtualPiano.PianoSoundPlayer
         private string pianoSoundSuffix;
 
         private XAudio2 device;
+        //DO NOT REMOVE, IT WILL CRASH
         MasteringVoice masteringVoice;
 
         /// <summary>
@@ -177,15 +178,6 @@ namespace VirtualPiano.PianoSoundPlayer
                 5 => 1,
                 _ => 0,
             };
-        }
-
-        /// <summary>
-        /// Nullafies the object and remove unncessary objects 
-        /// </summary>
-        public void Dispose()
-        {
-            device.Dispose();
-            masteringVoice.Dispose();
         }
     }
 }

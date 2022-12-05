@@ -19,9 +19,10 @@ namespace WpfView
     /// </summary>
     public partial class MainWindow : Window
     {
-        PianoGridGenerator pianoGrid;
-        PracticeNotesGenerator practiceNotes;
+        readonly PianoGridGenerator pianoGrid;
+        readonly PracticeNotesGenerator practiceNotes;
 
+        //Note Keep until plug and play + settings are implemented
         private static IInputDevice _inputDevice;
 
         public MainWindow()
@@ -35,13 +36,23 @@ namespace WpfView
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
+            //Keep this here until we have a better way of connecting phyiscal devices and so we can test
             //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
             //_inputDevice.EventReceived += OnMidiEventReceived;
             //_inputDevice.StartEventsListening();
 
-            new Thread(new ParameterizedThreadStart(UpdateVisualNotes)).Start();
+            //Start thread for updating practice notes
+            Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
+            {
+                IsBackground = true
+            };
+            updateVisualNoteThread.Start();
         }
 
+        /// <summary>
+        /// Method that constantly updates the practice notes
+        /// </summary>
+        /// <param name="obj"></param>
         private void UpdateVisualNotes(object? obj)
         {
             while (true)
@@ -53,13 +64,19 @@ namespace WpfView
                     {
                         practiceNotes.UpdateExampleNotes();
                     }));
-                } catch (TaskCanceledException ex)
+                }
+                catch (TaskCanceledException ex) //Just in case
                 {
-                    //ignore
+                    Environment.Exit(0);
                 }
             }
         }
 
+        /// <summary>
+        /// If note is to be played, create a new note
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
             try
@@ -70,12 +87,13 @@ namespace WpfView
                     {
                         practiceNotes.StartExampleNote(e.Key);
                     }
+                    //TODO Add option to display keys live as if the piano is playing it
                     //pianoGrid.DisplayPianoKey(e.Key);
                 }));
-            } catch (TaskCanceledException ex)
+            }
+            catch (TaskCanceledException ex) //Just in case
             {
-                //TODO Does not work check: https://developercommunity.visualstudio.com/t/taskcanceledexception-during-application-shutdown/284294
-                //On closure stop all events?
+                Environment.Exit(0);
             }
         }
 
@@ -148,58 +166,56 @@ namespace WpfView
 
         #region MIDI
         /// <summary>
-        /// Opens the dialog to select a MIDI file and open it
+        /// Checks if everything is okay and not playing before attempting to load new file in
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OpenMIDIFileDialog(object sender, RoutedEventArgs e)
         {
-            if (t is null)
+            if (SongController.CurrentSong is null)
             {
-                var openFileDialog = new OpenFileDialog();
-
-                openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "MIDI Files (*.mid)|*.mid";
-                openFileDialog.FilterIndex = 2;
-                openFileDialog.RestoreDirectory = true;
-
-                if ((bool)openFileDialog.ShowDialog())
-                {
-                    //Get the path of specified file
-                    MIDIController.OpenMidi(openFileDialog.FileName);
-                    SongController.LoadSong(new MetricTimeSpan(500));
-                }
+                StartDialog();
             }
-            else
+            else if(SongController.CurrentSong.IsPlaying)
             {
                 MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
-                    "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+            } else
+            {
+                StartDialog();
             }
         }
 
-        //To play MIDIs without hogging the main thread
+        /// <summary>
+        /// Open dialog and prepares MIDI
+        /// </summary>
+        private static void StartDialog()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "MIDI Files (*.mid)|*.mid",
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
+
+            if ((bool)openFileDialog.ShowDialog())
+            {
+                //Get the path of specified file
+                MIDIController.OpenMidi(openFileDialog.FileName);
+                SongController.LoadSong(new MetricTimeSpan(500));
+            }
+        }
 
         /// <summary>
         /// Play MIDI File
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        Thread t;
         private void PlayMIDIFile(object sender, RoutedEventArgs e)
         {
-            Boolean isisolated = IsolatedPiano.IsChecked;
-            if (MIDIController.OriginalMIDI is not null && t is null)
+            //Boolean isisolated = IsolatedPiano.IsChecked; Planned for later
+            if (MIDIController.OriginalMIDI is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
-                ////Play MIDI when program starts
-                //t = new Thread(() =>
-                //{
-                //    MIDIController.PlayMidi(isisolated);
-                //    t = null;
-                //});
-                ////Makes the thread close when application close
-                //t.IsBackground = true;
-                //t.Start();
-
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
                 SongController.PlaySong();
             }
@@ -211,7 +227,7 @@ namespace WpfView
                     "No MIDI selected", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
-                if (t is not null)
+                if (SongController.CurrentSong is not null && SongController.CurrentSong.IsPlaying)
                 {
                     MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
                     "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -227,10 +243,9 @@ namespace WpfView
         /// <param name="e"></param>
         private void StopMIDIFile(object sender, RoutedEventArgs e)
         {
-            if (t is not null)
+            if (SongController.CurrentSong is not null && SongController.CurrentSong.IsPlaying)
             {
-                t.Interrupt();
-                t = null;
+                SongController.StopSong();
             }
             else
             {
