@@ -14,10 +14,11 @@ namespace Model
         public MetricTimeSpan Offset { get; set; }
         public Thread SongTimerThread { get; set; }
         public Boolean IsPlaying { get; set; }
+        public TempoMap TempoMap { get; set; }
 
         public event EventHandler<PianoKeyEventArgs> NotePlayed;
 
-        public Song(MidiFile file, string name, Difficulty difficulty, MetricTimeSpan duration, Queue<PianoKey> pianoKeys)
+        public Song(MidiFile file, string name, Difficulty difficulty, MetricTimeSpan duration, Queue<PianoKey> pianoKeys, TempoMap tempoMap)
         {
             File = file;
             Name = name;
@@ -26,6 +27,7 @@ namespace Model
             PianoKeys = pianoKeys;
             TimeInSong = new MetricTimeSpan(0);
             Offset = new TimeSpan(0);
+            TempoMap = tempoMap;
         }
 
         public void InvokeNotePlayed(Song song, PianoKeyEventArgs pianoKeyEventArgs)

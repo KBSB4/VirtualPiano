@@ -51,7 +51,7 @@ namespace Controller
 			}
 
 			MetricTimeSpan duration = file.GetDuration<MetricTimeSpan>();
-			return new Song(file, "temp", Difficulty.Easy, duration, pianoKeyList);
+			return new Song(file, "temp", Difficulty.Easy, duration, pianoKeyList, TempoMap);
 		}
 
 		/// <summary>

@@ -50,6 +50,7 @@ namespace Controller
             //Stops the keys from appearing
             CurrentSong.PianoKeys = new();
 
+            //TODO Sometimes Stop() crashes with an AccessViolationException
             SongLogic.PlaybackDevice.Stop();
             SongLogic.PlaybackDevice.Dispose();
             SongLogic.OutputDevice.Dispose();

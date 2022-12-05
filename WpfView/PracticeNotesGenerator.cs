@@ -1,4 +1,6 @@
-﻿using Melanchall.DryWetMidi.MusicTheory;
+﻿using Controller;
+using Melanchall.DryWetMidi.Interaction;
+using Melanchall.DryWetMidi.MusicTheory;
 using Model;
 using System.Collections.Generic;
 using System.Windows;
@@ -13,7 +15,8 @@ namespace WpfView
         private List<Grid> practiceNoteColumns;
         private const int noteLength = 390;
         //TODO do this base do tempomap
-        private const int noteSpeed = 10;
+        private double noteSpeed = 10; //Default is 120BPM?
+        private Queue<double> tempoQueue = new();
 
         /// <summary>
         /// Prepare grids for practice notes
@@ -37,13 +40,17 @@ namespace WpfView
         /// <param name="key"></param>
         public void StartExampleNote(PianoKey? key)
         {
+            //Get starting speed
+            //if(SongController.CurrentSong is not null) noteSpeed = (double)10 / (double)140 * (double)SongController.CurrentSong.TempoMap
+            //        .GetTempoAtTime(new MetricTimeSpan(0)).BeatsPerMinute;
+
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);
 
             Grid currentColumn = practiceNoteColumns[0];
-			if (practiceNoteColumns.Count > note)
+            if (practiceNoteColumns.Count > note)
             {
-				currentColumn = practiceNoteColumns[note];
+                currentColumn = practiceNoteColumns[note];
             }
 
             double rectHeight = key.Duration.TotalSeconds * noteLength;
@@ -57,6 +64,10 @@ namespace WpfView
             };
 
             currentColumn.Children.Add(rectangle);
+
+            //Get bpm at the next note
+            double bpm = (double)SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute;
+            tempoQueue.Enqueue(bpm);
         }
 
         /// <summary>
@@ -74,10 +85,17 @@ namespace WpfView
                         if (rectangle is not null)
                         {
                             rectangle.Margin = new Thickness(0, rectangle.Margin.Top + noteSpeed, 0, 0);
-                            if (rectangle.Margin.Top > column.Height)
+                            if (rectangle.Margin.Top > column.ActualHeight)
                             {
                                 //Remove
-                                column.Children.Remove(rectangle);
+                                //column.Children.Remove(rectangle); //TODO DOES NOT WORK, BREAKS ENUMERATOR
+
+                                //Update notespeed
+                                //TODO Does not work as expected yet
+                                //if (tempoQueue.Count > 0)
+                                //{
+                                //    noteSpeed = (double)10 / (double)140 * tempoQueue.Dequeue();
+                                //}
                             }
                         }
                     }
@@ -156,49 +174,51 @@ namespace WpfView
         /// </summary>
         /// <param name="pianokey"></param>
         /// <returns>SolidBrush</returns>
+        private static SolidColorBrush whitekeycolour = new(Colors.Orange);
+        private static SolidColorBrush blackkeycolour = new(Colors.DarkRed);
         private static SolidColorBrush GetPianoKeyColour(PianoKey pianokey)
         {
             SolidColorBrush solidBrush;
             switch (pianokey.Note)
             {
                 case NoteName.C:
-                    solidBrush = new SolidColorBrush(Colors.Red);
+                    solidBrush = whitekeycolour;
                     break;
                 case NoteName.CSharp:
-                    solidBrush = new SolidColorBrush(Colors.DarkRed);
+                    solidBrush = blackkeycolour;
                     break;
                 case NoteName.D:
-                    solidBrush = new SolidColorBrush(Colors.Green);
+                    solidBrush = whitekeycolour;
                     break;
                 case NoteName.DSharp:
-                    solidBrush = new SolidColorBrush(Colors.DarkGreen);
+                    solidBrush = blackkeycolour;
                     break;
                 case NoteName.E:
-                    solidBrush = new SolidColorBrush(Colors.DeepSkyBlue);
+                    solidBrush = whitekeycolour;
                     break;
                 case NoteName.F:
-                    solidBrush = new SolidColorBrush(Colors.Blue);
+                    solidBrush = whitekeycolour;
                     break;
                 case NoteName.FSharp:
-                    solidBrush = new SolidColorBrush(Colors.DarkBlue);
+                    solidBrush = blackkeycolour;
                     break;
                 case NoteName.G:
-                    solidBrush = new SolidColorBrush(Colors.Yellow);
+                    solidBrush = whitekeycolour;
                     break;
                 case NoteName.GSharp:
-                    solidBrush = new SolidColorBrush(Colors.LightYellow);
+                    solidBrush = blackkeycolour;
                     break;
                 case NoteName.A:
-                    solidBrush = new SolidColorBrush(Colors.Purple);
+                    solidBrush = whitekeycolour;
                     break;
                 case NoteName.ASharp:
-                    solidBrush = new SolidColorBrush(Colors.MediumPurple);
+                    solidBrush = blackkeycolour;
                     break;
                 case NoteName.B:
-                    solidBrush = new SolidColorBrush(Colors.DarkTurquoise);
+                    solidBrush = whitekeycolour;
                     break;
                 default:
-                    solidBrush = new SolidColorBrush(Colors.DarkSeaGreen);
+                    solidBrush = new SolidColorBrush(Colors.Red);
                     break;
             }
             return solidBrush;
