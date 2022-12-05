@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <None Remove="Images\DifficultyIconEZ.png" />
+    <None Remove="Images\DifficultyIconHard.png" />
+    <None Remove="Images\DifficultyIconHero.png" />
     <None Remove="Images\DifficultyIconMedium.png" />
     <None Remove="Images\PianoHeroLogo.png" />
     <None Remove="Images\PianoHeroMenuBackground.png" />
@@ -29,6 +31,8 @@
 
   <ItemGroup>
     <Resource Include="Images\DifficultyIconEZ.png" />
+    <Resource Include="Images\DifficultyIconHard.png" />
+    <Resource Include="Images\DifficultyIconHero.png" />
     <Resource Include="Images\DifficultyIconMedium.png" />
     <Resource Include="Images\PianoHeroMenuBackground.png" />
   </ItemGroup>

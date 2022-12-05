@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -24,6 +25,8 @@ namespace WpfView
             {
                 0 => new BitmapImage(new Uri("/Images/DifficultyIconEZ.png", UriKind.Relative)),
                 1 => new BitmapImage(new Uri("/Images/DifficultyIconMedium.png", UriKind.Relative)),
+                2 => new BitmapImage(new Uri("/Images/DifficultyIconHard.png", UriKind.Relative)),
+                3 => new BitmapImage(new Uri("/Images/DifficultyIconHero.png", UriKind.Relative)),
                 _ => new BitmapImage(new Uri("/Images/DifficultyIconEZ.png", UriKind.Relative)),
             };
         }
@@ -52,5 +55,13 @@ namespace WpfView
         public static readonly DependencyProperty DifficultyImageSourceProperty =
             DependencyProperty.Register("DifficultyImageSource", typeof(ImageSource), typeof(SongCardControl), new PropertyMetadata(default(ImageSource)));
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Button? button = sender as Button;
+            if (button is not null)
+            {
+                Debug.WriteLine(button.Content);
+            }
+        }
     }
 }

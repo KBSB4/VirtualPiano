@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <Button Style="{StaticResource SongCardButton}">
+
+    <Button Style="{StaticResource SongCardButton}" MaxWidth="300" Click="Button_Click">
         <Grid>
             <local:AspectRatioLayoutDecorator AspectRatio="1">
                 <Grid ClipToBounds="True">
@@ -39,7 +40,9 @@
                             <Label Content="{Binding SongTitle}" FontSize="60" Foreground="WhiteSmoke" Name="SongName" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
                         </Viewbox>
                         <Image Grid.Column="1" Grid.ColumnSpan="2" Source="{Binding DifficultyImageSource}" Margin="10"></Image>
-                        <TextBlock Grid.Row="1" FontSize="25" TextWrapping="Wrap" Foreground="WhiteSmoke">Space for song info, highscore or other text, or maybe an image might be cool</TextBlock>
+                        <Viewbox Grid.Row="1" VerticalAlignment="Top">
+                            <TextBlock FontSize="10" TextWrapping="Wrap" Foreground="WhiteSmoke" Width="120" Text="Space for song info, highscore or other text. Or maybe an image might be cool. Lorem Ipsum Dolor set amet"></TextBlock>
+                        </Viewbox>
                     </Grid>
                 </Grid>
             </local:AspectRatioLayoutDecorator>
