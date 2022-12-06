@@ -1,4 +1,5 @@
-﻿using BusinessLogic;
+using System.Windows;
+using BusinessLogic;
 using Controller;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
@@ -19,6 +20,11 @@ namespace WpfView
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            _NavigationFrame.Navigate(new MainMenu());
         readonly PianoGridGenerator pianoGrid;
         readonly PracticeNotesGenerator practiceNotes;
 

@@ -33,6 +33,8 @@ namespace UnitTests
         [Test]
         public void PianoController_GetPressedPianoKey()
         {
+            Assert.That(piano.PianoKeys, Has.Count.EqualTo(72));
+        }
 
         }
 

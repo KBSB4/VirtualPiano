@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfView"
         mc:Ignorable="d"
-        Title="Piano Hero" Height="540" Width="960" Icon="/PianoHeroLogo.png"
+        Title="Piano Hero" Height="540" Width="960" Icon="/PianoHeroLogo.png" 
         WindowState="Maximized" WindowStyle="SingleBorderWindow">
+
     <DockPanel>
+        <Frame x:Name="_NavigationFrame" NavigationUIVisibility="Hidden" />
         <Menu x:Name="MenuPanel" DockPanel.Dock="Top" Panel.ZIndex="1">
             <MenuItem Header="_MIDI">
                 <MenuItem Header="_Open" Click="OpenMIDIFileDialog" />

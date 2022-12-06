@@ -9,16 +9,15 @@ namespace Model
         public Octave Octave { get; set; }
         public bool PressedDown { get; set; }
         public NoteName Note { get; set; }
-        public MicrosoftKeybinds MicrosoftBind { get; set; }
+        public KeyBind KeyBind { get; set; }
 
+        public PianoKey(Octave octave, NoteName note, KeyBind bind)
         public MetricTimeSpan TimeStamp { get; set; }
         public MetricTimeSpan Duration { get; set; }
-
-        public PianoKey(Octave octave, NoteName note, MicrosoftKeybinds bind)
         {
             Octave = octave;
             Note = note;
-            MicrosoftBind = bind;
+            KeyBind = bind;
         }
 
         public PianoKey(Octave octave, NoteName note, MetricTimeSpan timeStamp, MetricTimeSpan duration)
