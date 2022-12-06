@@ -29,7 +29,7 @@
             </MenuItem>
 
 
-            <MenuItem Name="MainItem"  Header="Connect MIDI-keyboard" Height="30" Click="Refresh_Click" Foreground="White" >
+            <MenuItem Name="MainItem"  Header="Settings" Height="30" Click="Refresh_Click" Foreground="White" >
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
