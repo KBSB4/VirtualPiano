@@ -11,9 +11,11 @@ namespace Model
         public NoteName Note { get; set; }
         public KeyBind KeyBind { get; set; }
 
-        public PianoKey(Octave octave, NoteName note, KeyBind bind)
+
         public MetricTimeSpan TimeStamp { get; set; }
         public MetricTimeSpan Duration { get; set; }
+
+        public PianoKey(Octave octave, NoteName note, KeyBind bind)
         {
             Octave = octave;
             Note = note;

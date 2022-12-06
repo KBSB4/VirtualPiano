@@ -14,12 +14,8 @@ namespace WpfView
     internal class PracticeNotesGenerator
     {
         private List<Grid> practiceNoteColumns;
-        //TODO get the right values
-        private const int noteLength = 390; //TODO change depending on speed
+        private const int noteLength = 390; 
         private double noteSpeed = 10;
-        private double defaultBPM = 120;
-        private Queue<double> tempoQueue = new();
-        private Boolean firstNote = true;
 
         /// <summary>
         /// Prepare grids for practice notes
@@ -63,18 +59,6 @@ namespace WpfView
             };
 
             currentColumn.Children.Add(rectangle);
-
-            //Get bpm at the next note
-            double bpm = (double)SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute;
-            tempoQueue.Enqueue(bpm);
-            
-
-            //Get starting notespeed
-            if (firstNote)
-            {
-                noteSpeed = (double)10 / (double)defaultBPM * tempoQueue.Dequeue();
-                firstNote = false;
-            }
         }
 
         /// <summary>
@@ -96,14 +80,6 @@ namespace WpfView
                             {
                                 //Remove
                                 //column.Children.Remove(rectangle); //TODO DOES NOT WORK, BREAKS ENUMERATOR
-
-                                //Update notespeed
-                                //TODO Does not work as expected yet
-                                if (tempoQueue.Count > 0)
-                                {
-                                    noteSpeed = (double)10 / (double)defaultBPM * tempoQueue.Dequeue();
-                                    Debug.WriteLine("Notespeed: " + noteSpeed);
-                                }
                             }
                         }
                     }

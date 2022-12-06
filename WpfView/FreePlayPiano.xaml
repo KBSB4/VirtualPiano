@@ -13,6 +13,9 @@
             <RowDefinition Height="70*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
+        <!-- <Image x:Name="MainImage" Margin="0,0,0,0"/> -->
+        <Grid Name="PracticeColumnWhiteKeys" Grid.Row="0" ZIndex="0"></Grid>
+        <Grid Name="PracticeColumnBlackKeys" Grid.Row="0" ZIndex="1"></Grid>
         <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
         <Grid Name="BlackKeysGrid" Grid.Row="1" ZIndex="1" Focusable="True">
             <Grid.RowDefinitions>
@@ -29,14 +32,22 @@
             </MenuItem>
 
 
-            <MenuItem Name="MainItem"  Header="Connect MIDI-keyboard" Height="30" Click="Refresh_Click" Foreground="White" >
+            <MenuItem Name="MainItem" Header="Connect MIDI-keyboard" Height="30" Click="Refresh_Click" Foreground="White" >
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
-                
+            </MenuItem>
+
+            <MenuItem Name="_MIDI" Header="MIDI" Height="30" Click="Refresh_Click" Foreground="White">
+                <MenuItem.Icon>
+                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                </MenuItem.Icon>
+                <MenuItem Header="_Open" Click="OpenMIDIFileDialog" Foreground="Black" />
+                <MenuItem Header="_Play" Click="PlayMIDIFile" Foreground="Black"/>
+                <MenuItem Header="_Stop" Click="StopMIDIFile" Foreground="Black"/>
+                <!--<Separator /> Planned for later-->
+                <!-- <MenuItem x:Name="IsolatedPiano" Header="_Isolate Piano" IsCheckable="true"/>-->
             </MenuItem>
         </Menu>
-
-
     </Grid>
 </Page>

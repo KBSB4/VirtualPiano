@@ -11,13 +11,13 @@ namespace WpfView
     {
         private FreePlayPiano _freeplay;
         private SettingsPage _adminPanel;
+
         public MainMenu()
         {
             InitializeComponent();
             
             _adminPanel = new SettingsPage(this);
             _freeplay = new FreePlayPiano(this,_adminPanel);
-
         }
 
         private void FreePlay_Button_Click(object sender, RoutedEventArgs e)
