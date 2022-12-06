@@ -67,10 +67,8 @@ namespace WpfView
             tempoQueue.Enqueue(Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute));
             if(FirstTime)
             {
-                //noteSpeed = Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute / 10);
-                //noteSpeed = 95 / 10;
                 int bpm = (int)tempoQueue.Dequeue();
-                noteSpeed =  bpm / 10;
+                //noteSpeed =  bpm / 10;
                 FirstTime = false;
             }
         }
@@ -90,17 +88,11 @@ namespace WpfView
                         if (rectangle is not null)
                         {
                             //Use margin to move down
-                            rectangle.Margin = new Thickness(0, rectangle.Margin.Top + noteSpeed, 0, 0);
+                            rectangle.Margin = new Thickness(0, rectangle.Margin.Top + (column.ActualHeight / 100 * 1.25F), 0, 0);
                             if (rectangle.Margin.Top > column.ActualHeight)
                             {
                                 //Remove
                                 //column.Children.Remove(rectangle); //TODO DOES NOT WORK, BREAKS ENUMERATOR
-
-                                if(tempoQueue.Count > 0)
-                                {
-                                    int bpm = (int)tempoQueue.Dequeue();
-                                    noteSpeed = bpm / 10;
-                                }
                             }
                         }
                     }

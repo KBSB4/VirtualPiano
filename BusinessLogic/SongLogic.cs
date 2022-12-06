@@ -19,7 +19,7 @@ namespace BusinessLogic
         {
             Song song = obj as Song;
             song.SongTimerThread.Start();
-            Thread.Sleep(2700);
+            Thread.Sleep(2000);
 
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
@@ -50,7 +50,6 @@ namespace BusinessLogic
 
         public static void PlaySong(Song song)
         {
-            Thread.Sleep(1000);
             song.IsPlaying = true;
             while (song.PianoKeys.Count > 0)
             {
