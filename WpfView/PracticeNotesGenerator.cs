@@ -2,7 +2,9 @@
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.MusicTheory;
 using Model;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -15,8 +17,10 @@ namespace WpfView
         private List<Grid> practiceNoteColumns;
         private const int noteLength = 390;
         //TODO do this base do tempomap
-        private double noteSpeed = 10; //Default is 120BPM?
+        private double noteSpeed = 10; 
+        private double defaultBPM = 140;
         private Queue<double> tempoQueue = new();
+        private Boolean firstNote = true;
 
         /// <summary>
         /// Prepare grids for practice notes
@@ -40,10 +44,6 @@ namespace WpfView
         /// <param name="key"></param>
         public void StartExampleNote(PianoKey? key)
         {
-            //Get starting speed
-            //if(SongController.CurrentSong is not null) noteSpeed = (double)10 / (double)140 * (double)SongController.CurrentSong.TempoMap
-            //        .GetTempoAtTime(new MetricTimeSpan(0)).BeatsPerMinute;
-
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);
 
@@ -68,6 +68,12 @@ namespace WpfView
             //Get bpm at the next note
             double bpm = (double)SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute;
             tempoQueue.Enqueue(bpm);
+
+            //Get starting notespeed
+            if(firstNote) {
+                noteSpeed = (double)10 / (double)defaultBPM * tempoQueue.Dequeue();
+                firstNote = false;
+            }
         }
 
         /// <summary>
@@ -92,10 +98,11 @@ namespace WpfView
 
                                 //Update notespeed
                                 //TODO Does not work as expected yet
-                                //if (tempoQueue.Count > 0)
-                                //{
-                                //    noteSpeed = (double)10 / (double)140 * tempoQueue.Dequeue();
-                                //}
+                                if (tempoQueue.Count > 0)
+                                {
+                                    noteSpeed = (double)10 / (double)defaultBPM * tempoQueue.Dequeue();
+                                    Debug.WriteLine("Notespeed: " + noteSpeed);
+                                }
                             }
                         }
                     }
