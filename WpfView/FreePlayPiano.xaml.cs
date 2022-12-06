@@ -59,7 +59,7 @@ namespace WpfView
         {
             while (true)
             {
-                Thread.Sleep(33);
+                Thread.Sleep(25); // 30 / 120 * bpm
                 try
                 {
                     Dispatcher.Invoke(new Action(() =>

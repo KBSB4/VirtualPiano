@@ -11,7 +11,6 @@ namespace WpfView
         {
             InitializeComponent();
             NavigationFrame.Navigate(new MainMenu());
-
         }
     }
 }

@@ -12,8 +12,6 @@ namespace Controller
 	{
 		private static TempoMap TempoMap;
 		public static MidiFile OriginalMIDI { get; set; } //Full MIDI
-		private static MidiFile MIDI { get; set; } //MIDI without the track in MIDITrackIsolated
-		private static MidiFile MIDITrackIsolated { get; set; } //Selfexplanatory, depends on which track we use which should be set in database
 
 		/// <summary>
 		/// Read MIDI File and get karoake MIDIs out of it as well.
@@ -84,9 +82,9 @@ namespace Controller
 					}
 				}
 			}
-			foreach(FourBitNumber channel in trackList.GetChannels())
+			foreach (FourBitNumber channel in trackList.GetChannels())
 			{
-				if (!programNumbersFound.Contains(channel)) 
+				if (!programNumbersFound.Contains(channel))
 					return channel;
 			}
 			return (FourBitNumber)trackList.GetChannels().Count();

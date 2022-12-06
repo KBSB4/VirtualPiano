@@ -33,7 +33,6 @@ namespace BusinessLogic
         private static void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
             object[] objs = { sender, e.Key };
-
             if (e.Key.PressedDown) new Thread(new ParameterizedThreadStart(PlayNote)).Start(objs);
         }
 
