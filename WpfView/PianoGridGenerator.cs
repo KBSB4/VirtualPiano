@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace WpfView
 {
-    internal class PianoGridGenerator
+    public class PianoGridGenerator
     {
         private List<Button> buttons;
 
@@ -41,6 +41,10 @@ namespace WpfView
         {
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
+            if (note < 0 || note > buttons.Count)
+            {
+                return;
+            }
             Button currentButton = buttons[note];
             bool pressed = key.PressedDown;
 

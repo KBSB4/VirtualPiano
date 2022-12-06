@@ -16,19 +16,13 @@ namespace Controller
         /// <summary>
         /// Creates the piano and soundplayer for the program
         /// </summary>
-        /// <returns>Piano object</returns>
+        /// <returns></returns>
         public static void CreatePiano()
         {
             Piano = new Piano();
             SoundPlayer = new("../../../../Controller/PianoSoundPlayer/Sounds/Piano/", "", ".wav");
             PianoLogic.AssembleKeyBindings(Piano);
         }
-
-        #region Piano Creation
-
-        //TODO Hier alle functies van Piano in model?
-
-        #endregion
 
         /// <summary>
         /// Figures out which key is pressed and set it to true + play audio
@@ -88,9 +82,9 @@ namespace Controller
         {
             if (!currentPlayingAudio.ContainsKey(key))
             {
-                FadingAudio fadingAudio = SoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
+                FadingAudio? fadingAudio = SoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
 
-                if (fadingAudio != null)
+                if (fadingAudio is not null)
                 {
                     fadingAudio.StartPlaying();
                     currentPlayingAudio.Add(key, fadingAudio);
