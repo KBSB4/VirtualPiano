@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace WpfView
 {
@@ -7,21 +8,28 @@ namespace WpfView
     /// </summary>
     public partial class SongSelectPage : Page
     {
-        public SongSelectPage()
+        MainMenu _mainMenu;
+        public SongSelectPage(MainMenu mainMenu)
         {
             InitializeComponent();
 
             AddSongs();
+            _mainMenu = mainMenu;
         }
 
         private void AddSongs()
         {
             for (int i = 0; i < 10; i++)
             {
-                SongCardControl songCardControl = new("Song " + i.ToString(), i % 4);
+                SongCardControl songCardControl = new(i, "Song " + i.ToString(), i % 4);
 
                 SongCards.Children.Add(songCardControl);
             }
+        }
+
+        private void MainMenu_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(_mainMenu);
         }
     }
 }
