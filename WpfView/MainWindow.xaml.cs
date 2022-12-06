@@ -57,7 +57,7 @@ namespace WpfView
         {
             while (true)
             {
-                Thread.Sleep(25);
+                Thread.Sleep(33);
                 try
                 {
                     Dispatcher.Invoke(new Action(() =>
