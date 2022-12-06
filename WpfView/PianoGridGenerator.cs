@@ -40,6 +40,10 @@ namespace WpfView
         {
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
+            if (note < 0 || note > buttons.Count)
+            {
+                return;
+            }
             Button currentButton = buttons[note];
             bool pressed = key.PressedDown;
 

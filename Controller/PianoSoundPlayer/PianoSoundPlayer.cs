@@ -11,6 +11,7 @@ namespace VirtualPiano.PianoSoundPlayer
         private string pianoSoundSuffix;
 
         private XAudio2 device;
+        //DO NOT REMOVE, IT WILL CRASH
         MasteringVoice masteringVoice;
 
         /// <summary>
@@ -107,9 +108,13 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <param name="noteName"></param>
         /// <param name="octave"></param>
         /// <returns></returns>
-        public SourceVoice GetSourceVoice(NoteName noteName, int octave)
+        public SourceVoice? GetSourceVoice(NoteName noteName, int octave)
         {
             string file = pianoFilesFolder + pianoSoundPrefix + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
+            if (!File.Exists(file))
+            {
+                return null;
+            }
             SoundStream stream = new(File.OpenRead(file));
             WaveFormat waveFormat = stream.Format;
             AudioBuffer buffer = new()
@@ -141,13 +146,18 @@ namespace VirtualPiano.PianoSoundPlayer
         /// <param name="noteName"></param>
         /// <param name="octave"></param>
         /// <returns></returns>
-        public FadingAudio GetFadingAudio(NoteName noteName, int octave)
+        public FadingAudio? GetFadingAudio(NoteName noteName, int octave)
         {
             float frequency = GetOctaveFrequencyRatio(octave);
             string pianoNoteString = noteName.ToString();
             string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
             //return new FadingAudio(GetSourceVoice(pathToFile, frequency));
-            return new FadingAudio(GetSourceVoice(noteName, octave));
+            SourceVoice? sourceVoice = GetSourceVoice(noteName, octave);
+            if (sourceVoice is not null)
+            {
+                return new FadingAudio(sourceVoice);
+            }
+            return null;
         }
 
         /// <summary>
@@ -168,15 +178,6 @@ namespace VirtualPiano.PianoSoundPlayer
                 5 => 1,
                 _ => 0,
             };
-        }
-
-        /// <summary>
-        /// Nullafies the object and remove unncessary objects 
-        /// </summary>
-        public void Dispose()
-        {
-            device.Dispose();
-            masteringVoice.Dispose();
         }
     }
 }

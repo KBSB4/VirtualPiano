@@ -7,11 +7,24 @@
         mc:Ignorable="d"
         Title="Piano Hero" Height="540" Width="960" Icon="/PianoHeroLogo.png"
         WindowState="Maximized" WindowStyle="SingleBorderWindow">
-    <Grid Background="#FF292929">
+    <DockPanel>
+        <Menu x:Name="MenuPanel" DockPanel.Dock="Top" Panel.ZIndex="1">
+            <MenuItem Header="_MIDI">
+                <MenuItem Header="_Open" Click="OpenMIDIFileDialog" />
+                <MenuItem Header="_Play" Click="PlayMIDIFile" />
+                <MenuItem Header="_Stop" Click="StopMIDIFile" />
+                <!--<Separator /> Planned for later-->
+                <!-- <MenuItem x:Name="IsolatedPiano" Header="_Isolate Piano" IsCheckable="true"/>-->
+            </MenuItem>
+        </Menu>
+        <Grid Background="#FF292929">
         <Grid.RowDefinitions>
             <RowDefinition Height="70*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
+            <!-- <Image x:Name="MainImage" Margin="0,0,0,0"/> -->
+            <Grid Name="PracticeColumnWhiteKeys" Grid.Row="0" ZIndex="0"></Grid>
+        <Grid Name="PracticeColumnBlackKeys" Grid.Row="0" ZIndex="1"></Grid>
         <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
         <Grid Name="BlackKeysGrid" Grid.Row="1" ZIndex="1">
             <Grid.RowDefinitions>
@@ -19,6 +32,7 @@
                 <RowDefinition Height="30*"></RowDefinition>
             </Grid.RowDefinitions>
         </Grid>
+            
     </Grid>
-
+    </DockPanel>
 </Window>
