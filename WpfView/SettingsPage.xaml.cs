@@ -1,22 +1,7 @@
-﻿using Melanchall.DryWetMidi.Multimedia;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
+﻿using System;
 using System.Management;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 namespace WpfView
 {
@@ -25,7 +10,7 @@ namespace WpfView
     /// </summary>
     public partial class SettingsPage : Page
     {
-        
+
         public int IndexInputDevice { get; set; }
         public int IndexOutputDevice { get; set; }
         private MainMenu _mainMenu;
@@ -39,8 +24,8 @@ namespace WpfView
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
-            
-          
+
+
         }
 
 
@@ -49,14 +34,14 @@ namespace WpfView
         /// </summary>
         public void GenerateInputDevices()
         {
-           input.Items.Clear();
+            input.Items.Clear();
             foreach (var device in InputDevice.GetAll())
             {
-               ComboBoxItem ToAddInputDevice = new ComboBoxItem() {Content = device.Name}; 
-               this.input.Items.Add(ToAddInputDevice);
-               
+                ComboBoxItem ToAddInputDevice = new() { Content = device.Name };
+                this.input.Items.Add(ToAddInputDevice);
+
                 ToAddInputDevice.Selected += ToAddInputDevice_Selected;
-                    
+
             }
         }
 
@@ -70,15 +55,16 @@ namespace WpfView
             try
             {
                 IndexInputDevice = input.Items.IndexOf(sender);
-            }catch(IndexOutOfRangeException ie)
+            }
+            catch (IndexOutOfRangeException)
             {
                 GenerateInputDevices();
             }
-           
+
         }
 
-       
-     
+
+
 
         /// <summary>
         /// Shows all the available MIDI-keyboard output devices 
@@ -86,10 +72,11 @@ namespace WpfView
         public void GenerateOutputDevices()
         {
             output.Items.Clear();
-            try {
+            try
+            {
 
 
-                ManagementObjectSearcher objSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_SoundDevice");
+                ManagementObjectSearcher objSearcher = new("SELECT * FROM Win32_SoundDevice");
 
                 ManagementObjectCollection objCollection = objSearcher.Get();
 
@@ -97,17 +84,18 @@ namespace WpfView
                 {
                     foreach (PropertyData property in obj.Properties)
                     {
-                        if (property.Name.Equals("Description")) {
-                            ComboBoxItem ToAddOutputDevice = new ComboBoxItem() { Content = property.Value };
+                        if (property.Name.Equals("Description"))
+                        {
+                            ComboBoxItem ToAddOutputDevice = new() { Content = property.Value };
                             this.output.Items.Add(ToAddOutputDevice);
                             ToAddOutputDevice.Selected += ToAddOutputDevice_Selected;
                             break;
                         }
                     }
                 }
-               
+
             }
-            catch(IndexOutOfRangeException ie)
+            catch (IndexOutOfRangeException)
             {
                 GenerateOutputDevices();
             }
@@ -124,7 +112,7 @@ namespace WpfView
             {
                 IndexOutputDevice = output.Items.IndexOf(sender);
             }
-            catch (IndexOutOfRangeException ie)
+            catch (IndexOutOfRangeException)
             {
                 GenerateOutputDevices();
             }

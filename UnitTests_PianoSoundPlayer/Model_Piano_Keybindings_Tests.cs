@@ -10,9 +10,9 @@ namespace UnitTests
         [SetUp]
         public void SetUp()
         {
-           Controller.PianoController.CreatePiano();
+            Controller.PianoController.CreatePiano();
             piano = Controller.PianoController.Piano;
-           
+
         }
 
         [TestCase(0, KeyBind.Z)]
@@ -45,7 +45,7 @@ namespace UnitTests
         {
 
             KeyBind test = piano.PianoKeys[index].KeyBind;
-            Assert.AreEqual(m, test);
+            Assert.That(test, Is.EqualTo(m));
 
         }
 
@@ -55,7 +55,7 @@ namespace UnitTests
         public void IsInvalidKeyBind(int index, KeyBind m)
         {
             KeyBind test = piano.PianoKeys[index].KeyBind;
-            Assert.AreNotEqual(m, test);
+            Assert.That(test, Is.Not.EqualTo(m));
         }
 
     }

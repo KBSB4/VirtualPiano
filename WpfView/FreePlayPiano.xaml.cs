@@ -6,15 +6,11 @@ using Microsoft.Win32;
 using Model;
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using Usb.Events;
 using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
 namespace WpfView
@@ -72,7 +68,7 @@ namespace WpfView
                         practiceNotes.UpdateExampleNotes();
                     }));
                 }
-                catch (TaskCanceledException ex) //Just in case
+                catch (TaskCanceledException) //Just in case
                 {
                     Environment.Exit(0);
                 }
@@ -98,7 +94,7 @@ namespace WpfView
                     //pianoGrid.DisplayPianoKey(e.Key);
                 }));
             }
-            catch (TaskCanceledException ex) //Just in case
+            catch (TaskCanceledException) //Just in case
             {
                 Environment.Exit(0);
             }
@@ -181,14 +177,14 @@ namespace WpfView
 
         private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-           
+
             MainItem.Items.Clear();
             AddInputDevices();
-           
+
             //CheckInputDevice();
         }
 
-       
+
 
 
         /// <summary>
@@ -196,24 +192,25 @@ namespace WpfView
         /// </summary>
         private void AddInputDevices()
         {
-           
+
             foreach (var input in InputDevice.GetAll())
             {
                 var x = new MenuItem { Header = input.Name };
                 MainItem.Items.Add(x);
-               
+
                 x.Click += X_Click;
             }
 
-            
+
         }
 
         private void X_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem) {
-               int x = MainItem.Items.IndexOf(sender as MenuItem);
+            if (sender is MenuItem)
+            {
+                int x = MainItem.Items.IndexOf(sender as MenuItem);
                 _settingsPage.IndexInputDevice = x;
-               CheckInputDevice(x);
+                CheckInputDevice(x);
             }
         }
 

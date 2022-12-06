@@ -12,13 +12,14 @@ namespace WpfView
     /// </summary>
     public partial class SongCardControl : UserControl
     {
-        public SongCardControl() : this("No name") { }
+        public SongCardControl(int id) : this(id, "No name") { }
 
-        public SongCardControl(string songTitle) : this(songTitle, 0) { }
+        public SongCardControl(int id, string songTitle) : this(id, songTitle, 0) { }
 
-        public SongCardControl(string songTitle, int difficulty)
+        public SongCardControl(int id, string songTitle, int difficulty)
         {
             InitializeComponent();
+            SongID = id;
             SongTitle = songTitle;
             Difficulty = difficulty;
             DifficultyImageSource = Difficulty switch
@@ -38,6 +39,14 @@ namespace WpfView
         }
         public static readonly DependencyProperty SongTitleProperty =
             DependencyProperty.Register("SongTitle", typeof(string), typeof(SongCardControl), new PropertyMetadata("no name"));
+
+        public int SongID
+        {
+            get { return (int)GetValue(SongIDProperty); }
+            set { SetValue(SongIDProperty, value); }
+        }
+        public static readonly DependencyProperty SongIDProperty =
+            DependencyProperty.Register("SongID", typeof(int), typeof(SongCardControl), new PropertyMetadata(default(int)));
 
         public int Difficulty
         {
@@ -60,7 +69,7 @@ namespace WpfView
             Button? button = sender as Button;
             if (button is not null)
             {
-                Debug.WriteLine(button.Content);
+                Debug.WriteLine(button.Tag);
             }
         }
     }

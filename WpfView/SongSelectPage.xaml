@@ -23,5 +23,35 @@
             <WrapPanel Orientation="Horizontal" Name="SongCards">
             </WrapPanel>
         </ScrollViewer>
+
+        <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="3*"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Viewbox Height="100" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <Label HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke">Current song</Label>
+            </Viewbox>
+            <Image Grid.Column="1"></Image>
+            <Image Grid.Row="1" Grid.ColumnSpan="2" Source="/Images/PianoHeroLogo.png"></Image>
+            <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource MenuButton}">
+                <Viewbox>
+                    <Label  HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="center" FontWeight="Bold" Foreground="WhiteSmoke">Start</Label>
+                </Viewbox>
+            </Button>
+        </Grid>
+        
+        <Menu Grid.Row="0" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#00ffffff">
+            <MenuItem Header="Menu" Height="30" Click="MainMenu_Click" Foreground="White">
+                <MenuItem.Icon>
+                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
     </Grid>
 </Page>
