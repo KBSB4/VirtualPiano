@@ -10,7 +10,7 @@ namespace WpfView
         public MainWindow()
         {
             InitializeComponent();
-            _NavigationFrame.Navigate(new SongSelectPage());
+            _NavigationFrame.Navigate(new MainMenu());
         }
     }
 }
