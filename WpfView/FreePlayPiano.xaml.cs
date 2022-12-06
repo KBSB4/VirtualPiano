@@ -24,12 +24,11 @@ namespace WpfView
         private static IInputDevice? _inputDevice;
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
-        private SettingsPage _settingsPage;
 
-        public FreePlayPiano(MainMenu _mainMenu, SettingsPage settingsPage)
+
+        public FreePlayPiano(MainMenu _mainMenu)
         {
             this._mainMenu = _mainMenu;
-            _settingsPage = settingsPage;
             InitializeComponent();
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
@@ -178,41 +177,13 @@ namespace WpfView
         private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
 
-            MainItem.Items.Clear();
-            AddInputDevices();
+            _mainMenu.SettingsPage.GenerateInputDevices();
 
-            //CheckInputDevice();
-        }
-
-
-
-
-        /// <summary>
-        /// Adds all the connected MIDI-keyboards to MenuItem "Connect MIDI-keyboard" 
-        /// </summary>
-        private void AddInputDevices()
-        {
-
-            foreach (var input in InputDevice.GetAll())
-            {
-                var x = new MenuItem { Header = input.Name };
-                MainItem.Items.Add(x);
-
-                x.Click += X_Click;
-            }
+            NavigationService?.Navigate(_mainMenu.SettingsPage);
 
 
         }
 
-        private void X_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is MenuItem)
-            {
-                int x = MainItem.Items.IndexOf(sender as MenuItem);
-                _settingsPage.IndexInputDevice = x;
-                CheckInputDevice(x);
-            }
-        }
 
 
 
@@ -221,28 +192,33 @@ namespace WpfView
         /// </summary>
         public void CheckInputDevice(int x)
         {
+            _inputDevice?.Dispose();
 
-
-            try
+            if (!_mainMenu.SettingsPage.NoneSelected.IsSelected)
             {
-                if (_settingsPage.IndexInputDevice >= 0)
+                try
                 {
+
+
                     Debug.Write("send!");
-                    _inputDevice?.Dispose();
-                    _inputDevice = InputDevice.GetByIndex(x);
+                    ;
+                    _inputDevice = InputDevice.GetByIndex(x - 1);
                     _inputDevice.EventReceived += OnMidiEventReceived;
                     _inputDevice.StartEventsListening();
+
+
+                }
+                catch (ArgumentException ex)
+                {
+                    Debug.WriteLine("No midi device found");
+                    Debug.WriteLine("Exception information:");
+                    Debug.IndentLevel = 1;
+                    Debug.WriteLine(ex.Message);
+                    Debug.IndentLevel = 0;
+                    _inputDevice = null;
                 }
             }
-            catch (ArgumentException ex)
-            {
-                Debug.WriteLine("No midi device found");
-                Debug.WriteLine("Exception information:");
-                Debug.IndentLevel = 1;
-                Debug.WriteLine(ex.Message);
-                Debug.IndentLevel = 0;
-                _inputDevice = null;
-            }
+
         }
 
         #region MIDI
