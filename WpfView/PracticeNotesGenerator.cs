@@ -19,7 +19,6 @@ namespace WpfView
         private double noteSpeed = 12; //120 BPM
         private Queue<double> tempoQueue = new();
         private bool FirstTime = true;
-        public int ThreadSleep = 30; // 120BPM
 
         /// <summary>
         /// Prepare grids for practice notes
@@ -72,7 +71,6 @@ namespace WpfView
                 //noteSpeed = 95 / 10;
                 int bpm = (int)tempoQueue.Dequeue();
                 noteSpeed =  bpm / 10;
-                ThreadSleep = (int)Math.Round((double)30 / (double)120 * (double)bpm);
                 FirstTime = false;
             }
         }
@@ -102,7 +100,6 @@ namespace WpfView
                                 {
                                     int bpm = (int)tempoQueue.Dequeue();
                                     noteSpeed = bpm / 10;
-                                    ThreadSleep = (int)((double)30 / (double)120 * (double)bpm);
                                 }
                             }
                         }

@@ -12,9 +12,6 @@ namespace Controller
 	{
 		private static TempoMap TempoMap;
 		public static MidiFile OriginalMIDI { get; set; } //Full MIDI
-		//TODO UNUSED RIGHT NOW
-		private static MidiFile MIDI { get; set; } //MIDI without the track in MIDITrackIsolated 
-		private static MidiFile MIDITrackIsolated { get; set; } //Selfexplanatory, depends on which track we use which should be set in database
 
 		/// <summary>
 		/// Read MIDI File and get karoake MIDIs out of it as well.
