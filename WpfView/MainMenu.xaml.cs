@@ -10,16 +10,13 @@ namespace WpfView
     {
         public FreePlayPiano FreePlay { get; set; }
         public SettingsPage SettingsPage { get; set; }
+        public SongSelectPage SongSelectPage { get; set; }
         public MainMenu()
         {
             InitializeComponent();
-
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
-
-            _adminPanel = new SettingsPage(this);
-            _freeplay = new FreePlayPiano(this, _adminPanel);
-            _songSelect = new SongSelectPage(this);
+            SongSelectPage = new SongSelectPage(this);
         }
 
         private void FreePlay_Button_Click(object sender, RoutedEventArgs e)
@@ -42,7 +39,7 @@ namespace WpfView
 
         private void Practice_Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(_songSelect);
+            NavigationService?.Navigate(SongSelectPage);
         }
     }
 }

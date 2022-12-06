@@ -38,7 +38,7 @@
                 </MenuItem.Icon>
             </MenuItem>
 
-            <MenuItem Name="_MIDI" Header="MIDI" Height="30" Click="Refresh_Click" Foreground="White">
+            <MenuItem Name="_MIDI" Header="MIDI" Height="30"  Foreground="White">
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
