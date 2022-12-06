@@ -14,8 +14,8 @@ namespace WpfView
     internal class PracticeNotesGenerator
     {
         private List<Grid> practiceNoteColumns;
-        private const int noteLength = 390;
         //TODO get the right values
+        private const int noteLength = 390; //TODO change depending on speed
         private double noteSpeed = 10;
         private double defaultBPM = 150;
         private Queue<double> tempoQueue = new();
