@@ -41,31 +41,18 @@ namespace VirtualPiano.PianoSoundPlayer
                 if (fadeOutSpeed == 0 || fadeOutSpeed > 1000)
                 {
                     sourceVoice.Stop();
-                    //sourceVoice.Dispose();
-                    // Disabled due to bug when playing many piano keys.
-                    // Not needed because of GC
                 }
                 else
                 {
                     ThreadPool.QueueUserWorkItem(DecreaseVolume, new object[] { fadeOutSpeed, sourceVoice });
-                    //new Thread(() =>
-                    //{
-                    //sourceVoice.GetVolume(out float volume);
-                    //while (volume > 0)
-                    //{
-                    //    volume -= fadeOutSpeed / 1000;
-                    //    sourceVoice.SetVolume(volume);
-                    //    Thread.Sleep(10);
-                    //}
-                    //sourceVoice.Stop();
-                    // sourceVoice.Dispose();
-                    // Disabled due to bug when playing many piano keys.
-                    // Not needed because of GC
-                    //}).Start();
                 }
             }
         }
 
+        /// <summary>
+        /// Selfexplanatory
+        /// </summary>
+        /// <param name="state"></param>
         public static void DecreaseVolume(object? state)
         {
             if (state is not object[] array)
@@ -82,7 +69,6 @@ namespace VirtualPiano.PianoSoundPlayer
                 Thread.Sleep(10);
             }
             sourceVoice.Stop();
-            //sourceVoice.Dispose();
         }
     }
 }

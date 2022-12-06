@@ -1,7 +1,8 @@
 ﻿namespace Model
 {
-    public enum MicrosoftKeybinds
+    public enum KeyBind
     {
+		//TODO Explain these bindings, for which devices are they?
         D1 = 35,
         D2 = 36,
         D3 = 37,

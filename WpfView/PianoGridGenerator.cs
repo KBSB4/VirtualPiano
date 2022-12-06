@@ -27,6 +27,7 @@ namespace WpfView
         {
             if (columnAmount < 0)
             {
+                buttons = new();
                 return;
             }
             buttons = AddPianoKeys(whiteKeyGrid, blackKeyGrid, columnAmount);
@@ -40,6 +41,10 @@ namespace WpfView
         {
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
+            if (note < 0 || note > buttons.Count)
+            {
+                return;
+            }
             Button currentButton = buttons[note];
             bool pressed = key.PressedDown;
 
@@ -102,10 +107,11 @@ namespace WpfView
                 if (i < PianoController.Piano.PianoKeys.Count)
                 {
                     //Ugly code
-                    buttons[i].Content = PianoController.Piano.PianoKeys[i].MicrosoftBind.ToString().ToLower().Last();
-                    buttons[i + 24].Content = PianoController.Piano.PianoKeys[i].MicrosoftBind.ToString().ToUpper().Last();
+                    buttons[i].Content = PianoController.Piano.PianoKeys[i].KeyBind.ToString().ToLower().Last();
+                    buttons[i + 24].Content = PianoController.Piano.PianoKeys[i].KeyBind.ToString().ToUpper().Last();
                 }
             }
+            buttons[0].Focus();
 
             return buttons;
         }
