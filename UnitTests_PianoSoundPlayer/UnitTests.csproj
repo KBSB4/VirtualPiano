@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Controller\Controller.csproj" />
-    <ProjectReference Include="..\WpfView\WpfView.csproj" />
   </ItemGroup>
 
 </Project>

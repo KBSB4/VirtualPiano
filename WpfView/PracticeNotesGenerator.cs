@@ -14,8 +14,12 @@ namespace WpfView
     internal class PracticeNotesGenerator
     {
         private List<Grid> practiceNoteColumns;
-        private const int noteLength = 390; 
-        private double noteSpeed = 10;
+        private const int noteLength = 390; //120 BPM
+
+        private double noteSpeed = 12; //120 BPM
+        private Queue<double> tempoQueue = new();
+        private bool FirstTime = true;
+        public int ThreadSleep = 30; // 120BPM
 
         /// <summary>
         /// Prepare grids for practice notes
@@ -58,7 +62,19 @@ namespace WpfView
                 Margin = new Thickness(0, -rectHeight, 0, 0)
             };
 
+            Debug.WriteLine(noteSpeed + " | " + SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute);
             currentColumn.Children.Add(rectangle);
+
+            tempoQueue.Enqueue(Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute));
+            if(FirstTime)
+            {
+                //noteSpeed = Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute / 10);
+                //noteSpeed = 95 / 10;
+                int bpm = (int)tempoQueue.Dequeue();
+                noteSpeed =  bpm / 10;
+                ThreadSleep = (int)Math.Round((double)30 / (double)120 * (double)bpm);
+                FirstTime = false;
+            }
         }
 
         /// <summary>
@@ -75,11 +91,19 @@ namespace WpfView
                         Rectangle? rectangle = note as Rectangle;
                         if (rectangle is not null)
                         {
+                            //Use margin to move down
                             rectangle.Margin = new Thickness(0, rectangle.Margin.Top + noteSpeed, 0, 0);
                             if (rectangle.Margin.Top > column.ActualHeight)
                             {
                                 //Remove
                                 //column.Children.Remove(rectangle); //TODO DOES NOT WORK, BREAKS ENUMERATOR
+
+                                if(tempoQueue.Count > 0)
+                                {
+                                    int bpm = (int)tempoQueue.Dequeue();
+                                    noteSpeed = bpm / 10;
+                                    ThreadSleep = (int)((double)30 / (double)120 * (double)bpm);
+                                }
                             }
                         }
                     }
