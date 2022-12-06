@@ -1,5 +1,4 @@
 ﻿using Controller;
-using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.MusicTheory;
 using Model;
 using System;
@@ -16,9 +15,9 @@ namespace WpfView
     {
         private List<Grid> practiceNoteColumns;
         private const int noteLength = 390;
-        //TODO do this base do tempomap
-        private double noteSpeed = 10; 
-        private double defaultBPM = 140;
+        //TODO get the right values
+        private double noteSpeed = 10;
+        private double defaultBPM = 150;
         private Queue<double> tempoQueue = new();
         private Boolean firstNote = true;
 
@@ -68,9 +67,11 @@ namespace WpfView
             //Get bpm at the next note
             double bpm = (double)SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute;
             tempoQueue.Enqueue(bpm);
+            
 
             //Get starting notespeed
-            if(firstNote) {
+            if (firstNote)
+            {
                 noteSpeed = (double)10 / (double)defaultBPM * tempoQueue.Dequeue();
                 firstNote = false;
             }
@@ -181,11 +182,12 @@ namespace WpfView
         /// </summary>
         /// <param name="pianokey"></param>
         /// <returns>SolidBrush</returns>
-        private static SolidColorBrush whitekeycolour = new(Colors.Orange);
-        private static SolidColorBrush blackkeycolour = new(Colors.DarkRed);
+
         private static SolidColorBrush GetPianoKeyColour(PianoKey pianokey)
         {
             SolidColorBrush solidBrush;
+            SolidColorBrush whitekeycolour = new(Colors.Orange);
+            SolidColorBrush blackkeycolour = new(Colors.DarkRed);
             switch (pianokey.Note)
             {
                 case NoteName.C:
