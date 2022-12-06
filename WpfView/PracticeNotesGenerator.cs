@@ -1,9 +1,6 @@
-﻿using Controller;
-using Melanchall.DryWetMidi.MusicTheory;
+﻿using Melanchall.DryWetMidi.MusicTheory;
 using Model;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,7 +11,7 @@ namespace WpfView
     internal class PracticeNotesGenerator
     {
         private List<Grid> practiceNoteColumns;
-        private const int noteLength = 390; //120 BPM
+        private const int noteLength = 300; //120 BPM
 
         private double noteSpeed = 12; //120 BPM
         private Queue<double> tempoQueue = new();
@@ -46,7 +43,7 @@ namespace WpfView
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);
 
             Grid currentColumn = practiceNoteColumns[0];
-            if (practiceNoteColumns.Count > note)
+            if (practiceNoteColumns.Count > note && 0 < note)
             {
                 currentColumn = practiceNoteColumns[note];
             }
@@ -58,19 +55,21 @@ namespace WpfView
                 Height = rectHeight,
                 Width = currentColumn.ActualWidth,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, -rectHeight, 0, 0)
+                Margin = new Thickness(0, -rectHeight, 0, 0),
+                RadiusX = 10,
+                RadiusY = 10,
             };
 
-            Debug.WriteLine(noteSpeed + " | " + SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute);
+            //Debug.WriteLine(noteSpeed + " | " + SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute);
             currentColumn.Children.Add(rectangle);
 
-            tempoQueue.Enqueue(Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute));
-            if(FirstTime)
-            {
-                int bpm = (int)tempoQueue.Dequeue();
-                //noteSpeed =  bpm / 10;
-                FirstTime = false;
-            }
+            //tempoQueue.Enqueue(Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute));
+            //if (FirstTime)
+            //{
+            //    int bpm = (int)tempoQueue.Dequeue();
+            //    //noteSpeed =  bpm / 10;
+            //    FirstTime = false;
+            //}
         }
 
         /// <summary>

@@ -57,9 +57,12 @@ namespace WpfView
         /// <param name="obj"></param>
         private void UpdateVisualNotes(object? obj)
         {
+            var next = DateTime.Now;
             while (true)
             {
-                Thread.Sleep(25); // 30 / 120 * bpm
+                //Debug.WriteLine(Math.Abs((DateTime.Now - next).Milliseconds));
+                Thread.Sleep(Math.Abs((DateTime.Now - next).Milliseconds)); // 30 / 120 * bpm
+                next = DateTime.Now.AddMilliseconds(25);
                 try
                 {
                     Dispatcher.Invoke(new Action(() =>

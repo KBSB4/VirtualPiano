@@ -1,6 +1,6 @@
-﻿using Melanchall.DryWetMidi.Multimedia;
+﻿using Melanchall.DryWetMidi.Interaction;
+using Melanchall.DryWetMidi.Multimedia;
 using Model;
-using System.Diagnostics;
 
 namespace BusinessLogic
 {
@@ -19,10 +19,12 @@ namespace BusinessLogic
         {
             Song song = obj as Song;
             song.SongTimerThread.Start();
-            Thread.Sleep(2000);
 
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
+
+            while (!song.IsPlaying) { }
+            Thread.Sleep(2000);
             PlaybackDevice.Start();
             SpinWait.SpinUntil(() => !PlaybackDevice.IsRunning);
 
@@ -51,16 +53,29 @@ namespace BusinessLogic
         public static void PlaySong(Song song)
         {
             song.IsPlaying = true;
+            DateTime now = DateTime.Now;
             while (song.PianoKeys.Count > 0)
             {
                 PianoKey pianoKey = song.PianoKeys.Dequeue();
                 song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
                 if (song.PianoKeys.TryPeek(out PianoKey? nextKey))
                 {
-                    Thread.Sleep(nextKey.TimeStamp - song.TimeInSong);
-                    song.TimeInSong = nextKey.TimeStamp;
+                    MetricTimeSpan timeSpan;
+                    if (PlaybackDevice is null || !PlaybackDevice.IsRunning)
+                    {
+                        timeSpan = DateTime.Now - now;
+                    }
+                    else
+                    {
+                        timeSpan = (MetricTimeSpan)PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
+                        timeSpan += (MetricTimeSpan)TimeSpan.FromSeconds(2d);
+                    }
+                    if (nextKey.TimeStamp > timeSpan)
+                    {
+                        Thread.Sleep(nextKey.TimeStamp - timeSpan);
+                    }
                 }
-                Debug.WriteLine(pianoKey.ToString());
+                //Debug.WriteLine(pianoKey.ToString());
             }
             song.IsPlaying = false;
         }
