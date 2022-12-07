@@ -27,9 +27,9 @@ namespace WpfView
             }
         }
 
-        public void SongCard_Click(object sender)
+        public void SongCard_Click(int ID)
         {
-            NavigationService?.Navigate(new PracticePlayPiano(_mainMenu));
+            NavigationService?.Navigate(new PracticePlayPiano(_mainMenu, ID));
         }
 
         private void MainMenu_Click(object sender, RoutedEventArgs e)

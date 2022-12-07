@@ -70,7 +70,7 @@ namespace WpfView
             Button? button = sender as Button;
             if (button is not null)
             {
-                SongSelectPage.SongCard_Click(this);
+                SongSelectPage.SongCard_Click(SongID);
             }
         }
     }

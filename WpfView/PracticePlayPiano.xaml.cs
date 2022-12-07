@@ -1,6 +1,8 @@
 ﻿using BusinessLogic;
 using Controller;
+using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
+using Microsoft.Win32;
 using Model;
 using System;
 using System.Diagnostics;
@@ -24,7 +26,7 @@ namespace WpfView
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
 
-        public PracticePlayPiano(MainMenu mainMenu)
+        public PracticePlayPiano(MainMenu mainMenu, int songID)
         {
             this._mainMenu = mainMenu;
             InitializeComponent();
@@ -33,7 +35,6 @@ namespace WpfView
             practiceNotes = new PracticeNotesGenerator(Play2ColumnWhiteKeys, Play2ColumnBlackKeys, 28);
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
-
 
             //Keep this here until we have a better way of connecting phyiscal devices and so we can test
             //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
@@ -46,6 +47,21 @@ namespace WpfView
                 IsBackground = true
             };
             updateVisualNoteThread.Start();
+
+            PlaySelectedSong(songID);
+        }
+
+        private void PlaySelectedSong(int songID)
+        {
+            //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
+            string path = "C:\\Users\\Harris\\Downloads\\sm64.mid";
+
+            //Start song
+            MIDIController.OpenMidi(path);
+            SongController.LoadSong(new MetricTimeSpan(500));
+
+            SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
+            SongController.PlaySong();
         }
 
         /// <summary>
