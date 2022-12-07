@@ -26,6 +26,7 @@ namespace BusinessLogic
             SongForTime = song;
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
+            
             PlaybackCurrentTimeWatcher.Instance.AddPlayback(PlaybackDevice, TimeSpanType.Metric);
             PlaybackCurrentTimeWatcher.Instance.CurrentTimeChanged += OnCurrentTimeChanged;
             PlaybackCurrentTimeWatcher.Instance.Start();
