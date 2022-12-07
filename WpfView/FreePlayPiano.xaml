@@ -24,7 +24,7 @@
             </Grid.RowDefinitions>
         </Grid>
 
-        <Menu Grid.Row="0" DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
+        <Menu Grid.Row="0" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#FF292929" Panel.ZIndex="2">
             <MenuItem Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />

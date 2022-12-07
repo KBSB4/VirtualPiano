@@ -59,23 +59,16 @@ namespace WpfView
                 RadiusY = 10,
             };
 
-            //Debug.WriteLine(noteSpeed + " | " + SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute);
             currentColumn.Children.Add(rectangle);
-
-            //tempoQueue.Enqueue(Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute));
-            //if (FirstTime)
-            //{
-            //    int bpm = (int)tempoQueue.Dequeue();
-            //    //noteSpeed =  bpm / 10;
-            //    FirstTime = false;
-            //}
         }
 
         /// <summary>
-        /// Update each note to fall down
+        /// Moves all notes down 1.25% of the screen, should be fired 40 times a second to move notes down completely in 2 seconds
+        /// If the note is not visible on screen anymore, the note is removed from the column it is in
         /// </summary>
         public void UpdateExampleNotes()
         {
+            List<Rectangle> notesToBeRemoved = new();
             foreach (var column in practiceNoteColumns)
             {
                 if (column.Children.Count > 0)
@@ -90,10 +83,18 @@ namespace WpfView
                             if (rectangle.Margin.Top > column.ActualHeight)
                             {
                                 //Remove
-                                //column.Children.Remove(rectangle); //TODO DOES NOT WORK, BREAKS ENUMERATOR
+                                notesToBeRemoved.Add(rectangle);
                             }
                         }
                     }
+                }
+            }
+            foreach (var item in notesToBeRemoved)
+            {
+                Grid? grid = item.Parent as Grid;
+                if (grid is not null)
+                {
+                    grid.Children.Remove(item);
                 }
             }
         }
@@ -176,14 +177,9 @@ namespace WpfView
                 StartPoint = new Point(0, 0),
                 EndPoint = new Point(0, 1)
             };
-            whitekeycolour.GradientStops.Add(
-                new GradientStop(Colors.Red, 0.0));
-            whitekeycolour.GradientStops.Add(
-                new GradientStop(Colors.Yellow, 1.0));
+            whitekeycolour.GradientStops.Add(new GradientStop(Colors.Red, 0.0));
+            whitekeycolour.GradientStops.Add(new GradientStop(Colors.Yellow, 1.0));
 
-            //GradientBrush whiteKeyBrush = new(Color.FromRgb());
-            //SolidColorBrush whitekeycolour = new(Colors.Orange);
-            //SolidColorBrush blackkeycolour = new(Colors.DarkRed);
             return pianokey.Note.ToString().Contains("Sharp") ? whitekeycolour : whitekeycolour;
         }
     }

@@ -25,7 +25,6 @@ namespace WpfView
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
 
-
         public FreePlayPiano(MainMenu _mainMenu)
         {
             this._mainMenu = _mainMenu;
@@ -33,14 +32,8 @@ namespace WpfView
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
-            this.KeyDown += KeyPressed;
-            this.KeyUp += KeyReleased;
-
-
-            //Keep this here until we have a better way of connecting phyiscal devices and so we can test
-            //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
-            //_inputDevice.EventReceived += OnMidiEventReceived;
-            //_inputDevice.StartEventsListening();
+            KeyDown += KeyPressed;
+            KeyUp += KeyReleased;
 
             //Start thread for updating practice notes
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
@@ -52,7 +45,7 @@ namespace WpfView
 
 
         /// <summary>
-        /// Method that constantly updates the practice notes
+        /// Thread that updates the visual position of already placed notes
         /// </summary>
         /// <param name="obj"></param>
         private void UpdateVisualNotes(object? obj)
@@ -60,9 +53,8 @@ namespace WpfView
             var next = DateTime.Now;
             while (true)
             {
-                //Debug.WriteLine(Math.Abs((DateTime.Now - next).Milliseconds));
-                Thread.Sleep(Math.Abs((DateTime.Now - next).Milliseconds)); // 30 / 120 * bpm
-                next = DateTime.Now.AddMilliseconds(25);
+                Thread.Sleep(Math.Abs((DateTime.Now - next).Milliseconds));
+                next = DateTime.Now.AddMilliseconds(25);// 25 milliseconds equals 40 frames per second
                 try
                 {
                     Dispatcher.Invoke(new Action(() =>
@@ -168,27 +160,18 @@ namespace WpfView
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
             }
-
         }
 
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
-
         }
 
         private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
             _mainMenu.SettingsPage.GenerateInputDevices();
-
             NavigationService?.Navigate(_mainMenu.SettingsPage);
-
-
         }
-
-
-
 
         /// <summary>
         /// Connects MIDI-keyboard
@@ -199,29 +182,34 @@ namespace WpfView
 
             if (!_mainMenu.SettingsPage.NoneSelected.IsSelected)
             {
-                try
-                {
-
-
-                    Debug.Write("send!");
-                    ;
-                    _inputDevice = InputDevice.GetByIndex(x - 1);
-                    _inputDevice.EventReceived += OnMidiEventReceived;
-                    _inputDevice.StartEventsListening();
-
-
-                }
-                catch (ArgumentException ex)
-                {
-                    Debug.WriteLine("No midi device found");
-                    Debug.WriteLine("Exception information:");
-                    Debug.IndentLevel = 1;
-                    Debug.WriteLine(ex.Message);
-                    Debug.IndentLevel = 0;
-                    _inputDevice = null;
-                }
+                SelectItem(x);
             }
+            else
+            {
+                SelectItem(1);
+            }
+        }
 
+        private void SelectItem(int item)
+        {
+            try
+            {
+                Debug.Write("send!");
+                _inputDevice = InputDevice.GetByIndex(item - 1);
+                _inputDevice.EventReceived += OnMidiEventReceived;
+                _inputDevice.StartEventsListening();
+                ComboBoxItem v = (ComboBoxItem)_mainMenu.SettingsPage.input.Items.GetItemAt(item);
+                v.IsSelected = true;
+            }
+            catch (ArgumentException ex)
+            {
+                Debug.WriteLine("No midi device found");
+                Debug.WriteLine("Exception information:");
+                Debug.IndentLevel = 1;
+                Debug.WriteLine(ex.Message);
+                Debug.IndentLevel = 0;
+                _inputDevice = null;
+            }
         }
 
         #region MIDI
