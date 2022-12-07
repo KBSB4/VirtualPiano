@@ -2,7 +2,6 @@
 using Controller;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
-using Microsoft.Win32;
 using Model;
 using System;
 using System.Diagnostics;
@@ -21,11 +20,14 @@ namespace WpfView
     /// </summary>
     public partial class PracticePlayPiano : Page
     {
+        //TODO Is there a way to reuse the code from FreePlay without copy and paste?
         private PianoGridGenerator pianoGrid;
         private static IInputDevice? _inputDevice;
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
 
+        private const int MinScore = 500;
+        private int Score = 0;
         public PracticePlayPiano(MainMenu mainMenu, int songID)
         {
             this._mainMenu = mainMenu;
@@ -160,6 +162,8 @@ namespace WpfView
             {
                 pianoGrid.DisplayPianoKey(key);
                 PianoController.PlayPianoSound(key);
+                //SCORE FUNCTION
+
             }
 
             if (e.Key == Key.CapsLock)
@@ -180,8 +184,9 @@ namespace WpfView
             {
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
-            }
+                //SCORE FUNCTION
 
+            }
         }
 
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
