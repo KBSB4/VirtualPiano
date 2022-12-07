@@ -7,6 +7,7 @@ using Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -60,7 +61,7 @@ namespace WpfView
         private void PlaySelectedSong(int songID)
         {
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
-            string path = "C:\\Users\\Harris\\Downloads\\sm64.mid";
+            string path = "C:\\Users\\Harris\\Downloads\\test.mid";
 
             //Start song
             MIDIController.OpenMidi(path);
@@ -92,6 +93,15 @@ namespace WpfView
                 catch (TaskCanceledException) //Just in case
                 {
                     Environment.Exit(0);
+                }
+
+                //check if notes been played
+                foreach (PianoKey key in upcoming)
+                {
+                    if (SongController.CurrentSong.TimeInSong.Milliseconds > key.TimeStamp.Milliseconds + key.Duration.Milliseconds)
+                    {
+                        upcoming.Remove(key);
+                    }
                 }
             }
         }
@@ -174,24 +184,26 @@ namespace WpfView
                 //SCORE FUNCTION
 
                 //Check if its to be played in 1 second
-                PressedAt = SongController.CurrentSong.TimeInSong.Seconds;
-
-                foreach(PianoKey koy in upcoming)
+                PressedAt = SongController.CurrentSong.TimeInSong.Milliseconds;
+                PianoKey upcomingKey = upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
+                if (upcomingKey != null)
                 {
-                    if (koy.TimeStamp.Seconds < PressedAt + 1 && PressedAt + 1 > koy.TimeStamp.Seconds)
+                    if (upcomingKey.TimeStamp.Milliseconds < PressedAt + 200 && PressedAt + 200 > upcomingKey.TimeStamp.Milliseconds)
                     {
                         //played, add score
                         Score += 50;
-                        playing.Add(key.Note, PressedAt);
+                        if (!playing.ContainsKey(upcomingKey.Note))
+                        {
+                            playing.Add(key.Note, PressedAt);
+                        }
                         //start counting for how long, maybe dictionary?
                     }
                 }
             }
+            ScoreLabel.Content = "Score = " + Score;
 
             if (e.Key == Key.CapsLock)
                 PianoLogic.SwapOctave(PianoController.Piano);
-
-            Debug.WriteLine(Score);
         }
 
         /// <summary>
@@ -207,37 +219,35 @@ namespace WpfView
             PianoKey? key = PianoController.GetReleasedKey(intValue);
             if (key is not null)
             {
+                PianoKey upcomingKey = upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
                 //SCORE FUNCTION
-                ReleasedAt = SongController.CurrentSong.TimeInSong.Seconds;
-
-                foreach (PianoKey koy in upcoming)
+                ReleasedAt = SongController.CurrentSong.TimeInSong.Milliseconds;
+                if (upcomingKey is not null)
                 {
-                    if (koy.Duration.Seconds + koy.TimeStamp.Seconds < PressedAt + 1 && PressedAt + 1 > koy.TimeStamp.Seconds + koy.TimeStamp.Seconds)
+                    if (upcomingKey.Duration.Milliseconds + upcomingKey.TimeStamp.Milliseconds < PressedAt + 1
+                    && PressedAt + 1 > upcomingKey.TimeStamp.Milliseconds + upcomingKey.TimeStamp.Milliseconds)
                     {
                         //played, add score
                         Score += ReleasedAt - playing[key.Note] * 10;
                         playing.Remove(key.Note);
+                        upcoming.Remove(upcomingKey);
                     }
                 }
             }
+            ScoreLabel.Content = "Score = " + Score;
         }
 
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
-
         }
 
         private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
             _mainMenu.SettingsPage.GenerateInputDevices();
-
             NavigationService?.Navigate(_mainMenu.SettingsPage);
-
-
         }
 
 
