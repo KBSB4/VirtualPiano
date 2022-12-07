@@ -24,6 +24,7 @@
             </Grid.RowDefinitions>
         </Grid>
 
+        <!-- Currently not used while we figure out how and what exactly (pause menu on esc?)
         <Menu Grid.Row="0" DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
             <MenuItem Header="PianoHero MainMenu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                 <MenuItem.Icon>
@@ -37,6 +38,6 @@
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
             </MenuItem>
-        </Menu>
+        </Menu> -->
     </Grid>
 </Page>
