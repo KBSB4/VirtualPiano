@@ -199,13 +199,14 @@ namespace WpfView
                 {
                     //Upcomingkey is the key that should be played next for the current PianoKey
                     //todo TWEAK VALUES
-                    if (PressedAt > upcomingKey.TimeStamp.Milliseconds-50 && PressedAt < upcomingKey.TimeStamp.Milliseconds+50)
+                    if (PressedAt > upcomingKey.TimeStamp.Milliseconds - 80 && PressedAt < upcomingKey.TimeStamp.Milliseconds + 80)
                     {
                         //played, add score
                         Score += 50;
                         if (!playing.ContainsKey(upcomingKey.Note))
                         {
                             playing.Add(key.Note, PressedAt);
+                            Debug.WriteLine("Added 50 points with " + key.Note);
                         }
                     }
                     else if (PressedAt > upcomingKey.TimeStamp.Milliseconds && PressedAt < upcomingKey.Duration.Milliseconds)
@@ -214,6 +215,7 @@ namespace WpfView
                         if (!playing.ContainsKey(upcomingKey.Note))
                         {
                             playing.Add(key.Note, PressedAt);
+                            Debug.WriteLine("Added NO points with " + key.Note);
                         }
                     }
                 }
@@ -248,9 +250,11 @@ namespace WpfView
                     && ReleasedAt + 50 > upcomingKey.TimeStamp.Milliseconds + upcomingKey.TimeStamp.Milliseconds)
                     {
                         //played, add score based on how long pressed
+                        Debug.WriteLine("Key " + key.Note + " RELEASED");
                         if (playing.ContainsKey(key.Note))
                         {
                             Score += (ReleasedAt - playing[key.Note]) / 100;
+                            Debug.Write(" WITH " + (ReleasedAt - playing[key.Note]) / 100 + " points");
                             upcoming.Remove(upcomingKey);
                         }
                         playing.Remove(key.Note);
