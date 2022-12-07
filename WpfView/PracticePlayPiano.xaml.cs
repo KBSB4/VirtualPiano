@@ -29,10 +29,13 @@ namespace WpfView
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
 
-        private const int MinScore = 500;
-
-        //TODO use getset to keep it at max 500
+        //Score
         private int Score = 0;
+        List<PianoKey> upcoming = new();
+        int PressedAt;
+        Dictionary<NoteName, int> playing = new();
+        int ReleasedAt;
+
         public PracticePlayPiano(MainMenu mainMenu, int songID)
         {
             this._mainMenu = mainMenu;
@@ -51,7 +54,7 @@ namespace WpfView
             PlaySelectedSong(songID);
 
             //Start thread for updating practice notes
-            Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
+            Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateView))
             {
                 IsBackground = true
             };
@@ -72,16 +75,15 @@ namespace WpfView
         }
 
         /// <summary>
-        /// Method that constantly updates the practice notes
+        /// Method that constantly updates the view
         /// </summary>
         /// <param name="obj"></param>
-        private void UpdateVisualNotes(object? obj)
+        private void UpdateView(object? obj)
         {
             var next = DateTime.Now;
             while (true)
             {
-                //Debug.WriteLine(Math.Abs((DateTime.Now - next).Milliseconds));
-                Thread.Sleep(Math.Abs((DateTime.Now - next).Milliseconds)); // 30 / 120 * bpm
+                Thread.Sleep(Math.Abs((DateTime.Now - next).Milliseconds));
                 next = DateTime.Now.AddMilliseconds(25);
                 try
                 {
@@ -95,7 +97,7 @@ namespace WpfView
                     Environment.Exit(0);
                 }
 
-                //check if notes been played
+                //Check if notes been played, delete them from the list then
                 foreach (PianoKey key in upcoming)
                 {
                     if (SongController.CurrentSong.TimeInSong.Milliseconds > key.TimeStamp.Milliseconds + key.Duration.Milliseconds)
@@ -104,6 +106,7 @@ namespace WpfView
                     }
                 }
 
+                //Go to main menu after playing
                 if (!SongController.CurrentSong.IsPlaying)
                 {
                     Dispatcher.Invoke(new Action(() =>
@@ -112,6 +115,8 @@ namespace WpfView
                         NavigationService?.Navigate(_mainMenu);
                     }));
                 }
+
+                ScoreLabel.Content = "Score = " + Score;
             }
         }
 
@@ -120,8 +125,6 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-
-        List<PianoKey> upcoming = new();
         private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
             try
@@ -133,8 +136,6 @@ namespace WpfView
                         practiceNotes.StartExampleNote(e.Key);
                         upcoming.Add(e.Key);
                     }
-                    //TODO Add option to display keys live as if the piano is playing it
-                    //pianoGrid.DisplayPianoKey(e.Key);
                 }));
             }
             catch (TaskCanceledException) //Just in case
@@ -179,8 +180,6 @@ namespace WpfView
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        int PressedAt;
-        Dictionary<NoteName, int> playing = new();
         public void KeyPressed(object? source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
@@ -190,7 +189,7 @@ namespace WpfView
             {
                 pianoGrid.DisplayPianoKey(key);
                 PianoController.PlayPianoSound(key);
-                
+
                 //SCORE FUNCTION
                 PressedAt = SongController.CurrentSong.TimeInSong.Milliseconds;
                 PianoKey upcomingKey = upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
@@ -205,7 +204,9 @@ namespace WpfView
                         {
                             playing.Add(key.Note, PressedAt);
                         }
-                    } else if (PressedAt + 200 > upcomingKey.TimeStamp.Milliseconds){
+                    }
+                    else if (PressedAt + 200 > upcomingKey.TimeStamp.Milliseconds)
+                    {
                         //Too late, no points
                         if (!playing.ContainsKey(upcomingKey.Note))
                         {
@@ -214,7 +215,6 @@ namespace WpfView
                     }
                 }
             }
-            ScoreLabel.Content = "Score = " + Score;
 
             if (e.Key == Key.CapsLock)
                 PianoLogic.SwapOctave(PianoController.Piano);
@@ -226,7 +226,6 @@ namespace WpfView
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        int ReleasedAt;
         public void KeyReleased(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
@@ -236,6 +235,7 @@ namespace WpfView
                 PianoKey upcomingKey = upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
+
                 //SCORE FUNCTION
                 ReleasedAt = SongController.CurrentSong.TimeInSong.Milliseconds;
                 if (upcomingKey is not null)
@@ -250,9 +250,9 @@ namespace WpfView
                     }
                 }
             }
-            ScoreLabel.Content = "Score = " + Score;
         }
 
+        //NOTE Not used right now
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
@@ -268,6 +268,7 @@ namespace WpfView
         /// <summary>
         /// Connects MIDI-keyboard
         /// </summary>
+        //NOTE Not used right now
         public void CheckInputDevice(int x)
         {
             _inputDevice?.Dispose();
