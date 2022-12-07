@@ -19,6 +19,7 @@ namespace BusinessLogic
         private static void PlayFile(object? obj)
         {
             if (obj is not Song song) return;
+            //TODO Properly stop and start thread when song finishes fully
             song.SongTimerThread.Start();
 
             OutputDevice = OutputDevice.GetByIndex(0);

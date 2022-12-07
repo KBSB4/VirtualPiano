@@ -21,10 +21,15 @@ namespace WpfView
         {
             for (int i = 0; i < 10; i++)
             {
-                SongCardControl songCardControl = new(i, "Song " + i.ToString(), i % 4);
+                SongCardControl songCardControl = new(i, "Song " + i.ToString(), i % 4, this);
 
                 SongCards.Children.Add(songCardControl);
             }
+        }
+
+        public void SongCard_Click(object sender)
+        {
+            NavigationService?.Navigate(new PracticePlayPiano(_mainMenu));
         }
 
         private void MainMenu_Click(object sender, RoutedEventArgs e)
