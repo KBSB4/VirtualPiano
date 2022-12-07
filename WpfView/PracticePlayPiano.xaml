@@ -24,20 +24,22 @@
             </Grid.RowDefinitions>
         </Grid>
 
-        <!-- Currently not used while we figure out how and what exactly (pause menu on esc?)
+        <!-- Currently not fully used while we figure out how and what exactly (pause menu on esc?) -->
         <Menu Grid.Row="0" DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
-            <MenuItem Header="PianoHero MainMenu" Height="30" Click="MainMenu_Click" Foreground="White"  >
+            <Label x:Name="ScoreLabel" Content="Score = 0" Foreground="White"/>
+
+            <!--<MenuItem Header="PianoHero MainMenu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
             </MenuItem>
 
 
-            <MenuItem Name="MainItem"  Header="Settings" Height="30" Click="Refresh_Click" Foreground="White" >
+            MenuItem Name="MainItem"  Header="Settings" Height="30" Click="Refresh_Click" Foreground="White" >
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
-            </MenuItem>
-        </Menu> -->
+            </MenuItem> -->
+        </Menu>
     </Grid>
 </Page>
