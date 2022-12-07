@@ -7,6 +7,7 @@ namespace BusinessLogic
     public static class SongLogic
     {
         private const int SONG_OFFSET = 2000;
+        private const int STARTTUNENOTES = 8;
         public static Playback PlaybackDevice;
         public static OutputDevice OutputDevice;
 
@@ -55,16 +56,30 @@ namespace BusinessLogic
         {
             song.IsPlaying = true;
             DateTime now = DateTime.Now;
+            int ignoreNote = STARTTUNENOTES;
+            //if (song.PianoKeys.TryPeek(out PianoKey? firstKey))
+            //{
+            //    MetricTimeSpan firsttimeSpan = DateTime.Now - now;
+            //    Thread.Sleep(firstKey.TimeStamp - firsttimeSpan);
+            //}
             while (song.PianoKeys.Count > 0)
             {
                 PianoKey pianoKey = song.PianoKeys.Dequeue();
+                //if (ignoreNote < 0)
+                //{
                 song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
+                //}
+                //else
+                //{
+                //    ignoreNote--;
+                //}
                 if (song.PianoKeys.TryPeek(out PianoKey? nextKey))
                 {
                     MetricTimeSpan timeSpan;
                     if (PlaybackDevice is null || !PlaybackDevice.IsRunning)
                     {
                         timeSpan = DateTime.Now - now;
+                        //timeSpan = pianoKey.TimeStamp + (MetricTimeSpan)TimeSpan.FromMilliseconds(20);
                     }
                     else
                     {

@@ -30,10 +30,12 @@ namespace Controller
 		/// <returns></returns>
 		public static Song Convert(MidiFile file)
 		{
-			var trackList = file.GetTrackChunks().ToList();
-			TempoMap = file.GetTempoMap();
+			//file.ShiftEvents((MetricTimeSpan)TimeSpan.FromSeconds(2));
+			var newFile = AddStartTune(file);
+			var trackList = newFile.GetTrackChunks().ToList();
+			TempoMap = newFile.GetTempoMap();
 			Queue<PianoKey> pianoKeyList = new();
-			var notes = file.GetNotes();
+			var notes = newFile.GetNotes();
 
 			foreach (Note? midiKey in notes)
 			{
@@ -48,8 +50,19 @@ namespace Controller
 				}
 			}
 
-			MetricTimeSpan duration = file.GetDuration<MetricTimeSpan>();
-			return new Song(file, "temp", Difficulty.Easy, duration, pianoKeyList, TempoMap);
+			MetricTimeSpan duration = newFile.GetDuration<MetricTimeSpan>();
+			return new Song(newFile, "temp", Difficulty.Easy, duration, pianoKeyList, TempoMap);
+		}
+
+		public static MidiFile RemovePiano(MidiFile file)
+		{
+			//file.ShiftEvents((MetricTimeSpan)TimeSpan.FromSeconds(2));
+			var trackList = file.GetTrackChunks().ToList();
+			TempoMap = file.GetTempoMap();
+
+			file.RemoveNotes(x => x.Channel == GetPianoChannel(trackList));
+
+			return file;
 		}
 
 		/// <summary>
@@ -107,6 +120,48 @@ namespace Controller
 			var noteName = midiNote.NoteName;
 			var octave = midiNote.Octave;
 			return new PianoKey((Octave)octave, noteName, timeStamp, duration);
+		}
+
+		public static MidiFile AddStartTune(MidiFile midiFile)
+		{
+			var fileNameOut = "testName.mid";
+			var midiFileOut = new MidiFile()
+			{
+				TimeDivision = midiFile.TimeDivision // copied from master file
+			};
+
+			MidiFile StartTune = MidiFile.Read("C:\\Users\\jaelk\\source\\repos\\VirtualPiano\\Controller\\PianoSoundPlayer\\Sounds\\startTune.mid");
+			// Add all parts after shifting them
+			long addedSoFarMicroseconds = 0;
+
+			List<MidiFile> lsToWrite = new()
+			{
+				StartTune,
+				midiFile
+			};
+
+			foreach (var midiPart in lsToWrite) // lsToWrite is a list of MidiFile objects
+			{
+				var currentDuration = midiPart.GetDuration<MetricTimeSpan>();
+				midiPart.ShiftEvents(new MetricTimeSpan(addedSoFarMicroseconds));
+				midiFileOut.Chunks.AddRange(midiPart.Chunks);
+				addedSoFarMicroseconds += currentDuration.TotalMicroseconds;
+			}
+			midiFileOut.Write(fileNameOut, true);
+
+			return midiFileOut;
+
+
+			//midiFile.ShiftEvents((MetricTimeSpan)TimeSpan.FromSeconds(2));
+			//var StartTune = MidiFile.Read("C:\\Users\\jaelk\\source\\repos\\VirtualPiano\\Controller\\PianoSoundPlayer\\Sounds\\startTune.mid");
+			//foreach (Note? item in StartTune.GetNotes())
+			//{
+			//	if (item is not null)
+			//	{
+			//		midiFile.Write("..\\..");
+			//	}
+			//}
+			//return midiFile;
 		}
 	}
 }
