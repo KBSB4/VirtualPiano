@@ -25,13 +25,13 @@ namespace BusinessLogic
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
 
-            while (!song.IsPlaying) { }
             Thread.Sleep(SONG_OFFSET);
             PlaybackDevice.Start();
             SpinWait.SpinUntil(() => !PlaybackDevice.IsRunning);
 
             OutputDevice.Dispose();
             PlaybackDevice.Dispose();
+            song.IsPlaying = false;
         }
 
         private static void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
@@ -54,7 +54,6 @@ namespace BusinessLogic
 
         public static void PlaySong(Song song)
         {
-            song.IsPlaying = true;
             DateTime now = DateTime.Now;
             while (song.PianoKeys.Count > 0)
             {
@@ -79,7 +78,6 @@ namespace BusinessLogic
                 }
                 //Debug.WriteLine(pianoKey.ToString());
             }
-            song.IsPlaying = false;
         }
     }
 }
