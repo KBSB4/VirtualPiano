@@ -69,7 +69,7 @@ namespace BusinessLogic
                     else
                     {
                         timeSpan = (MetricTimeSpan)PlaybackDevice.GetCurrentTime(TimeSpanType.Metric)
-                            + (MetricTimeSpan)TimeSpan.FromMilliseconds(SONG_OFFSET);
+                        + (MetricTimeSpan)TimeSpan.FromMilliseconds(SONG_OFFSET);
                     }
                     if (nextKey.TimeStamp > timeSpan)
                     {

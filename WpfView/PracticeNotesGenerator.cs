@@ -10,7 +10,7 @@ namespace WpfView
     internal class PracticeNotesGenerator
     {
         private List<Grid> practiceNoteColumns;
-        private const int noteLength = 300; //120 BPM
+        private const int noteLength = 290; //120 BPM
 
         //private double noteSpeed = 12; //120 BPM
         //private Queue<double> tempoQueue = new();
@@ -169,11 +169,22 @@ namespace WpfView
         /// </summary>
         /// <param name="pianokey"></param>
         /// <returns>SolidBrush</returns>
-        private static SolidColorBrush GetPianoKeyColour(PianoKey pianokey)
+        private static LinearGradientBrush GetPianoKeyColour(PianoKey pianokey)
         {
-            SolidColorBrush whitekeycolour = new(Colors.Orange);
-            SolidColorBrush blackkeycolour = new(Colors.DarkRed);
-            return pianokey.Note.ToString().Contains("Sharp") ? whitekeycolour : blackkeycolour;
+            LinearGradientBrush whitekeycolour = new()
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(0, 1)
+            };
+            whitekeycolour.GradientStops.Add(
+                new GradientStop(Colors.Red, 0.0));
+            whitekeycolour.GradientStops.Add(
+                new GradientStop(Colors.Yellow, 1.0));
+
+            //GradientBrush whiteKeyBrush = new(Color.FromRgb());
+            //SolidColorBrush whitekeycolour = new(Colors.Orange);
+            //SolidColorBrush blackkeycolour = new(Colors.DarkRed);
+            return pianokey.Note.ToString().Contains("Sharp") ? whitekeycolour : whitekeycolour;
         }
     }
 }
