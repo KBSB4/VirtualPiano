@@ -54,14 +54,16 @@ namespace Controller
 			return new Song(newFile, "temp", Difficulty.Easy, duration, pianoKeyList, TempoMap);
 		}
 
-		public static MidiFile RemovePiano(MidiFile file)
+
+        /// <summary>
+        /// Illiterates through the trackChuncks of the MidiFile and removes the pianokeys. 
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static MidiFile RemovePiano(MidiFile file)
 		{
-			//file.ShiftEvents((MetricTimeSpan)TimeSpan.FromSeconds(2));
 			var trackList = file.GetTrackChunks().ToList();
-			TempoMap = file.GetTempoMap();
-
 			file.RemoveNotes(x => x.Channel == GetPianoChannel(trackList));
-
 			return file;
 		}
 
@@ -122,6 +124,12 @@ namespace Controller
 			return new PianoKey((Octave)octave, noteName, timeStamp, duration);
 		}
 
+
+		/// <summary>
+		///  Appends the generic startTune to the midiFile
+		/// </summary>
+		/// <param name="midiFile"></param>
+		/// <returns></returns>
 		public static MidiFile AddStartTune(MidiFile midiFile)
 		{
 			var fileNameOut = "testName.mid";
@@ -130,7 +138,7 @@ namespace Controller
 				TimeDivision = midiFile.TimeDivision // copied from master file
 			};
 
-			MidiFile StartTune = MidiFile.Read("C:\\Users\\jaelk\\source\\repos\\VirtualPiano\\Controller\\PianoSoundPlayer\\Sounds\\startTune.mid");
+			MidiFile StartTune = MidiFile.Read("..\\..\\..\\..\\Controller\\PianoSoundPlayer\\Sounds\\startTune.mid");
 			// Add all parts after shifting them
 			long addedSoFarMicroseconds = 0;
 
@@ -150,18 +158,6 @@ namespace Controller
 			midiFileOut.Write(fileNameOut, true);
 
 			return midiFileOut;
-
-
-			//midiFile.ShiftEvents((MetricTimeSpan)TimeSpan.FromSeconds(2));
-			//var StartTune = MidiFile.Read("C:\\Users\\jaelk\\source\\repos\\VirtualPiano\\Controller\\PianoSoundPlayer\\Sounds\\startTune.mid");
-			//foreach (Note? item in StartTune.GetNotes())
-			//{
-			//	if (item is not null)
-			//	{
-			//		midiFile.Write("..\\..");
-			//	}
-			//}
-			//return midiFile;
 		}
 	}
 }

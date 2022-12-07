@@ -16,7 +16,7 @@ namespace Controller
             {
                 CurrentSong = MIDIController.Convert(file);
                 CurrentSong.SongTimerThread = new Thread(() => SongLogic.PlaySong(CurrentSong));
-                //CurrentSong.File = MIDIController.RemovePiano(CurrentSong.File.Clone());
+                CurrentSong.File = MIDIController.RemovePiano(CurrentSong.File.Clone());
             }
         }
 
@@ -53,7 +53,8 @@ namespace Controller
                 CurrentSong.PianoKeys = new();
 
                 //TODO Sometimes Stop() crashes with an AccessViolationException
-                SongLogic.PlaybackDevice.Stop();
+                //SongLogic.PlaybackDevice.Stop();
+                GC.Collect();
                 SongLogic.PlaybackDevice.Dispose();
                 SongLogic.OutputDevice.Dispose();
             }

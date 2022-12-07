@@ -10,7 +10,7 @@ namespace WpfView
     internal class PracticeNotesGenerator
     {
         private List<Grid> practiceNoteColumns;
-        private const int noteLength = 290; //120 BPM
+        private const int noteLength = 280; //120 BPM
 
         //private double noteSpeed = 12; //120 BPM
         //private Queue<double> tempoQueue = new();
@@ -39,7 +39,7 @@ namespace WpfView
         public void StartExampleNote(PianoKey? key)
         {
             if (key is null) return;
-            int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);
+            int note = (((int)key.Octave - 2) * 12) + ((int)key.Note); // OCTAVE HAS 12 KEYS, THE VIRTUAL PIANO STARTS SECOND OCTAVE 
 
             Grid currentColumn = practiceNoteColumns[0];
             if (practiceNoteColumns.Count > note && 0 < note)
