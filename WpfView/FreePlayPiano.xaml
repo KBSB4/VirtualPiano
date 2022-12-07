@@ -25,7 +25,7 @@
         </Grid>
 
         <Menu Grid.Row="0" DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
-            <MenuItem Header="PianoHero MainMenu" Height="30" Click="MainMenu_Click" Foreground="White"  >
+            <MenuItem Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
@@ -34,13 +34,13 @@
 
             <MenuItem Name="MainItem"  Header="Settings" Height="30" Click="Refresh_Click" Foreground="White" >
                 <MenuItem.Icon>
-                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                    <Image Source="/Images/settings.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
             </MenuItem>
 
             <MenuItem Name="_MIDI" Header="MIDI" Height="30"  Foreground="White">
                 <MenuItem.Icon>
-                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                    <Image Source="/Images/midi.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
                 <MenuItem Header="_Open" Click="OpenMIDIFileDialog" Foreground="Black" />
                 <MenuItem Header="_Play" Click="PlayMIDIFile" Foreground="Black"/>
