@@ -130,7 +130,7 @@ namespace Controller
 				TimeDivision = midiFile.TimeDivision // copied from master file
 			};
 
-			MidiFile StartTune = MidiFile.Read("C:\\Users\\jaelk\\source\\repos\\VirtualPiano\\Controller\\PianoSoundPlayer\\Sounds\\startTune.mid");
+			MidiFile StartTune = MidiFile.Read("..\\..\\..\\..\\Controller\\PianoSoundPlayer\\Sounds\\startTune.mid");
 			// Add all parts after shifting them
 			long addedSoFarMicroseconds = 0;
 
