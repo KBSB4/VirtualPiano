@@ -1,4 +1,6 @@
-﻿using Model;
+﻿using Melanchall.DryWetMidi.MusicTheory;
+using Model;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,7 @@ namespace WpfView
     internal class PracticeNotesGenerator
     {
         private List<Grid> practiceNoteColumns;
+        private PracticePlayPiano PracticePlayPianoPage { get; set; }
         private const int noteLength = 290; //120 BPM
 
         //private double noteSpeed = 12; //120 BPM
@@ -22,8 +25,9 @@ namespace WpfView
         /// <param name="whiteKeyGrid"></param>
         /// <param name="blackKeyGrid"></param>
         /// <param name="columnAmount"></param>
-        public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
+        public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount, PracticePlayPiano? ppp)
         {
+            PracticePlayPianoPage = ppp;
             if (columnAmount < 0)
             {
                 practiceNoteColumns = new();
@@ -32,6 +36,7 @@ namespace WpfView
             practiceNoteColumns = AddPracticeNoteColumns(whiteKeyGrid, blackKeyGrid, columnAmount);
         }
 
+        public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount) : this(whiteKeyGrid, blackKeyGrid, columnAmount, null) { }
         /// <summary>
         /// Adds upcoming note
         /// </summary>
@@ -61,7 +66,6 @@ namespace WpfView
 
             //Debug.WriteLine(noteSpeed + " | " + SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute);
             currentColumn.Children.Add(rectangle);
-
             //tempoQueue.Enqueue(Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute));
             //if (FirstTime)
             //{
@@ -69,8 +73,8 @@ namespace WpfView
             //    //noteSpeed =  bpm / 10;
             //    FirstTime = false;
             //}
-        }
 
+        }
         /// <summary>
         /// Update each note to fall down
         /// </summary>
@@ -91,6 +95,8 @@ namespace WpfView
                             {
                                 //Remove
                                 //column.Children.Remove(rectangle); //TODO DOES NOT WORK, BREAKS ENUMERATOR
+
+                                //Remove key so it can not be scored
                             }
                         }
                     }
