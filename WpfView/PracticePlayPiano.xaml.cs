@@ -4,6 +4,8 @@ using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using Model;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +29,8 @@ namespace WpfView
         private MainMenu _mainMenu;
 
         private const int MinScore = 500;
+
+        //TODO use getset to keep it at max 500
         private int Score = 0;
         public PracticePlayPiano(MainMenu mainMenu, int songID)
         {
@@ -97,6 +101,8 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+
+        Queue<PianoKey> upcomingKeys = new();
         private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
             try
@@ -106,6 +112,7 @@ namespace WpfView
                     if (e.Key.PressedDown)
                     {
                         practiceNotes.StartExampleNote(e.Key);
+                        upcomingKeys.Enqueue(e.Key);
                     }
                     //TODO Add option to display keys live as if the piano is playing it
                     //pianoGrid.DisplayPianoKey(e.Key);
@@ -117,12 +124,12 @@ namespace WpfView
             }
         }
 
-        /// <summary>
-        /// Event fired on MIDI-input
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
+            /// <summary>
+            /// Event fired on MIDI-input
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
         {
             PianoKey? key = PianoController.ParseMidiNote(e.Event);
 
@@ -153,6 +160,7 @@ namespace WpfView
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
+        int PressedAt;
         public void KeyPressed(object? source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
@@ -164,10 +172,29 @@ namespace WpfView
                 PianoController.PlayPianoSound(key);
                 //SCORE FUNCTION
 
+                //Check if its to be played in 1 second
+                PressedAt = SongController.CurrentSong.TimeInSong.Seconds;
+                if (upcomingKeys.Peek().TimeStamp.Seconds < (PressedAt + 1))
+                {
+                    PianoKey playing = upcomingKeys.Dequeue();
+                    if(playing.TimeStamp.Seconds < PressedAt + 1 && PressedAt + 1 > playing.TimeStamp.Seconds)
+                    {
+                        //played, add score
+                        Score += 50;
+
+                        //start counting for how long
+                    } else
+                    {
+                        //too late
+                        Score -= 50;
+                    } 
+                }
             }
 
             if (e.Key == Key.CapsLock)
                 PianoLogic.SwapOctave(PianoController.Piano);
+
+            Debug.WriteLine(Score);
         }
 
         /// <summary>
@@ -185,7 +212,7 @@ namespace WpfView
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
                 //SCORE FUNCTION
-
+                //check how long is pressed
             }
         }
 
