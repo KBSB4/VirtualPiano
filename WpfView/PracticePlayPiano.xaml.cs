@@ -2,9 +2,9 @@
 using Controller;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
+using Melanchall.DryWetMidi.MusicTheory;
 using Model;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -38,7 +38,7 @@ namespace WpfView
             InitializeComponent();
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(Play2WhiteKeysGrid, Play2BlackKeysGrid, 28);
-            practiceNotes = new PracticeNotesGenerator(Play2ColumnWhiteKeys, Play2ColumnBlackKeys, 28);
+            practiceNotes = new PracticeNotesGenerator(Play2ColumnWhiteKeys, Play2ColumnBlackKeys, 28, this);
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
 
@@ -102,7 +102,7 @@ namespace WpfView
         /// <param name="sender"></param>
         /// <param name="e"></param>
 
-        Queue<PianoKey> upcomingKeys = new();
+        List<PianoKey> upcoming = new();
         private void CurrentSong_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
             try
@@ -112,7 +112,7 @@ namespace WpfView
                     if (e.Key.PressedDown)
                     {
                         practiceNotes.StartExampleNote(e.Key);
-                        upcomingKeys.Enqueue(e.Key);
+                        upcoming.Add(e.Key);
                     }
                     //TODO Add option to display keys live as if the piano is playing it
                     //pianoGrid.DisplayPianoKey(e.Key);
@@ -124,12 +124,12 @@ namespace WpfView
             }
         }
 
-            /// <summary>
-            /// Event fired on MIDI-input
-            /// </summary>
-            /// <param name="sender"></param>
-            /// <param name="e"></param>
-            private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
+        /// <summary>
+        /// Event fired on MIDI-input
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
         {
             PianoKey? key = PianoController.ParseMidiNote(e.Event);
 
@@ -161,6 +161,7 @@ namespace WpfView
         /// <param name="source"></param>
         /// <param name="e"></param>
         int PressedAt;
+        Dictionary<NoteName, int> playing = new();
         public void KeyPressed(object? source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
@@ -174,20 +175,16 @@ namespace WpfView
 
                 //Check if its to be played in 1 second
                 PressedAt = SongController.CurrentSong.TimeInSong.Seconds;
-                if (upcomingKeys.Peek().TimeStamp.Seconds < (PressedAt + 1))
+
+                foreach(PianoKey koy in upcoming)
                 {
-                    PianoKey playing = upcomingKeys.Dequeue();
-                    if(playing.TimeStamp.Seconds < PressedAt + 1 && PressedAt + 1 > playing.TimeStamp.Seconds)
+                    if (koy.TimeStamp.Seconds < PressedAt + 1 && PressedAt + 1 > koy.TimeStamp.Seconds)
                     {
                         //played, add score
                         Score += 50;
-
-                        //start counting for how long
-                    } else
-                    {
-                        //too late
-                        Score -= 50;
-                    } 
+                        playing.Add(key.Note, PressedAt);
+                        //start counting for how long, maybe dictionary?
+                    }
                 }
             }
 
@@ -203,6 +200,7 @@ namespace WpfView
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
+        int ReleasedAt;
         public void KeyReleased(object source, KeyEventArgs e)
         {
             int intValue = (int)e.Key;
@@ -212,7 +210,17 @@ namespace WpfView
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
                 //SCORE FUNCTION
-                //check how long is pressed
+                ReleasedAt = SongController.CurrentSong.TimeInSong.Seconds;
+
+                foreach (PianoKey koy in upcoming)
+                {
+                    if (koy.Duration.Seconds + koy.TimeStamp.Seconds < PressedAt + 1 && PressedAt + 1 > koy.TimeStamp.Seconds + koy.TimeStamp.Seconds)
+                    {
+                        //played, add score
+                        Score += ReleasedAt - playing[key.Note] * 10;
+                        playing.Remove(key.Note);
+                    }
+                }
             }
         }
 
