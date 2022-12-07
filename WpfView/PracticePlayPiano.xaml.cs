@@ -48,14 +48,14 @@ namespace WpfView
             //_inputDevice.EventReceived += OnMidiEventReceived;
             //_inputDevice.StartEventsListening();
 
+            PlaySelectedSong(songID);
+
             //Start thread for updating practice notes
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
             {
                 IsBackground = true
             };
             updateVisualNoteThread.Start();
-
-            PlaySelectedSong(songID);
         }
 
         private void PlaySelectedSong(int songID)
@@ -102,6 +102,15 @@ namespace WpfView
                     {
                         upcoming.Remove(key);
                     }
+                }
+
+                if (!SongController.CurrentSong.IsPlaying)
+                {
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        Thread.Sleep(1000);
+                        NavigationService?.Navigate(_mainMenu);
+                    }));
                 }
             }
         }
@@ -181,13 +190,13 @@ namespace WpfView
             {
                 pianoGrid.DisplayPianoKey(key);
                 PianoController.PlayPianoSound(key);
+                
                 //SCORE FUNCTION
-
-                //Check if its to be played in 1 second
                 PressedAt = SongController.CurrentSong.TimeInSong.Milliseconds;
                 PianoKey upcomingKey = upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
                 if (upcomingKey != null)
                 {
+                    //Upcomingkey is the key that should be played next for the current PianoKey
                     if (upcomingKey.TimeStamp.Milliseconds < PressedAt + 200 && PressedAt + 200 > upcomingKey.TimeStamp.Milliseconds)
                     {
                         //played, add score
@@ -196,7 +205,12 @@ namespace WpfView
                         {
                             playing.Add(key.Note, PressedAt);
                         }
-                        //start counting for how long, maybe dictionary?
+                    } else if (PressedAt + 200 > upcomingKey.TimeStamp.Milliseconds){
+                        //Too late, no points
+                        if (!playing.ContainsKey(upcomingKey.Note))
+                        {
+                            playing.Add(key.Note, PressedAt);
+                        }
                     }
                 }
             }
@@ -226,11 +240,11 @@ namespace WpfView
                 ReleasedAt = SongController.CurrentSong.TimeInSong.Milliseconds;
                 if (upcomingKey is not null)
                 {
-                    if (upcomingKey.Duration.Milliseconds + upcomingKey.TimeStamp.Milliseconds < PressedAt + 1
-                    && PressedAt + 1 > upcomingKey.TimeStamp.Milliseconds + upcomingKey.TimeStamp.Milliseconds)
+                    if (upcomingKey.Duration.Milliseconds + upcomingKey.TimeStamp.Milliseconds < PressedAt + 200
+                    && PressedAt + 200 > upcomingKey.TimeStamp.Milliseconds + upcomingKey.TimeStamp.Milliseconds)
                     {
-                        //played, add score
-                        Score += ReleasedAt - playing[key.Note] * 10;
+                        //played, add score based on how long pressed
+                        Score += ReleasedAt - playing[key.Note] * 5;
                         playing.Remove(key.Note);
                         upcoming.Remove(upcomingKey);
                     }

@@ -26,8 +26,6 @@ namespace Controller
         public static void LoadSong(MetricTimeSpan Offset)
         {
             LoadSong();
-            //TODO NOT USED RIGHT NOW
-            //CurrentSong.Offset = Offset;
         }
 
         /// <summary>
@@ -37,6 +35,7 @@ namespace Controller
         {
             if (CurrentSong is not null && !CurrentSong.IsPlaying)
             {
+                CurrentSong.IsPlaying = true;
                 SongLogic.Play(CurrentSong);
             }
         }
@@ -51,7 +50,6 @@ namespace Controller
                 //Stops the keys from appearing
                 CurrentSong.PianoKeys = new();
 
-                //TODO Sometimes Stop() crashes with an AccessViolationException
                 SongLogic.PlaybackDevice.Dispose();
                 SongLogic.OutputDevice.Dispose();
             }
