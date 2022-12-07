@@ -1,5 +1,4 @@
-﻿using Melanchall.DryWetMidi.MusicTheory;
-using Model;
+﻿using Model;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,9 +12,9 @@ namespace WpfView
         private List<Grid> practiceNoteColumns;
         private const int noteLength = 300; //120 BPM
 
-        private double noteSpeed = 12; //120 BPM
-        private Queue<double> tempoQueue = new();
-        private bool FirstTime = true;
+        //private double noteSpeed = 12; //120 BPM
+        //private Queue<double> tempoQueue = new();
+        //private bool FirstTime = true;
 
         /// <summary>
         /// Prepare grids for practice notes
@@ -170,55 +169,11 @@ namespace WpfView
         /// </summary>
         /// <param name="pianokey"></param>
         /// <returns>SolidBrush</returns>
-
         private static SolidColorBrush GetPianoKeyColour(PianoKey pianokey)
         {
-            SolidColorBrush solidBrush;
             SolidColorBrush whitekeycolour = new(Colors.Orange);
             SolidColorBrush blackkeycolour = new(Colors.DarkRed);
-            switch (pianokey.Note)
-            {
-                case NoteName.C:
-                    solidBrush = whitekeycolour;
-                    break;
-                case NoteName.CSharp:
-                    solidBrush = blackkeycolour;
-                    break;
-                case NoteName.D:
-                    solidBrush = whitekeycolour;
-                    break;
-                case NoteName.DSharp:
-                    solidBrush = blackkeycolour;
-                    break;
-                case NoteName.E:
-                    solidBrush = whitekeycolour;
-                    break;
-                case NoteName.F:
-                    solidBrush = whitekeycolour;
-                    break;
-                case NoteName.FSharp:
-                    solidBrush = blackkeycolour;
-                    break;
-                case NoteName.G:
-                    solidBrush = whitekeycolour;
-                    break;
-                case NoteName.GSharp:
-                    solidBrush = blackkeycolour;
-                    break;
-                case NoteName.A:
-                    solidBrush = whitekeycolour;
-                    break;
-                case NoteName.ASharp:
-                    solidBrush = blackkeycolour;
-                    break;
-                case NoteName.B:
-                    solidBrush = whitekeycolour;
-                    break;
-                default:
-                    solidBrush = new SolidColorBrush(Colors.Red);
-                    break;
-            }
-            return solidBrush;
+            return pianokey.Note.ToString().Contains("Sharp") ? whitekeycolour : blackkeycolour;
         }
     }
 }

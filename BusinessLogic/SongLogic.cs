@@ -6,6 +6,7 @@ namespace BusinessLogic
 {
     public static class SongLogic
     {
+        private const int SONG_OFFSET = 2000;
         public static Playback PlaybackDevice;
         public static OutputDevice OutputDevice;
 
@@ -17,14 +18,14 @@ namespace BusinessLogic
 
         private static void PlayFile(object? obj)
         {
-            Song song = obj as Song;
+            if (obj is not Song song) return;
             song.SongTimerThread.Start();
 
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
 
             while (!song.IsPlaying) { }
-            Thread.Sleep(2000);
+            Thread.Sleep(SONG_OFFSET);
             PlaybackDevice.Start();
             SpinWait.SpinUntil(() => !PlaybackDevice.IsRunning);
 
@@ -67,8 +68,8 @@ namespace BusinessLogic
                     }
                     else
                     {
-                        timeSpan = (MetricTimeSpan)PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
-                        timeSpan += (MetricTimeSpan)TimeSpan.FromSeconds(2d);
+                        timeSpan = (MetricTimeSpan)PlaybackDevice.GetCurrentTime(TimeSpanType.Metric)
+                            + (MetricTimeSpan)TimeSpan.FromMilliseconds(SONG_OFFSET);
                     }
                     if (nextKey.TimeStamp > timeSpan)
                     {

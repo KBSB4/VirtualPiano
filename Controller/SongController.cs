@@ -27,7 +27,7 @@ namespace Controller
         {
             LoadSong();
             //TODO NOT USED RIGHT NOW
-            CurrentSong.Offset = Offset;
+            //CurrentSong.Offset = Offset;
         }
 
         /// <summary>
@@ -38,7 +38,6 @@ namespace Controller
             if (CurrentSong is not null && !CurrentSong.IsPlaying)
             {
                 SongLogic.Play(CurrentSong);
-
             }
         }
 
@@ -47,13 +46,16 @@ namespace Controller
         /// </summary>
         public static void StopSong()
         {
-            //Stops the keys from appearing
-            CurrentSong.PianoKeys = new();
+            if (CurrentSong is not null && CurrentSong.IsPlaying)
+            {
+                //Stops the keys from appearing
+                CurrentSong.PianoKeys = new();
 
-            //TODO Sometimes Stop() crashes with an AccessViolationException
-            SongLogic.PlaybackDevice.Stop();
-            SongLogic.PlaybackDevice.Dispose();
-            SongLogic.OutputDevice.Dispose();
+                //TODO Sometimes Stop() crashes with an AccessViolationException
+                SongLogic.PlaybackDevice.Stop();
+                SongLogic.PlaybackDevice.Dispose();
+                SongLogic.OutputDevice.Dispose();
+            }
         }
     }
 }
