@@ -10,6 +10,8 @@ namespace BusinessLogic
         public static Playback PlaybackDevice;
         public static OutputDevice OutputDevice;
 
+        private static Song SongForTime;
+
         public static void Play(Song song)
         {
             song.NotePlayed += Song_NotePlayed;
@@ -21,9 +23,12 @@ namespace BusinessLogic
             if (obj is not Song song) return;
             //TODO Properly stop and start thread when song finishes fully
             song.SongTimerThread.Start();
-
+            SongForTime = song;
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
+            PlaybackCurrentTimeWatcher.Instance.AddPlayback(PlaybackDevice, TimeSpanType.Metric);
+            PlaybackCurrentTimeWatcher.Instance.CurrentTimeChanged += OnCurrentTimeChanged;
+            PlaybackCurrentTimeWatcher.Instance.Start();
 
             Thread.Sleep(SONG_OFFSET);
             PlaybackDevice.Start();
@@ -32,6 +37,14 @@ namespace BusinessLogic
             OutputDevice.Dispose();
             PlaybackDevice.Dispose();
             song.IsPlaying = false;
+        }
+
+        private static void OnCurrentTimeChanged(object sender, PlaybackCurrentTimeChangedEventArgs e)
+        {
+            foreach (var playbackTime in e.Times)
+            {
+                SongForTime.TimeInSong = (MetricTimeSpan)playbackTime.Time;
+            }
         }
 
         private static void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
