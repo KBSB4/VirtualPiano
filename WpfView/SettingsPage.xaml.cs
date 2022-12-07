@@ -20,7 +20,7 @@ namespace WpfView
         {
 
             _mainMenu = mainMenu;
-            this.DataContext = new DataContextSettings();
+            DataContext = new DataContextSettings();
             InitializeComponent();
 
         }
@@ -28,7 +28,6 @@ namespace WpfView
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
-
         }
 
 
@@ -41,8 +40,7 @@ namespace WpfView
             {
                 foreach (var device in InputDevice.GetAll())
                 {
-                    if (
-                    !input.Items.Cast<ComboBoxItem>().Any(cbi => cbi.Content.Equals(device.Name)))
+                    if (!input.Items.Cast<ComboBoxItem>().Any(cbi => cbi.Content.Equals(device.Name)))
                     {
                         ComboBoxItem ToAddInputDevice = new() { Content = device.Name };
                         input.Items.Add(ToAddInputDevice);
@@ -52,37 +50,17 @@ namespace WpfView
             }
             else
             {
-
                 if (input.Items.Count > 1)
                 {
                     for (int i = 1; i < input.Items.Count; i++)
                     {
-
                         input.Items.RemoveAt(i);
-
                     }
                 }
                 NoneSelected.IsSelected = true; // DEFAULT VALUE NONE
                 count = InputDevice.GetDevicesCount();
             }
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         /// <summary>
         /// Gets the index of the selected input device.
@@ -94,17 +72,12 @@ namespace WpfView
             try
             {
                 IndexInputDevice = input.Items.IndexOf(sender);
-
             }
             catch (IndexOutOfRangeException)
             {
 
-
             }
         }
-
-
-
 
         /// <summary>
         /// Refreshes the ComboBoxItems when selected

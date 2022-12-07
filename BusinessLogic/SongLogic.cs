@@ -34,12 +34,21 @@ namespace BusinessLogic
             PlaybackDevice.Dispose();
         }
 
+        /// <summary>
+        /// If the key is pressedDown, starts the PlayNote thread
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
             object[] objs = { sender, e.Key };
             if (e.Key.PressedDown) new Thread(new ParameterizedThreadStart(PlayNote)).Start(objs);
         }
 
+        /// <summary>
+        /// Waits for the note to have ended, releases the key and fires the NotePlayed event
+        /// </summary>
+        /// <param name="obj"></param>
         private static void PlayNote(object? obj)
         {
             object[] objs = (object[])obj;
@@ -52,9 +61,10 @@ namespace BusinessLogic
             song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
         }
 
-
-
-      
+        /// <summary>
+        /// Loops through every note in the song, and fires an event when this note should appear visually
+        /// </summary>
+        /// <param name="song"></param>
         public static void PlaySong(Song song)
         {
             song.IsPlaying = true;
@@ -72,7 +82,6 @@ namespace BusinessLogic
                 {
                     ignoreNote--;
                 }
-
                 if (song.PianoKeys.TryPeek(out PianoKey? nextKey))
                 {
                     MetricTimeSpan timeSpan;
