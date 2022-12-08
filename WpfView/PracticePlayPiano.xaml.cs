@@ -157,6 +157,24 @@ namespace WpfView
             }
         }
 
+        public void DeletedPressedKey(object? sender, PianoKeyEventArgs e)
+        {
+            try
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    if (e.Key.PressedDown)
+                    {
+                        practiceNotes.StartExampleNote(e.Key);
+                    }
+                }));
+            }
+            catch (TaskCanceledException) //Just in case
+            {
+                Environment.Exit(0);
+            }
+        }
+
         /// <summary>
         /// Event fired on MIDI-input
         /// </summary>
@@ -216,9 +234,9 @@ namespace WpfView
                     if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds - 150 && PressedAt < upcomingKey.TimeStamp.TotalMilliseconds + 150)
                     {
                         //played, add score
-                        Score += 50;
                         if (!playing.ContainsKey(upcomingKey.Note))
                         {
+                            Score += 50;
                             playing.Add(key.Note, PressedAt);
                             Debug.WriteLine("Added 50 points with " + key.Note);
                         }
