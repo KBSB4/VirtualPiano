@@ -196,16 +196,33 @@ namespace WpfView
             }
         }
 
-        private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
+        #region Menubar event clicks
+        
+        /// <summary>
+        /// lets the player go back to the main menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
         }
 
-        private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
+        /// <summary>
+        /// lets the player go to the settings page of Piano Hero
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Settings_Click(object sender, RoutedEventArgs e)
         {
             _mainMenu.SettingsPage.GenerateInputDevices();
             NavigationService?.Navigate(_mainMenu.SettingsPage);
         }
+
+        #endregion
+
+
+
 
         /// <summary>
         /// Connects MIDI-keyboard
@@ -223,7 +240,11 @@ namespace WpfView
                 SelectItem(1);
             }
         }
-
+        /// <summary>
+        /// tries to select the correct input device with parameter <paramref name="item"/> for playing with a Midi keyboard otherwise throws an exception
+        /// </summary>
+        /// <exception cref="ArgumentException"></exception>
+        /// <param name="item"></param>
         private void SelectItem(int item)
         {
             try
@@ -290,7 +311,7 @@ namespace WpfView
         }
 
         /// <summary>
-        /// Play MIDI File
+        /// Plays the selected MIDI file and checks if a correct MIDI file is selected. when true it plays otherwise it shows a popup with an error
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -323,7 +344,7 @@ namespace WpfView
 
 
         /// <summary>
-        /// Stop playing the MIDI
+        /// Stop playing the MIDI file which is selected. then produced with an exception it displays a popup with 'No MIDI playing'
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

@@ -37,7 +37,7 @@
             </MenuItem>
 
 
-            <MenuItem Name="MainItem"  Header="Settings" Height="30" Click="Refresh_Click" Foreground="White" >
+            <MenuItem Name="MainItem"  Header="Settings" Height="30" Click="Settings_Click" Foreground="White" >
                 <MenuItem.Icon>
                     <Image Source="/Images/settings.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>

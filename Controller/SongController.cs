@@ -9,6 +9,9 @@ namespace Controller
     {
         public static Song? CurrentSong { get; set; }
 
+        /// <summary>
+        /// Loads the current song for playing determined by a thread and conversion from the Midicontroller
+        /// </summary>
         public static void LoadSong()
         {
             MidiFile? file = MidiController.GetMidiFile();
