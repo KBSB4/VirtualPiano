@@ -175,7 +175,7 @@ namespace WpfView
                     PianoController.PlayPianoSound(key);
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        pianoGrid.DisplayPianoKey(key);
+                        pianoGrid.DisplayPianoKey(key); //TODO CHANGE COLOUR DEPENDING ON HOW WELL
                     }));
                 }
                 else
@@ -183,7 +183,7 @@ namespace WpfView
                     PianoController.StopPianoSound(key);
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        pianoGrid.DisplayPianoKey(key);
+                        pianoGrid.DisplayPianoKey(key); //TODO CHANGE COLOUR DEPENDING ON HOW WELL
                     }));
                 }
             }
@@ -204,7 +204,7 @@ namespace WpfView
             if (key is not null && stopWatch.Elapsed.TotalSeconds >= 2)
             {
                 stopWatch.Stop();
-                pianoGrid.DisplayPianoKey(key);
+                pianoGrid.DisplayPianoKey(key); //TODO CHANGE COLOUR DEPENDING ON HOW WELL
                 PianoController.PlayPianoSound(key);
 
                 //SCORE FUNCTION
@@ -257,7 +257,7 @@ namespace WpfView
             {
                 PianoKey upcomingKey = practiceNotes.upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
                 PianoController.StopPianoSound(key);
-                pianoGrid.DisplayPianoKey(key);
+                pianoGrid.DisplayPianoKey(key); //TODO CHANGE COLOUR DEPENDING ON HOW WELL
 
                 //SCORE FUNCTION
                 ReleasedAt = (int)SongController.CurrentSong.TimeInSong.TotalMilliseconds;
