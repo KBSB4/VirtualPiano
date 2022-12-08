@@ -29,8 +29,6 @@
             <Label x:Name="ScoreLabel" Content="Score = 0" Foreground="White"/>
             <Label x:Name="PlayingLabel" Content="Playing = " Foreground="White"/>
             <Label x:Name="UpcomingLabel" Content="Upcoming = " Foreground="White"/>
-            <Label x:Name="PlayedAtLabel" Content="PlayingAt = " Foreground="White"/>
-            <Label x:Name="ReleasedAtLabel" Content="ReleasedAt = " Foreground="White"/>
             <!--<MenuItem Header="PianoHero MainMenu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
