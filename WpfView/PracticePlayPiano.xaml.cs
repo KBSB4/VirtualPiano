@@ -61,7 +61,7 @@ namespace WpfView
         private void PlaySelectedSong(int songID)
         {
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
-            string path = "C:\\Users\\Harris\\Downloads\\test.mid";
+            string path = "../../../../WpfView/test.mid";
 
             //Start song
             MIDIController.OpenMidi(path);
