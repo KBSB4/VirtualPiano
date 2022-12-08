@@ -19,7 +19,7 @@ namespace UnitTests
 			
 			Assert.DoesNotThrow(() =>
 			{
-				MIDIController.OpenMidi(file);
+				MidiController.OpenMidi(file);
 			});
 		}
 
@@ -27,9 +27,11 @@ namespace UnitTests
 		public void MIDIController_Convert_EmptyFile()
 		{
 			MidiFile file = new MidiFile();
-			Song song = MIDIController.Convert(file);
+			Song? song = MidiController.Convert(file);
 
 			Assert.That(song, Is.Null);
 		}
+
+
 	}
 }
