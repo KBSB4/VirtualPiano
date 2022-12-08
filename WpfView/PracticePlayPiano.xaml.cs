@@ -135,9 +135,10 @@ namespace WpfView
             if (playing.ContainsKey(e.Key.Note))
             {
                 int ReleasedAt = (int)(e.Key.TimeStamp.TotalMilliseconds + e.Key.Duration.TotalMilliseconds);
-                Score += ((ReleasedAt - playing[e.Key.Note]) / 10);
-                playing.Remove(e.Key.Note);
-                playedNotes.Add(e.Key);
+                //todo fIX
+                //Score += ((ReleasedAt - playing[e.Key.Note]) / 10);
+                //playing.Remove(e.Key.Note);
+                //playedNotes.Add(e.Key);
             }
         }
 
