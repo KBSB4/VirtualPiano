@@ -179,5 +179,11 @@ namespace VirtualPiano.PianoSoundPlayer
                 _ => 0,
             };
         }
+
+        public void Dispose()
+        {
+            masteringVoice.Dispose();
+            device.Dispose();
+        }
     }
 }

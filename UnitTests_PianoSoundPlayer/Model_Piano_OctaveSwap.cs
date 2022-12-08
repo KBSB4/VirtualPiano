@@ -1,4 +1,5 @@
-﻿using Controller;
+﻿using BusinessLogic;
+using Controller;
 using Model;
 using NUnit.Framework.Internal.Execution;
 using System;
@@ -30,7 +31,7 @@ namespace UnitTests
         {
             if (b)
             {
-                piano.SwapOctave();
+                PianoLogic.SwapOctave(piano);
             }
 
             Assert.AreEqual(result, piano.PianoKeys[index].Octave);
@@ -44,7 +45,7 @@ namespace UnitTests
         {
             if (b)
             {
-                piano.SwapOctave();
+                PianoLogic.SwapOctave(piano);
                
             }
            
@@ -52,7 +53,7 @@ namespace UnitTests
             if (b)
             {
 
-                piano.SwapOctave();
+                PianoLogic.SwapOctave(piano);
             }
 
             Assert.AreEqual(result, piano.PianoKeys[index].Octave);
