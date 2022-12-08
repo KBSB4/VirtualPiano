@@ -185,8 +185,8 @@ namespace WpfView
                 StartPoint = new Point(0, 0),
                 EndPoint = new Point(0, 1)
             };
-            blackKeyColour.GradientStops.Add(new GradientStop(Colors.Red, 0.0));
-            blackKeyColour.GradientStops.Add(new GradientStop(Colors.OrangeRed, 1.0));
+            blackKeyColour.GradientStops.Add(new GradientStop(Colors.DarkRed, 0.0));
+            blackKeyColour.GradientStops.Add(new GradientStop(Colors.DarkOrange, 1.0));
 
             //LinearGradientBrush whitekeycolour = new()
             //{

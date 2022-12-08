@@ -14,6 +14,11 @@
             <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
         <!-- <Image x:Name="MainImage" Margin="0,0,0,0"/> -->
+
+        <Grid>
+            <Image Name="CountDownImage"></Image>
+        </Grid>
+        
         <Grid Name="PracticeColumnWhiteKeys" Grid.Row="0" ZIndex="0"></Grid>
         <Grid Name="PracticeColumnBlackKeys" Grid.Row="0" ZIndex="1"></Grid>
         <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>

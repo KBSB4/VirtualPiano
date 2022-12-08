@@ -1,17 +1,16 @@
-﻿using Model;
+﻿using BusinessLogic;
+using Controller;
+using Model;
 
 namespace UnitTests
 {
     [TestFixture]
     internal class Model_Piano_OctaveSwap
     {
-        private Piano piano;
-
         [SetUp]
-        //TODO update tests
         public void SetUp()
         {
-            piano = new();
+            PianoController.CreatePiano();
         }
 
 
@@ -23,10 +22,10 @@ namespace UnitTests
         {
             if (b)
             {
-                piano.SwapOctave();
+                PianoLogic.SwapOctave(PianoController.Piano);
             }
 
-            Assert.AreEqual(result, piano.PianoKeys[index].Octave);
+            Assert.That(PianoController.Piano.PianoKeys[index].Octave, Is.EqualTo(result));
 
         }
 
@@ -37,18 +36,16 @@ namespace UnitTests
         {
             if (b)
             {
-                piano.SwapOctave();
+                PianoLogic.SwapOctave(PianoController.Piano);
 
             }
-
-
             if (b)
             {
 
-                piano.SwapOctave();
+                PianoLogic.SwapOctave(PianoController.Piano);
             }
 
-            Assert.AreEqual(result, piano.PianoKeys[index].Octave);
+            Assert.That(PianoController.Piano.PianoKeys[index].Octave, Is.EqualTo(result));
 
         }
 
