@@ -1,6 +1,7 @@
+using BusinessLogic;
+using BusinessLogic.SoundPlayer;
 using Melanchall.DryWetMidi.MusicTheory;
 using System.Diagnostics;
-using VirtualPiano.PianoSoundPlayer;
 
 namespace UnitTests
 {
@@ -14,7 +15,7 @@ namespace UnitTests
 		[Test]
 		public void PianoSoundPlayer_GetFadingAudio_PlayTenNotesFor3Seconds()
 		{
-			PianoSoundPlayer? player = new PianoSoundPlayer("../../../../PianoSoundPlayer/Sounds/Piano/", "", ".wav");
+			PianoSoundPlayer? player = new PianoSoundPlayer(ProjectSettings.GetPath(PianoHeroPath.PianoSoundsFolder), "", ".wav");
 			FadingAudio[] fadingAudios = {
 				player.GetFadingAudio(NoteName.C, 5),
 				player.GetFadingAudio(NoteName.CSharp, 5),
@@ -54,7 +55,6 @@ namespace UnitTests
 			{
 				Assert.That(fA.sourceVoice.IsDisposed, Is.EqualTo(true));
 			}
-			//player.Dispose();
 		}
 
 		[Test]
@@ -62,7 +62,7 @@ namespace UnitTests
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
 			stopwatch.Start();
-			while (stopwatch.ElapsedMilliseconds < 300_000 /* 1 minutes */)
+			while (stopwatch.ElapsedMilliseconds < 300_000)
 			{
 				PianoSoundPlayer_GetFadingAudio_PlayTenNotesFor3Seconds();
 			}
@@ -90,7 +90,7 @@ namespace UnitTests
 			try
 			{
 				PianoSoundPlayer player;
-				player = new PianoSoundPlayer("../../../../PianoSoundPlayer/Sounds/Piano/", "testname", ".wav");
+				player = new PianoSoundPlayer(ProjectSettings.GetPath(PianoHeroPath.PianoSoundsFolder), "testname", ".wav");
 				player.PlayNote(NoteName.C, 5);
 				Assert.Fail("No exception was given, while the folder \"Piano\" only contains the note names " +
 					"without prefix \"testname\"");

@@ -188,25 +188,6 @@ namespace WpfView
             blackKeyColour.GradientStops.Add(new GradientStop(Colors.DarkRed, 0.0));
             blackKeyColour.GradientStops.Add(new GradientStop(Colors.DarkOrange, 1.0));
 
-            //LinearGradientBrush whitekeycolour = new()
-            //{
-            //    StartPoint = new Point(0, 0),
-            //    EndPoint = new Point(0, 1)
-            //};
-            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.Orange, 0.0));
-            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.Orange, 1.0));
-
-            //LinearGradientBrush blackKeyColour = new()
-            //{
-            //    StartPoint = new Point(0, 0),
-            //    EndPoint = new Point(0, 1)
-            //};
-            //blackKeyColour.GradientStops.Add(new GradientStop(Colors.Orange, 0.0));
-            //blackKeyColour.GradientStops.Add(new GradientStop(Colors.Orange, 1.0));
-
-            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.MediumPurple, 0.0));
-            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.MediumPurple, 1.0));
-
             return pianokey.Note.ToString().Contains("Sharp") ? blackKeyColour : whitekeycolour;
         }
     }

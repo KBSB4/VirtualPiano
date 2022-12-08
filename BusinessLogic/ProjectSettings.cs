@@ -5,7 +5,8 @@
 		public static Dictionary<PianoHeroPath, string> paths = new()
 		{
 			{ PianoHeroPath.PianoSoundsFolder, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/Piano/" },
-			{ PianoHeroPath.StartTune, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/StartTune.mid" }
+			{ PianoHeroPath.StartTune, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/StartTune.mid" },
+			{ PianoHeroPath.ImagesFolder, "/Images/"}
 		};
 
 		public static string GetPath(PianoHeroPath directory)
@@ -21,5 +22,6 @@
 	{
 		PianoSoundsFolder,
 		StartTune,
+		ImagesFolder
 	}
 }
