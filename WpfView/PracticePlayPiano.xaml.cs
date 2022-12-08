@@ -91,6 +91,13 @@ namespace WpfView
                     {
                         practiceNotes.UpdateExampleNotes();
                         ScoreLabel.Content = "Score = " + Score;
+                        PlayingLabel.Content = "Playing = ";
+
+                        foreach(var key in playing)
+                        {
+                            PlayingLabel.Content += key.ToString() + " ";
+                        }
+                        
                     }));
                 }
                 catch (TaskCanceledException) //Just in case
@@ -100,13 +107,16 @@ namespace WpfView
 
                 //Check if notes been played, delete them from the list then
                 //TODO Can this be done in a way that does not result in Collection was modified
-                //foreach (PianoKey key in upcoming)
-                //{
-                //    if (SongController.CurrentSong.TimeInSong.Milliseconds > key.TimeStamp.Milliseconds + key.Duration.Milliseconds)
-                //    {
-                //        //upcoming.Remove(key);
-                //    }
-                //}
+                foreach (PianoKey key in upcoming)
+                {
+                    if (SongController.CurrentSong.TimeInSong.Milliseconds > key.TimeStamp.Milliseconds + key.Duration.Milliseconds)
+                    {
+                        if (!playing.ContainsKey(key.Note))
+                        {
+                            //upcoming.Remove(key);
+                        }
+                    }
+                }
 
                 //Go to main menu after playing
                 if (!SongController.CurrentSong.IsPlaying)
