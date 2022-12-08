@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessLogic;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,11 +25,11 @@ namespace WpfView
             Difficulty = difficulty;
             DifficultyImageSource = Difficulty switch
             {
-                0 => new BitmapImage(new Uri("/Images/DifficultyIconEZ.png", UriKind.Relative)),
-                1 => new BitmapImage(new Uri("/Images/DifficultyIconMedium.png", UriKind.Relative)),
-                2 => new BitmapImage(new Uri("/Images/DifficultyIconHard.png", UriKind.Relative)),
-                3 => new BitmapImage(new Uri("/Images/DifficultyIconHero.png", UriKind.Relative)),
-                _ => new BitmapImage(new Uri("/Images/DifficultyIconEZ.png", UriKind.Relative)),
+                0 => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconEZ.png", UriKind.Relative)),
+                1 => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconMedium.png", UriKind.Relative)),
+                2 => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconHard.png", UriKind.Relative)),
+                3 => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconHero.png", UriKind.Relative)),
+                _ => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconEZ.png", UriKind.Relative)),
             };
         }
 

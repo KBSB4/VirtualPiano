@@ -18,11 +18,9 @@ namespace WpfView
 
         public SettingsPage(MainMenu mainMenu)
         {
-
             _mainMenu = mainMenu;
             DataContext = new DataContextSettings();
             InitializeComponent();
-
         }
 
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -57,7 +55,7 @@ namespace WpfView
                         input.Items.RemoveAt(i);
                     }
                 }
-                NoneSelected.IsSelected = true; // DEFAULT VALUE NONE
+                NoneSelected.IsSelected = true; 
                 count = InputDevice.GetDevicesCount();
             }
         }
@@ -73,9 +71,12 @@ namespace WpfView
             {
                 IndexInputDevice = input.Items.IndexOf(sender);
             }
-            catch (IndexOutOfRangeException)
+            catch (Exception ex)
             {
-                //TODO
+                if(ex is IndexOutOfRangeException)
+                {
+                    MessageBox.Show($"Selected item in combobox {input.Name} was out of range");
+                }
             }
         }
 
