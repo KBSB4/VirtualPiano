@@ -69,25 +69,26 @@ namespace BusinessLogic
         {
             song.IsPlaying = true;
             DateTime now = DateTime.Now;
-            int ignoreNote = STARTTUNENOTES;
+            //int ignoreNote = STARTTUNENOTES;
             while (song.PianoKeys.Count > 0)
             {
                 PianoKey pianoKey = song.PianoKeys.Dequeue();
 
-                if (ignoreNote < 0)
-                {
-                    song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
-                }
-                else
-                {
-                    ignoreNote--;
-                }
+                //if (ignoreNote < 0)
+                //{
+                song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
+                //}
+                //else
+                //{
+                //ignoreNote--;
+                //}
                 if (song.PianoKeys.TryPeek(out PianoKey? nextKey))
                 {
                     MetricTimeSpan timeSpan;
                     if (PlaybackDevice is null || !PlaybackDevice.IsRunning)
                     {
-                        timeSpan = DateTime.Now - now;
+                        //timeSpan = DateTime.Now - now;
+                        timeSpan = pianoKey.TimeStamp;
                     }
                     else
                     {

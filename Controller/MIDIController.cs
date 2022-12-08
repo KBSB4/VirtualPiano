@@ -31,7 +31,8 @@ namespace Controller
 		public static Song Convert(MidiFile file)
 		{
 			//file.ShiftEvents((MetricTimeSpan)TimeSpan.FromSeconds(2));
-			var newFile = AddStartTune(file);
+			var newFile = file;
+			//var newFile = AddStartTune(file);
 			var trackList = newFile.GetTrackChunks().ToList();
 			TempoMap = newFile.GetTempoMap();
 			Queue<PianoKey> pianoKeyList = new();

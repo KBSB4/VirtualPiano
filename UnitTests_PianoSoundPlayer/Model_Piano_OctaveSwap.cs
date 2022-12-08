@@ -1,11 +1,4 @@
-﻿using Controller;
-using Model;
-using NUnit.Framework.Internal.Execution;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Model;
 
 namespace UnitTests
 {
@@ -15,14 +8,14 @@ namespace UnitTests
         private Piano piano;
 
         [SetUp]
-
+        //TODO update tests
         public void SetUp()
         {
-            piano = new Piano();
+            piano = new();
         }
 
 
-        [TestCase(true,0, Octave.Four)]
+        [TestCase(true, 0, Octave.Four)]
         [TestCase(false, 0, Octave.Two)]
         [TestCase(true, 12, Octave.Five)]
         [TestCase(false, 12, Octave.Three)]
@@ -37,7 +30,7 @@ namespace UnitTests
 
         }
 
-      
+
         [TestCase(true, 0, Octave.Two)]
         [TestCase(true, 12, Octave.Three)]
         public void OctaveGetsDecreased(bool b, int index, Octave result)
@@ -45,10 +38,10 @@ namespace UnitTests
             if (b)
             {
                 piano.SwapOctave();
-               
+
             }
-           
-          
+
+
             if (b)
             {
 

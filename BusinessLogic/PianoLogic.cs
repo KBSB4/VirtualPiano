@@ -107,11 +107,19 @@ namespace BusinessLogic
         /// </summary>
         public static void SwapOctave(Piano piano)
         {
-            foreach (PianoKey key in piano.PianoKeys)
+            for (int i = 0; i < 24; i++)
             {
+                PianoKey key = piano.PianoKeys[i];
                 if (piano.lowerOctaveActive) key.Octave += 2;
                 else key.Octave -= 2;
             }
+            //TODO
+            //MIDI-keyboard breaks when the keys change octave
+            //foreach (PianoKey key in piano.PianoKeys)
+            //{
+            //    if (piano.lowerOctaveActive) key.Octave += 2;
+            //    else key.Octave -= 2;
+            //}
             piano.lowerOctaveActive = !piano.lowerOctaveActive;
         }
     }

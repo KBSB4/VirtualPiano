@@ -42,6 +42,8 @@ namespace Controller
             return null;
         }
 
+        //TODO move to logic?
+
         /// <summary>
         /// Takes an MIDIevent as input and detects whether the key is pressed and what key this is
         /// </summary>
