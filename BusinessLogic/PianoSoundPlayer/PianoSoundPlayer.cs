@@ -2,7 +2,7 @@
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
 
-namespace VirtualPiano.PianoSoundPlayer
+namespace BusinessLogic.SoundPlayer
 {
     public class PianoSoundPlayer
     {

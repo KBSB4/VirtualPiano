@@ -109,7 +109,7 @@ namespace BusinessLogic
 				TimeDivision = midiFile.TimeDivision // copied from master file
 			};
 
-			MidiFile StartTune = MidiFile.Read("..\\..\\..\\..\\Controller\\PianoSoundPlayer\\Sounds\\StartTune.mid");
+			MidiFile StartTune = MidiFile.Read(ProjectSettings.GetPath(PianoHeroPath.StartTune));
 			// Add all parts after shifting them
 			long addedSoFarMicroseconds = 0;
 

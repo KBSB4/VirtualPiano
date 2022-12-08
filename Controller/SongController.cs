@@ -16,7 +16,6 @@ namespace Controller
             {
                 CurrentSong = MidiController.Convert(file);
                 CurrentSong.SongTimerThread = new Thread(() => SongLogic.PlaySong(CurrentSong));
-                //CurrentSong.File = MIDIController.RemovePiano(CurrentSong.File.Clone());
             }
         }
 
