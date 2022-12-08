@@ -28,10 +28,12 @@ namespace WpfView
         private static IInputDevice? _inputDevice;
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
+        private Stopwatch stopWatch = new Stopwatch();
 
         //Score
         private int Score = 0;
-        Dictionary<NoteName, int> playing = new();    
+        Dictionary<NoteName, int> playing = new();
+        List<PianoKey> playedNotes = new();
 
         public PracticePlayPiano(MainMenu mainMenu, int songID)
         {
@@ -40,13 +42,9 @@ namespace WpfView
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(Play2WhiteKeysGrid, Play2BlackKeysGrid, 28);
             practiceNotes = new PracticeNotesGenerator(Play2ColumnWhiteKeys, Play2ColumnBlackKeys, 28, this);
+
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
-
-            //Keep this here until we have a better way of connecting phyiscal devices and so we can test
-            //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
-            //_inputDevice.EventReceived += OnMidiEventReceived;
-            //_inputDevice.StartEventsListening();
 
             PlaySelectedSong(songID);
 
@@ -56,6 +54,7 @@ namespace WpfView
                 IsBackground = true
             };
             updateVisualNoteThread.Start();
+            stopWatch.Start();
         }
 
         private void PlaySelectedSong(int songID)
@@ -88,38 +87,12 @@ namespace WpfView
                     {
                         practiceNotes.UpdateExampleNotes();
                         ScoreLabel.Content = "Score = " + Score;
-                        PlayingLabel.Content = "Playing = ";
-                        //UpcomingLabel.Content = "Upcoming = ";
-
-                        foreach (var key in playing)
-                        {
-                            PlayingLabel.Content += key.ToString() + " ";
-                        }
-
-                        //foreach (var key in playing)
-                        //{
-                        //    UpcomingLabel.Content += key.ToString() + " ";
-                        //}
-
                     }));
                 }
                 catch (TaskCanceledException) //Just in case
                 {
                     Environment.Exit(0);
                 }
-
-                //Check if notes been played, delete them from the list then
-                //TODO Can this be done in a way that does not result in Collection was modified
-                //foreach (PianoKey key in upcoming)
-                //{
-                //    if (SongController.CurrentSong.TimeInSong.Milliseconds > key.TimeStamp.Milliseconds + key.Duration.Milliseconds)
-                //    {
-                //        if (!playing.ContainsKey(key.Note))
-                //        {
-                //            upcoming.Remove(key);
-                //        }
-                //    }
-                //}
 
                 //Go to main menu after playing
                 if (!SongController.CurrentSong.IsPlaying)
@@ -159,19 +132,11 @@ namespace WpfView
 
         public void DeletedPressedKey(object? sender, PianoKeyEventArgs e)
         {
-            try
+            if (playing.ContainsKey(e.Key.Note))
             {
-                Dispatcher.Invoke(new Action(() =>
-                {
-                    if (e.Key.PressedDown)
-                    {
-                        practiceNotes.StartExampleNote(e.Key);
-                    }
-                }));
-            }
-            catch (TaskCanceledException) //Just in case
-            {
-                Environment.Exit(0);
+                int ReleasedAt = (int)(e.Key.TimeStamp.TotalMilliseconds + e.Key.Duration.TotalMilliseconds);
+                Score += ((ReleasedAt - playing[e.Key.Note]) / 10);
+                playing.Remove(e.Key.Note);
             }
         }
 
@@ -217,8 +182,9 @@ namespace WpfView
             int intValue = (int)e.Key;
 
             PianoKey? key = PianoController.GetPressedPianoKey(intValue);
-            if (key is not null)
+            if (key is not null && stopWatch.Elapsed.TotalSeconds >= 2)
             {
+                stopWatch.Stop();
                 pianoGrid.DisplayPianoKey(key);
                 PianoController.PlayPianoSound(key);
 
@@ -227,7 +193,7 @@ namespace WpfView
 
                 PianoKey upcomingKey = practiceNotes.upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
 
-                if (upcomingKey != null)
+                if (upcomingKey != null && !playedNotes.Contains(upcomingKey))
                 {
                     //Upcomingkey is the key that should be played next for the current PianoKey
                     //todo TWEAK VALUES
@@ -238,18 +204,18 @@ namespace WpfView
                         {
                             Score += 50;
                             playing.Add(key.Note, PressedAt);
-                            Debug.WriteLine("Added 50 points with " + key.Note);
+                            playedNotes.Add(upcomingKey);
                         }
                     }
-                    //else if (PressedAt > upcomingKey.TimeStamp.Milliseconds && PressedAt < upcomingKey.Duration.Milliseconds)
-                    //{
-                    //    //Too late, no points
-                    //    if (!playing.ContainsKey(upcomingKey.Note))
-                    //    {
-                    //        playing.Add(key.Note, PressedAt);
-                    //        Debug.WriteLine("Added NO points with " + key.Note);
-                    //    }
-                    //}
+                    else if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds)
+                    {
+                        //Too late, no points
+                        if (!playing.ContainsKey(upcomingKey.Note))
+                        {
+                            playing.Add(key.Note, PressedAt);
+                            Debug.WriteLine("Added NO points with " + key.Note);
+                        }
+                    }
                 }
             }
 
@@ -279,17 +245,13 @@ namespace WpfView
                 if (upcomingKey is not null)
                 {
                     //todo TWEAK VALUES
-                    if (ReleasedAt > upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.Duration.TotalMilliseconds - 150 
-                        && ReleasedAt < upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.Duration.TotalMilliseconds + 150)
+                    if (ReleasedAt < (upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.Duration.TotalMilliseconds) + 50)
                     {
                         //played, add score based on how long pressed
-                        Debug.WriteLine("Key " + key.Note + " RELEASED");
                         if (playing.ContainsKey(key.Note))
                         {
-                            Score += (ReleasedAt - playing[key.Note]) / 100;
-                            Debug.Write(" WITH " + (ReleasedAt - playing[key.Note]) / 100 + " points");
+                            Score += (ReleasedAt - playing[key.Note]) / 10;
                         }
-
                     }
                 }
                 playing.Remove(key.Note);
