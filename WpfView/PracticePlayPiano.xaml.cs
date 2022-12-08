@@ -32,9 +32,7 @@ namespace WpfView
         //Score
         private int Score = 0;
         List<PianoKey> upcoming = new();
-        int PressedAt;
-        Dictionary<NoteName, int> playing = new();
-        int ReleasedAt;
+        Dictionary<NoteName, int> playing = new();    
 
         public PracticePlayPiano(MainMenu mainMenu, int songID)
         {
@@ -193,6 +191,7 @@ namespace WpfView
         /// <param name="e"></param>
         public void KeyPressed(object? source, KeyEventArgs e)
         {
+            int PressedAt;
             int intValue = (int)e.Key;
 
             PianoKey? key = PianoController.GetPressedPianoKey(intValue);
@@ -243,6 +242,7 @@ namespace WpfView
         /// <param name="e"></param>
         public void KeyReleased(object source, KeyEventArgs e)
         {
+            int ReleasedAt;
             int intValue = (int)e.Key;
             PianoKey? key = PianoController.GetReleasedKey(intValue);
             if (key is not null)
