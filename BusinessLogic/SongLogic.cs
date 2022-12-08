@@ -11,6 +11,8 @@ namespace BusinessLogic
         public static Playback PlaybackDevice;
         public static OutputDevice OutputDevice;
 
+        public static event EventHandler startCountDown;
+
         public static void Play(Song song)
         {
             song.NotePlayed += Song_NotePlayed;
@@ -19,6 +21,8 @@ namespace BusinessLogic
 
         private static void PlayFile(object? obj)
         {
+            startCountDown?.Invoke(null, null);
+
             if (obj is not Song song) return;
             song.SongTimerThread.Start();
 
@@ -69,19 +73,19 @@ namespace BusinessLogic
         {
             song.IsPlaying = true;
             DateTime now = DateTime.Now;
-            //int ignoreNote = STARTTUNENOTES;
+            int ignoreNote = STARTTUNENOTES;
             while (song.PianoKeys.Count > 0)
             {
                 PianoKey pianoKey = song.PianoKeys.Dequeue();
 
-                //if (ignoreNote < 0)
-                //{
-                song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
-                //}
-                //else
-                //{
-                //ignoreNote--;
-                //}
+                if (ignoreNote < 0)
+                {
+                    song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
+                }
+                else
+                {
+                    ignoreNote--;
+                }
                 if (song.PianoKeys.TryPeek(out PianoKey? nextKey))
                 {
                     MetricTimeSpan timeSpan;

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
 namespace WpfView
@@ -35,6 +36,7 @@ namespace WpfView
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
+            SongLogic.startCountDown += StartCountDown;
 
             //Start thread for updating practice notes
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
@@ -42,6 +44,37 @@ namespace WpfView
                 IsBackground = true
             };
             updateVisualNoteThread.Start();
+        }
+
+        private void StartCountDown(object? sender, EventArgs e)
+        {
+            Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
+            countDownThread.Start();
+        }
+
+        private void CountDown(object? obj)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                CountDownImage.Visibility = Visibility.Visible;
+                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownReady.png", UriKind.Relative));
+                Debug.WriteLine("Image updated");
+            }));
+            Thread.Sleep(2500);
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownSet.png", UriKind.Relative));
+            }));
+            Thread.Sleep(2500);
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownGo.png", UriKind.Relative));
+            }));
+            Thread.Sleep(2500);
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Visibility = Visibility.Hidden;
+            }));
         }
 
 
