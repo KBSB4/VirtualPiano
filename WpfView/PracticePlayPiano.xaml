@@ -27,6 +27,7 @@
         <!-- Currently not fully used while we figure out how and what exactly (pause menu on esc?) -->
         <Menu Grid.Row="0" DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
             <Label x:Name="ScoreLabel" Content="Score = 0" Foreground="White"/>
+            <Label x:Name="PlayingLabel" Content="Playing = " Foreground="White"/>
 
             <!--<MenuItem Header="PianoHero MainMenu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                 <MenuItem.Icon>
