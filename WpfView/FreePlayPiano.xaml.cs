@@ -1,5 +1,6 @@
 ﻿using BusinessLogic;
 using Controller;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using Microsoft.Win32;
@@ -283,7 +284,7 @@ namespace WpfView
             if ((bool)openFileDialog.ShowDialog())
             {
                 //Get the path of specified file
-                MIDIController.OpenMidi(openFileDialog.FileName);
+                MidiController.OpenMidi(openFileDialog.FileName);
                 SongController.LoadSong(new MetricTimeSpan(500));
             }
         }
@@ -296,14 +297,17 @@ namespace WpfView
         private void PlayMIDIFile(object sender, RoutedEventArgs e)
         {
             //Boolean isisolated = IsolatedPiano.IsChecked; Planned for later
-            if (MIDIController.OriginalMIDI is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
+            MidiFile currentMidiFile = MidiController.GetMidiFile();
+
+
+			if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
                 SongController.PlaySong();
             }
             else
             {
-                if (MIDIController.OriginalMIDI is null)
+                if (currentMidiFile is null)
                 {
                     MessageBox.Show("Select a MIDI File first before playing",
                     "No MIDI selected", MessageBoxButton.OK, MessageBoxImage.Error);
