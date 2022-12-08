@@ -31,7 +31,6 @@ namespace WpfView
 
         //Score
         private int Score = 0;
-        List<PianoKey> upcoming = new();
         Dictionary<NoteName, int> playing = new();    
 
         public PracticePlayPiano(MainMenu mainMenu, int songID)
@@ -90,12 +89,18 @@ namespace WpfView
                         practiceNotes.UpdateExampleNotes();
                         ScoreLabel.Content = "Score = " + Score;
                         PlayingLabel.Content = "Playing = ";
+                        //UpcomingLabel.Content = "Upcoming = ";
 
-                        foreach(var key in playing)
+                        foreach (var key in playing)
                         {
                             PlayingLabel.Content += key.ToString() + " ";
                         }
-                        
+
+                        //foreach (var key in playing)
+                        //{
+                        //    UpcomingLabel.Content += key.ToString() + " ";
+                        //}
+
                     }));
                 }
                 catch (TaskCanceledException) //Just in case
@@ -105,16 +110,16 @@ namespace WpfView
 
                 //Check if notes been played, delete them from the list then
                 //TODO Can this be done in a way that does not result in Collection was modified
-                foreach (PianoKey key in upcoming)
-                {
-                    if (SongController.CurrentSong.TimeInSong.Milliseconds > key.TimeStamp.Milliseconds + key.Duration.Milliseconds)
-                    {
-                        if (!playing.ContainsKey(key.Note))
-                        {
-                            //upcoming.Remove(key);
-                        }
-                    }
-                }
+                //foreach (PianoKey key in upcoming)
+                //{
+                //    if (SongController.CurrentSong.TimeInSong.Milliseconds > key.TimeStamp.Milliseconds + key.Duration.Milliseconds)
+                //    {
+                //        if (!playing.ContainsKey(key.Note))
+                //        {
+                //            upcoming.Remove(key);
+                //        }
+                //    }
+                //}
 
                 //Go to main menu after playing
                 if (!SongController.CurrentSong.IsPlaying)
@@ -143,7 +148,6 @@ namespace WpfView
                     if (e.Key.PressedDown)
                     {
                         practiceNotes.StartExampleNote(e.Key);
-                        upcoming.Add(e.Key);
                     }
                 }));
             }
@@ -202,7 +206,8 @@ namespace WpfView
 
                 //SCORE FUNCTION
                 PressedAt = (int)SongController.CurrentSong.TimeInSong.TotalMilliseconds;
-                PianoKey upcomingKey = upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
+
+                PianoKey upcomingKey = practiceNotes.upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
 
                 if (upcomingKey != null)
                 {
@@ -218,15 +223,15 @@ namespace WpfView
                             Debug.WriteLine("Added 50 points with " + key.Note);
                         }
                     }
-                    else if (PressedAt > upcomingKey.TimeStamp.Milliseconds && PressedAt < upcomingKey.Duration.Milliseconds)
-                    {
-                        //Too late, no points
-                        if (!playing.ContainsKey(upcomingKey.Note))
-                        {
-                            playing.Add(key.Note, PressedAt);
-                            Debug.WriteLine("Added NO points with " + key.Note);
-                        }
-                    }
+                    //else if (PressedAt > upcomingKey.TimeStamp.Milliseconds && PressedAt < upcomingKey.Duration.Milliseconds)
+                    //{
+                    //    //Too late, no points
+                    //    if (!playing.ContainsKey(upcomingKey.Note))
+                    //    {
+                    //        playing.Add(key.Note, PressedAt);
+                    //        Debug.WriteLine("Added NO points with " + key.Note);
+                    //    }
+                    //}
                 }
             }
 
@@ -247,7 +252,7 @@ namespace WpfView
             PianoKey? key = PianoController.GetReleasedKey(intValue);
             if (key is not null)
             {
-                PianoKey upcomingKey = upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
+                PianoKey upcomingKey = practiceNotes.upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
 
@@ -265,7 +270,6 @@ namespace WpfView
                         {
                             Score += (ReleasedAt - playing[key.Note]) / 100;
                             Debug.Write(" WITH " + (ReleasedAt - playing[key.Note]) / 100 + " points");
-                            upcoming.Remove(upcomingKey);
                         }
                         playing.Remove(key.Note);
                     }

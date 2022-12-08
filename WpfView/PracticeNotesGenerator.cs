@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
@@ -14,6 +15,9 @@ namespace WpfView
         private List<Grid> practiceNoteColumns;
         private PracticePlayPiano PracticePlayPianoPage { get; set; }
         private const int noteLength = 290; //120 BPM
+        public Dictionary<Rectangle, PianoKey> keyValuePairs = new();
+        public Dictionary<PianoKey, Rectangle> keyValuePairs2 = new();
+        public List<PianoKey> upcoming = new();
 
         //private double noteSpeed = 12; //120 BPM
         //private Queue<double> tempoQueue = new();
@@ -66,6 +70,9 @@ namespace WpfView
 
             //Debug.WriteLine(noteSpeed + " | " + SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute);
             currentColumn.Children.Add(rectangle);
+            keyValuePairs.Add(rectangle, key);
+            keyValuePairs2.Add(key, rectangle);
+            upcoming.Add(key);
             //tempoQueue.Enqueue(Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute));
             //if (FirstTime)
             //{
@@ -97,6 +104,12 @@ namespace WpfView
                                 //column.Children.Remove(rectangle); //TODO DOES NOT WORK, BREAKS ENUMERATOR
 
                                 //Remove key so it can not be scored
+                                if(PracticePlayPianoPage is not null)
+                                {
+                                    //keyValuePairs2.Remove(keyValuePairs[rectangle]);
+                                    upcoming.Remove(keyValuePairs[rectangle]);
+                                    //keyValuePairs.Remove(rectangle);
+                                }
                             }
                         }
                     }
