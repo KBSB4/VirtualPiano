@@ -279,8 +279,8 @@ namespace WpfView
                 if (upcomingKey is not null)
                 {
                     //todo TWEAK VALUES
-                    if (upcomingKey.Duration.TotalMilliseconds + upcomingKey.TimeStamp.TotalMilliseconds < ReleasedAt - 50
-                    && ReleasedAt + 50 > upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.TimeStamp.TotalMilliseconds)
+                    if (ReleasedAt > upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.Duration.TotalMilliseconds - 150 
+                        && ReleasedAt < upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.Duration.TotalMilliseconds + 150)
                     {
                         //played, add score based on how long pressed
                         Debug.WriteLine("Key " + key.Note + " RELEASED");
