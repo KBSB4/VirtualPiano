@@ -32,6 +32,7 @@ namespace WpfView
 
         //Score
         private int Score = 0;
+        private int TotalScore = 0;
         Dictionary<NoteName, int> playing = new();
         List<PianoKey> playedNotes = new();
 
@@ -62,14 +63,28 @@ namespace WpfView
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
             string path = "../../../../WpfView/test.mid";
 
-            //Start song
+            //Prepare song
             MIDIController.OpenMidi(path);
             SongController.LoadSong(new MetricTimeSpan(500));
 
+            //Get TotalScore
+            TotalScore = CalculateMaximalScore();
+
+            //Play
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
             SongController.PlaySong();
         }
 
+        private int CalculateMaximalScore()
+        {
+            Queue<PianoKey> allKeys = new(SongController.CurrentSong.PianoKeys); //Copy over
+            int totalScore = 0;
+            while(allKeys.Count > 0) {
+                PianoKey key = allKeys.Dequeue();
+                totalScore += 100;
+            }
+            return totalScore;
+        }
         /// <summary>
         /// Method that constantly updates the view
         /// </summary>
@@ -86,7 +101,8 @@ namespace WpfView
                     Dispatcher.Invoke(new Action(() =>
                     {
                         practiceNotes.UpdateExampleNotes();
-                        ScoreLabel.Content = "Score = " + Score;
+                        //TODO Make a concept and then implement it
+                        ScoreLabel.Content = "Score = " + Score + "/" + TotalScore;
                     }));
                 }
                 catch (TaskCanceledException) //Just in case
@@ -95,6 +111,7 @@ namespace WpfView
                 }
 
                 //Go to main menu after playing
+                //TODO Wait for merge with dev before doing this. Before closing it should STOP ALL PIANO KEYS SOUNDS
                 //if (!SongController.CurrentSong.IsPlaying)
                 //{
                 //    Dispatcher.Invoke(new Action(() =>
