@@ -75,7 +75,7 @@ namespace WpfView
             }
             catch (IndexOutOfRangeException)
             {
-
+                //TODO
             }
         }
 

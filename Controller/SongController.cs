@@ -53,9 +53,9 @@ namespace Controller
                 CurrentSong.PianoKeys = new();
 
                 //TODO Sometimes Stop() crashes with an AccessViolationException
-                SongLogic.PlaybackDevice.Stop();
-                SongLogic.PlaybackDevice.Dispose();
+                //SongLogic.PlaybackDevice.Stop();
                 SongLogic.OutputDevice.Dispose();
+                SongLogic.PlaybackDevice.Dispose();
             }
         }
     }

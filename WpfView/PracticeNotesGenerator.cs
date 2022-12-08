@@ -55,8 +55,8 @@ namespace WpfView
                 Width = currentColumn.ActualWidth,
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(0, -rectHeight, 0, 0),
-                RadiusX = 10,
-                RadiusY = 10,
+                RadiusX = 5,
+                RadiusY = 5,
             };
 
             currentColumn.Children.Add(rectangle);
@@ -177,10 +177,37 @@ namespace WpfView
                 StartPoint = new Point(0, 0),
                 EndPoint = new Point(0, 1)
             };
-            whitekeycolour.GradientStops.Add(new GradientStop(Colors.Red, 0.0));
+            whitekeycolour.GradientStops.Add(new GradientStop(Colors.Orange, 0.0));
             whitekeycolour.GradientStops.Add(new GradientStop(Colors.Yellow, 1.0));
 
-            return pianokey.Note.ToString().Contains("Sharp") ? whitekeycolour : whitekeycolour;
+            LinearGradientBrush blackKeyColour = new()
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(0, 1)
+            };
+            blackKeyColour.GradientStops.Add(new GradientStop(Colors.Red, 0.0));
+            blackKeyColour.GradientStops.Add(new GradientStop(Colors.OrangeRed, 1.0));
+
+            //LinearGradientBrush whitekeycolour = new()
+            //{
+            //    StartPoint = new Point(0, 0),
+            //    EndPoint = new Point(0, 1)
+            //};
+            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.Orange, 0.0));
+            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.Orange, 1.0));
+
+            //LinearGradientBrush blackKeyColour = new()
+            //{
+            //    StartPoint = new Point(0, 0),
+            //    EndPoint = new Point(0, 1)
+            //};
+            //blackKeyColour.GradientStops.Add(new GradientStop(Colors.Orange, 0.0));
+            //blackKeyColour.GradientStops.Add(new GradientStop(Colors.Orange, 1.0));
+
+            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.MediumPurple, 0.0));
+            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.MediumPurple, 1.0));
+
+            return pianokey.Note.ToString().Contains("Sharp") ? blackKeyColour : whitekeycolour;
         }
     }
 }
