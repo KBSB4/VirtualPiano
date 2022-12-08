@@ -1,10 +1,8 @@
-﻿using Melanchall.DryWetMidi.MusicTheory;
-using Model;
+﻿using Model;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
@@ -14,14 +12,10 @@ namespace WpfView
     {
         private List<Grid> practiceNoteColumns;
         private PracticePlayPiano PracticePlayPianoPage { get; set; }
-        private const int noteLength = 290; //120 BPM
+        private const int noteLength = 290;
         public Dictionary<Rectangle, PianoKey> keyValuePairs = new();
-        public Dictionary<PianoKey, Rectangle> keyValuePairs2 = new();
         public List<PianoKey> upcoming = new();
-
-        //private double noteSpeed = 12; //120 BPM
-        //private Queue<double> tempoQueue = new();
-        //private bool FirstTime = true;
+        public event EventHandler<PianoKeyEventArgs> NoteDeleted;
 
         /// <summary>
         /// Prepare grids for practice notes
@@ -38,9 +32,14 @@ namespace WpfView
                 return;
             }
             practiceNoteColumns = AddPracticeNoteColumns(whiteKeyGrid, blackKeyGrid, columnAmount);
-        }
 
+            if(ppp is not null)
+            {
+                NoteDeleted += ppp.DeletedPressedKey;
+            }
+        }
         public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount) : this(whiteKeyGrid, blackKeyGrid, columnAmount, null) { }
+
         /// <summary>
         /// Adds upcoming note
         /// </summary>
@@ -68,19 +67,9 @@ namespace WpfView
                 RadiusY = 10,
             };
 
-            //Debug.WriteLine(noteSpeed + " | " + SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute);
             currentColumn.Children.Add(rectangle);
             keyValuePairs.Add(rectangle, key);
-            keyValuePairs2.Add(key, rectangle);
             upcoming.Add(key);
-            //tempoQueue.Enqueue(Math.Ceiling(SongController.CurrentSong.TempoMap.GetTempoAtTime(key.TimeStamp).BeatsPerMinute));
-            //if (FirstTime)
-            //{
-            //    int bpm = (int)tempoQueue.Dequeue();
-            //    //noteSpeed =  bpm / 10;
-            //    FirstTime = false;
-            //}
-
         }
         /// <summary>
         /// Update each note to fall down
@@ -104,11 +93,10 @@ namespace WpfView
                                 //column.Children.Remove(rectangle); //TODO DOES NOT WORK, BREAKS ENUMERATOR
 
                                 //Remove key so it can not be scored
-                                if(PracticePlayPianoPage is not null)
+                                if (PracticePlayPianoPage is not null)
                                 {
-                                    //keyValuePairs2.Remove(keyValuePairs[rectangle]);
+                                    NoteDeleted.Invoke(this, new PianoKeyEventArgs(keyValuePairs[rectangle]));
                                     upcoming.Remove(keyValuePairs[rectangle]);
-                                    //keyValuePairs.Remove(rectangle);
                                 }
                             }
                         }
@@ -200,9 +188,6 @@ namespace WpfView
             whitekeycolour.GradientStops.Add(
                 new GradientStop(Colors.Yellow, 1.0));
 
-            //GradientBrush whiteKeyBrush = new(Color.FromRgb());
-            //SolidColorBrush whitekeycolour = new(Colors.Orange);
-            //SolidColorBrush blackkeycolour = new(Colors.DarkRed);
             return pianokey.Note.ToString().Contains("Sharp") ? whitekeycolour : whitekeycolour;
         }
     }
