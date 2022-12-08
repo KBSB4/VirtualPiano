@@ -95,15 +95,15 @@ namespace WpfView
                 }
 
                 //Go to main menu after playing
-                if (!SongController.CurrentSong.IsPlaying)
-                {
-                    Dispatcher.Invoke(new Action(() =>
-                    {
-                        //TODO Sometimes hangs
-                        Thread.Sleep(1000);
-                        NavigationService?.Navigate(_mainMenu);
-                    }));
-                }
+                //if (!SongController.CurrentSong.IsPlaying)
+                //{
+                //    Dispatcher.Invoke(new Action(() =>
+                //    {
+                //        //TODO Sometimes hangs
+                //        Thread.Sleep(1000);
+                //        NavigationService?.Navigate(_mainMenu);
+                //    }));
+                //}
             }
         }
 
@@ -137,6 +137,7 @@ namespace WpfView
                 int ReleasedAt = (int)(e.Key.TimeStamp.TotalMilliseconds + e.Key.Duration.TotalMilliseconds);
                 Score += ((ReleasedAt - playing[e.Key.Note]) / 10);
                 playing.Remove(e.Key.Note);
+                playedNotes.Add(e.Key);
             }
         }
 
@@ -254,52 +255,8 @@ namespace WpfView
                         }
                     }
                 }
-                playing.Remove(key.Note);
+                if(playing.ContainsKey(key.Note)) playing.Remove(key.Note);
             }
-        }
-
-        //NOTE Not used right now
-        private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            NavigationService?.Navigate(_mainMenu);
-        }
-
-        private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            _mainMenu.SettingsPage.GenerateInputDevices();
-            NavigationService?.Navigate(_mainMenu.SettingsPage);
-        }
-
-
-        /// <summary>
-        /// Connects MIDI-keyboard
-        /// </summary>
-        //NOTE Not used right now
-        public void CheckInputDevice(int x)
-        {
-            _inputDevice?.Dispose();
-
-            if (!_mainMenu.SettingsPage.NoneSelected.IsSelected)
-            {
-                try
-                {
-                    Debug.Write("send!");
-                    ;
-                    _inputDevice = InputDevice.GetByIndex(x - 1);
-                    _inputDevice.EventReceived += OnMidiEventReceived;
-                    _inputDevice.StartEventsListening();
-                }
-                catch (ArgumentException ex)
-                {
-                    Debug.WriteLine("No midi device found");
-                    Debug.WriteLine("Exception information:");
-                    Debug.IndentLevel = 1;
-                    Debug.WriteLine(ex.Message);
-                    Debug.IndentLevel = 0;
-                    _inputDevice = null;
-                }
-            }
-
         }
     }
 }
