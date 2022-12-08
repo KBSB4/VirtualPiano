@@ -213,7 +213,7 @@ namespace WpfView
                 {
                     //Upcomingkey is the key that should be played next for the current PianoKey
                     //todo TWEAK VALUES
-                    if (PressedAt > upcomingKey.TimeStamp.Milliseconds - 80 && PressedAt < upcomingKey.TimeStamp.Milliseconds + 80)
+                    if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds - 150 && PressedAt < upcomingKey.TimeStamp.TotalMilliseconds + 150)
                     {
                         //played, add score
                         Score += 50;
@@ -261,8 +261,8 @@ namespace WpfView
                 if (upcomingKey is not null)
                 {
                     //todo TWEAK VALUES
-                    if (upcomingKey.Duration.Milliseconds + upcomingKey.TimeStamp.Milliseconds < ReleasedAt - 50
-                    && ReleasedAt + 50 > upcomingKey.TimeStamp.Milliseconds + upcomingKey.TimeStamp.Milliseconds)
+                    if (upcomingKey.Duration.TotalMilliseconds + upcomingKey.TimeStamp.TotalMilliseconds < ReleasedAt - 50
+                    && ReleasedAt + 50 > upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.TimeStamp.TotalMilliseconds)
                     {
                         //played, add score based on how long pressed
                         Debug.WriteLine("Key " + key.Note + " RELEASED");
@@ -271,9 +271,10 @@ namespace WpfView
                             Score += (ReleasedAt - playing[key.Note]) / 100;
                             Debug.Write(" WITH " + (ReleasedAt - playing[key.Note]) / 100 + " points");
                         }
-                        playing.Remove(key.Note);
+
                     }
                 }
+                playing.Remove(key.Note);
             }
         }
 
