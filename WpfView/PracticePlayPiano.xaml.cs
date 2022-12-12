@@ -268,8 +268,6 @@ namespace WpfView
                             //played, add score
                             if (!playedNotes.Contains(upcomingKey))
                             {
-                                //Score += 50;
-                                //playedNotes.Add(upcomingKey);
                                 var rating = Rating.Perfect;
                                 pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Green));
                                 practiceNotes.DisplayNoteFeedBack(key, rating);
@@ -281,25 +279,6 @@ namespace WpfView
                             practiceNotes.DisplayNoteFeedBack(key, rating);
                         }
                         playing.Add(key.Note, PressedAt);
-                        //else if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds && !playedNotes.Contains(upcomingKey))
-                        //{
-                        //    //Too late, no points
-                        //    if (!playing.ContainsKey(upcomingKey.Note))
-                        //    {
-                        //        //Var rating = Rating.Ok;
-                        //        //practiceNotes.DisplayNoteFeedBack(key, rating);
-                        //        //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Yellow));
-                        //        playing.Add(key.Note, PressedAt);
-                        //        Debug.WriteLine("Added NO points with " + key.Note);
-                        //    }
-                        //}
-                        //else if(!playedNotes.Contains(upcomingKey))
-                        //{
-                        //    //var rating = Rating.Miss;
-                        //    //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
-                        //    //practiceNotes.DisplayNoteFeedBack(key, rating);
-                        //}
-
                     }
                 }
             }
@@ -334,18 +313,6 @@ namespace WpfView
                     double PerfectTimeToPress = upcomingKey.TimeStamp.TotalMilliseconds;
                     double PerfectTimeToRelease = PerfectTimeToPress + upcomingKey.Duration.TotalMilliseconds;
                     MaxScore = (double)upcomingKey.Duration.TotalMilliseconds;
-                    ////todo TWEAK VALUES
-                    //if (ReleasedAt < (upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.Duration.TotalMilliseconds))
-                    //{
-                    //    //played, add score based on how long pressed
-                    //    if (playing.ContainsKey(key.Note))
-                    //    {
-                    //        Score += (ReleasedAt - playing[key.Note]);
-                    //        //var rating = Rating.Great;
-                    //        //practiceNotes.DisplayNoteFeedBack(key, rating);
-                    //        //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Orange));
-                    //    }
-                    //}
 
                     //TODO FIX FIRST NOTE, gives less than it should
                     if (playing.ContainsKey(key.Note))
