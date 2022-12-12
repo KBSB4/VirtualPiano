@@ -48,7 +48,7 @@ namespace WpfView
             Button currentButton = buttons[note];
             bool pressed = key.PressedDown;
 
-            if (colour is not null)
+            if (colour is null)
             {
                 if (key.Note.ToString().Contains("Sharp"))
                 {

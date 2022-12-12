@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
 
 namespace WpfView
@@ -23,7 +22,6 @@ namespace WpfView
     /// </summary>
     public partial class PracticePlayPiano : Page
     {
-        //TODO Is there a way to reuse the code from FreePlay without copy and paste?
         private PianoGridGenerator pianoGrid;
         private static IInputDevice? _inputDevice;
         readonly PracticeNotesGenerator practiceNotes;
@@ -79,7 +77,8 @@ namespace WpfView
         {
             Queue<PianoKey> allKeys = new(SongController.CurrentSong.PianoKeys); //Copy over
             int totalScore = 0;
-            while(allKeys.Count > 0) {
+            while (allKeys.Count > 0)
+            {
                 PianoKey key = allKeys.Dequeue();
                 totalScore += 100;
             }
@@ -273,7 +272,7 @@ namespace WpfView
                         }
                     }
                 }
-                if(playing.ContainsKey(key.Note)) playing.Remove(key.Note);
+                if (playing.ContainsKey(key.Note)) playing.Remove(key.Note);
             }
         }
     }
