@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -238,7 +239,6 @@ namespace WpfView
             if (key is not null && stopWatch.Elapsed.TotalSeconds >= 2)
             {
                 stopWatch.Stop();
-                pianoGrid.DisplayPianoKey(key); //TODO CHANGE COLOUR DEPENDING ON HOW WELL
                 PianoController.PlayPianoSound(key);
 
                 //SCORE FUNCTION
@@ -259,6 +259,7 @@ namespace WpfView
                             playing.Add(key.Note, PressedAt);
                             playedNotes.Add(upcomingKey);
                             var rating = Rating.Perfect;
+                            pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Green));
                             practiceNotes.DisplayNoteFeedBack(key, rating);
                         }
                     }
@@ -270,11 +271,13 @@ namespace WpfView
                             playing.Add(key.Note, PressedAt);
                             var rating = Rating.Ok;
                             practiceNotes.DisplayNoteFeedBack(key, rating);
+                            pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Yellow));
                             Debug.WriteLine("Added NO points with " + key.Note);
                         }
                     } else
                     {
                         var rating = Rating.Miss;
+                        pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
                         practiceNotes.DisplayNoteFeedBack(key, rating);
                     }
                 }
@@ -299,7 +302,6 @@ namespace WpfView
             {
                 PianoKey upcomingKey = practiceNotes.upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
                 PianoController.StopPianoSound(key);
-                pianoGrid.DisplayPianoKey(key); //TODO CHANGE COLOUR DEPENDING ON HOW WELL
 
                 //SCORE FUNCTION
                 ReleasedAt = (int)SongController.CurrentSong.TimeInSong.TotalMilliseconds;
@@ -314,14 +316,17 @@ namespace WpfView
                             Score += (ReleasedAt - playing[key.Note]) / 10;
                             var rating = Rating.Great;
                             practiceNotes.DisplayNoteFeedBack(key, rating);
+                            pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Orange));
                         }
                     } else
                     {
                         var rating = Rating.Miss;
                         practiceNotes.DisplayNoteFeedBack(key, rating);
+                        pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
                     }
                 }
                 if (playing.ContainsKey(key.Note)) playing.Remove(key.Note);
+                pianoGrid.DisplayPianoKey(key);
             }
         }
     }
