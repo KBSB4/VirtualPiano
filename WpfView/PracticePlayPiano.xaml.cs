@@ -225,13 +225,12 @@ namespace WpfView
                 {
                     PianoController.StopPianoSound(key);
                     ApplyReleasedScore(key);
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        pianoGrid.DisplayPianoKey(key);
+                    }));
                 }
 
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    pianoGrid.DisplayPianoKey(key);
-                    Debug.WriteLine("PianoKey visually updated--------------------");
-                }));
                 Debug.WriteLine($"Totalscore: {score} / {maxTotalScore}");
             }
         }
@@ -323,6 +322,7 @@ namespace WpfView
                     Dispatcher.Invoke(new Action(() =>
                     {
                         practiceNotes.DisplayNoteFeedBack(key, rating);
+                        pianoGrid.DisplayPianoKey(key, rating);
                     }));
                     score += noteScore;
 
