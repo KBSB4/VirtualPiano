@@ -146,6 +146,7 @@ namespace WpfView
                 }
 
                 //Go to main menu after playing
+                //TODO Properly close this page so it doesnt hang on other pages
                 if (!SongController.CurrentSong.IsPlaying)
                 {
                     Dispatcher.Invoke(new Action(() =>
@@ -157,7 +158,7 @@ namespace WpfView
                                 entry.Value.StopPlaying(0);
                             }
                         }
-                        Thread.Sleep(10000);
+                        Thread.Sleep(5000);
                         NavigationService?.Navigate(_mainMenu);
                     }));
                 }
@@ -215,7 +216,7 @@ namespace WpfView
                     PianoController.PlayPianoSound(key);
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        pianoGrid.DisplayPianoKey(key); 
+                        pianoGrid.DisplayPianoKey(key);
                     }));
                 }
                 else
@@ -223,7 +224,7 @@ namespace WpfView
                     PianoController.StopPianoSound(key);
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        pianoGrid.DisplayPianoKey(key); 
+                        pianoGrid.DisplayPianoKey(key);
                     }));
                 }
             }
@@ -244,46 +245,51 @@ namespace WpfView
             if (key is not null && stopWatch.Elapsed.TotalSeconds >= 2)
             {
                 stopWatch.Stop();
+
                 PianoController.PlayPianoSound(key);
 
                 //SCORE FUNCTION
                 PressedAt = (int)SongController.CurrentSong.TimeInSong.TotalMilliseconds;
 
                 PianoKey upcomingKey = practiceNotes.upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
-
-                if (upcomingKey != null && !playedNotes.Contains(upcomingKey))
+                if (!playing.ContainsKey(key.Note))
                 {
-                    //Upcomingkey is the key that should be played next for the current PianoKey
-                    //todo TWEAK VALUES
-                    if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds - 150 && PressedAt < upcomingKey.TimeStamp.TotalMilliseconds + 150)
+                    pianoGrid.DisplayPianoKey(key);
+                    if (upcomingKey != null && !playedNotes.Contains(upcomingKey))
                     {
-                        //played, add score
-                        if (!playing.ContainsKey(upcomingKey.Note))
+                        //Upcomingkey is the key that should be played next for the current PianoKey
+                        //todo TWEAK VALUES
+                        if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds - 150 && PressedAt < upcomingKey.TimeStamp.TotalMilliseconds + 150)
                         {
-                            Score += 50;
-                            playing.Add(key.Note, PressedAt);
-                            playedNotes.Add(upcomingKey);
-                            var rating = Rating.Perfect;
-                            pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Green));
+                            //played, add score
+                            if (!playing.ContainsKey(upcomingKey.Note))
+                            {
+                                Score += 50;
+                
+                                playedNotes.Add(upcomingKey);
+                                var rating = Rating.Perfect;
+                                pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Green));
+                                practiceNotes.DisplayNoteFeedBack(key, rating);
+                            }
+                        }
+                        else if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds && !playedNotes.Contains(upcomingKey))
+                        {
+                            //Too late, no points
+                            if (!playing.ContainsKey(upcomingKey.Note))
+                            {
+                                var rating = Rating.Ok;
+                                practiceNotes.DisplayNoteFeedBack(key, rating);
+                                pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Yellow));
+                                Debug.WriteLine("Added NO points with " + key.Note);
+                            }
+                        }
+                        else if(!playedNotes.Contains(upcomingKey))
+                        {
+                            var rating = Rating.Miss;
+                            pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
                             practiceNotes.DisplayNoteFeedBack(key, rating);
                         }
-                    }
-                    else if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds)
-                    {
-                        //Too late, no points
-                        if (!playing.ContainsKey(upcomingKey.Note))
-                        {
-                            playing.Add(key.Note, PressedAt);
-                            var rating = Rating.Ok;
-                            practiceNotes.DisplayNoteFeedBack(key, rating);
-                            pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Yellow));
-                            Debug.WriteLine("Added NO points with " + key.Note);
-                        }
-                    } else
-                    {
-                        var rating = Rating.Miss;
-                        pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
-                        practiceNotes.DisplayNoteFeedBack(key, rating);
+                        playing.Add(key.Note, PressedAt);
                     }
                 }
             }
@@ -323,7 +329,8 @@ namespace WpfView
                             practiceNotes.DisplayNoteFeedBack(key, rating);
                             pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Orange));
                         }
-                    } else
+                    }
+                    else
                     {
                         var rating = Rating.Miss;
                         practiceNotes.DisplayNoteFeedBack(key, rating);
