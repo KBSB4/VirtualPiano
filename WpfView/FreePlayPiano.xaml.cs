@@ -27,6 +27,9 @@ namespace WpfView
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
 
+        //Just for testing, can be removed, make sure to also remove line {var rating = (Rating)rnd.Next(Enum.GetNames(typeof(Rating)).Length);}
+        Random rnd = new Random();
+
         public FreePlayPiano(MainMenu _mainMenu)
         {
             this._mainMenu = _mainMenu;
@@ -54,7 +57,7 @@ namespace WpfView
 
         private void CountDown(object? obj)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Visible;
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownReady.png", UriKind.Relative));
@@ -172,6 +175,8 @@ namespace WpfView
             if (key is not null)
             {
                 pianoGrid.DisplayPianoKey(key);
+                var rating = (Rating)rnd.Next(Enum.GetNames(typeof(Rating)).Length);
+                practiceNotes.DisplayNoteFeedBack(key, rating);
                 PianoController.PlayPianoSound(key);
             }
 
@@ -214,13 +219,13 @@ namespace WpfView
         {
             _inputDevice?.Dispose();
 
-            if (!_mainMenu.SettingsPage.NoneSelected.IsSelected)
+            if (_mainMenu.SettingsPage.NoneSelected.IsSelected)
             {
-                SelectItem(x);
+                SelectItem(1);
             }
             else
             {
-                SelectItem(1);
+                SelectItem(x);
             }
         }
 
@@ -300,7 +305,7 @@ namespace WpfView
             MidiFile currentMidiFile = MidiController.GetMidiFile();
 
 
-			if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
+            if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
                 SongController.PlaySong();

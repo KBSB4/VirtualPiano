@@ -1,6 +1,5 @@
 using Melanchall.DryWetMidi.MusicTheory;
 using System.Diagnostics;
-using VirtualPiano.PianoSoundPlayer;
 
 namespace UnitTests
 {

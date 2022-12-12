@@ -63,6 +63,28 @@ namespace WpfView
         }
 
         /// <summary>
+        /// Showing a word indicating how good the note was pressed.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="rating"></param>
+        public void DisplayNoteFeedBack(PianoKey? key, Rating rating)
+        {
+            if (key is null) return;
+            int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);
+
+            Grid currentColumn;
+            if (practiceNoteColumns.Count <= note || 0 > note)
+            {
+                return;
+            }
+            currentColumn = practiceNoteColumns[note];
+
+            RatingTextControl ratingText = new(rating);
+
+            currentColumn.Children.Add(ratingText);
+        }
+
+        /// <summary>
         /// Moves all notes down 1.25% of the screen, should be fired 40 times a second to move notes down completely in 2 seconds
         /// If the note is not visible on screen anymore, the note is removed from the column it is in
         /// </summary>
