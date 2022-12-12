@@ -1,4 +1,5 @@
 ﻿using BusinessLogic;
+using BusinessLogic.SoundPlayer;
 using Controller;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
@@ -94,7 +95,7 @@ namespace WpfView
         {
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
             //TODO For demo do this based on easy and hero- rush e
-            string path = "../../../../WpfView/BEET.mid";
+            string path = "../../../../WpfView/test2.mid";
 
             //Prepare song
             MidiController.OpenMidi(path);
@@ -135,7 +136,6 @@ namespace WpfView
                     Dispatcher.Invoke(new Action(() =>
                     {
                         practiceNotes.UpdateExampleNotes();
-                        //TODO Make a concept and then implement it
                         ScoreLabel.Content = "Score = " + Score + "/" + TotalScore;
                         ScoreBar.Value = Math.Round((double)Score / (double)TotalScore * (double)100);
                     }));
@@ -146,16 +146,21 @@ namespace WpfView
                 }
 
                 //Go to main menu after playing
-                //TODO Wait for merge with dev before doing this. Before closing it should STOP ALL PIANO KEYS SOUNDS
-                //if (!SongController.CurrentSong.IsPlaying)
-                //{
-                //    Dispatcher.Invoke(new Action(() =>
-                //    {
-                //        //TODO Sometimes hangs
-                //        Thread.Sleep(1000);
-                //        NavigationService?.Navigate(_mainMenu);
-                //    }));
-                //}
+                if (!SongController.CurrentSong.IsPlaying)
+                {
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        if (PianoLogic.currentPlayingAudio is not null)
+                        {
+                            foreach (KeyValuePair<PianoKey, FadingAudio> entry in PianoLogic.currentPlayingAudio)
+                            {
+                                entry.Value.StopPlaying(0);
+                            }
+                        }
+                        Thread.Sleep(10000);
+                        NavigationService?.Navigate(_mainMenu);
+                    }));
+                }
             }
         }
 
@@ -210,7 +215,7 @@ namespace WpfView
                     PianoController.PlayPianoSound(key);
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        pianoGrid.DisplayPianoKey(key); //TODO CHANGE COLOUR DEPENDING ON HOW WELL
+                        pianoGrid.DisplayPianoKey(key); 
                     }));
                 }
                 else
@@ -218,7 +223,7 @@ namespace WpfView
                     PianoController.StopPianoSound(key);
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        pianoGrid.DisplayPianoKey(key); //TODO CHANGE COLOUR DEPENDING ON HOW WELL
+                        pianoGrid.DisplayPianoKey(key); 
                     }));
                 }
             }

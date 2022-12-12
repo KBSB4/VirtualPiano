@@ -7,7 +7,7 @@ namespace BusinessLogic
     public static class SongLogic
     {
         private const int SONG_OFFSET = 2000;
-        private const int STARTTUNENOTES = 8;
+        private const int STARTTUNENOTES = 7;
         public static Playback PlaybackDevice;
         public static OutputDevice OutputDevice;
 
@@ -26,7 +26,7 @@ namespace BusinessLogic
             startCountDown?.Invoke(null, null);
 
             if (obj is not Song song) return;
-            //TODO Properly stop and start thread when song finishes fully
+            //TODO Properly remake thread when song wants to be played again
             song.SongTimerThread.Start();
             SongForTime = song;
             OutputDevice = OutputDevice.GetByIndex(0);

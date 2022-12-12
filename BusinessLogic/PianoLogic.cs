@@ -6,7 +6,7 @@ using Octave = Model.Octave;
 
 namespace BusinessLogic
 {
-    public class PianoLogic
+    public static class PianoLogic
     {
 		public static Piano Piano { get; set; }
 		public static PianoSoundPlayer SoundPlayer { get; set; }

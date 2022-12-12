@@ -1,4 +1,5 @@
 ﻿using BusinessLogic;
+using BusinessLogic.SoundPlayer;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Model;
@@ -50,7 +51,9 @@ namespace Controller
                 //Stops the keys from appearing
                 CurrentSong.PianoKeys = new();
 
+                //TODO Does not work
                 SongLogic.PlaybackDevice.Dispose();
+                SongLogic.OutputDevice.Dispose();
             }
         }
     }
