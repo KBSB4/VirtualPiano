@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
@@ -68,6 +69,8 @@ namespace WpfView
             };
 
             currentColumn.Children.Add(rectangle);
+            keyValuePairs.Add(rectangle, key);
+            upcoming.Add(key);
         }
 
         /// <summary>
@@ -126,6 +129,7 @@ namespace WpfView
                     grid.Children.Remove(item);
                     NoteDeleted.Invoke(this, new PianoKeyEventArgs(keyValuePairs[item]));
                     upcoming.Remove(keyValuePairs[item]);
+                    keyValuePairs.Remove(item);
                 }
             }
         }
