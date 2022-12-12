@@ -11,6 +11,7 @@ namespace WpfView
         public FreePlayPiano FreePlay { get; set; }
         public SettingsPage SettingsPage { get; set; }
         public SongSelectPage SongSelectPage { get; set; }
+       
         public MainMenu()
         {
             InitializeComponent();
@@ -35,6 +36,7 @@ namespace WpfView
 
         private void Practice_Button_Click(object sender, RoutedEventArgs e)
         {
+            SettingsPage.GenerateInputDevices();
             NavigationService?.Navigate(SongSelectPage);
         }
     }

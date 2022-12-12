@@ -16,12 +16,17 @@ namespace WpfView
             AddSongs();
             _mainMenu = mainMenu;
         }
+        public void SongCard_Click(int ID)
+        {
+            NavigationService?.Navigate(new PracticePlayPiano(_mainMenu, ID));
+        }
 
         private void AddSongs()
         {
             for (int i = 0; i < 10; i++)
             {
-                SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4);
+              
+                SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4, this);
 
                 SongCards.Children.Add(songCardControl);
             }
