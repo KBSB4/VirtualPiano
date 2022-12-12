@@ -41,6 +41,7 @@ namespace BusinessLogic.SoundPlayer
                 if (fadeOutSpeed == 0 || fadeOutSpeed > 1000)
                 {
                     sourceVoice.Stop();
+                    sourceVoice.Dispose();
                 }
                 else
                 {
@@ -69,6 +70,7 @@ namespace BusinessLogic.SoundPlayer
                 Thread.Sleep(10);
             }
             sourceVoice.Stop();
+            sourceVoice.Dispose();
         }
     }
 }

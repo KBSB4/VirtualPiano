@@ -62,10 +62,18 @@ namespace UnitTests
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
 			stopwatch.Start();
-			while (stopwatch.ElapsedMilliseconds < 300_000)
+
+			new Thread(() =>
 			{
-				PianoSoundPlayer_GetFadingAudio_PlayTenNotesFor3Seconds();
-			}
+				while (stopwatch.ElapsedMilliseconds < 40_000)
+				{
+					PianoSoundPlayer_GetFadingAudio_PlayTenNotesFor3Seconds();
+					Thread.Sleep(3100);
+				}
+			}).Start();
+
+			Thread.Sleep(41000);
+
 			Assert.That(true);
 		}
 

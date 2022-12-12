@@ -6,16 +6,23 @@ namespace Controller
 {
 	public static class MidiController
 	{
-		
+
 
 		/// <summary>
-		/// Read MIDI File using <paramref name="MIDIpath"/> and loads the song in the <see cref="SongController"/>.
+		/// Read MIDI File using <paramref name="midiPath"/> and loads the song in the <see cref="SongController"/>.
 		/// </summary>
-		/// <param name="MIDIpath"></param>
-		public static void OpenMidi(string MIDIpath)
+		/// <param name="midiPath"></param>
+		public static void OpenMidi(string midiPath)
 		{
-			MidiLogic.currentMidi = MidiFile.Read(MIDIpath);
-			SongController.LoadSong();
+			bool fileFound = false;
+			try
+			{
+				MidiLogic.currentMidi = MidiFile.Read(midiPath);
+				fileFound = true;
+			}
+			catch { }
+			if (fileFound) 
+				SongController.LoadSong();
 		}
 
 		/// <summary>
@@ -38,7 +45,7 @@ namespace Controller
 			return MidiLogic.AddStartTune(midiFile);
 		}
 
-		public static MidiFile GetMidiFile() 
+		public static MidiFile GetMidiFile()
 		{
 			return MidiLogic.currentMidi;
 		}
