@@ -59,10 +59,11 @@ namespace WpfView
         private void PlaySelectedSong(int songID)
         {
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
+            //TODO For demo do this based on easy and hero- rush e
             string path = "../../../../WpfView/test.mid";
 
             //Prepare song
-            MIDIController.OpenMidi(path);
+            MidiController.OpenMidi(path);
             SongController.LoadSong(new MetricTimeSpan(500));
 
             //Get TotalScore
@@ -102,6 +103,7 @@ namespace WpfView
                         practiceNotes.UpdateExampleNotes();
                         //TODO Make a concept and then implement it
                         ScoreLabel.Content = "Score = " + Score + "/" + TotalScore;
+                        ScoreBar.Value = Math.Round((double)Score / (double)TotalScore * (double)100);
                     }));
                 }
                 catch (TaskCanceledException) //Just in case
@@ -223,6 +225,8 @@ namespace WpfView
                             Score += 50;
                             playing.Add(key.Note, PressedAt);
                             playedNotes.Add(upcomingKey);
+                            var rating = Rating.Perfect;
+                            practiceNotes.DisplayNoteFeedBack(key, rating);
                         }
                     }
                     else if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds)
@@ -231,8 +235,14 @@ namespace WpfView
                         if (!playing.ContainsKey(upcomingKey.Note))
                         {
                             playing.Add(key.Note, PressedAt);
+                            var rating = Rating.Ok;
+                            practiceNotes.DisplayNoteFeedBack(key, rating);
                             Debug.WriteLine("Added NO points with " + key.Note);
                         }
+                    } else
+                    {
+                        var rating = Rating.Miss;
+                        practiceNotes.DisplayNoteFeedBack(key, rating);
                     }
                 }
             }
@@ -269,7 +279,13 @@ namespace WpfView
                         if (playing.ContainsKey(key.Note))
                         {
                             Score += (ReleasedAt - playing[key.Note]) / 10;
+                            var rating = Rating.Great;
+                            practiceNotes.DisplayNoteFeedBack(key, rating);
                         }
+                    } else
+                    {
+                        var rating = Rating.Miss;
+                        practiceNotes.DisplayNoteFeedBack(key, rating);
                     }
                 }
                 if (playing.ContainsKey(key.Note)) playing.Remove(key.Note);

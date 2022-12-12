@@ -33,7 +33,7 @@ namespace WpfView
             }
             practiceNoteColumns = AddPracticeNoteColumns(whiteKeyGrid, blackKeyGrid, columnAmount);
 
-            if(ppp is not null)
+            if (ppp is not null)
             {
                 NoteDeleted += ppp.DeletedPressedKey;
             }
@@ -90,17 +90,20 @@ namespace WpfView
                             if (rectangle.Margin.Top > column.ActualHeight)
                             {
                                 //Remove
-                                //column.Children.Remove(rectangle); //TODO DOES NOT WORK, BREAKS ENUMERATOR
-
-                                //Remove key so it can not be scored
-                                if (PracticePlayPianoPage is not null)
-                                {
-                                    NoteDeleted.Invoke(this, new PianoKeyEventArgs(keyValuePairs[rectangle]));
-                                    upcoming.Remove(keyValuePairs[rectangle]);
-                                }
+                                notesToBeRemoved.Add(rectangle);
                             }
                         }
                     }
+                }
+            }
+            foreach (var item in notesToBeRemoved)
+            {
+                Grid? grid = item.Parent as Grid;
+                if (grid is not null)
+                {
+                    grid.Children.Remove(item);
+                    NoteDeleted.Invoke(this, new PianoKeyEventArgs(keyValuePairs[item]));
+                    upcoming.Remove(keyValuePairs[item]);
                 }
             }
         }

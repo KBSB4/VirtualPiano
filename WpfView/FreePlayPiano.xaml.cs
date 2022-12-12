@@ -146,6 +146,8 @@ namespace WpfView
             if (key is not null)
             {
                 pianoGrid.DisplayPianoKey(key);
+                //var rating = (Rating)rnd.Next(Enum.GetNames(typeof(Rating)).Length);
+                //practiceNotes.DisplayNoteFeedBack(key, rating);
                 PianoController.PlayPianoSound(key);
             }
 

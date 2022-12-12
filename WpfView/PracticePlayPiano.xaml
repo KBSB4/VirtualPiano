@@ -15,7 +15,8 @@
         </Grid.RowDefinitions>
         <!-- <Image x:Name="MainImage" Margin="0,0,0,0"/> -->
         <Grid Name="Play2ColumnWhiteKeys" Grid.Row="0" ZIndex="0"></Grid>
-        <Grid Name="Play2ColumnBlackKeys" Grid.Row="0" ZIndex="1"></Grid>
+        <Grid Name="Play2ColumnBlackKeys" Grid.Row="0" ZIndex="1">
+        </Grid>
         <Grid Name="Play2WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
         <Grid Name="Play2BlackKeysGrid" Grid.Row="1" ZIndex="1" Focusable="True">
             <Grid.RowDefinitions>
@@ -26,6 +27,7 @@
 
         <Menu Grid.Row="0" DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
             <Label x:Name="ScoreLabel" Content="Score = 0" Foreground="White"/>
+            <ProgressBar x:Name="ScoreBar" HorizontalAlignment="Right" Height="20" Width="700" Foreground="#FFF46524"/>
         </Menu>
     </Grid>
 </Page>
