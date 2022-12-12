@@ -13,7 +13,11 @@
             <RowDefinition Height="70*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
-        <!-- <Image x:Name="MainImage" Margin="0,0,0,0"/> -->
+
+        <Grid>
+            <Image Name="CountDownImage"></Image>
+        </Grid>
+        
         <Grid Name="PracticeColumnWhiteKeys" Grid.Row="0" ZIndex="0"></Grid>
         <Grid Name="PracticeColumnBlackKeys" Grid.Row="0" ZIndex="1"></Grid>
         <Grid Name="WhiteKeysGrid" Grid.Row="1" ZIndex="0"></Grid>
@@ -24,13 +28,12 @@
             </Grid.RowDefinitions>
         </Grid>
 
-        <Menu Grid.Row="0" DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
+        <Menu Grid.Row="0" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#FF292929" Panel.ZIndex="2">
             <MenuItem Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
             </MenuItem>
-
 
             <MenuItem Name="MainItem"  Header="Settings" Height="30" Click="Refresh_Click" Foreground="White" >
                 <MenuItem.Icon>

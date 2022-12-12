@@ -17,14 +17,11 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
+            FreePlay.CheckInputDevice(SettingsPage.IndexInputDevice);
         }
 
         private void FreePlay_Button_Click(object sender, RoutedEventArgs e)
         {
-            //this.NavigationService.Navigate(new Uri("FreePlayPiano.xaml", UriKind.Relative));
-            //Also possible (no string usage) but might make a new one every time
-
-
             FreePlay.CheckInputDevice(SettingsPage.IndexInputDevice);  // Checks if input device has been selected!
             this.NavigationService.Navigate(FreePlay);
 
@@ -32,7 +29,6 @@ namespace WpfView
 
         private void Admin_Button_Click(object sender, RoutedEventArgs e)
         {
-
             SettingsPage.GenerateInputDevices(); // Gets all input devices
             NavigationService?.Navigate(SettingsPage);
         }

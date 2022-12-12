@@ -1,5 +1,6 @@
 ﻿using BusinessLogic;
 using Controller;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using Microsoft.Win32;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
 namespace WpfView
@@ -25,6 +27,8 @@ namespace WpfView
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
 
+        //Just for testing, can be removed, make sure to also remove line {var rating = (Rating)rnd.Next(Enum.GetNames(typeof(Rating)).Length);}
+        Random rnd = new Random();
 
         public FreePlayPiano(MainMenu _mainMenu)
         {
@@ -33,14 +37,9 @@ namespace WpfView
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
-            this.KeyDown += KeyPressed;
-            this.KeyUp += KeyReleased;
-
-
-            //Keep this here until we have a better way of connecting phyiscal devices and so we can test
-            //_inputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByName("Launchkey 49");
-            //_inputDevice.EventReceived += OnMidiEventReceived;
-            //_inputDevice.StartEventsListening();
+            KeyDown += KeyPressed;
+            KeyUp += KeyReleased;
+            SongLogic.startCountDown += StartCountDown;
 
             //Start thread for updating practice notes
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
@@ -50,9 +49,40 @@ namespace WpfView
             updateVisualNoteThread.Start();
         }
 
+        private void StartCountDown(object? sender, EventArgs e)
+        {
+            Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
+            countDownThread.Start();
+        }
+
+        private void CountDown(object? obj)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Visibility = Visibility.Visible;
+                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownReady.png", UriKind.Relative));
+                Debug.WriteLine("Image updated");
+            }));
+            Thread.Sleep(2500);
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownSet.png", UriKind.Relative));
+            }));
+            Thread.Sleep(2500);
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownGo.png", UriKind.Relative));
+            }));
+            Thread.Sleep(2500);
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Visibility = Visibility.Hidden;
+            }));
+        }
+
 
         /// <summary>
-        /// Method that constantly updates the practice notes
+        /// Thread that updates the visual position of already placed notes
         /// </summary>
         /// <param name="obj"></param>
         private void UpdateVisualNotes(object? obj)
@@ -60,9 +90,8 @@ namespace WpfView
             var next = DateTime.Now;
             while (true)
             {
-                //Debug.WriteLine(Math.Abs((DateTime.Now - next).Milliseconds));
-                Thread.Sleep(Math.Abs((DateTime.Now - next).Milliseconds)); // 30 / 120 * bpm
-                next = DateTime.Now.AddMilliseconds(25);
+                Thread.Sleep(Math.Abs((DateTime.Now - next).Milliseconds));
+                next = DateTime.Now.AddMilliseconds(25);// 25 milliseconds equals 40 frames per second
                 try
                 {
                     Dispatcher.Invoke(new Action(() =>
@@ -170,27 +199,18 @@ namespace WpfView
                 PianoController.StopPianoSound(key);
                 pianoGrid.DisplayPianoKey(key);
             }
-
         }
 
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
-
         }
 
         private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
             _mainMenu.SettingsPage.GenerateInputDevices();
-
             NavigationService?.Navigate(_mainMenu.SettingsPage);
-
-
         }
-
-
-
 
         /// <summary>
         /// Connects MIDI-keyboard
@@ -199,31 +219,36 @@ namespace WpfView
         {
             _inputDevice?.Dispose();
 
-            if (!_mainMenu.SettingsPage.NoneSelected.IsSelected)
+            if (_mainMenu.SettingsPage.NoneSelected.IsSelected)
             {
-                try
-                {
-
-
-                    Debug.Write("send!");
-                    ;
-                    _inputDevice = InputDevice.GetByIndex(x - 1);
-                    _inputDevice.EventReceived += OnMidiEventReceived;
-                    _inputDevice.StartEventsListening();
-
-
-                }
-                catch (ArgumentException ex)
-                {
-                    Debug.WriteLine("No midi device found");
-                    Debug.WriteLine("Exception information:");
-                    Debug.IndentLevel = 1;
-                    Debug.WriteLine(ex.Message);
-                    Debug.IndentLevel = 0;
-                    _inputDevice = null;
-                }
+                SelectItem(1);
             }
+            else
+            {
+                SelectItem(x);
+            }
+        }
 
+        private void SelectItem(int item)
+        {
+            try
+            {
+                Debug.Write("send!");
+                _inputDevice = InputDevice.GetByIndex(item - 1);
+                _inputDevice.EventReceived += OnMidiEventReceived;
+                _inputDevice.StartEventsListening();
+                ComboBoxItem v = (ComboBoxItem)_mainMenu.SettingsPage.input.Items.GetItemAt(item);
+                v.IsSelected = true;
+            }
+            catch (ArgumentException ex)
+            {
+                Debug.WriteLine("No midi device found");
+                Debug.WriteLine("Exception information:");
+                Debug.IndentLevel = 1;
+                Debug.WriteLine(ex.Message);
+                Debug.IndentLevel = 0;
+                _inputDevice = null;
+            }
         }
 
         #region MIDI
@@ -264,7 +289,7 @@ namespace WpfView
             if ((bool)openFileDialog.ShowDialog())
             {
                 //Get the path of specified file
-                MIDIController.OpenMidi(openFileDialog.FileName);
+                MidiController.OpenMidi(openFileDialog.FileName);
                 SongController.LoadSong(new MetricTimeSpan(500));
             }
         }
@@ -277,14 +302,17 @@ namespace WpfView
         private void PlayMIDIFile(object sender, RoutedEventArgs e)
         {
             //Boolean isisolated = IsolatedPiano.IsChecked; Planned for later
-            if (MIDIController.OriginalMIDI is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
+            MidiFile currentMidiFile = MidiController.GetMidiFile();
+
+
+            if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
                 SongController.PlaySong();
             }
             else
             {
-                if (MIDIController.OriginalMIDI is null)
+                if (currentMidiFile is null)
                 {
                     MessageBox.Show("Select a MIDI File first before playing",
                     "No MIDI selected", MessageBoxButton.OK, MessageBoxImage.Error);

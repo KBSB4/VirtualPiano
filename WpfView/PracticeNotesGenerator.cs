@@ -63,19 +63,41 @@ namespace WpfView
                 Width = currentColumn.ActualWidth,
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(0, -rectHeight, 0, 0),
-                RadiusX = 10,
-                RadiusY = 10,
+                RadiusX = 5,
+                RadiusY = 5,
             };
 
             currentColumn.Children.Add(rectangle);
-            keyValuePairs.Add(rectangle, key);
-            upcoming.Add(key);
+        }
+
+        /// <summary>
+        /// Showing a word indicating how good the note was pressed.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="rating"></param>
+        public void DisplayNoteFeedBack(PianoKey? key, Rating rating)
+        {
+            if (key is null) return;
+            int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);
+
+            Grid currentColumn;
+            if (practiceNoteColumns.Count <= note || 0 > note)
+            {
+                return;
+            }
+            currentColumn = practiceNoteColumns[note];
+
+            RatingTextControl ratingText = new(rating);
+
+            currentColumn.Children.Add(ratingText);
         }
         /// <summary>
-        /// Update each note to fall down
+        /// Moves all notes down 1.25% of the screen, should be fired 40 times a second to move notes down completely in 2 seconds
+        /// If the note is not visible on screen anymore, the note is removed from the column it is in
         /// </summary>
         public void UpdateExampleNotes()
         {
+            List<Rectangle> notesToBeRemoved = new();
             foreach (var column in practiceNoteColumns)
             {
                 if (column.Children.Count > 0)
@@ -186,12 +208,37 @@ namespace WpfView
                 StartPoint = new Point(0, 0),
                 EndPoint = new Point(0, 1)
             };
-            whitekeycolour.GradientStops.Add(
-                new GradientStop(Colors.Red, 0.0));
-            whitekeycolour.GradientStops.Add(
-                new GradientStop(Colors.Yellow, 1.0));
+            whitekeycolour.GradientStops.Add(new GradientStop(Colors.Orange, 0.0));
+            whitekeycolour.GradientStops.Add(new GradientStop(Colors.Yellow, 1.0));
 
-            return pianokey.Note.ToString().Contains("Sharp") ? whitekeycolour : whitekeycolour;
+            LinearGradientBrush blackKeyColour = new()
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(0, 1)
+            };
+            blackKeyColour.GradientStops.Add(new GradientStop(Colors.DarkRed, 0.0));
+            blackKeyColour.GradientStops.Add(new GradientStop(Colors.DarkOrange, 1.0));
+
+            //LinearGradientBrush whitekeycolour = new()
+            //{
+            //    StartPoint = new Point(0, 0),
+            //    EndPoint = new Point(0, 1)
+            //};
+            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.Orange, 0.0));
+            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.Orange, 1.0));
+
+            //LinearGradientBrush blackKeyColour = new()
+            //{
+            //    StartPoint = new Point(0, 0),
+            //    EndPoint = new Point(0, 1)
+            //};
+            //blackKeyColour.GradientStops.Add(new GradientStop(Colors.Orange, 0.0));
+            //blackKeyColour.GradientStops.Add(new GradientStop(Colors.Orange, 1.0));
+
+            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.MediumPurple, 0.0));
+            //whitekeycolour.GradientStops.Add(new GradientStop(Colors.MediumPurple, 1.0));
+
+            return pianokey.Note.ToString().Contains("Sharp") ? blackKeyColour : whitekeycolour;
         }
     }
 }

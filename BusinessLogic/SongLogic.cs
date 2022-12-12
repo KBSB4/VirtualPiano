@@ -7,8 +7,11 @@ namespace BusinessLogic
     public static class SongLogic
     {
         private const int SONG_OFFSET = 2000;
+        private const int STARTTUNENOTES = 8;
         public static Playback PlaybackDevice;
         public static OutputDevice OutputDevice;
+
+        public static event EventHandler startCountDown;
 
         private static Song SongForTime;
 
@@ -20,6 +23,8 @@ namespace BusinessLogic
 
         private static void PlayFile(object? obj)
         {
+            startCountDown?.Invoke(null, null);
+
             if (obj is not Song song) return;
             //TODO Properly stop and start thread when song finishes fully
             song.SongTimerThread.Start();
@@ -48,12 +53,21 @@ namespace BusinessLogic
             }
         }
 
+        /// <summary>
+        /// If the key is pressedDown, starts the PlayNote thread
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
             object[] objs = { sender, e.Key };
             if (e.Key.PressedDown) new Thread(new ParameterizedThreadStart(PlayNote)).Start(objs);
         }
 
+        /// <summary>
+        /// Waits for the note to have ended, releases the key and fires the NotePlayed event
+        /// </summary>
+        /// <param name="obj"></param>
         private static void PlayNote(object? obj)
         {
             object[] objs = (object[])obj;
@@ -66,19 +80,33 @@ namespace BusinessLogic
             song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
         }
 
+        /// <summary>
+        /// Loops through every note in the song, and fires an event when this note should appear visually
+        /// </summary>
+        /// <param name="song"></param>
         public static void PlaySong(Song song)
         {
             DateTime now = DateTime.Now;
+            int ignoreNote = STARTTUNENOTES;
             while (song.PianoKeys.Count > 0)
             {
                 PianoKey pianoKey = song.PianoKeys.Dequeue();
-                song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
+
+                if (ignoreNote < 0)
+                {
+                    song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
+                }
+                else
+                {
+                    ignoreNote--;
+                }
                 if (song.PianoKeys.TryPeek(out PianoKey? nextKey))
                 {
                     MetricTimeSpan timeSpan;
                     if (PlaybackDevice is null || !PlaybackDevice.IsRunning)
                     {
-                        timeSpan = DateTime.Now - now;
+                        //timeSpan = DateTime.Now - now;
+                        timeSpan = pianoKey.TimeStamp;
                     }
                     else
                     {
