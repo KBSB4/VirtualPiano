@@ -6,7 +6,9 @@ using Melanchall.DryWetMidi.Multimedia;
 using Microsoft.Win32;
 using Model;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,6 +28,11 @@ namespace WpfView
         private static IInputDevice? _inputDevice;
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
+
+        int score = 0;
+        List<PianoKey> notesToBePressed;
+        List<PianoKey> currentlyPlaying = new();
+
 
         public FreePlayPiano(MainMenu _mainMenu)
         {
@@ -50,6 +57,7 @@ namespace WpfView
         {
             Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
             countDownThread.Start();
+            notesToBePressed = SongController.CurrentSong.PianoKeys.Take(new Range(8, SongController.CurrentSong.PianoKeys.Count)).ToList();
         }
 
         private void CountDown(object? obj)
@@ -137,25 +145,7 @@ namespace WpfView
         {
             PianoKey? key = PianoController.ParseMidiNote(e.Event);
 
-            if (key is not null)
-            {
-                if (key.PressedDown)
-                {
-                    PianoController.PlayPianoSound(key);
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        pianoGrid.DisplayPianoKey(key);
-                    }));
-                }
-                else
-                {
-                    PianoController.StopPianoSound(key);
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        pianoGrid.DisplayPianoKey(key);
-                    }));
-                }
-            }
+            UpdateKey(key);
         }
 
         /// <summary>
@@ -169,14 +159,95 @@ namespace WpfView
             int intValue = (int)e.Key;
 
             PianoKey? key = PianoController.GetPressedPianoKey(intValue);
-            if (key is not null)
-            {
-                pianoGrid.DisplayPianoKey(key);
-                PianoController.PlayPianoSound(key);
-            }
+            UpdateKey(key);
 
             if (e.Key == Key.CapsLock)
                 PianoLogic.SwapOctave(PianoController.Piano);
+        }
+
+        /// <summary>
+        /// Occurs when a key is pressed or released, for keyboard and midi
+        /// </summary>
+        /// <param name="key"></param>
+        private void UpdateKey(PianoKey? key)
+        {
+            if (key is not null)
+            {
+                if (key.PressedDown)
+                {
+                    PianoController.PlayPianoSound(key);
+
+                    if (!currentlyPlaying.Contains(key))
+                    {
+                        MetricTimeSpan pressedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
+
+                        PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds)).FirstOrDefault();
+                        if (closestNote is not null)
+                        {
+                            currentlyPlaying.Add(key);
+                            //Hit with difference of pressedat - closestNote.timestamp
+                            Debug.WriteLine($"Original note: {key} pressed at: {pressedAt} [][][] Closest note: {closestNote}");
+                            int timeDifference = TimeSpan.Compare(pressedAt, closestNote.TimeStamp);
+                            if (timeDifference == 0)
+                            {
+                                Debug.WriteLine("Played perfectly (impossible)");
+                            }
+                            else if (timeDifference == -1)
+                            {
+                                Debug.WriteLine($"Too early with a difference of: {closestNote.TimeStamp - pressedAt}");
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"Too late with a difference of: {pressedAt - closestNote.TimeStamp}");
+                            }
+                        }
+                        else
+                        {
+                            //Miss
+                            Debug.WriteLine($"Original note: {key} not found in tobeplayed");
+                        }
+                    }
+                }
+                else
+                {
+                    PianoController.StopPianoSound(key);
+                    if (currentlyPlaying.Contains(key))
+                    {
+                        MetricTimeSpan releasedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
+
+                        PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(releasedAt.TotalSeconds - (item.TimeStamp + item.Duration).TotalSeconds)).FirstOrDefault();
+                        if (closestNote is not null)
+                        {
+                            Debug.WriteLine($"Original note: {key} released at: {releasedAt} [][][] Closest note: {closestNote}");
+                            int timeDifference = TimeSpan.Compare(releasedAt, (closestNote.TimeStamp + closestNote.Duration));
+                            if (timeDifference == 0)
+                            {
+                                Debug.WriteLine("Played perfectly (impossible)");
+                            }
+                            else if (timeDifference == -1)
+                            {
+                                Debug.WriteLine($"Too early with a difference of: {(closestNote.TimeStamp + closestNote.Duration) - releasedAt}");
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"Too late with a difference of: {releasedAt - (closestNote.TimeStamp + closestNote.Duration)}");
+                            }
+                            //Debug.WriteLine($"Difference of: {releasedAt - (closestNote.TimeStamp + closestNote.Duration)}");
+                        }
+                        else
+                        {
+                            //Miss
+                            Debug.WriteLine($"Original note: {key} not found in tobeplayed");
+                        }
+
+                        currentlyPlaying.Remove(key);
+                    }
+                }
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    pianoGrid.DisplayPianoKey(key);
+                }));
+            }
         }
 
         /// <summary>
@@ -189,15 +260,11 @@ namespace WpfView
         {
             int intValue = (int)e.Key;
             PianoKey? key = PianoController.GetReleasedKey(intValue);
-            if (key is not null)
-            {
-                PianoController.StopPianoSound(key);
-                pianoGrid.DisplayPianoKey(key);
-            }
+            UpdateKey(key);
         }
 
         #region Menubar event clicks
-        
+
         /// <summary>
         /// lets the player go back to the main menu
         /// </summary>
@@ -220,8 +287,6 @@ namespace WpfView
         }
 
         #endregion
-
-
 
 
         /// <summary>
@@ -321,7 +386,7 @@ namespace WpfView
             MidiFile currentMidiFile = MidiController.GetMidiFile();
 
 
-			if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
+            if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
                 SongController.PlaySong();
