@@ -13,7 +13,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
 namespace WpfView
 {
@@ -23,7 +22,7 @@ namespace WpfView
     public partial class FreePlayPiano : Page
     {
         private PianoGridGenerator pianoGrid;
-        public IInputDevice? InputDevice;
+        //public IInputDevice? InputDevice;
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
 
@@ -133,7 +132,7 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
+        public void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
         {
             PianoKey? key = PianoController.ParseMidiNote(e.Event);
 
@@ -217,53 +216,6 @@ namespace WpfView
         }
 
         #endregion
-
-        /// <summary>
-        /// Connects MIDI-keyboard
-        /// </summary>
-        public void CheckInputDevice(int x)
-        {
-            InputDevice?.Dispose();
-
-            if (x > 0)
-            {
-                if (_mainMenu.SettingsPage.NoneSelected.IsSelected)
-                {
-                    SelectItem(1);
-                }
-                else
-                {
-                    SelectItem(x);
-                }
-
-            }
-        }
-        /// <summary>
-        /// tries to select the correct input device with parameter <paramref name="item"/> for playing with a Midi keyboard otherwise throws an exception
-        /// </summary>
-        /// <exception cref="ArgumentException"></exception>
-        /// <param name="item"></param>
-        private void SelectItem(int item)
-        {
-            try
-            {
-                Debug.Write("send!");
-                InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByIndex(item - 1);
-                InputDevice.EventReceived += OnMidiEventReceived;
-                InputDevice.StartEventsListening();
-                ComboBoxItem v = (ComboBoxItem)_mainMenu.SettingsPage.input.Items.GetItemAt(item);
-                v.IsSelected = true;
-            }
-            catch (ArgumentException ex)
-            {
-                Debug.WriteLine("No midi device found");
-                Debug.WriteLine("Exception information:");
-                Debug.IndentLevel = 1;
-                Debug.WriteLine(ex.Message);
-                Debug.IndentLevel = 0;
-                InputDevice = null;
-            }
-        }
 
         #region MIDI
         /// <summary>

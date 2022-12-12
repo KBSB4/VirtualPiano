@@ -15,7 +15,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
 namespace WpfView
 {
@@ -26,8 +25,9 @@ namespace WpfView
     {
         private MainMenu _mainMenu;
         private PianoGridGenerator pianoGrid;
-        private static IInputDevice? _inputDevice;
         readonly PracticeNotesGenerator practiceNotes;
+
+        bool hasStarted = false;
 
         int score = 0;
         List<PianoKey> notesToBePressed;
@@ -35,12 +35,14 @@ namespace WpfView
         private int MAXNOTESCORE = 1000;
         private int maxTotalScore;
 
-        public PracticePlayPiano(MainMenu mainMenu, int ID)
+        public PracticePlayPiano(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
             InitializeComponent();
+            _mainMenu?.CheckInputDevice(SettingsPage.IndexInputDevice);
             //_inputDevice = _mainMenu.FreePlay.InputDevice;
-            CheckInputDevice(SettingsPage.IndexInputDevice);
+            //_mainMenu.FreePlay.CheckInputDevice(-1);
+            //CheckInputDevice(SettingsPage.IndexInputDevice);
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
@@ -48,18 +50,11 @@ namespace WpfView
             KeyUp += KeyReleased;
             SongLogic.startCountDown += StartCountDown;
 
-            PlaySelectedSong(ID);
-
             //Start thread for updating practice notes
-            Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
-            {
-                IsBackground = true
-            };
-            updateVisualNoteThread.Start();
         }
 
 
-        private void PlaySelectedSong(int songID)
+        public void PlaySelectedSong(int songID)
         {
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
             //TODO For demo do this based on easy and hero- rush e
@@ -71,7 +66,6 @@ namespace WpfView
             string path = "../../../../WpfView/test2.mid";
 
 
-
             //Prepare song
             MidiController.OpenMidi(path);
             SongController.LoadSong();
@@ -79,6 +73,14 @@ namespace WpfView
             //Play
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
             SongController.PlaySong();
+
+            Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
+            {
+                IsBackground = true
+            };
+            updateVisualNoteThread.Start();
+
+            hasStarted = true;
         }
 
         private void StartCountDown(object? sender, EventArgs e)
@@ -175,11 +177,15 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
+        public void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
         {
-            PianoKey? key = PianoController.ParseMidiNote(e.Event);
+            if (hasStarted)
+            {
+                PianoKey? key = PianoController.ParseMidiNote(e.Event);
 
-            UpdateKey(key);
+                UpdateKey(key);
+            }
+
         }
 
         /// <summary>
@@ -190,13 +196,16 @@ namespace WpfView
         /// <param name="e"></param>
         public void KeyPressed(object? source, KeyEventArgs e)
         {
-            int intValue = (int)e.Key;
+            if (hasStarted)
+            {
+                int intValue = (int)e.Key;
 
-            PianoKey? key = PianoController.GetPressedPianoKey(intValue);
-            UpdateKey(key);
+                PianoKey? key = PianoController.GetPressedPianoKey(intValue);
+                UpdateKey(key);
 
-            if (e.Key == Key.CapsLock)
-                PianoLogic.SwapOctave(PianoController.Piano);
+                if (e.Key == Key.CapsLock)
+                    PianoLogic.SwapOctave(PianoController.Piano);
+            }
         }
 
         /// <summary>
@@ -349,9 +358,12 @@ namespace WpfView
         /// <param name="e"></param>
         public void KeyReleased(object source, KeyEventArgs e)
         {
-            int intValue = (int)e.Key;
-            PianoKey? key = PianoController.GetReleasedKey(intValue);
-            UpdateKey(key);
+            if (hasStarted)
+            {
+                int intValue = (int)e.Key;
+                PianoKey? key = PianoController.GetReleasedKey(intValue);
+                UpdateKey(key);
+            }
         }
 
         #region Menubar event clicks
@@ -378,50 +390,6 @@ namespace WpfView
         }
 
         #endregion
-
-
-        /// <summary>
-        /// Connects MIDI-keyboard
-        /// </summary>
-        public void CheckInputDevice(int x)
-        {
-            _inputDevice?.Dispose();
-
-            if (_mainMenu.SettingsPage.NoneSelected.IsSelected)
-            {
-                SelectItem(1);
-            }
-            else
-            {
-                SelectItem(x);
-            }
-        }
-        /// <summary>
-        /// tries to select the correct input device with parameter <paramref name="item"/> for playing with a Midi keyboard otherwise throws an exception
-        /// </summary>
-        /// <exception cref="ArgumentException"></exception>
-        /// <param name="item"></param>
-        private void SelectItem(int item)
-        {
-            try
-            {
-                Debug.Write("send!");
-                _inputDevice = InputDevice.GetByIndex(item - 1);
-                _inputDevice.EventReceived += OnMidiEventReceived;
-                _inputDevice.StartEventsListening();
-                ComboBoxItem v = (ComboBoxItem)_mainMenu.SettingsPage.input.Items.GetItemAt(item);
-                v.IsSelected = true;
-            }
-            catch (ArgumentException ex)
-            {
-                Debug.WriteLine("No midi device found");
-                Debug.WriteLine("Exception information:");
-                Debug.IndentLevel = 1;
-                Debug.WriteLine(ex.Message);
-                Debug.IndentLevel = 0;
-                _inputDevice = null;
-            }
-        }
 
         #region MIDI
         /// <summary>

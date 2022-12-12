@@ -99,7 +99,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _mainMenu?.FreePlay?.CheckInputDevice(IndexInputDevice);
+            _mainMenu?.CheckInputDevice(IndexInputDevice);
             GenerateInputDevices();
             input.Items.Refresh();
         }

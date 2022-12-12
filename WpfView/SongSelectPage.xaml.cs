@@ -9,18 +9,20 @@ namespace WpfView
     public partial class SongSelectPage : Page
     {
         MainMenu _mainMenu;
+        public PracticePlayPiano practicePiano;
 
         public SongSelectPage(MainMenu mainMenu)
         {
+            _mainMenu = mainMenu;
+            practicePiano = new PracticePlayPiano(_mainMenu);
             InitializeComponent();
 
             AddSongs();
-            _mainMenu = mainMenu;
         }
         public void SongCard_Click(int ID)
         {
-            _mainMenu.FreePlay.CheckInputDevice(-1);
-            NavigationService?.Navigate(new PracticePlayPiano(_mainMenu, ID));
+            practicePiano.PlaySelectedSong(ID);
+            NavigationService?.Navigate(practicePiano);
         }
 
         private void AddSongs()
