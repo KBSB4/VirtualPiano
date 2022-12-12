@@ -12,15 +12,16 @@ namespace WpfView
     /// </summary>
     public partial class SongCardControl : UserControl
     {
+        SongSelectPage SongSelectPage;
+
         public SongCardControl(int id) : this(id, "No name") { }
-
         public SongCardControl(int id, string songTitle) : this(id, songTitle, 0) { }
-
-        public SongCardControl(int id, string songTitle, int difficulty)
+        public SongCardControl(int id, string songTitle, int difficulty) : this(id, songTitle, difficulty, null) { }
+        public SongCardControl(int id, string songTitle, int difficulty, SongSelectPage songSelectPage)
         {
             InitializeComponent();
-            SongID = id;
             SongTitle = songTitle;
+            SongSelectPage = songSelectPage;
             Difficulty = difficulty;
             DifficultyImageSource = Difficulty switch
             {
@@ -69,7 +70,7 @@ namespace WpfView
             Button? button = sender as Button;
             if (button is not null)
             {
-                Debug.WriteLine(button.Tag);
+                SongSelectPage.SongCard_Click(SongID);
             }
         }
     }

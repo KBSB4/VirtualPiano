@@ -1,4 +1,5 @@
 ﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,11 +11,11 @@ namespace WpfView
     internal class PracticeNotesGenerator
     {
         private List<Grid> practiceNoteColumns;
-        private const int noteLength = 290; //120 BPM
-
-        //private double noteSpeed = 12; //120 BPM
-        //private Queue<double> tempoQueue = new();
-        //private bool FirstTime = true;
+        private PracticePlayPiano PracticePlayPianoPage { get; set; }
+        private const int noteLength = 290;
+        public Dictionary<Rectangle, PianoKey> keyValuePairs = new();
+        public List<PianoKey> upcoming = new();
+        public event EventHandler<PianoKeyEventArgs> NoteDeleted;
 
         /// <summary>
         /// Prepare grids for practice notes
@@ -22,15 +23,22 @@ namespace WpfView
         /// <param name="whiteKeyGrid"></param>
         /// <param name="blackKeyGrid"></param>
         /// <param name="columnAmount"></param>
-        public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
+        public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount, PracticePlayPiano? ppp)
         {
+            PracticePlayPianoPage = ppp;
             if (columnAmount < 0)
             {
                 practiceNoteColumns = new();
                 return;
             }
             practiceNoteColumns = AddPracticeNoteColumns(whiteKeyGrid, blackKeyGrid, columnAmount);
+
+            if(ppp is not null)
+            {
+                NoteDeleted += ppp.DeletedPressedKey;
+            }
         }
+        public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount) : this(whiteKeyGrid, blackKeyGrid, columnAmount, null) { }
 
         /// <summary>
         /// Adds upcoming note
@@ -83,7 +91,6 @@ namespace WpfView
 
             currentColumn.Children.Add(ratingText);
         }
-
         /// <summary>
         /// Moves all notes down 1.25% of the screen, should be fired 40 times a second to move notes down completely in 2 seconds
         /// If the note is not visible on screen anymore, the note is removed from the column it is in
