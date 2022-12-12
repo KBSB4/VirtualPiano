@@ -1,5 +1,4 @@
 ﻿using BusinessLogic;
-using BusinessLogic.SoundPlayer;
 using Controller;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
@@ -95,7 +94,7 @@ namespace WpfView
         {
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
             //TODO For demo do this based on easy and hero- rush e
-            string path = "../../../../WpfView/test2.mid";
+            string path = "../../../../WpfView/sm64.mid";
 
             //Prepare song
             MidiController.OpenMidi(path);
@@ -113,10 +112,15 @@ namespace WpfView
         {
             Queue<PianoKey> allKeys = new(SongController.CurrentSong.PianoKeys); //Copy over
             int totalScore = 0;
+
+            for (int i = 0; i < 8; i++)
+            {
+                allKeys.Dequeue(); //Delete first 8 notes which are the starting notes
+            }
             while (allKeys.Count > 0)
             {
                 PianoKey key = allKeys.Dequeue();
-                totalScore += 100;
+                totalScore += (int)key.Duration.TotalMilliseconds;
             }
             return totalScore;
         }
@@ -147,21 +151,21 @@ namespace WpfView
 
                 //Go to main menu after playing
                 //TODO Properly close this page so it doesnt hang on other pages
-                if (!SongController.CurrentSong.IsPlaying)
-                {
-                    Dispatcher.Invoke(new Action(() =>
-                    {
-                        if (PianoLogic.currentPlayingAudio is not null)
-                        {
-                            foreach (KeyValuePair<PianoKey, FadingAudio> entry in PianoLogic.currentPlayingAudio)
-                            {
-                                entry.Value.StopPlaying(0);
-                            }
-                        }
-                        Thread.Sleep(5000);
-                        NavigationService?.Navigate(_mainMenu);
-                    }));
-                }
+                //if (!SongController.CurrentSong.IsPlaying)
+                //{
+                //    Dispatcher.Invoke(new Action(() =>
+                //    {
+                //        if (PianoLogic.currentPlayingAudio is not null)
+                //        {
+                //            foreach (KeyValuePair<PianoKey, FadingAudio> entry in PianoLogic.currentPlayingAudio)
+                //            {
+                //                entry.Value.StopPlaying(0);
+                //            }
+                //        }
+                //        Thread.Sleep(5000);
+                //        NavigationService?.Navigate(_mainMenu);
+                //    }));
+                //}
             }
         }
 
@@ -249,7 +253,7 @@ namespace WpfView
                 PianoController.PlayPianoSound(key);
 
                 //SCORE FUNCTION
-                PressedAt = (int)SongController.CurrentSong.TimeInSong.TotalMilliseconds;
+                PressedAt = (int)((MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric)).TotalMilliseconds;
 
                 PianoKey upcomingKey = practiceNotes.upcoming.Where(x => x.Note == key.Note && x.Octave == key.Octave).FirstOrDefault();
                 if (!playing.ContainsKey(key.Note))
@@ -259,37 +263,43 @@ namespace WpfView
                     {
                         //Upcomingkey is the key that should be played next for the current PianoKey
                         //todo TWEAK VALUES
-                        if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds - 150 && PressedAt < upcomingKey.TimeStamp.TotalMilliseconds + 150)
+                        if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds)
                         {
                             //played, add score
-                            if (!playing.ContainsKey(upcomingKey.Note))
+                            if (!playedNotes.Contains(upcomingKey))
                             {
-                                Score += 50;
-                
-                                playedNotes.Add(upcomingKey);
+                                //Score += 50;
+                                //playedNotes.Add(upcomingKey);
                                 var rating = Rating.Perfect;
                                 pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Green));
                                 practiceNotes.DisplayNoteFeedBack(key, rating);
                             }
-                        }
-                        else if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds && !playedNotes.Contains(upcomingKey))
-                        {
-                            //Too late, no points
-                            if (!playing.ContainsKey(upcomingKey.Note))
-                            {
-                                var rating = Rating.Ok;
-                                practiceNotes.DisplayNoteFeedBack(key, rating);
-                                pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Yellow));
-                                Debug.WriteLine("Added NO points with " + key.Note);
-                            }
-                        }
-                        else if(!playedNotes.Contains(upcomingKey))
+                        } else
                         {
                             var rating = Rating.Miss;
                             pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
                             practiceNotes.DisplayNoteFeedBack(key, rating);
                         }
                         playing.Add(key.Note, PressedAt);
+                        //else if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds && !playedNotes.Contains(upcomingKey))
+                        //{
+                        //    //Too late, no points
+                        //    if (!playing.ContainsKey(upcomingKey.Note))
+                        //    {
+                        //        //Var rating = Rating.Ok;
+                        //        //practiceNotes.DisplayNoteFeedBack(key, rating);
+                        //        //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Yellow));
+                        //        playing.Add(key.Note, PressedAt);
+                        //        Debug.WriteLine("Added NO points with " + key.Note);
+                        //    }
+                        //}
+                        //else if(!playedNotes.Contains(upcomingKey))
+                        //{
+                        //    //var rating = Rating.Miss;
+                        //    //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
+                        //    //practiceNotes.DisplayNoteFeedBack(key, rating);
+                        //}
+
                     }
                 }
             }
@@ -304,10 +314,12 @@ namespace WpfView
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
+        bool firstNote = true;
         public void KeyReleased(object source, KeyEventArgs e)
         {
             int ReleasedAt;
             int intValue = (int)e.Key;
+            double MaxScore = 0;
             PianoKey? key = PianoController.GetReleasedKey(intValue);
             if (key is not null)
             {
@@ -315,29 +327,74 @@ namespace WpfView
                 PianoController.StopPianoSound(key);
 
                 //SCORE FUNCTION
-                ReleasedAt = (int)SongController.CurrentSong.TimeInSong.TotalMilliseconds;
+                ReleasedAt = (int)((MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric)).TotalMilliseconds;
+                int scoreToAdd = 0;
                 if (upcomingKey is not null)
                 {
-                    //todo TWEAK VALUES
-                    if (ReleasedAt < (upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.Duration.TotalMilliseconds) + 50)
+                    double PerfectTimeToPress = upcomingKey.TimeStamp.TotalMilliseconds;
+                    double PerfectTimeToRelease = PerfectTimeToPress + upcomingKey.Duration.TotalMilliseconds;
+                    MaxScore = (double)upcomingKey.Duration.TotalMilliseconds;
+                    ////todo TWEAK VALUES
+                    //if (ReleasedAt < (upcomingKey.TimeStamp.TotalMilliseconds + upcomingKey.Duration.TotalMilliseconds))
+                    //{
+                    //    //played, add score based on how long pressed
+                    //    if (playing.ContainsKey(key.Note))
+                    //    {
+                    //        Score += (ReleasedAt - playing[key.Note]);
+                    //        //var rating = Rating.Great;
+                    //        //practiceNotes.DisplayNoteFeedBack(key, rating);
+                    //        //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Orange));
+                    //    }
+                    //}
+
+                    //TODO FIX FIRST NOTE, gives less than it should
+                    if (playing.ContainsKey(key.Note))
                     {
-                        //played, add score based on how long pressed
-                        if (playing.ContainsKey(key.Note))
+                        if (firstNote)
                         {
-                            Score += (ReleasedAt - playing[key.Note]) / 10;
-                            var rating = Rating.Great;
-                            practiceNotes.DisplayNoteFeedBack(key, rating);
-                            pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Orange));
+                            playing[key.Note] += 300;
+                            ReleasedAt += 200;
+                            firstNote = false;
+                        }
+                        int pressed = playing[key.Note];
+                        if (pressed >= PerfectTimeToPress)
+                        {
+                            if (pressed < PerfectTimeToPress) pressed = (int)PerfectTimeToPress;
+                            scoreToAdd = (int)(MaxScore - ((double)(PerfectTimeToPress - pressed)) - (double)(PerfectTimeToRelease - ReleasedAt));
+                            Score += scoreToAdd;
                         }
                     }
-                    else
-                    {
-                        var rating = Rating.Miss;
-                        practiceNotes.DisplayNoteFeedBack(key, rating);
-                        pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
-                    }
+
                 }
+
                 if (playing.ContainsKey(key.Note)) playing.Remove(key.Note);
+                //Give visual
+                switch (scoreToAdd / MaxScore * 100)
+                {
+                    case < 10:
+                        practiceNotes.DisplayNoteFeedBack(key, Rating.Miss);
+                        //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
+                        break;
+                    case < 25:
+                        practiceNotes.DisplayNoteFeedBack(key, Rating.Ok);
+                        //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Orange));
+                        break;
+                    case < 50:
+                        practiceNotes.DisplayNoteFeedBack(key, Rating.Good);
+                        //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Yellow));
+                        break;
+                    case < 75:
+                        practiceNotes.DisplayNoteFeedBack(key, Rating.Great);
+                        //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.LightGreen));
+                        break;
+                    case < 100:
+                        practiceNotes.DisplayNoteFeedBack(key, Rating.Perfect);
+                        //pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Green));
+                        break;
+                    default:
+                        pianoGrid.DisplayPianoKey(key);
+                        break;
+                }
                 pianoGrid.DisplayPianoKey(key);
             }
         }

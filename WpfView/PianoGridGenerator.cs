@@ -61,6 +61,7 @@ namespace WpfView
             } else
             {
                 currentButton.Background = colour;
+
             }
         }
 
