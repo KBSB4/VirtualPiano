@@ -263,31 +263,25 @@ namespace WpfView
                         {
                             //played, add score
                             if (!playing.ContainsKey(upcomingKey.Note))
-                            {
-                                Score += 50;
-                
-                                playedNotes.Add(upcomingKey);
-                                var rating = Rating.Perfect;
-                                pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Green));
-                                practiceNotes.DisplayNoteFeedBack(key, rating);
-                            }
-                        }
+							{
+								Score += 50;
+
+								playedNotes.Add(upcomingKey);
+								DisplayKeyAndFeedback(key, Rating.Perfect);
+							}
+						}
                         else if (PressedAt > upcomingKey.TimeStamp.TotalMilliseconds && !playedNotes.Contains(upcomingKey))
                         {
                             //Too late, no points
                             if (!playing.ContainsKey(upcomingKey.Note))
                             {
-                                var rating = Rating.Ok;
-                                practiceNotes.DisplayNoteFeedBack(key, rating);
-                                pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Yellow));
+                                DisplayKeyAndFeedback(key, Rating.Ok);
                                 Debug.WriteLine("Added NO points with " + key.Note);
                             }
                         }
                         else if(!playedNotes.Contains(upcomingKey))
                         {
-                            var rating = Rating.Miss;
-                            pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Red));
-                            practiceNotes.DisplayNoteFeedBack(key, rating);
+                            DisplayKeyAndFeedback(key, Rating.Miss);
                         }
                         playing.Add(key.Note, PressedAt);
                     }
@@ -298,13 +292,19 @@ namespace WpfView
                 PianoLogic.SwapOctave(PianoController.Piano);
         }
 
-        /// <summary>
-        /// If pressed down keyboard key gets released, stop the audio playing for the pianokey and unpress it.
-        /// Updates the view
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="e"></param>
-        public void KeyReleased(object source, KeyEventArgs e)
+		private void DisplayKeyAndFeedback(PianoKey? key, Rating rating)
+		{
+			pianoGrid.DisplayPianoKey(key, new System.Windows.Media.SolidColorBrush(Colors.Green));
+			practiceNotes.DisplayNoteFeedBack(key, rating);
+		}
+
+		/// <summary>
+		/// If pressed down keyboard key gets released, stop the audio playing for the pianokey and unpress it.
+		/// Updates the view
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="e"></param>
+		public void KeyReleased(object source, KeyEventArgs e)
         {
             int ReleasedAt;
             int intValue = (int)e.Key;
