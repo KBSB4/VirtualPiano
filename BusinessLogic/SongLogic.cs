@@ -7,7 +7,7 @@ namespace BusinessLogic
     public static class SongLogic
     {
         private const int SONG_OFFSET = 2000;
-        private const int STARTTUNENOTES = 8;
+        private const int STARTTUNENOTES = 7;
         public static Playback PlaybackDevice;
         public static OutputDevice OutputDevice;
 

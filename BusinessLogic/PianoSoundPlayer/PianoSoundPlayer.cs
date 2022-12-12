@@ -1,6 +1,7 @@
 ﻿using Melanchall.DryWetMidi.MusicTheory;
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
+using System.Diagnostics;
 
 namespace BusinessLogic.SoundPlayer
 {
@@ -91,12 +92,16 @@ namespace BusinessLogic.SoundPlayer
                 AudioBytes = (int)stream.Length,
                 Flags = BufferFlags.EndOfStream
             };
+            //if (buffer is not null)
+            //{
 
-            SourceVoice sourceVoice = new SourceVoice(device, waveFormat, true);
+            SourceVoice sourceVoice = new(device, waveFormat, true);
 
             sourceVoice.SetFrequencyRatio(frequency);
-            sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
+            sourceVoice.BufferEnd += (context) => Debug.WriteLine(" => event received: end of buffer");
             sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
+
+            //}
 
             return sourceVoice;
         }
@@ -124,12 +129,13 @@ namespace BusinessLogic.SoundPlayer
                 Flags = BufferFlags.EndOfStream
             };
 
-            SourceVoice sourceVoice = new SourceVoice(device, waveFormat, true);
+            SourceVoice sourceVoice = new(device, waveFormat, true);
 
-            sourceVoice.BufferEnd += (context) => Console.WriteLine(" => event received: end of buffer");
+            sourceVoice.BufferEnd += (context) => Debug.WriteLine(" => event received: end of buffer");
             sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
 
             stream.Close();
+            stream.Dispose();
 
             return sourceVoice;
         }
@@ -148,10 +154,6 @@ namespace BusinessLogic.SoundPlayer
         /// <returns></returns>
         public FadingAudio? GetFadingAudio(NoteName noteName, int octave)
         {
-            float frequency = GetOctaveFrequencyRatio(octave);
-            string pianoNoteString = noteName.ToString();
-            string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
-            //return new FadingAudio(GetSourceVoice(pathToFile, frequency));
             SourceVoice? sourceVoice = GetSourceVoice(noteName, octave);
             if (sourceVoice is not null)
             {

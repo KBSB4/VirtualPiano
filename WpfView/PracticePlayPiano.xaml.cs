@@ -25,7 +25,6 @@ namespace WpfView
     public partial class PracticePlayPiano : Page
     {
         private MainMenu _mainMenu;
-        private int iD;
         private PianoGridGenerator pianoGrid;
         private static IInputDevice? _inputDevice;
         readonly PracticeNotesGenerator practiceNotes;
@@ -36,11 +35,9 @@ namespace WpfView
         private int MAXNOTESCORE = 1000;
         private int maxTotalScore;
 
-
         public PracticePlayPiano(MainMenu mainMenu, int iD)
         {
             this._mainMenu = mainMenu;
-            this.iD = iD;
             InitializeComponent();
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
@@ -48,6 +45,8 @@ namespace WpfView
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
             SongLogic.startCountDown += StartCountDown;
+
+            PlaySelectedSong(iD);
 
             //Start thread for updating practice notes
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
@@ -62,16 +61,18 @@ namespace WpfView
         {
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
             //TODO For demo do this based on easy and hero- rush e
+
+
+            //string path = "../../../../WpfView/sm64.mid";
+            //string path = "../../../../WpfView/RUshE.mid";
+            //string path = "../../../../WpfView/silent_night_easy.mid";
             string path = "../../../../WpfView/test2.mid";
 
 
 
             //Prepare song
             MidiController.OpenMidi(path);
-            SongController.LoadSong(new MetricTimeSpan(500));
-
-
-
+            SongController.LoadSong();
 
             //Play
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
@@ -82,9 +83,13 @@ namespace WpfView
         {
             Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
             countDownThread.Start();
-            notesToBePressed = SongController.CurrentSong.PianoKeys.Take(new Range(8, SongController.CurrentSong.PianoKeys.Count)).ToList();
+
+            notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
+            notesToBePressed.RemoveRange(0, 8);
+
+            //notesToBePressed = SongController.CurrentSong.PianoKeys.Take(new Range(7, SongController.CurrentSong.PianoKeys.Count)).ToList();
             maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
-           
+
         }
 
         private void CountDown(object? obj)
@@ -129,11 +134,6 @@ namespace WpfView
                     Dispatcher.Invoke(new Action(() =>
                     {
                         practiceNotes.UpdateExampleNotes();
-                     
-                         ScoreBar.Value = Math.Round((double)score / maxTotalScore * 100);
-                         ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
-
-
                     }));
                 }
                 catch (TaskCanceledException) //Just in case
@@ -225,76 +225,96 @@ namespace WpfView
 
         private void ApplyReleasedScore(PianoKey key)
         {
-            if (currentlyPlaying.Contains(key))
+            if (SongLogic.PlaybackDevice.IsRunning || currentlyPlaying.Count > 0)
             {
-                int noteScore;
-                Rating rating;
-
-                MetricTimeSpan releasedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
-
-                PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(releasedAt.TotalSeconds - (item.TimeStamp + item.Duration).TotalSeconds)).FirstOrDefault();
-                if (closestNote is not null)
+                if (currentlyPlaying.Contains(key))
                 {
-                    Debug.WriteLine($"Original note: {key} released at: {releasedAt} [][][] Closest note: {closestNote}");
-                    int timeDifference = TimeSpan.Compare(releasedAt, (closestNote.TimeStamp + closestNote.Duration));
-                    int difference = timeDifference switch
+                    int noteScore;
+                    Rating rating;
+
+                    MetricTimeSpan releasedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
+
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(releasedAt.TotalSeconds - (item.TimeStamp + item.Duration).TotalSeconds)).FirstOrDefault();
+                    if (closestNote is not null)
                     {
-                        -1 => (int)((closestNote.TimeStamp + closestNote.Duration) - releasedAt).TotalMilliseconds,
-                        0 => 0,
-                        1 => (int)(releasedAt - (closestNote.TimeStamp + closestNote.Duration)).TotalMilliseconds,
-                    };
+                        Debug.WriteLine($"Original note: {key} released at: {releasedAt} [][][] Closest note: {closestNote}");
+                        int timeDifference = TimeSpan.Compare(releasedAt, (closestNote.TimeStamp + closestNote.Duration));
+                        int difference = timeDifference switch
+                        {
+                            -1 => (int)((closestNote.TimeStamp + closestNote.Duration) - releasedAt).TotalMilliseconds,
+                            0 => 0,
+                            1 => (int)(releasedAt - (closestNote.TimeStamp + closestNote.Duration)).TotalMilliseconds,
+                        };
 
-                    noteScore = Math.Max(MAXNOTESCORE - difference, 0);
-                    rating = GetRating(noteScore);
-                }
-                else
-                {
-                    noteScore = 0;
-                    rating = GetRating(0);
-                }
-                //practiceNotes.DisplayNoteFeedBack(key, rating);
-                currentlyPlaying.Remove(key);
-                score += noteScore;
+                        noteScore = Math.Max(MAXNOTESCORE - difference, 0);
+                        rating = GetRating(noteScore);
+                    }
+                    else
+                    {
+                        noteScore = 0;
+                        rating = GetRating(0);
+                    }
+                    //practiceNotes.DisplayNoteFeedBack(key, rating);
 
-                Debug.WriteLine($"Score += {noteScore}");
+                    currentlyPlaying.Remove(key);
+                    score += noteScore;
+
+                    Debug.WriteLine($"Score += {noteScore}");
+                }
             }
+            UpdateScoreVisual();
+        }
+
+        private void UpdateScoreVisual()
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                ScoreBar.Value = Math.Round((double)score / maxTotalScore * 100);
+                ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
+            }));
         }
 
         private void ApplyPressedScore(PianoKey key)
         {
-            if (!currentlyPlaying.Contains(key))
+            if (SongLogic.PlaybackDevice.IsRunning)
             {
-                int noteScore;
-                Rating rating;
-
-                MetricTimeSpan pressedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
-
-                PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds)).FirstOrDefault();
-                if (closestNote is not null)
+                if (!currentlyPlaying.Contains(key))
                 {
-                    currentlyPlaying.Add(key);
-                    int timeDifference = TimeSpan.Compare(pressedAt, closestNote.TimeStamp);
+                    int noteScore;
+                    Rating rating;
 
-                    int difference = timeDifference switch
+                    MetricTimeSpan pressedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
+
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds)).FirstOrDefault();
+                    if (closestNote is not null)
                     {
-                        -1 => (int)(closestNote.TimeStamp - pressedAt).TotalMilliseconds,
-                        0 => 0,
-                        1 => (int)(pressedAt - closestNote.TimeStamp).TotalMilliseconds,
-                    };
+                        currentlyPlaying.Add(key);
+                        int timeDifference = TimeSpan.Compare(pressedAt, closestNote.TimeStamp);
 
-                    noteScore = Math.Max(MAXNOTESCORE - difference, 0);
-                    rating = GetRating(noteScore);
-                }
-                else
-                {
-                    noteScore = 0;
-                    rating = GetRating(0);
-                }
-                practiceNotes.DisplayNoteFeedBack(key, rating);
-                score += noteScore;
+                        int difference = timeDifference switch
+                        {
+                            -1 => (int)(closestNote.TimeStamp - pressedAt).TotalMilliseconds,
+                            0 => 0,
+                            1 => (int)(pressedAt - closestNote.TimeStamp).TotalMilliseconds,
+                        };
 
-                Debug.WriteLine($"Score += {noteScore}");
+                        noteScore = Math.Max(MAXNOTESCORE - difference, 0);
+                        rating = GetRating(noteScore);
+                    }
+                    else
+                    {
+                        noteScore = 0;
+                        rating = GetRating(0);
+                    }
+
+
+                    practiceNotes.DisplayNoteFeedBack(key, rating);
+                    score += noteScore;
+
+                    Debug.WriteLine($"Score += {noteScore}");
+                }
             }
+            UpdateScoreVisual();
         }
 
 
@@ -491,6 +511,6 @@ namespace WpfView
             }
         }
         #endregion
-    
-}
+
+    }
 }
