@@ -2,7 +2,7 @@
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
 
-namespace VirtualPiano.PianoSoundPlayer
+namespace BusinessLogic.SoundPlayer
 {
     public class PianoSoundPlayer
     {
@@ -178,6 +178,12 @@ namespace VirtualPiano.PianoSoundPlayer
                 5 => 1,
                 _ => 0,
             };
+        }
+
+        public void Dispose()
+        {
+            masteringVoice.Dispose();
+            device.Dispose();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace WpfView
         {
             for (int i = 0; i < 10; i++)
             {
-                SongCardControl songCardControl = new(i, "Song " + i.ToString(), i % 4, this);
+                SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4);
 
                 SongCards.Children.Add(songCardControl);
             }

@@ -11,10 +11,10 @@ namespace Controller
 
         public static void LoadSong()
         {
-            MidiFile? file = MIDIController.OriginalMIDI;
+            MidiFile? file = MidiController.GetMidiFile();
             if (file is not null)
             {
-                CurrentSong = MIDIController.Convert(file);
+                CurrentSong = MidiController.Convert(file);
                 CurrentSong.SongTimerThread = new Thread(() => SongLogic.PlaySong(CurrentSong));
             }
         }
@@ -51,7 +51,6 @@ namespace Controller
                 CurrentSong.PianoKeys = new();
 
                 SongLogic.PlaybackDevice.Dispose();
-                SongLogic.OutputDevice.Dispose();
             }
         }
     }
