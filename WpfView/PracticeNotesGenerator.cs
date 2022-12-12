@@ -127,7 +127,7 @@ namespace WpfView
                 if (grid is not null)
                 {
                     grid.Children.Remove(item);
-                    NoteDeleted.Invoke(this, new PianoKeyEventArgs(keyValuePairs[item]));
+                    NoteDeleted?.Invoke(this, new PianoKeyEventArgs(keyValuePairs[item]));
                     upcoming.Remove(keyValuePairs[item]);
                     keyValuePairs.Remove(item);
                 }

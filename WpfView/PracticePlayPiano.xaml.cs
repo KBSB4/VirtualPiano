@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 
@@ -44,6 +45,7 @@ namespace WpfView
 
             this.KeyDown += KeyPressed;
             this.KeyUp += KeyReleased;
+            SongLogic.startCountDown += StartCountDown;
 
             PlaySelectedSong(songID);
 
@@ -56,11 +58,42 @@ namespace WpfView
             stopWatch.Start();
         }
 
+        private void StartCountDown(object? sender, EventArgs e)
+        {
+            Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
+            countDownThread.Start();
+        }
+
+        private void CountDown(object? obj)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Visibility = System.Windows.Visibility.Visible;
+                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownReady.png", UriKind.Relative));
+                Debug.WriteLine("Image updated");
+            }));
+            Thread.Sleep(2500);
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownSet.png", UriKind.Relative));
+            }));
+            Thread.Sleep(2500);
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownGo.png", UriKind.Relative));
+            }));
+            Thread.Sleep(2500);
+            Dispatcher.Invoke(new Action(() =>
+            {
+                CountDownImage.Visibility = System.Windows.Visibility.Hidden;
+            }));
+        }
+
         private void PlaySelectedSong(int songID)
         {
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
             //TODO For demo do this based on easy and hero- rush e
-            string path = "../../../../WpfView/test.mid";
+            string path = "../../../../WpfView/BEET.mid";
 
             //Prepare song
             MidiController.OpenMidi(path);

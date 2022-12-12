@@ -25,6 +25,10 @@
             </Grid.RowDefinitions>
         </Grid>
 
+        <Grid>
+            <Image Name="CountDownImage"></Image>
+        </Grid>
+        
         <Menu Grid.Row="0" DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="#FF292929">
             <Label x:Name="ScoreLabel" Content="Score = 0" Foreground="White"/>
             <ProgressBar x:Name="ScoreBar" HorizontalAlignment="Right" Height="20" Width="700" Foreground="#FFF46524"/>
