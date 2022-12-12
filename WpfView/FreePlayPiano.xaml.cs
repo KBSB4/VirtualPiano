@@ -23,7 +23,7 @@ namespace WpfView
     public partial class FreePlayPiano : Page
     {
         private PianoGridGenerator pianoGrid;
-        private static IInputDevice? _inputDevice;
+        public IInputDevice? InputDevice;
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
 
@@ -218,21 +218,24 @@ namespace WpfView
 
         #endregion
 
-
         /// <summary>
         /// Connects MIDI-keyboard
         /// </summary>
         public void CheckInputDevice(int x)
         {
-            _inputDevice?.Dispose();
+            InputDevice?.Dispose();
 
-            if (_mainMenu.SettingsPage.NoneSelected.IsSelected)
+            if (x > 0)
             {
-                SelectItem(1);
-            }
-            else
-            {
-                SelectItem(x);
+                if (_mainMenu.SettingsPage.NoneSelected.IsSelected)
+                {
+                    SelectItem(1);
+                }
+                else
+                {
+                    SelectItem(x);
+                }
+
             }
         }
         /// <summary>
@@ -245,9 +248,9 @@ namespace WpfView
             try
             {
                 Debug.Write("send!");
-                _inputDevice = InputDevice.GetByIndex(item - 1);
-                _inputDevice.EventReceived += OnMidiEventReceived;
-                _inputDevice.StartEventsListening();
+                InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByIndex(item - 1);
+                InputDevice.EventReceived += OnMidiEventReceived;
+                InputDevice.StartEventsListening();
                 ComboBoxItem v = (ComboBoxItem)_mainMenu.SettingsPage.input.Items.GetItemAt(item);
                 v.IsSelected = true;
             }
@@ -258,7 +261,7 @@ namespace WpfView
                 Debug.IndentLevel = 1;
                 Debug.WriteLine(ex.Message);
                 Debug.IndentLevel = 0;
-                _inputDevice = null;
+                InputDevice = null;
             }
         }
 

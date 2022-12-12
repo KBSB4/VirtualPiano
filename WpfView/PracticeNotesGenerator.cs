@@ -80,7 +80,6 @@ namespace WpfView
             currentColumn = practiceNoteColumns[note];
 
             RatingTextControl ratingText = new(rating);
-
             currentColumn.Children.Add(ratingText);
         }
 

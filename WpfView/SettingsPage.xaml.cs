@@ -13,7 +13,7 @@ namespace WpfView
     {
         private MainMenu _mainMenu;
         private int count = InputDevice.GetDevicesCount();
-        public int IndexInputDevice { get; set; }
+        public static int IndexInputDevice { get; set; }
 
 
         public SettingsPage(MainMenu mainMenu)
@@ -55,7 +55,7 @@ namespace WpfView
                         input.Items.RemoveAt(i);
                     }
                 }
-                NoneSelected.IsSelected = true; 
+                NoneSelected.IsSelected = true;
                 count = InputDevice.GetDevicesCount();
             }
         }
@@ -73,7 +73,7 @@ namespace WpfView
             }
             catch (Exception ex)
             {
-                if(ex is IndexOutOfRangeException)
+                if (ex is IndexOutOfRangeException)
                 {
                     MessageBox.Show($"Selected item in combobox {input.Name} was out of range");
                 }

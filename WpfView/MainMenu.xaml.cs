@@ -11,7 +11,7 @@ namespace WpfView
         public FreePlayPiano FreePlay { get; set; }
         public SettingsPage SettingsPage { get; set; }
         public SongSelectPage SongSelectPage { get; set; }
-       
+
         public MainMenu()
         {
             InitializeComponent();

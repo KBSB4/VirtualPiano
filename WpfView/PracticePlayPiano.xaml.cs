@@ -35,10 +35,12 @@ namespace WpfView
         private int MAXNOTESCORE = 1000;
         private int maxTotalScore;
 
-        public PracticePlayPiano(MainMenu mainMenu, int iD)
+        public PracticePlayPiano(MainMenu mainMenu, int ID)
         {
-            this._mainMenu = mainMenu;
+            _mainMenu = mainMenu;
             InitializeComponent();
+            //_inputDevice = _mainMenu.FreePlay.InputDevice;
+            CheckInputDevice(SettingsPage.IndexInputDevice);
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
@@ -46,7 +48,7 @@ namespace WpfView
             KeyUp += KeyReleased;
             SongLogic.startCountDown += StartCountDown;
 
-            PlaySelectedSong(iD);
+            PlaySelectedSong(ID);
 
             //Start thread for updating practice notes
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
@@ -215,9 +217,11 @@ namespace WpfView
                     PianoController.StopPianoSound(key);
                     ApplyReleasedScore(key);
                 }
+
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
                     pianoGrid.DisplayPianoKey(key);
+                    Debug.WriteLine("PianoKey visually updated--------------------");
                 }));
                 Debug.WriteLine($"Totalscore: {score} / {maxTotalScore}");
             }
@@ -307,8 +311,10 @@ namespace WpfView
                         rating = GetRating(0);
                     }
 
-
-                    practiceNotes.DisplayNoteFeedBack(key, rating);
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        practiceNotes.DisplayNoteFeedBack(key, rating);
+                    }));
                     score += noteScore;
 
                     Debug.WriteLine($"Score += {noteScore}");
