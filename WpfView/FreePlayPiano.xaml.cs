@@ -1,21 +1,4 @@
-﻿using BusinessLogic;
-using Controller;
-using Melanchall.DryWetMidi.Core;
-using Melanchall.DryWetMidi.Interaction;
-using Melanchall.DryWetMidi.Multimedia;
-using Microsoft.Win32;
-using Model;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
+﻿using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
 namespace WpfView
 {
@@ -62,7 +45,7 @@ namespace WpfView
 
         private void CountDown(object? obj)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Visible;
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownReady.png", UriKind.Relative));
@@ -296,13 +279,13 @@ namespace WpfView
         {
             _inputDevice?.Dispose();
 
-            if (!_mainMenu.SettingsPage.NoneSelected.IsSelected)
+            if (_mainMenu.SettingsPage.NoneSelected.IsSelected)
             {
-                SelectItem(x);
+                SelectItem(1);
             }
             else
             {
-                SelectItem(1);
+                SelectItem(x);
             }
         }
         /// <summary>

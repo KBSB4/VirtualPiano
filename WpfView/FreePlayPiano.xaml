@@ -13,7 +13,6 @@
             <RowDefinition Height="70*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
-        <!-- <Image x:Name="MainImage" Margin="0,0,0,0"/> -->
 
         <Grid>
             <Image Name="CountDownImage"></Image>
