@@ -1,5 +1,8 @@
 ﻿namespace Model
 {
+    /// <summary>
+    /// Keyboard binds
+    /// </summary>
     public enum KeyBind
     {
         D1 = 35,

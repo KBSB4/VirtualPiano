@@ -3,7 +3,6 @@ using Melanchall.DryWetMidi.MusicTheory;
 
 namespace Model
 {
-
     public class PianoKey
     {
         public Octave Octave { get; set; }
@@ -32,8 +31,7 @@ namespace Model
         {
             KeyBind = bind;
         }
-
-        public override string ToString()
+        public override string ToString() //Debug
         {
             return $"{Octave} | {Note} | {TimeStamp} | {Duration}";
         }

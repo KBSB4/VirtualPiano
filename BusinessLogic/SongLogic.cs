@@ -18,10 +18,14 @@ namespace BusinessLogic
         /// Plays <paramref name="song"/> in a new thread
         /// </summary>
         /// <param name="song"></param>
-        public static void Play(Song song)
+        public static void Play(Song? song)
         {
-            song.NotePlayed += Song_NotePlayed;
-            new Thread(new ParameterizedThreadStart(PlayFile)).Start(song);
+            if (song is not null && !song.IsPlaying)
+            {
+                song.NotePlayed += Song_NotePlayed;
+                new Thread(new ParameterizedThreadStart(PlayFile)).Start(song);
+                song.IsPlaying = true;
+            }
         }
 
         /// <summary>
@@ -113,6 +117,23 @@ namespace BusinessLogic
                         Thread.Sleep(nextKey.TimeStamp - timeSpan);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Stops current playing song
+        /// </summary>
+        /// <param name="song"></param>
+        public static void StopSong(Song? song)
+        {
+            if (song is not null && song.IsPlaying)
+            {
+                //Stops the keys from appearing
+                song.PianoKeys = new();
+
+                PlaybackDevice.PlaybackEnd = new MetricTimeSpan(0);
+                PlaybackDevice.Dispose();
+                OutputDevice.Dispose();
             }
         }
     }

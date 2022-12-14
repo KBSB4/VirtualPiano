@@ -6,15 +6,16 @@ namespace Controller
 {
 	public static class PianoController
 	{
-		public static Piano Piano { 
-			get 
+		public static Piano Piano
+		{
+			get
 			{
 				return PianoLogic.Piano;
-			} 
-			set 
-			{ 
+			}
+			set
+			{
 				PianoLogic.Piano = value;
-			} 
+			}
 		}
 
 		/// <summary>
@@ -29,7 +30,7 @@ namespace Controller
 		/// <summary>
 		/// Figures out which key is pressed and set it to true + play audio
 		/// </summary>
-		/// <param name="intValue"></param>
+		/// <param name="value"></param>
 		/// <returns>Piano key pressed</returns>
 		public static PianoKey? GetPressedPianoKey(int value)
 		{
@@ -65,6 +66,10 @@ namespace Controller
 			return PianoLogic.GetReleasedKey(intValue);
 		}
 
+		/// <summary>
+		/// Stops the pianosound of <paramref name="key"/> 
+		/// </summary>
+		/// <param name="key"></param>
 		public static void StopPianoSound(PianoKey key)
 		{
 			PianoLogic.StopPianoSound(key);

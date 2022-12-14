@@ -9,25 +9,19 @@ namespace Model
         public string Name { get; set; }
         public Difficulty Difficulty { get; set; }
         public MetricTimeSpan Duration { get; set; }
-        public Queue<PianoKey> PianoKeys { get; set; } //all keys
-        public MetricTimeSpan TimeInSong { get; set; }
-        public MetricTimeSpan Offset { get; set; }
-        public Thread SongTimerThread { get; set; }
-        public Boolean IsPlaying { get; set; }
-        public TempoMap TempoMap { get; set; }
+        public Queue<PianoKey> PianoKeys { get; set; }
+        public Thread? SongTimerThread { get; set; }
+        public bool IsPlaying { get; set; }
 
-        public event EventHandler<PianoKeyEventArgs> NotePlayed;
+        public event EventHandler<PianoKeyEventArgs>? NotePlayed;
 
-        public Song(MidiFile file, string name, Difficulty difficulty, MetricTimeSpan duration, Queue<PianoKey> pianoKeys, TempoMap tempoMap)
+        public Song(MidiFile file, string name, Difficulty difficulty, MetricTimeSpan duration, Queue<PianoKey> pianoKeys)
         {
             File = file;
             Name = name;
             Difficulty = difficulty;
             Duration = duration;
             PianoKeys = pianoKeys;
-            TimeInSong = new MetricTimeSpan(0);
-            Offset = new TimeSpan(0);
-            TempoMap = tempoMap;
         }
 
         public void InvokeNotePlayed(Song song, PianoKeyEventArgs pianoKeyEventArgs)

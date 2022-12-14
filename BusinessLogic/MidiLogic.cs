@@ -39,7 +39,7 @@ namespace BusinessLogic
 			}
 
 			MetricTimeSpan duration = newFile.GetDuration<MetricTimeSpan>();
-			return new Song(newFile, "temp", Difficulty.Easy, duration, pianoKeyList, tempoMap);
+			return new Song(newFile, "temp", Difficulty.Easy, duration, pianoKeyList);
 		}
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace BusinessLogic
 		/// </summary>
 		/// <param name="midiFile"></param>
 		/// <returns></returns>
-		public static MidiFile AddStartTune(MidiFile midiFile)
+		private static MidiFile AddStartTune(MidiFile midiFile)
 		{
 			MidiFile midiFileOut = new()
 			{

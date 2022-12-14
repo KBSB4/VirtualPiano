@@ -1,5 +1,8 @@
 ﻿namespace Model
 {
+    /// <summary>
+    /// Score rating
+    /// </summary>
     public enum Rating
     {
         Miss,

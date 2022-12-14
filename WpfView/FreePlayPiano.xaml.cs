@@ -256,7 +256,7 @@ namespace WpfView
             {
                 //Get the path of specified file
                 MidiController.OpenMidi(openFileDialog.FileName);
-                SongController.LoadSong(new MetricTimeSpan(500));
+                SongController.LoadSong();
             }
         }
 
