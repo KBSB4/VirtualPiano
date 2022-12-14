@@ -1,85 +1,78 @@
 ﻿using BusinessLogic;
+using Melanchall.DryWetMidi.Core;
 using Model;
-using VirtualPiano.PianoSoundPlayer;
 
 namespace Controller
 {
-    public class PianoController
-    {
-        public static Piano Piano { get; set; }
-        public static PianoSoundPlayer SoundPlayer { get; set; }
+	public static class PianoController
+	{
+		public static Piano? Piano
+		{
+			get
+			{
+				return PianoLogic.Piano;
+			}
+			set
+			{
+				PianoLogic.Piano = value;
+			}
+		}
 
-        //Used to play multiple keys at once, also tracks the playing keys
-        public static Dictionary<PianoKey, FadingAudio> currentPlayingAudio = new();
+		/// <summary>
+		/// Creates the piano and soundplayer for the program
+		/// </summary>
+		/// <returns></returns>
+		public static void CreatePiano()
+		{
+			PianoLogic.CreatePiano();
+		}
 
-        /// <summary>
-        /// Creates the piano and soundplayer for the program
-        /// </summary>
-        /// <returns>Piano object</returns>
-        public static void CreatePiano()
-        {
-            Piano = new Piano();
-            SoundPlayer = new("../../../../Controller/PianoSoundPlayer/Sounds/Piano/", "", ".wav");
-            PianoLogic.AssembleKeyBindings(Piano);
-        }
+		/// <summary>
+		/// Figures out which key is pressed and set it to true + play audio
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns>Piano key pressed</returns>
+		public static PianoKey? GetPressedPianoKey(int value)
+		{
+			return PianoLogic.GetPressedPianoKey(value);
+		}
 
-        #region Piano Creation
+		/// <summary>
+		/// Takes an MIDIevent as input and detects whether the key is pressed and what key this is
+		/// </summary>
+		/// <param name="midiEvent"></param>
+		/// <returns>The resulting pianokey</returns>
+		public static PianoKey? ParseMidiNote(MidiEvent midiEvent)
+		{
+			return PianoLogic.ParseMidiNote(midiEvent);
+		}
 
-        //TODO Hier alle functies van Piano in model?
+		/// <summary>
+		/// Plays a sound using <paramref name="key"/> to define which <see cref="PianoKey"/> to play
+		/// </summary>
+		/// <param name="key"></param>
+		public static void PlayPianoSound(PianoKey key)
+		{
+			PianoLogic.PlayPianoSound(key);
+		}
 
-        #endregion
+		/// <summary>
+		/// Figures out which key is pressed and set it to false + stop audio
+		/// </summary>
+		/// <param name="intValue"></param>
+		/// <returns>Pianokey released</returns>
+		public static PianoKey? GetReleasedKey(int intValue)
+		{
+			return PianoLogic.GetReleasedKey(intValue);
+		}
 
-        /// <summary>
-        /// Figures out which key is pressed and set it to true + play audio
-        /// </summary>
-        /// <param name="intValue"></param>
-        /// <returns>Piano key pressed</returns>
-        public static PianoKey? GetPressedPianoKey(int intValue)
-        {
-            foreach (var key in Piano.PianoKeys)
-            {
-                if ((int)key.MicrosoftBind == intValue)
-                {
-                    key.PressedDown = true;
-                    //Play 
-                    if (!currentPlayingAudio.ContainsKey(key))
-                    {
-                        FadingAudio fadingAudio = SoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
-
-                        if (fadingAudio != null)
-                        {
-                            fadingAudio.StartPlaying();
-							currentPlayingAudio.Add(key, fadingAudio);
-                        }
-					}
-					return key;
-				}
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Figures out which key is pressed and set it to false + stop audio
-        /// </summary>
-        /// <param name="intValue"></param>
-        /// <returns>Pianokey released</returns>
-        public static PianoKey? GetReleasedKey(int intValue)
-        {
-            foreach (var key in Piano.PianoKeys)
-            {
-                if ((int)key.MicrosoftBind == intValue)
-                {
-                    key.PressedDown = false;
-                    //Stop playing
-                    if (currentPlayingAudio.ContainsKey(key))
-                    {
-						currentPlayingAudio[key].StopPlaying(50);
-						currentPlayingAudio.Remove(key);
-                    }
-                    return key;
-                }
-            }
-            return null;
-        }
-    }
+		/// <summary>
+		/// Stops the pianosound of <paramref name="key"/> 
+		/// </summary>
+		/// <param name="key"></param>
+		public static void StopPianoSound(PianoKey key)
+		{
+			PianoLogic.StopPianoSound(key);
+		}
+	}
 }
