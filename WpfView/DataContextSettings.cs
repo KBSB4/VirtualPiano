@@ -1,29 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.ComponentModel;
 
 namespace WpfView
 {
-
+    /// <summary>
+    /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.inotifypropertychanged?view=net-7.0"/>
+    /// </summary>
     internal class DataContextSettings : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-        
-       
-        
         private int _indexInputDevice;
 
         public int IndexinputDevice
         {
             get { return _indexInputDevice; }
-            set { _indexInputDevice = value; OnPropertyChanged(); } 
+            set { _indexInputDevice = value; OnPropertyChanged(); }
         }
-
-      
 
         public void OnPropertyChanged()
         {

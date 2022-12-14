@@ -24,7 +24,7 @@
             </Grid.RowDefinitions>
 
 
-            <Button Grid.Column="1" Grid.Row="1" Style="{StaticResource MenuButton}" Click="Admin_Button_Click">
+            <Button Grid.Column="1" Grid.Row="1" Style="{StaticResource MenuButton}" Click="Settings_Button_Click">
                 <Grid>
                     <Ellipse Fill="White"></Ellipse>
                     <Image Source="/Images/SettingsIcon.png" Margin="30"></Image>

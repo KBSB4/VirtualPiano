@@ -11,15 +11,43 @@ namespace WpfView
     /// </summary>
     public partial class RatingTextControl : UserControl
     {
-        public RatingTextControl(Rating rating)
+        //Control properties
+        public static readonly DependencyProperty RotationProperty =
+        DependencyProperty.Register("Rotation", typeof(int), typeof(RatingTextControl), new PropertyMetadata(0));
+
+        public static readonly DependencyProperty RatingTextProperty =
+            DependencyProperty.Register("RatingText", typeof(string), typeof(RatingTextControl), new PropertyMetadata("no name"));
+
+        public string RatingText
+        {
+            get { return (string)GetValue(RatingTextProperty); }
+            set { SetValue(RatingTextProperty, value); }
+        }
+
+        public int Rotation
+        {
+            get { return (int)GetValue(RotationProperty); }
+            set { SetValue(RotationProperty, value); }
+        }
+
+        /// <summary>
+        /// Creates the rating text to display
+        /// </summary>
+        /// <param name="rating"></param>
+        /// <param name="rotation"></param>
+        public RatingTextControl(Rating rating, int rotation)
         {
             RatingText = rating.ToString();
-            Rotation = new Random().Next(-15, 15);
+            Rotation = rotation;
             InitializeComponent();
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateRatingText));
             updateVisualNoteThread.Start();
         }
 
+        /// <summary>
+        /// Updates text
+        /// </summary>
+        /// <param name="obj"></param>
         private void UpdateRatingText(object? obj)
         {
             Thread.Sleep(1000);
@@ -28,21 +56,5 @@ namespace WpfView
                 ((Grid)Parent).Children.Remove(this);
             }));
         }
-
-        public string RatingText
-        {
-            get { return (string)GetValue(RatingTextProperty); }
-            set { SetValue(RatingTextProperty, value); }
-        }
-        public static readonly DependencyProperty RatingTextProperty =
-            DependencyProperty.Register("RatingText", typeof(string), typeof(RatingTextControl), new PropertyMetadata("no name"));
-
-        public int Rotation
-        {
-            get { return (int)GetValue(RotationProperty); }
-            set { SetValue(RotationProperty, value); }
-        }
-        public static readonly DependencyProperty RotationProperty =
-            DependencyProperty.Register("Rotation", typeof(int), typeof(RatingTextControl), new PropertyMetadata(0));
     }
 }

@@ -1,18 +1,15 @@
 ﻿using BusinessLogic;
 using Controller;
 using Melanchall.DryWetMidi.Core;
-using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using Microsoft.Win32;
 using Model;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 namespace WpfView
 {
@@ -21,10 +18,9 @@ namespace WpfView
     /// </summary>
     public partial class FreePlayPiano : Page
     {
-        private PianoGridGenerator pianoGrid;
-        //public IInputDevice? InputDevice;
-        readonly PracticeNotesGenerator practiceNotes;
-        private MainMenu _mainMenu;
+        private readonly PianoGridGenerator pianoGrid;
+        private readonly PracticeNotesGenerator practiceNotes;
+        private readonly MainMenu _mainMenu;
 
         public FreePlayPiano(MainMenu _mainMenu)
         {
@@ -35,7 +31,6 @@ namespace WpfView
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
-            //SongLogic.startCountDown += StartCountDown;
 
             //Start thread for updating practice notes
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
@@ -44,38 +39,6 @@ namespace WpfView
             };
             updateVisualNoteThread.Start();
         }
-
-        private void StartCountDown(object? sender, EventArgs e)
-        {
-            Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
-            countDownThread.Start();
-        }
-
-        private void CountDown(object? obj)
-        {
-            Dispatcher.Invoke(new Action(() =>
-            {
-                CountDownImage.Visibility = Visibility.Visible;
-                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownReady.png", UriKind.Relative));
-                Debug.WriteLine("Image updated");
-            }));
-            Thread.Sleep(2500);
-            Dispatcher.Invoke(new Action(() =>
-            {
-                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownSet.png", UriKind.Relative));
-            }));
-            Thread.Sleep(2500);
-            Dispatcher.Invoke(new Action(() =>
-            {
-                CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownGo.png", UriKind.Relative));
-            }));
-            Thread.Sleep(2500);
-            Dispatcher.Invoke(new Action(() =>
-            {
-                CountDownImage.Visibility = Visibility.Hidden;
-            }));
-        }
-
 
         /// <summary>
         /// Thread that updates the visual position of already placed notes
@@ -129,13 +92,13 @@ namespace WpfView
 
         /// <summary>
         /// Event fired on MIDI-input
+        /// DO NOT REMOVE - Used for MIDI-Keyboard
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
         {
             PianoKey? key = PianoController.ParseMidiNote(e.Event);
-
             UpdateKey(key);
         }
 
@@ -152,8 +115,8 @@ namespace WpfView
             PianoKey? key = PianoController.GetPressedPianoKey(intValue);
             UpdateKey(key);
 
-            if (e.Key == Key.CapsLock)
-                PianoLogic.SwapOctave(PianoController.Piano);
+            if (PianoController.Piano is null) return;
+            if (e.Key == Key.CapsLock) PianoLogic.SwapOctave(PianoController.Piano);
         }
 
         /// <summary>
@@ -252,7 +215,8 @@ namespace WpfView
                 RestoreDirectory = true
             };
 
-            if ((bool)openFileDialog.ShowDialog())
+            bool? fileOpened = openFileDialog.ShowDialog();
+            if (fileOpened == true)
             {
                 //Get the path of specified file
                 MidiController.OpenMidi(openFileDialog.FileName);
@@ -268,8 +232,7 @@ namespace WpfView
         private void PlayMIDIFile(object sender, RoutedEventArgs e)
         {
             //Boolean isisolated = IsolatedPiano.IsChecked; Planned for later
-            MidiFile currentMidiFile = MidiController.GetMidiFile();
-
+            MidiFile? currentMidiFile = MidiController.GetMidiFile();
 
             if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
@@ -291,7 +254,6 @@ namespace WpfView
                 }
             }
         }
-
 
         /// <summary>
         /// Stop playing the MIDI file which is selected. then produced with an exception it displays a popup with 'No MIDI playing'

@@ -7,13 +7,11 @@ namespace BusinessLogic.SoundPlayer
 {
     public class PianoSoundPlayer
     {
-        private string pianoFilesFolder;
-        private string pianoSoundPrefix;
-        private string pianoSoundSuffix;
+        private readonly string pianoFilesFolder;
+        private readonly string pianoSoundPrefix;
+        private readonly string pianoSoundSuffix;
 
-        private XAudio2 device;
-        //DO NOT REMOVE, IT WILL CRASH
-        MasteringVoice masteringVoice;
+        private readonly XAudio2 device;
 
         /// <summary>
         /// The <paramref name="soundsFolder"/> is the folder that contains all the piano files.
@@ -40,7 +38,7 @@ namespace BusinessLogic.SoundPlayer
             this.pianoSoundSuffix = pianoSoundSuffix;
             VerifyDirectory();
             device = new XAudio2();
-            masteringVoice = new MasteringVoice(device);
+            _ = new MasteringVoice(device);
         }
 
         /// <summary>
@@ -168,7 +166,7 @@ namespace BusinessLogic.SoundPlayer
         /// <param name="octave"></param>
         /// <returns></returns>
         //TODO KEEP THIS FUNCTION?
-        private float GetOctaveFrequencyRatio(int octave)
+        private static float GetOctaveFrequencyRatio(int octave)
         {
             return octave switch
             {

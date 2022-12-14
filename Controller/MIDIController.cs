@@ -15,7 +15,7 @@ namespace Controller
             bool fileFound = false;
             try
             {
-                MidiLogic.currentMidi = MidiFile.Read(midiPath);
+                MidiLogic.CurrentMidi = MidiFile.Read(midiPath);
                 fileFound = true;
             }
             catch { } //Ignore exception
@@ -29,7 +29,7 @@ namespace Controller
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static Song Convert(MidiFile file)
+        public static Song? Convert(MidiFile file)
         {
             return MidiLogic.ConvertMidiFile(file);
         }
@@ -46,10 +46,10 @@ namespace Controller
 
         /// <summary>
         /// </summary>
-        /// <returns><see cref="MidiLogic.currentMidi"/></returns>
-        public static MidiFile GetMidiFile()
+        /// <returns><see cref="MidiLogic.CurrentMidi"/></returns>
+        public static MidiFile? GetMidiFile()
         {
-            return MidiLogic.currentMidi;
+            return MidiLogic.CurrentMidi;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace WpfView
 {
     public class PianoGridGenerator
     {
-        private List<Button> buttons;
+        private readonly List<Button> buttons;
 
         private Color blackKeyPressedColor = Color.FromRgb(40, 57, 149);
         private Color blackKeyReleasedColor = Color.FromRgb(30, 30, 30);
@@ -34,10 +34,12 @@ namespace WpfView
         }
 
         /// <summary>
-        /// Updates pianokey to current <see cref="PianoKey.PressedDown"> state
+        /// Updates pianokey to current <see cref="PianoKey.PressedDown">
         /// </summary>
         /// <param name="key"></param>
-        public void DisplayPianoKey(PianoKey key, SolidColorBrush? colour)
+        /// <param name="colour"></param>
+        //TODO Colours for all ratings? - Ask PO
+        public void DisplayPianoKey(PianoKey key, Rating? rating)
         {
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
@@ -48,7 +50,7 @@ namespace WpfView
             Button currentButton = buttons[note];
             bool pressed = key.PressedDown;
 
-            if (colour is null)
+            if (rating is null)
             {
                 if (key.Note.ToString().Contains("Sharp"))
                 {
@@ -58,41 +60,27 @@ namespace WpfView
                 {
                     currentButton.Background = new SolidColorBrush(pressed ? whiteKeyPressedColor : whiteKeyReleasedColor);
                 }
-            } else
-            {
-                currentButton.Background = colour;
-
-            }
-        }
-
-        public void DisplayPianoKey(PianoKey pkey)
-        {
-            DisplayPianoKey(pkey, null);
-        }
-
-        /// <summary>
-        /// Updates pianokey to current <see cref="PianoKey.PressedDown"> state
-        /// </summary>
-        /// <param name="key"></param>
-        public void DisplayPianoKey(PianoKey key, Rating rating)
-        {
-            if (key is null) return;
-            int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
-            if (note < 0 || note >= buttons.Count)
-            {
-                return;
-            }
-            Button currentButton = buttons[note];
-            bool pressed = key.PressedDown;
-
-            if (rating == Rating.Miss)
-            {
-                currentButton.Background = new SolidColorBrush(Colors.Red);
             }
             else
             {
-                currentButton.Background = new SolidColorBrush(Colors.Green);
+                if (rating == Rating.Miss)
+                {
+                    currentButton.Background = new SolidColorBrush(Colors.Red);
+                }
+                else
+                {
+                    currentButton.Background = new SolidColorBrush(Colors.Green);
+                }
             }
+        }
+
+        /// <summary>
+        /// Displays pianokey with default colour
+        /// </summary>
+        /// <param name="pkey"></param>
+        public void DisplayPianoKey(PianoKey pkey)
+        {
+            DisplayPianoKey(pkey, null);
         }
 
         /// <summary>
@@ -108,6 +96,7 @@ namespace WpfView
             blackKeyGrid.ColumnDefinitions.Clear();
             whiteKeyGrid.ColumnDefinitions.Clear();
 
+            //Add the keys to the grids
             for (int i = 0; i < columnAmount; i++)
             {
                 whiteKeyGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
@@ -119,6 +108,7 @@ namespace WpfView
                     BorderBrush = new SolidColorBrush(blackKeyReleasedColor),
                     Padding = new Thickness(0, 200, 0, 0),
                 };
+
                 AddKey(whiteKeyGrid, buttons, i, whiteKeyButton);
 
                 blackKeyGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
@@ -132,20 +122,23 @@ namespace WpfView
                         Padding = new Thickness(0, 100, 0, 0),
                         Foreground = new SolidColorBrush(whiteKeyReleasedColor)
                     };
+
                     AddKey(blackKeyGrid, buttons, i, blackKeyButton);
                 }
             }
             SetColumnWidth(whiteKeyGrid);
             SetColumnWidth(blackKeyGrid);
 
-            //todo: IMPROVE CODE
-            for (int i = 0; i < buttons.Count / 2; i++)
+            //Add text to the keys
+            if (PianoController.Piano is not null)
             {
-                if (i < PianoController.Piano.PianoKeys.Count)
+                for (int i = 0; i < buttons.Count / 2; i++)
                 {
-                    //Ugly code
-                    buttons[i].Content = PianoController.Piano.PianoKeys[i].KeyBind.ToString().ToLower().Last();
-                    buttons[i + 24].Content = PianoController.Piano.PianoKeys[i].KeyBind.ToString().ToUpper().Last();
+                    if (i < PianoController.Piano.PianoKeys.Count)
+                    {
+                        buttons[i].Content = PianoController.Piano.PianoKeys[i].KeyBind.ToString()?.ToLower().Last();
+                        buttons[i + 24].Content = PianoController.Piano.PianoKeys[i].KeyBind.ToString()?.ToUpper().Last();
+                    }
                 }
             }
             buttons[0].Focus();

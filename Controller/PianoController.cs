@@ -6,7 +6,7 @@ namespace Controller
 {
 	public static class PianoController
 	{
-		public static Piano Piano
+		public static Piano? Piano
 		{
 			get
 			{

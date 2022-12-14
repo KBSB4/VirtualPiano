@@ -24,10 +24,9 @@ namespace Model
             PianoKeys = pianoKeys;
         }
 
-        public void InvokeNotePlayed(Song song, PianoKeyEventArgs pianoKeyEventArgs)
+        public static void InvokeNotePlayed(Song song, PianoKeyEventArgs pianoKeyEventArgs)
         {
             song.NotePlayed?.Invoke(song, pianoKeyEventArgs);
         }
     }
 }
-

@@ -15,6 +15,7 @@ namespace WpfView
         public SettingsPage SettingsPage { get; set; }
         public SongSelectPage SongSelectPage { get; set; }
 
+        //DO NOT REMOVE
         public IInputDevice? InputDevice;
 
         public MainMenu()
@@ -23,7 +24,6 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
-            //FreePlay.CheckInputDevice(SettingsPage.IndexInputDevice);
         }
 
         /// <summary>
@@ -43,7 +43,6 @@ namespace WpfView
                 {
                     SelectItem(x);
                 }
-
             }
         }
 
@@ -56,13 +55,12 @@ namespace WpfView
         {
             try
             {
-                Debug.Write("send!");
                 InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice.GetByIndex(item - 1);
 
                 InputDevice.EventReceived += FreePlay.OnMidiEventReceived;
-                if (SongSelectPage.practicePiano is not null)
+                if (SongSelectPage.PracticePiano is not null)
                 {
-                    InputDevice.EventReceived += SongSelectPage.practicePiano.OnMidiEventReceived;
+                    InputDevice.EventReceived += SongSelectPage.PracticePiano.OnMidiEventReceived;
                 }
                 InputDevice.StartEventsListening();
                 ComboBoxItem v = (ComboBoxItem)SettingsPage.input.Items.GetItemAt(item);
@@ -70,29 +68,38 @@ namespace WpfView
             }
             catch (ArgumentException ex)
             {
-                Debug.WriteLine("No midi device found");
-                Debug.WriteLine("Exception information:");
-                Debug.IndentLevel = 1;
                 Debug.WriteLine(ex.Message);
-                Debug.IndentLevel = 0;
                 InputDevice = null;
             }
         }
 
+        /// <summary>
+        /// Goes to <see cref="FreePlayPiano"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FreePlay_Button_Click(object sender, RoutedEventArgs e)
         {
-
             CheckInputDevice(SettingsPage.IndexInputDevice);  // Checks if input device has been selected!
             this.NavigationService.Navigate(FreePlay);
-
         }
 
-        private void Admin_Button_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Goes to <see cref="SettingsPage"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Settings_Button_Click(object sender, RoutedEventArgs e)
         {
             SettingsPage.GenerateInputDevices(); // Gets all input devices
             NavigationService?.Navigate(SettingsPage);
         }
 
+        /// <summary>
+        /// Goes to <see cref="PracticePlayPiano"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Practice_Button_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(SongSelectPage);

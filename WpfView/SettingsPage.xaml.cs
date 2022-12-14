@@ -11,10 +11,9 @@ namespace WpfView
     /// </summary>
     public partial class SettingsPage : Page
     {
-        private MainMenu _mainMenu;
+        private readonly MainMenu _mainMenu;
         private int count = InputDevice.GetDevicesCount();
         public static int IndexInputDevice { get; set; }
-
 
         public SettingsPage(MainMenu mainMenu)
         {
@@ -22,12 +21,6 @@ namespace WpfView
             DataContext = new DataContextSettings();
             InitializeComponent();
         }
-
-        private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            NavigationService?.Navigate(_mainMenu);
-        }
-
 
         /// <summary>
         /// Shows all the available MIDI-keyboard input devices
@@ -81,6 +74,16 @@ namespace WpfView
         }
 
         /// <summary>
+        /// Return to main menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(_mainMenu);
+        }
+
+        /// <summary>
         /// Refreshes the ComboBoxItems when selected
         /// </summary>
         /// <param name="sender"></param>
@@ -91,9 +94,8 @@ namespace WpfView
             input.Items.Refresh();
         }
 
-
         /// <summary>
-        ///
+        /// Update inputdevices items in settings
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

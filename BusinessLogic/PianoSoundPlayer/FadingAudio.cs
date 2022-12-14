@@ -4,28 +4,27 @@ namespace BusinessLogic.SoundPlayer
 {
     public class FadingAudio
     {
-        public SourceVoice sourceVoice { get; private set; }
+        public SourceVoice SourceVoice { get; private set; }
 
         /// <summary>
-        /// Creates an instance of <see cref="FadingAudio"/> and sets the <see cref="sourceVoice"/> to <paramref name="sourceVoice"/>
+        /// Creates an instance of <see cref="FadingAudio"/> and sets the <see cref="SourceVoice"/> to <paramref name="sourceVoice"/>
         /// </summary>
         /// <param name="sourceVoice"></param>
         public FadingAudio(SourceVoice sourceVoice)
         {
-            this.sourceVoice = sourceVoice;
+            this.SourceVoice = sourceVoice;
         }
 
         /// <summary>
-        /// Starts the <see cref="sourceVoice"/> and keeps playing until is shutdown by <see cref="StopPlaying(float)"/>
+        /// Starts the <see cref="SourceVoice"/> and keeps playing until is shutdown by <see cref="StopPlaying(float)"/>
         /// </summary>
         public void StartPlaying()
         {
-            if (sourceVoice != null)
-                sourceVoice.Start();
+            SourceVoice?.Start();
         }
 
         /// <summary>
-        /// Decreases the volume of <see cref="sourceVoice"/> in a new <see cref="Thread"/> by the amount specified by <paramref name="fadeOutSpeed"/> 
+        /// Decreases the volume of <see cref="SourceVoice"/> in a new <see cref="Thread"/> by the amount specified by <paramref name="fadeOutSpeed"/> 
         /// <para><paramref name="fadeOutSpeed"/> should be between 0 - 1000</para>
         /// <para>
         /// <example>
@@ -36,16 +35,16 @@ namespace BusinessLogic.SoundPlayer
         /// <param name="fadeOutSpeed"></param>
         public void StopPlaying(float fadeOutSpeed)
         {
-            if (sourceVoice != null)
+            if (SourceVoice != null)
             {
                 if (fadeOutSpeed == 0 || fadeOutSpeed > 1000)
                 {
-                    sourceVoice.Stop();
-                    sourceVoice.Dispose();
+                    SourceVoice.Stop();
+                    SourceVoice.Dispose();
                 }
                 else
                 {
-                    ThreadPool.QueueUserWorkItem(DecreaseVolume, new object[] { fadeOutSpeed, sourceVoice });
+                    ThreadPool.QueueUserWorkItem(DecreaseVolume, new object[] { fadeOutSpeed, SourceVoice });
                 }
             }
         }

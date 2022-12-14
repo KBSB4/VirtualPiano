@@ -9,10 +9,12 @@ namespace BusinessLogic
         private const int SONG_OFFSET = 2000;
         private const int STARTTUNENOTES = 7;
 
-        public static Playback PlaybackDevice;
-        public static OutputDevice OutputDevice;
+        public static Playback? PlaybackDevice { get => playbackDevice; set => playbackDevice = value; }
+        private static Playback? playbackDevice;
+        public static OutputDevice? OutputDevice { get => outputDevice; set => outputDevice = value; }
+        private static OutputDevice? outputDevice;
 
-        public static event EventHandler startCountDown;
+        public static event EventHandler? StartCountDown;
 
         /// <summary>
         /// Plays <paramref name="song"/> in a new thread
@@ -34,11 +36,11 @@ namespace BusinessLogic
         /// <param name="obj"></param>
         private static void PlayFile(object? obj)
         {
-            startCountDown?.Invoke(null, null);
+            StartCountDown?.Invoke(null, new EventArgs());
 
             if (obj is not Song song) return;
             //TODO Properly remake thread when song wants to be played again after it finishes
-            song.SongTimerThread.Start();
+            song.SongTimerThread?.Start();
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
 
@@ -58,7 +60,7 @@ namespace BusinessLogic
         /// <param name="e"></param>
         private static void Song_NotePlayed(object? sender, PianoKeyEventArgs e)
         {
-            object[] objs = { sender, e.Key };
+            object?[] objs = { sender, e.Key };
             if (e.Key.PressedDown) new Thread(new ParameterizedThreadStart(PlayNote)).Start(objs);
         }
 
@@ -68,6 +70,7 @@ namespace BusinessLogic
         /// <param name="obj"></param>
         private static void PlayNote(object? obj)
         {
+            if (obj is null) return;
             object[] objs = (object[])obj;
 
             PianoKey pianoKey = (PianoKey)objs[1];
@@ -75,7 +78,7 @@ namespace BusinessLogic
 
             Thread.Sleep(pianoKey.Duration);
             pianoKey.PressedDown = false;
-            song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
+            Song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
         }
 
         /// <summary>
@@ -84,7 +87,6 @@ namespace BusinessLogic
         /// <param name="song"></param>
         public static void PlaySong(Song song)
         {
-            DateTime now = DateTime.Now;
             int ignoreNote = STARTTUNENOTES;
             while (song.PianoKeys.Count > 0)
             {
@@ -92,7 +94,7 @@ namespace BusinessLogic
 
                 if (ignoreNote < 0)
                 {
-                    song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
+                    Song.InvokeNotePlayed(song, new PianoKeyEventArgs(pianoKey));
                 }
                 else
                 {
@@ -104,6 +106,7 @@ namespace BusinessLogic
                     MetricTimeSpan timeSpan;
                     if (PlaybackDevice is null || !PlaybackDevice.IsRunning)
                     {
+                        if (pianoKey.TimeStamp is null) continue;
                         timeSpan = pianoKey.TimeStamp;
                     }
                     else
@@ -131,6 +134,7 @@ namespace BusinessLogic
                 //Stops the keys from appearing
                 song.PianoKeys = new();
 
+                if (PlaybackDevice is null || OutputDevice is null) return;
                 PlaybackDevice.PlaybackEnd = new MetricTimeSpan(0);
                 PlaybackDevice.Dispose();
                 OutputDevice.Dispose();

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
@@ -11,12 +10,11 @@ namespace WpfView
 {
     internal class PracticeNotesGenerator
     {
-        private List<Grid> practiceNoteColumns;
-        private PracticePlayPiano PracticePlayPianoPage { get; set; }
+        private readonly List<Grid> practiceNoteColumns;
         private const int noteLength = 290;
         public Dictionary<Rectangle, PianoKey> keyValuePairs = new();
         public List<PianoKey> upcoming = new();
-        public event EventHandler<PianoKeyEventArgs> NoteDeleted;
+        private readonly Random textrotationrandomiser = new();
 
         /// <summary>
         /// Prepare grids for practice notes
@@ -24,22 +22,15 @@ namespace WpfView
         /// <param name="whiteKeyGrid"></param>
         /// <param name="blackKeyGrid"></param>
         /// <param name="columnAmount"></param>
-        public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount, PracticePlayPiano? ppp)
+        public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
         {
-            PracticePlayPianoPage = ppp;
             if (columnAmount < 0)
             {
                 practiceNoteColumns = new();
                 return;
             }
             practiceNoteColumns = AddPracticeNoteColumns(whiteKeyGrid, blackKeyGrid, columnAmount);
-
-            if (ppp is not null)
-            {
-                //NoteDeleted += ppp.DeletedPressedKey;
-            }
         }
-        public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount) : this(whiteKeyGrid, blackKeyGrid, columnAmount, null) { }
 
         /// <summary>
         /// Adds upcoming note
@@ -56,6 +47,7 @@ namespace WpfView
                 currentColumn = practiceNoteColumns[note];
             }
 
+            if (key.Duration is null) return;
             double rectHeight = key.Duration.TotalSeconds * noteLength;
             Rectangle rectangle = new()
             {
@@ -90,9 +82,10 @@ namespace WpfView
             }
             currentColumn = practiceNoteColumns[note];
 
-            RatingTextControl ratingText = new(rating);
+            RatingTextControl ratingText = new(rating, textrotationrandomiser.Next(-15,15));
             currentColumn.Children.Add(ratingText);
         }
+
         /// <summary>
         /// Moves all notes down 1.25% of the screen, should be fired 40 times a second to move notes down completely in 2 seconds
         /// If the note is not visible on screen anymore, the note is removed from the column it is in
@@ -100,7 +93,7 @@ namespace WpfView
         public void UpdateExampleNotes()
         {
             List<Rectangle> notesToBeRemoved = new();
-            foreach (var column in practiceNoteColumns)
+            foreach (Grid column in practiceNoteColumns)
             {
                 if (column.Children.Count > 0)
                 {
@@ -120,13 +113,13 @@ namespace WpfView
                     }
                 }
             }
-            foreach (var item in notesToBeRemoved)
+
+            foreach (Rectangle item in notesToBeRemoved)
             {
                 Grid? grid = item.Parent as Grid;
                 if (grid is not null)
                 {
                     grid.Children.Remove(item);
-                    NoteDeleted?.Invoke(this, new PianoKeyEventArgs(keyValuePairs[item]));
                     upcoming.Remove(keyValuePairs[item]);
                     keyValuePairs.Remove(item);
                 }
@@ -140,7 +133,7 @@ namespace WpfView
         /// <param name="blackKeyGrid"></param>
         /// <param name="columnAmount"></param>
         /// <returns></returns>
-        private List<Grid> AddPracticeNoteColumns(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
+        private static List<Grid> AddPracticeNoteColumns(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount)
         {
             List<Grid> columns = new();
 

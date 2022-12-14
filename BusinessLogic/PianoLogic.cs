@@ -8,13 +8,14 @@ namespace BusinessLogic
 {
     public static class PianoLogic
     {
-        public static Piano Piano { get; set; }
-        public static PianoSoundPlayer SoundPlayer { get; set; }
-
-        private const int AmountOfKeys = 24;
+        public static Piano? Piano { get; set; }
+        public static PianoSoundPlayer? SoundPlayer { get; set; }
 
         //Used to play multiple keys at once, also tracks the playing keys
-        public static Dictionary<PianoKey, FadingAudio> currentPlayingAudio = new();
+        public static Dictionary<PianoKey, FadingAudio> CurrentPlayingAudio { get => currentPlayingAudio; set => currentPlayingAudio = value; }
+        private static Dictionary<PianoKey, FadingAudio> currentPlayingAudio = new();
+        
+        private const int AmountOfKeys = 24;
 
         /// <summary>
         /// Creates the piano and soundplayer for the application
@@ -66,15 +67,15 @@ namespace BusinessLogic
         }
 
         /// <summary>
-        /// Stops the sound of <paramref name="key"/> in <see cref="currentPlayingAudio"/>
+        /// Stops the sound of <paramref name="key"/> in <see cref="CurrentPlayingAudio"/>
         /// </summary>
         /// <param name="key"></param>
         public static void StopPianoSound(PianoKey key)
         {
-            if (currentPlayingAudio.ContainsKey(key))
+            if (CurrentPlayingAudio.ContainsKey(key))
             {
-                currentPlayingAudio[key].StopPlaying(50);
-                currentPlayingAudio.Remove(key);
+                CurrentPlayingAudio[key].StopPlaying(50);
+                CurrentPlayingAudio.Remove(key);
             }
         }
 
@@ -85,12 +86,14 @@ namespace BusinessLogic
         /// <returns></returns>
         public static PianoKey? GetPressedPianoKey(int value)
         {
-            foreach (PianoKey? key in Piano.PianoKeys.Where(key => key.KeyBind is not null && (int)key.KeyBind == value))
+            if (Piano is not null)
             {
-                key.PressedDown = true;
-                return key;
+                foreach (PianoKey? key in Piano.PianoKeys.Where(key => key.KeyBind is not null && (int)key.KeyBind == value))
+                {
+                    key.PressedDown = true;
+                    return key;
+                }
             }
-
             return null;
         }
 
@@ -121,6 +124,8 @@ namespace BusinessLogic
             int octave = (number / 12) - 1;
             int noteIndex = (number % 12);
 
+            if (Piano is null) return null;
+
             PianoKey? key = Piano.PianoKeys.Find(x => ((int)x.Octave == octave) && ((int)x.Note == noteIndex));
             if (key is not null)
             {
@@ -136,14 +141,14 @@ namespace BusinessLogic
         /// <param name="key"></param>
         public static void PlayPianoSound(PianoKey key)
         {
-            if (!currentPlayingAudio.ContainsKey(key))
+            if (!CurrentPlayingAudio.ContainsKey(key))
             {
-                FadingAudio? fadingAudio = SoundPlayer.GetFadingAudio(key.Note, (int)key.Octave);
+                FadingAudio? fadingAudio = SoundPlayer?.GetFadingAudio(key.Note, (int)key.Octave);
 
                 if (fadingAudio is not null)
                 {
                     fadingAudio.StartPlaying();
-                    currentPlayingAudio.Add(key, fadingAudio);
+                    CurrentPlayingAudio.Add(key, fadingAudio);
                 }
             }
         }
@@ -155,12 +160,15 @@ namespace BusinessLogic
         /// <returns><see cref="PianoKey"/> released</returns>
         public static PianoKey? GetReleasedKey(int intValue)
         {
-            foreach (PianoKey key in Piano.PianoKeys)
+            if (Piano is not null)
             {
-                if (key.KeyBind is not null && (int)key.KeyBind == intValue)
+                foreach (PianoKey key in Piano.PianoKeys)
                 {
-                    key.PressedDown = false;
-                    return key;
+                    if (key.KeyBind is not null && (int)key.KeyBind == intValue)
+                    {
+                        key.PressedDown = false;
+                        return key;
+                    }
                 }
             }
             return null;

@@ -27,7 +27,6 @@
     <None Remove="Images\settingsIcon.png" />
     <None Remove="Images\SongCardBackground.png" />
     <None Remove="Images\SongSelectBackGround.png" />
-    <None Remove="PianoHeroLogo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,7 +60,6 @@
     <Resource Include="Images\settingsIcon.png" />
     <Resource Include="Images\SongCardBackground.png" />
     <Resource Include="Images\SongSelectBackGround.png" />
-    <Resource Include="PianoHeroLogo.png" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,5 @@
 ﻿using BusinessLogic;
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,12 +12,10 @@ namespace WpfView
     /// </summary>
     public partial class SongCardControl : UserControl
     {
-        SongSelectPage SongSelectPage;
+        readonly SongSelectPage? SongSelectPage;
         public SongCardControl(int id) : this(id, "No name") { }
-
-        public SongCardControl(int id, string songTitle) : this(id, songTitle, 0,null) { }
-
-        public SongCardControl(int id, string songTitle, int difficulty, SongSelectPage songSelectPage)
+        public SongCardControl(int id, string songTitle) : this(id, songTitle, 0, null) { }
+        public SongCardControl(int id, string songTitle, int difficulty, SongSelectPage? songSelectPage)
         {
             InitializeComponent();
             SongID = id;
@@ -67,13 +64,15 @@ namespace WpfView
         public static readonly DependencyProperty DifficultyImageSourceProperty =
             DependencyProperty.Register("DifficultyImageSource", typeof(ImageSource), typeof(SongCardControl), new PropertyMetadata(default(ImageSource)));
 
-
-        private void Button_Click(object sender, RoutedEventArgs e) { Button? button = sender as Button; 
-            if (button is not null) { SongSelectPage.SongCard_Click(SongID); } }
-
-
-
-
-     
+        /// <summary>
+        /// Temporary - starts practice play
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Button? button = sender as Button;
+            if (button is not null && SongSelectPage is not null) { SongSelectPage.SongCard_Click(SongID); }
+        }
     }
 }

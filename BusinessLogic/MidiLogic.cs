@@ -7,15 +7,15 @@ namespace BusinessLogic
 {
 	public static class MidiLogic
 	{
-		private static TempoMap tempoMap;
-		public static MidiFile currentMidi { get; set; } //Full MIDI
+		private static TempoMap? tempoMap;
+		public static MidiFile? CurrentMidi { get; set; } //Full MIDI
 
 		/// <summary>
 		/// Convert MIDI to Song and its notes to PianoKeys
 		/// </summary>
 		/// <param name="file"></param>
 		/// <returns></returns>
-		public static Song ConvertMidiFile(MidiFile file)
+		public static Song? ConvertMidiFile(MidiFile file)
 		{
 			if (file.Chunks.Count == 0) return null;
 
@@ -51,8 +51,7 @@ namespace BusinessLogic
 		private static FourBitNumber GetPianoChannel(List<TrackChunk> trackList)
 		{
 			FourBitNumber resultChannel = (FourBitNumber)0;
-			bool channelFound = false;
-			List<FourBitNumber> programNumbersFound = new List<FourBitNumber>();
+			List<FourBitNumber> programNumbersFound = new();
 
 			foreach (TrackChunk chunk in trackList)
 			{

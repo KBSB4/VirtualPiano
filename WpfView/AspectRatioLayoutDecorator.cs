@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace WpfView
@@ -14,12 +13,9 @@ namespace WpfView
               "AspectRatio",
               typeof(double),
               typeof(AspectRatioLayoutDecorator),
-              new FrameworkPropertyMetadata
-                 (
-                    1d,
-                    FrameworkPropertyMetadataOptions.AffectsMeasure
-                 ),
+              new FrameworkPropertyMetadata(1d, FrameworkPropertyMetadataOptions.AffectsMeasure),
               ValidateAspectRatio);
+
         public double AspectRatio
         {
             get { return (double)GetValue(AspectRatioProperty); }
