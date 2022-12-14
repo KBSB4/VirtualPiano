@@ -35,9 +35,21 @@ namespace Controller
 			return MidiLogic.ConvertMidiFile(file);
 		}
 
-		public static MidiFile RemovePianoNotes(MidiFile file)
+			MetricTimeSpan duration = newFile.GetDuration<MetricTimeSpan>();
+			return new Song(newFile, "temp", Difficulty.Easy, duration, pianoKeyList, TempoMap);
+		}
+
+
+        /// <summary>
+        /// Illiterates through the trackChuncks of the MidiFile and removes the pianokeys. 
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static MidiFile RemovePiano(MidiFile file)
 		{
-			return MidiLogic.RemovePianoNotes(file);
+			var trackList = file.GetTrackChunks().ToList();
+			file.RemoveNotes(x => x.Channel == GetPianoChannel(trackList));
+			return file;
 		}
 
 		public static MidiFile AddStartTune(MidiFile midiFile)
@@ -45,9 +57,40 @@ namespace Controller
 			return MidiLogic.AddStartTune(midiFile);
 		}
 
-		public static MidiFile GetMidiFile()
+
+		/// <summary>
+		///  Appends the generic startTune to the midiFile
+		/// </summary>
+		/// <param name="midiFile"></param>
+		/// <returns></returns>
+		public static MidiFile AddStartTune(MidiFile midiFile)
 		{
-			return MidiLogic.currentMidi;
+			var fileNameOut = "testName.mid";
+			var midiFileOut = new MidiFile()
+			{
+				TimeDivision = midiFile.TimeDivision // copied from master file
+			};
+
+			MidiFile StartTune = MidiFile.Read("..\\..\\..\\..\\Controller\\PianoSoundPlayer\\Sounds\\startTune.mid");
+			// Add all parts after shifting them
+			long addedSoFarMicroseconds = 0;
+
+			List<MidiFile> lsToWrite = new()
+			{
+				StartTune,
+				midiFile
+			};
+
+			foreach (var midiPart in lsToWrite) // lsToWrite is a list of MidiFile objects
+			{
+				var currentDuration = midiPart.GetDuration<MetricTimeSpan>();
+				midiPart.ShiftEvents(new MetricTimeSpan(addedSoFarMicroseconds));
+				midiFileOut.Chunks.AddRange(midiPart.Chunks);
+				addedSoFarMicroseconds += currentDuration.TotalMicroseconds;
+			}
+			midiFileOut.Write(fileNameOut, true);
+
+			return midiFileOut;
 		}
 	}
 }
