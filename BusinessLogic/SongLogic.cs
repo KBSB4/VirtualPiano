@@ -8,33 +8,35 @@ namespace BusinessLogic
     {
         private const int SONG_OFFSET = 2000;
         private const int STARTTUNENOTES = 7;
+
         public static Playback PlaybackDevice;
         public static OutputDevice OutputDevice;
 
         public static event EventHandler startCountDown;
 
-        private static Song SongForTime;
-
+        /// <summary>
+        /// Plays <paramref name="song"/> in a new thread
+        /// </summary>
+        /// <param name="song"></param>
         public static void Play(Song song)
         {
             song.NotePlayed += Song_NotePlayed;
             new Thread(new ParameterizedThreadStart(PlayFile)).Start(song);
         }
 
+        /// <summary>
+        /// Plays <see cref="Song.File"/> from <paramref name="obj"/>
+        /// </summary>
+        /// <param name="obj"></param>
         private static void PlayFile(object? obj)
         {
             startCountDown?.Invoke(null, null);
 
             if (obj is not Song song) return;
-            //TODO Properly remake thread when song wants to be played again
+            //TODO Properly remake thread when song wants to be played again after it finishes
             song.SongTimerThread.Start();
-            SongForTime = song;
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
-            
-            PlaybackCurrentTimeWatcher.Instance.AddPlayback(PlaybackDevice, TimeSpanType.Metric);
-            PlaybackCurrentTimeWatcher.Instance.CurrentTimeChanged += OnCurrentTimeChanged;
-            PlaybackCurrentTimeWatcher.Instance.Start();
 
             Thread.Sleep(SONG_OFFSET);
             PlaybackDevice.Start();
@@ -43,14 +45,6 @@ namespace BusinessLogic
             OutputDevice.Dispose();
             PlaybackDevice.Dispose();
             song.IsPlaying = false;
-        }
-
-        private static void OnCurrentTimeChanged(object sender, PlaybackCurrentTimeChangedEventArgs e)
-        {
-            foreach (var playbackTime in e.Times)
-            {
-                SongForTime.TimeInSong = (MetricTimeSpan)playbackTime.Time;
-            }
         }
 
         /// <summary>
@@ -100,12 +94,12 @@ namespace BusinessLogic
                 {
                     ignoreNote--;
                 }
+
                 if (song.PianoKeys.TryPeek(out PianoKey? nextKey))
                 {
                     MetricTimeSpan timeSpan;
                     if (PlaybackDevice is null || !PlaybackDevice.IsRunning)
                     {
-                        //timeSpan = DateTime.Now - now;
                         timeSpan = pianoKey.TimeStamp;
                     }
                     else
@@ -113,12 +107,12 @@ namespace BusinessLogic
                         timeSpan = (MetricTimeSpan)PlaybackDevice.GetCurrentTime(TimeSpanType.Metric)
                         + (MetricTimeSpan)TimeSpan.FromMilliseconds(SONG_OFFSET);
                     }
+
                     if (nextKey.TimeStamp > timeSpan)
                     {
                         Thread.Sleep(nextKey.TimeStamp - timeSpan);
                     }
                 }
-                //Debug.WriteLine(pianoKey.ToString());
             }
         }
     }

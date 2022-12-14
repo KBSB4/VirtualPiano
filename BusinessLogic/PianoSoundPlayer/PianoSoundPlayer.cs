@@ -58,6 +58,7 @@ namespace BusinessLogic.SoundPlayer
         /// </summary>
         /// <param name="noteName"></param>
         /// <param name="octave"></param>
+        //TODO KEEP THIS FUNCTION?
         public void PlayNote(NoteName noteName, int octave)
         {
             float frequency = GetOctaveFrequencyRatio(octave);
@@ -92,16 +93,12 @@ namespace BusinessLogic.SoundPlayer
                 AudioBytes = (int)stream.Length,
                 Flags = BufferFlags.EndOfStream
             };
-            //if (buffer is not null)
-            //{
 
             SourceVoice sourceVoice = new(device, waveFormat, true);
 
             sourceVoice.SetFrequencyRatio(frequency);
             sourceVoice.BufferEnd += (context) => Debug.WriteLine(" => event received: end of buffer");
             sourceVoice.SubmitSourceBuffer(buffer, stream.DecodedPacketsInfo);
-
-            //}
 
             return sourceVoice;
         }
@@ -170,6 +167,7 @@ namespace BusinessLogic.SoundPlayer
         /// </summary>
         /// <param name="octave"></param>
         /// <returns></returns>
+        //TODO KEEP THIS FUNCTION?
         private float GetOctaveFrequencyRatio(int octave)
         {
             return octave switch
@@ -180,12 +178,6 @@ namespace BusinessLogic.SoundPlayer
                 5 => 1,
                 _ => 0,
             };
-        }
-
-        public void Dispose()
-        {
-            masteringVoice.Dispose();
-            device.Dispose();
         }
     }
 }

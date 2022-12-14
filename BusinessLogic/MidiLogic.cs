@@ -1,5 +1,4 @@
-﻿
-using Melanchall.DryWetMidi.Common;
+﻿using Melanchall.DryWetMidi.Common;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Model;
@@ -11,7 +10,6 @@ namespace BusinessLogic
 		private static TempoMap tempoMap;
 		public static MidiFile currentMidi { get; set; } //Full MIDI
 
-
 		/// <summary>
 		/// Convert MIDI to Song and its notes to PianoKeys
 		/// </summary>
@@ -21,19 +19,18 @@ namespace BusinessLogic
 		{
 			if (file.Chunks.Count == 0) return null;
 
-			var newFile = AddStartTune(file);
-			var trackList = newFile.GetTrackChunks().ToList();
+			MidiFile newFile = AddStartTune(file);
+			List<TrackChunk> trackList = newFile.GetTrackChunks().ToList();
 
 			tempoMap = newFile.GetTempoMap();
 			Queue<PianoKey> pianoKeyList = new();
-			var notes = newFile.GetNotes();
+			List<Note> notes = (List<Note>)newFile.GetNotes();
 
 			foreach (Note? midiKey in notes)
 			{
 				PianoKey? pianoKey = ConvertPianoKey(midiKey);
 				if (pianoKey is not null)
 				{
-					//Gets the piano channel
 					if (GetPianoChannel(trackList) == midiKey.Channel)
 					{
 						pianoKeyList.Enqueue(pianoKey);
@@ -56,6 +53,7 @@ namespace BusinessLogic
 			FourBitNumber resultChannel = (FourBitNumber)0;
 			bool channelFound = false;
 			List<FourBitNumber> programNumbersFound = new List<FourBitNumber>();
+
 			foreach (TrackChunk chunk in trackList)
 			{
 				var programNumbers = chunk
@@ -68,7 +66,6 @@ namespace BusinessLogic
 				foreach (var number in programNumbers)
 				{
 					//See Wikipedia General MIDI - Everything under 8 is Piano
-					//TODO Place the other channels in another MIDI file for karaoke
 					programNumbersFound.Add(number.Channel);
 					if (number.ProgramNumber < 8)
 					{
@@ -76,11 +73,13 @@ namespace BusinessLogic
 					}
 				}
 			}
+
 			foreach (FourBitNumber channel in trackList.GetChannels())
 			{
 				if (!programNumbersFound.Contains(channel))
 					return channel;
 			}
+
 			return (FourBitNumber)trackList.GetChannels().Count();
 		}
 
@@ -103,11 +102,16 @@ namespace BusinessLogic
 			return new PianoKey((Octave)octave, noteName, timeStamp, duration);
 		}
 
+		/// <summary>
+		/// Adds a pre-made tune to the beginning of the <paramref name="midiFile"/> to sync the song with the practice notes
+		/// </summary>
+		/// <param name="midiFile"></param>
+		/// <returns></returns>
 		public static MidiFile AddStartTune(MidiFile midiFile)
 		{
-			var midiFileOut = new MidiFile()
+			MidiFile midiFileOut = new()
 			{
-				TimeDivision = midiFile.TimeDivision // copied from master file
+				TimeDivision = midiFile.TimeDivision
 			};
 
 			MidiFile StartTune = MidiFile.Read(ProjectSettings.GetPath(PianoHeroPath.StartTune));
@@ -120,21 +124,27 @@ namespace BusinessLogic
 				midiFile
 			};
 
-			foreach (var midiPart in lsToWrite) // lsToWrite is a list of MidiFile objects
+			foreach (MidiFile midiPart in lsToWrite)
 			{
-				var currentDuration = midiPart.GetDuration<MetricTimeSpan>();
+				MetricTimeSpan currentDuration = midiPart.GetDuration<MetricTimeSpan>();
 				midiPart.ShiftEvents(new MetricTimeSpan(addedSoFarMicroseconds));
 				midiFileOut.Chunks.AddRange(midiPart.Chunks);
 				addedSoFarMicroseconds += currentDuration.TotalMicroseconds;
 			}
+
 			midiFileOut.Write("current-playing-song.mid", true);
 
 			return midiFileOut;
 		}
 
+		/// <summary>
+		/// Removes the piano-notes from the <paramref name="file"/>
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns></returns>
 		public static MidiFile RemovePianoNotes(MidiFile file)
 		{
-			var trackList = file.GetTrackChunks().ToList();
+            List<TrackChunk> trackList = file.GetTrackChunks().ToList();
 			tempoMap = file.GetTempoMap();
 			FourBitNumber pianoChannel = GetPianoChannel(trackList);
 			file.RemoveNotes(x => x.Channel == pianoChannel);

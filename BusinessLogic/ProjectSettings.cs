@@ -9,9 +9,14 @@
 			{ PianoHeroPath.ImagesFolder, "/Images/"}
 		};
 
+		/// <summary>
+		/// Get path of directory
+		/// </summary>
+		/// <param name="directory"></param>
+		/// <returns></returns>
 		public static string GetPath(PianoHeroPath directory)
 		{
-			return paths[directory];
+            return paths[directory];
 		}
 	}
 
