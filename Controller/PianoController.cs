@@ -1,5 +1,4 @@
 ﻿using BusinessLogic;
-using BusinessLogic.SoundPlayer;
 using Melanchall.DryWetMidi.Core;
 using Model;
 
