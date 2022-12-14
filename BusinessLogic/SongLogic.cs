@@ -7,11 +7,13 @@ namespace BusinessLogic
     public static class SongLogic
     {
         private const int SONG_OFFSET = 2000;
-        private const int STARTTUNENOTES = 8;
+        private const int STARTTUNENOTES = 7;
         public static Playback PlaybackDevice;
         public static OutputDevice OutputDevice;
 
         public static event EventHandler startCountDown;
+
+        private static Song SongForTime;
 
         public static void Play(Song song)
         {
@@ -24,18 +26,31 @@ namespace BusinessLogic
             startCountDown?.Invoke(null, null);
 
             if (obj is not Song song) return;
+            //TODO Properly remake thread when song wants to be played again
             song.SongTimerThread.Start();
-
+            SongForTime = song;
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
+            
+            PlaybackCurrentTimeWatcher.Instance.AddPlayback(PlaybackDevice, TimeSpanType.Metric);
+            PlaybackCurrentTimeWatcher.Instance.CurrentTimeChanged += OnCurrentTimeChanged;
+            PlaybackCurrentTimeWatcher.Instance.Start();
 
-            while (!song.IsPlaying) { }
             Thread.Sleep(SONG_OFFSET);
             PlaybackDevice.Start();
             SpinWait.SpinUntil(() => !PlaybackDevice.IsRunning);
 
             OutputDevice.Dispose();
             PlaybackDevice.Dispose();
+            song.IsPlaying = false;
+        }
+
+        private static void OnCurrentTimeChanged(object sender, PlaybackCurrentTimeChangedEventArgs e)
+        {
+            foreach (var playbackTime in e.Times)
+            {
+                SongForTime.TimeInSong = (MetricTimeSpan)playbackTime.Time;
+            }
         }
 
         /// <summary>
@@ -71,7 +86,6 @@ namespace BusinessLogic
         /// <param name="song"></param>
         public static void PlaySong(Song song)
         {
-            song.IsPlaying = true;
             DateTime now = DateTime.Now;
             int ignoreNote = STARTTUNENOTES;
             while (song.PianoKeys.Count > 0)
@@ -106,7 +120,6 @@ namespace BusinessLogic
                 }
                 //Debug.WriteLine(pianoKey.ToString());
             }
-            song.IsPlaying = false;
         }
     }
 }

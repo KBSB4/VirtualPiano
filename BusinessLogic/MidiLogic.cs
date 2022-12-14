@@ -68,6 +68,7 @@ namespace BusinessLogic
 				foreach (var number in programNumbers)
 				{
 					//See Wikipedia General MIDI - Everything under 8 is Piano
+					//TODO Place the other channels in another MIDI file for karaoke
 					programNumbersFound.Add(number.Channel);
 					if (number.ProgramNumber < 8)
 					{
