@@ -9,7 +9,7 @@ namespace Model
         public string Name { get; set; }
         public Difficulty Difficulty { get; set; }
         public MetricTimeSpan Duration { get; set; }
-        public Queue<PianoKey> PianoKeys { get; set; }
+        public Queue<PianoKey> PianoKeys { get; set; } //all keys
         public MetricTimeSpan TimeInSong { get; set; }
         public MetricTimeSpan Offset { get; set; }
         public Thread SongTimerThread { get; set; }

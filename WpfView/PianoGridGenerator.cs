@@ -37,7 +37,7 @@ namespace WpfView
         /// Updates pianokey to current <see cref="PianoKey.PressedDown"> state
         /// </summary>
         /// <param name="key"></param>
-        public void DisplayPianoKey(PianoKey key)
+        public void DisplayPianoKey(PianoKey key, SolidColorBrush? colour)
         {
             if (key is null) return;
             int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
@@ -48,14 +48,26 @@ namespace WpfView
             Button currentButton = buttons[note];
             bool pressed = key.PressedDown;
 
-            if (key.Note.ToString().Contains("Sharp"))
+            if (colour is null)
             {
-                currentButton.Background = new SolidColorBrush(pressed ? blackKeyPressedColor : blackKeyReleasedColor);
-            }
-            else
+                if (key.Note.ToString().Contains("Sharp"))
+                {
+                    currentButton.Background = new SolidColorBrush(pressed ? blackKeyPressedColor : blackKeyReleasedColor);
+                }
+                else
+                {
+                    currentButton.Background = new SolidColorBrush(pressed ? whiteKeyPressedColor : whiteKeyReleasedColor);
+                }
+            } else
             {
-                currentButton.Background = new SolidColorBrush(pressed ? whiteKeyPressedColor : whiteKeyReleasedColor);
+                currentButton.Background = colour;
+
             }
+        }
+
+        public void DisplayPianoKey(PianoKey pkey)
+        {
+            DisplayPianoKey(pkey, null);
         }
 
         /// <summary>
