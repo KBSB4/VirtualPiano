@@ -13,7 +13,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
 
 namespace WpfView
 {
@@ -23,12 +22,9 @@ namespace WpfView
     public partial class FreePlayPiano : Page
     {
         private PianoGridGenerator pianoGrid;
-        private static IInputDevice? _inputDevice;
+        //public IInputDevice? InputDevice;
         readonly PracticeNotesGenerator practiceNotes;
         private MainMenu _mainMenu;
-
-        //Just for testing, can be removed, make sure to also remove line {var rating = (Rating)rnd.Next(Enum.GetNames(typeof(Rating)).Length);}
-        Random rnd = new Random();
 
         public FreePlayPiano(MainMenu _mainMenu)
         {
@@ -39,7 +35,7 @@ namespace WpfView
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
-            SongLogic.startCountDown += StartCountDown;
+            //SongLogic.startCountDown += StartCountDown;
 
             //Start thread for updating practice notes
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
@@ -136,29 +132,11 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
+        public void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
         {
             PianoKey? key = PianoController.ParseMidiNote(e.Event);
 
-            if (key is not null)
-            {
-                if (key.PressedDown)
-                {
-                    PianoController.PlayPianoSound(key);
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        pianoGrid.DisplayPianoKey(key);
-                    }));
-                }
-                else
-                {
-                    PianoController.StopPianoSound(key);
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        pianoGrid.DisplayPianoKey(key);
-                    }));
-                }
-            }
+            UpdateKey(key);
         }
 
         /// <summary>
@@ -172,16 +150,33 @@ namespace WpfView
             int intValue = (int)e.Key;
 
             PianoKey? key = PianoController.GetPressedPianoKey(intValue);
-            if (key is not null)
-            {
-                pianoGrid.DisplayPianoKey(key);
-                //var rating = (Rating)rnd.Next(Enum.GetNames(typeof(Rating)).Length);
-                //practiceNotes.DisplayNoteFeedBack(key, rating);
-                PianoController.PlayPianoSound(key);
-            }
+            UpdateKey(key);
 
             if (e.Key == Key.CapsLock)
                 PianoLogic.SwapOctave(PianoController.Piano);
+        }
+
+        /// <summary>
+        /// Occurs when a key is pressed or released, for keyboard and midi
+        /// </summary>
+        /// <param name="key"></param>
+        private void UpdateKey(PianoKey? key)
+        {
+            if (key is not null)
+            {
+                if (key.PressedDown)
+                {
+                    PianoController.PlayPianoSound(key);
+                }
+                else
+                {
+                    PianoController.StopPianoSound(key);
+                }
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    pianoGrid.DisplayPianoKey(key);
+                }));
+            }
         }
 
         /// <summary>
@@ -194,62 +189,33 @@ namespace WpfView
         {
             int intValue = (int)e.Key;
             PianoKey? key = PianoController.GetReleasedKey(intValue);
-            if (key is not null)
-            {
-                PianoController.StopPianoSound(key);
-                pianoGrid.DisplayPianoKey(key);
-            }
+            UpdateKey(key);
         }
 
-        private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
+        #region Menubar event clicks
+
+        /// <summary>
+        /// lets the player go back to the main menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
         }
 
-        private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
+        /// <summary>
+        /// lets the player go to the settings page of Piano Hero
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Settings_Click(object sender, RoutedEventArgs e)
         {
             _mainMenu.SettingsPage.GenerateInputDevices();
             NavigationService?.Navigate(_mainMenu.SettingsPage);
         }
 
-        /// <summary>
-        /// Connects MIDI-keyboard
-        /// </summary>
-        public void CheckInputDevice(int x)
-        {
-            _inputDevice?.Dispose();
-
-            if (_mainMenu.SettingsPage.NoneSelected.IsSelected)
-            {
-                SelectItem(1);
-            }
-            else
-            {
-                SelectItem(x);
-            }
-        }
-
-        private void SelectItem(int item)
-        {
-            try
-            {
-                Debug.Write("send!");
-                _inputDevice = InputDevice.GetByIndex(item - 1);
-                _inputDevice.EventReceived += OnMidiEventReceived;
-                _inputDevice.StartEventsListening();
-                ComboBoxItem v = (ComboBoxItem)_mainMenu.SettingsPage.input.Items.GetItemAt(item);
-                v.IsSelected = true;
-            }
-            catch (ArgumentException ex)
-            {
-                Debug.WriteLine("No midi device found");
-                Debug.WriteLine("Exception information:");
-                Debug.IndentLevel = 1;
-                Debug.WriteLine(ex.Message);
-                Debug.IndentLevel = 0;
-                _inputDevice = null;
-            }
-        }
+        #endregion
 
         #region MIDI
         /// <summary>
@@ -295,7 +261,7 @@ namespace WpfView
         }
 
         /// <summary>
-        /// Play MIDI File
+        /// Plays the selected MIDI file and checks if a correct MIDI file is selected. when true it plays otherwise it shows a popup with an error
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -328,7 +294,7 @@ namespace WpfView
 
 
         /// <summary>
-        /// Stop playing the MIDI
+        /// Stop playing the MIDI file which is selected. then produced with an exception it displays a popup with 'No MIDI playing'
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

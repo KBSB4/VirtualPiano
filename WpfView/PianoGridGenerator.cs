@@ -71,6 +71,31 @@ namespace WpfView
         }
 
         /// <summary>
+        /// Updates pianokey to current <see cref="PianoKey.PressedDown"> state
+        /// </summary>
+        /// <param name="key"></param>
+        public void DisplayPianoKey(PianoKey key, Rating rating)
+        {
+            if (key is null) return;
+            int note = (((int)key.Octave - 2) * 12) + ((int)key.Note);//berekening uitleggen
+            if (note < 0 || note >= buttons.Count)
+            {
+                return;
+            }
+            Button currentButton = buttons[note];
+            bool pressed = key.PressedDown;
+
+            if (rating == Rating.Miss)
+            {
+                currentButton.Background = new SolidColorBrush(Colors.Red);
+            }
+            else
+            {
+                currentButton.Background = new SolidColorBrush(Colors.Green);
+            }
+        }
+
+        /// <summary>
         /// Adds the amount of white keys specified and places black keys in between
         /// </summary>
         /// <param name="grid"></param>

@@ -21,6 +21,8 @@ namespace UnitTests
 			{
 				MidiController.OpenMidi(file);
 			});
+
+			Assert.Null(SongController.CurrentSong);
 		}
 
 		[Test]
