@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\CountdownGo.png" />
+    <None Remove="Images\CountdownReady.png" />
+    <None Remove="Images\CountdownSet.png" />
     <None Remove="Images\DifficultyIconEZ.png" />
     <None Remove="Images\DifficultyIconHard.png" />
     <None Remove="Images\DifficultyIconHero.png" />
@@ -32,6 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\CountdownGo.png" />
+    <Resource Include="Images\CountdownReady.png" />
+    <Resource Include="Images\CountdownSet.png" />
     <Resource Include="Images\DifficultyIconEZ.png" />
     <Resource Include="Images\DifficultyIconHard.png" />
     <Resource Include="Images\DifficultyIconHero.png" />

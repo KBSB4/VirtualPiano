@@ -1,6 +1,6 @@
 ﻿using SharpDX.XAudio2;
 
-namespace VirtualPiano.PianoSoundPlayer
+namespace BusinessLogic.SoundPlayer
 {
     public class FadingAudio
     {
@@ -41,6 +41,7 @@ namespace VirtualPiano.PianoSoundPlayer
                 if (fadeOutSpeed == 0 || fadeOutSpeed > 1000)
                 {
                     sourceVoice.Stop();
+                    sourceVoice.Dispose();
                 }
                 else
                 {
@@ -69,6 +70,7 @@ namespace VirtualPiano.PianoSoundPlayer
                 Thread.Sleep(10);
             }
             sourceVoice.Stop();
+            sourceVoice.Dispose();
         }
     }
 }

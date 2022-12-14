@@ -13,16 +13,14 @@ namespace WpfView
     {
         private MainMenu _mainMenu;
         private int count = InputDevice.GetDevicesCount();
-        public int IndexInputDevice { get; set; }
+        public static int IndexInputDevice { get; set; }
 
 
         public SettingsPage(MainMenu mainMenu)
         {
-
             _mainMenu = mainMenu;
             DataContext = new DataContextSettings();
             InitializeComponent();
-
         }
 
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -57,7 +55,7 @@ namespace WpfView
                         input.Items.RemoveAt(i);
                     }
                 }
-                NoneSelected.IsSelected = true; // DEFAULT VALUE NONE
+                NoneSelected.IsSelected = true;
                 count = InputDevice.GetDevicesCount();
             }
         }
@@ -73,9 +71,12 @@ namespace WpfView
             {
                 IndexInputDevice = input.Items.IndexOf(sender);
             }
-            catch (IndexOutOfRangeException)
+            catch (Exception ex)
             {
-
+                if (ex is IndexOutOfRangeException)
+                {
+                    MessageBox.Show($"Selected item in combobox {input.Name} was out of range");
+                }
             }
         }
 
@@ -98,7 +99,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _mainMenu?.FreePlay?.CheckInputDevice(IndexInputDevice);
+            _mainMenu?.CheckInputDevice(IndexInputDevice);
             GenerateInputDevices();
             input.Items.Refresh();
         }

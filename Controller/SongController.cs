@@ -1,4 +1,5 @@
 ﻿using BusinessLogic;
+using BusinessLogic.SoundPlayer;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Model;
@@ -9,12 +10,15 @@ namespace Controller
     {
         public static Song? CurrentSong { get; set; }
 
+        /// <summary>
+        /// Loads the current song for playing determined by a thread and conversion from the Midicontroller
+        /// </summary>
         public static void LoadSong()
         {
-            MidiFile? file = MIDIController.OriginalMIDI;
+            MidiFile? file = MidiController.GetMidiFile();
             if (file is not null)
             {
-                CurrentSong = MIDIController.Convert(file);
+                CurrentSong = MidiController.Convert(file);
                 CurrentSong.SongTimerThread = new Thread(() => SongLogic.PlaySong(CurrentSong));
                 CurrentSong.File = MIDIController.RemovePiano(CurrentSong.File.Clone());
             }
@@ -27,8 +31,6 @@ namespace Controller
         public static void LoadSong(MetricTimeSpan Offset)
         {
             LoadSong();
-            //TODO NOT USED RIGHT NOW
-            //CurrentSong.Offset = Offset;
         }
 
         /// <summary>
@@ -38,6 +40,7 @@ namespace Controller
         {
             if (CurrentSong is not null && !CurrentSong.IsPlaying)
             {
+                CurrentSong.IsPlaying = true;
                 SongLogic.Play(CurrentSong);
             }
         }

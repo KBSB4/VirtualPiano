@@ -9,19 +9,28 @@ namespace WpfView
     public partial class SongSelectPage : Page
     {
         MainMenu _mainMenu;
+        public PracticePlayPiano practicePiano;
+
         public SongSelectPage(MainMenu mainMenu)
         {
+            _mainMenu = mainMenu;
+            practicePiano = new PracticePlayPiano(_mainMenu);
             InitializeComponent();
 
             AddSongs();
-            _mainMenu = mainMenu;
+        }
+        public void SongCard_Click(int ID)
+        {
+            practicePiano.PlaySelectedSong(ID);
+            NavigationService?.Navigate(practicePiano);
         }
 
         private void AddSongs()
         {
             for (int i = 0; i < 10; i++)
             {
-                SongCardControl songCardControl = new(i, "Song " + i.ToString(), i % 4);
+
+                SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4, this);
 
                 SongCards.Children.Add(songCardControl);
             }

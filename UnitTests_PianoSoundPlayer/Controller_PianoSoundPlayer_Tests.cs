@@ -1,6 +1,5 @@
-using VirtualPiano.PianoSoundPlayer;
+using BusinessLogic.SoundPlayer;
 using Melanchall.DryWetMidi.MusicTheory;
-using SharpDX.XAudio2;
 using System.Diagnostics;
 
 namespace UnitTests
@@ -55,7 +54,7 @@ namespace UnitTests
 			{
 				Assert.That(fA.sourceVoice.IsDisposed, Is.EqualTo(true));
 			}
-			player.Dispose();
+			//player.Dispose();
 		}
 
 		[Test]
@@ -79,7 +78,7 @@ namespace UnitTests
 				player = new PianoSoundPlayer("", "", ".wav");
 				Assert.Fail("No exception was given, while path was absolete");
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Assert.That(ex is DirectoryNotFoundException);
 			}
