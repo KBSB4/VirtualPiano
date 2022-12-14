@@ -36,7 +36,7 @@ namespace WpfView
 
             if (ppp is not null)
             {
-                NoteDeleted += ppp.DeletedPressedKey;
+                //NoteDeleted += ppp.DeletedPressedKey;
             }
         }
         public PracticeNotesGenerator(Grid whiteKeyGrid, Grid blackKeyGrid, int columnAmount) : this(whiteKeyGrid, blackKeyGrid, columnAmount, null) { }
