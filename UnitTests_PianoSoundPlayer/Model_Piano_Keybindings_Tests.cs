@@ -44,7 +44,7 @@ namespace UnitTests
         public void Piano_GetsCorrectKeys(int index, KeyBind m)
         {
 
-            KeyBind test = piano.PianoKeys[index].KeyBind;
+            KeyBind? test = piano.PianoKeys[index].KeyBind;
             Assert.That(test, Is.EqualTo(m));
 
         }
@@ -54,7 +54,7 @@ namespace UnitTests
         [TestCase(3, KeyBind.U)]
         public void IsInvalidKeyBind(int index, KeyBind m)
         {
-            KeyBind test = piano.PianoKeys[index].KeyBind;
+            KeyBind? test = piano.PianoKeys[index].KeyBind;
             Assert.That(test, Is.Not.EqualTo(m));
         }
 

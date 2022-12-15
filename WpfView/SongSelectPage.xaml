@@ -34,11 +34,9 @@
                 <RowDefinition Height="3*"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Viewbox Height="100" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Label HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke">Current song</Label>
+            <Viewbox Grid.RowSpan="2" Grid.ColumnSpan="2">
+                <local:SelectedSongControl></local:SelectedSongControl>
             </Viewbox>
-            <Image Grid.Column="1"></Image>
-            <Image Grid.Row="1" Grid.ColumnSpan="2" Source="/Images/PianoHeroLogo.png"></Image>
             <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource MenuButton}">
                 <Viewbox>
                     <Label  HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="center" FontWeight="Bold" Foreground="WhiteSmoke">Start</Label>
