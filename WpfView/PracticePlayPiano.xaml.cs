@@ -85,7 +85,7 @@ namespace WpfView
             Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
             countDownThread.Start();
 
-            if (SongController.CurrentSong is null) return; 
+            if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
             notesToBePressed.RemoveRange(0, 8);
 
@@ -306,8 +306,8 @@ namespace WpfView
                     MetricTimeSpan pressedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
 
                     if (notesToBePressed is null) return;
-                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => 
-                    { if (item.TimeStamp is null) return false; Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds); return true; }).FirstOrDefault();
+
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds)).FirstOrDefault();
 
                     if (closestNote is not null)
                     {
