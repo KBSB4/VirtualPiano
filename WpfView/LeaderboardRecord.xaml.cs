@@ -16,7 +16,6 @@ namespace WpfView
             Score = "69420";
         }
 
-
         public LeaderboardRecord(int position, string userName, int score)
         {
             Position = position.ToString();

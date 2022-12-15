@@ -49,12 +49,12 @@ namespace WpfView
 
             //Select the clicked card
             SelectedCard = songCard;
-            SelectedCard.Background = new SolidColorBrush(Colors.Red);
+            SelectedCard.Background = new SolidColorBrush(Colors.OrangeRed);
 
             //Show leaderboard
             //TODO Connect to database
             Leaderboard.Children.Clear();
-            Leaderboard.Children.Add(new SelectedSongControl());
+            Leaderboard.Children.Add(new SelectedSongControl(SelectedCard));
         }
 
         /// <summary>
