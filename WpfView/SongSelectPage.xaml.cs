@@ -52,7 +52,7 @@ namespace WpfView
             SelectedCard.Background = new SolidColorBrush(Colors.OrangeRed);
 
             //Show leaderboard
-            //TODO Connect to database
+            //TODO Connect to database and send current user through to the control
             Leaderboard.Children.Clear();
             Leaderboard.Children.Add(new SelectedSongControl(SelectedCard));
         }
