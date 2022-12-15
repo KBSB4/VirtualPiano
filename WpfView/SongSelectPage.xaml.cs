@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace WpfView
 {
@@ -10,6 +11,8 @@ namespace WpfView
     {
         private readonly MainMenu _mainMenu;
         public PracticePlayPiano PracticePiano { get; set; }
+
+        private SongCardControl SelectedCard { get; set; }
 
         public SongSelectPage(MainMenu mainMenu)
         {
@@ -23,10 +26,25 @@ namespace WpfView
         /// Temporary - Starts practice play
         /// </summary>
         /// <param name="ID"></param>
-        public void SongCard_Click(int ID)
+        public void SongCard_Click(SongCardControl songCard)
         {
-            PracticePiano.PlaySelectedSong(ID);
-            NavigationService?.Navigate(PracticePiano);
+            //Deselect if there is one
+            if (SelectedCard is not null)
+            {
+                SelectedCard.BorderThickness = new Thickness(0);
+                //TODO Alternatively change background to prevent changing size
+            }
+
+            //Select the clicked card
+            SelectedCard = songCard;
+            SelectedCard.BorderThickness = new Thickness(1);
+            SelectedCard.BorderBrush = new SolidColorBrush(Colors.Red);
+            //TODO Alternatively change background to prevent changing size
+            
+            //Get leaderboard and display
+            //TODO Database query here
+
+
         }
 
         /// <summary>
@@ -49,6 +67,15 @@ namespace WpfView
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
+        }
+
+        private void StartButton_MouseLeftDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(SelectedCard is not null)
+            {
+                PracticePiano.PlaySelectedSong(SelectedCard.SongID);
+                NavigationService?.Navigate(PracticePiano);
+            }
         }
     }
 }
