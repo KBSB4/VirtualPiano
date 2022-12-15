@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -46,11 +47,6 @@ namespace WpfView
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
             SongLogic.StartCountDown += StartCountDown;
-
-            //Clear out score
-            score = 0;
-            maxTotalScore = 0;
-            UpdateScoreVisual();
         }
 
 
@@ -95,9 +91,9 @@ namespace WpfView
             if (SongController.CurrentSong is null) return; 
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
             notesToBePressed.RemoveRange(0, 8);
-
             maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
-
+            score = 0;
+            UpdateScoreVisual();
         }
 
         /// <summary>
