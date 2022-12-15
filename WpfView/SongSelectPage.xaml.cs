@@ -18,7 +18,7 @@ namespace WpfView
         public SongSelectPage(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
-            PracticePiano = new PracticePlayPiano(_mainMenu);
+            PracticePiano = new PracticePlayPiano(_mainMenu, this);
             InitializeComponent();
             AddSongs();
         }
