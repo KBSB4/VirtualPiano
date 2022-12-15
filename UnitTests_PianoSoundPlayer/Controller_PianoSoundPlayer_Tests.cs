@@ -52,7 +52,7 @@ namespace UnitTests
 			thr2 = null;
 			foreach (FadingAudio fA in fadingAudios)
 			{
-				Assert.That(fA.sourceVoice.IsDisposed, Is.EqualTo(true));
+				Assert.That(fA.SourceVoice.IsDisposed, Is.EqualTo(true));
 			}
 			//player.Dispose();
 		}
