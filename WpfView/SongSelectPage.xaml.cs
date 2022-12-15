@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using SharpDX.Multimedia;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -12,7 +13,7 @@ namespace WpfView
         private readonly MainMenu _mainMenu;
         public PracticePlayPiano PracticePiano { get; set; }
 
-        private SongCardControl SelectedCard { get; set; }
+        private SongCardControl? SelectedCard { get; set; }
 
         public SongSelectPage(MainMenu mainMenu)
         {
@@ -33,18 +34,35 @@ namespace WpfView
             {
                 SelectedCard.BorderThickness = new Thickness(0);
                 //TODO Alternatively change background to prevent changing size
+
+                //If the same songcard is clicked that is selected -> deselect
+                if (SelectedCard.Equals(songCard))
+                {
+                    SelectedCard = null;
+                    Image nothingSelectedImage = new()
+                    {
+                        Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/PianoHeroLogo.png") as ImageSource
+                    };
+                   Scoreboard.Children.Clear();
+                    Scoreboard.Children.Add(nothingSelectedImage);
+                    return;
+                }
             }
 
             //Select the clicked card
             SelectedCard = songCard;
             SelectedCard.BorderThickness = new Thickness(1);
             SelectedCard.BorderBrush = new SolidColorBrush(Colors.Red);
+
+            Scoreboard.Children.Clear();
             //TODO Alternatively change background to prevent changing size
-            
-            //Get leaderboard and display
-            //TODO Database query here
 
-
+            //TODO Get leaderboard and display
+            for (int i = 0; i < 10; i++)
+            {
+                ScoreCardControl scoreCardControl = new("Username " + i, i, i);
+                Scoreboard.Children.Add(scoreCardControl);
+            }
         }
 
         /// <summary>
@@ -75,6 +93,10 @@ namespace WpfView
             {
                 PracticePiano.PlaySelectedSong(SelectedCard.SongID);
                 NavigationService?.Navigate(PracticePiano);
+            } else
+            {
+                MessageBox.Show("Select a song from the list first before starting",
+                "You can't play nothing", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }
