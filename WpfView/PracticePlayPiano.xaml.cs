@@ -248,7 +248,7 @@ namespace WpfView
 
                     if (notesToBePressed is null) return;
                     PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(releasedAt.TotalSeconds - (item.TimeStamp + item.Duration).TotalSeconds)).FirstOrDefault();
-                    if (closestNote is not null)
+                    if (closestNote is not null && !closestNote.PressedDown)
                     {
                         Debug.WriteLine($"Original note: {key} released at: {releasedAt} [][][] Closest note: {closestNote}");
                         int timeDifference = TimeSpan.Compare(releasedAt, (closestNote.TimeStamp + closestNote.Duration));
@@ -261,6 +261,7 @@ namespace WpfView
 
                         noteScore = Math.Max(MAXNOTESCORE - difference, 0);
                         rating = GetRating(noteScore);
+                        closestNote.PressedDown = true;
                     }
                     else
                     {
@@ -309,7 +310,7 @@ namespace WpfView
 
                     PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds)).FirstOrDefault();
 
-                    if (closestNote is not null)
+                    if (closestNote is not null && !closestNote.PressedDown)
                     {
                         currentlyPlaying.Add(key);
                         int timeDifference = TimeSpan.Compare(pressedAt, closestNote.TimeStamp);
