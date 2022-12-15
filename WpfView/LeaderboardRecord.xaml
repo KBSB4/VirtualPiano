@@ -13,11 +13,13 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="4*"></ColumnDefinition>
                 <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Image Grid.ColumnSpan="3"></Image>
-            <Label Foreground="AntiqueWhite" FontSize="30" Content="{Binding Position}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"></Label>
-            <Label Grid.Column="1" Foreground="AntiqueWhite" FontSize="30" Content="{Binding UserName}"></Label>
-            <Label Grid.Column="2" Foreground="AntiqueWhite" FontSize="30" Content="{Binding Score}"></Label>
+            <Image Grid.ColumnSpan="4"></Image>
+            <Label x:Name="PositionLabel" Foreground="AntiqueWhite" FontSize="30" Content="{Binding Position}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"></Label>
+            <Label x:Name="UserLabel" Grid.Column="1" Foreground="AntiqueWhite" FontSize="30" Content="{Binding UserName}"></Label>
+            <Image x:Name="TrophyImage" Grid.Column="2"></Image>
+            <Label x:Name="ScoreLabel" Grid.Column="3" Foreground="AntiqueWhite" FontSize="30" Content="{Binding Score}"></Label>
         </Grid>
     </Viewbox>
 </UserControl>

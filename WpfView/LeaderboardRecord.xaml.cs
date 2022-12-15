@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace WpfView
 {
@@ -18,10 +19,47 @@ namespace WpfView
 
         public LeaderboardRecord(int position, string userName, int score)
         {
-            Position = position.ToString();
+            Position = (position + 1).ToString();
             UserName = userName;
             Score = score.ToString();
             InitializeComponent();
+
+            //Change colour of top 3 and add trophy image
+            //TODO Change images to trophies
+            SolidColorBrush firstPosition = new SolidColorBrush(Colors.Gold);
+            SolidColorBrush secondPosition = new SolidColorBrush(Colors.Silver);
+            SolidColorBrush thirdPosition = new SolidColorBrush(Colors.Brown);
+            SolidColorBrush otherPosition = new SolidColorBrush(Colors.White);
+
+            TrophyImage.Height = 40;
+            TrophyImage.Width = 40;
+            switch (position)
+            {
+                case 0:
+                    PositionLabel.Foreground = firstPosition;
+                    UserLabel.Foreground = firstPosition;
+                    ScoreLabel.Foreground = firstPosition;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/DifficultyIconHero.png") as ImageSource;
+                    break;
+                case 1:
+                    PositionLabel.Foreground = secondPosition;
+                    UserLabel.Foreground = secondPosition;
+                    ScoreLabel.Foreground = secondPosition;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/DifficultyIconMedium.png") as ImageSource;
+                    break;
+                case 2:
+                    PositionLabel.Foreground = thirdPosition;
+                    UserLabel.Foreground = thirdPosition;
+                    ScoreLabel.Foreground = thirdPosition;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/DifficultyIconEZ.png") as ImageSource;
+                    break;
+                default:
+                    PositionLabel.Foreground = otherPosition;
+                    UserLabel.Foreground = otherPosition;
+                    ScoreLabel.Foreground = otherPosition;
+                    TrophyImage.Source = null;
+                    break;
+            }
         }
 
         public string Position
