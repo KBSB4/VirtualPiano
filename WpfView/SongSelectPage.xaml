@@ -41,7 +41,7 @@
             <Image Grid.Row="1" Grid.ColumnSpan="2" Source="/Images/PianoHeroLogo.png"></Image>
             <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource MenuButton}">
                 <Viewbox>
-                    <Label  HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="center" FontWeight="Bold" Foreground="WhiteSmoke">Start</Label>
+                    <Label x:Name="StartButton"  HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="center" FontWeight="Bold" Foreground="WhiteSmoke" MouseLeftButtonDown="StartButton_MouseLeftDown">Start</Label>
                 </Viewbox>
             </Button>
         </Grid>
