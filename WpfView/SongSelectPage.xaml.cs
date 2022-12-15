@@ -32,10 +32,8 @@ namespace WpfView
             //Deselect if there is one
             if (SelectedCard is not null)
             {
-                SelectedCard.BorderThickness = new Thickness(0);
-                //TODO Alternatively change background to prevent changing size
-
-                //If the same songcard is clicked that is selected -> deselect
+                SelectedCard.Background = null;
+                //If the same songcard is clicked that is selected -> deselect and show logo
                 if (SelectedCard.Equals(songCard))
                 {
                     SelectedCard = null;
@@ -50,14 +48,13 @@ namespace WpfView
             }
 
             //Select the clicked card
-            //TODO Alternatively change background to prevent changing size
             SelectedCard = songCard;
-            SelectedCard.BorderThickness = new Thickness(1);
-            SelectedCard.BorderBrush = new SolidColorBrush(Colors.Red);
+            SelectedCard.Background = new SolidColorBrush(Colors.Red);
 
+            //Show leaderboard
+            //TODO Connect to database
             Leaderboard.Children.Clear();
-            SelectedSongControl selectedSongControl = new();
-            Leaderboard.Children.Add(selectedSongControl);
+            Leaderboard.Children.Add(new SelectedSongControl());
         }
 
         /// <summary>
