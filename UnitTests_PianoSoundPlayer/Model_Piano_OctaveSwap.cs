@@ -13,7 +13,8 @@ namespace UnitTests
         //TODO update tests
         public void SetUp()
         {
-            piano = new();
+            PianoController.CreatePiano();
+            piano = PianoController.Piano;
         }
 
 
@@ -28,7 +29,7 @@ namespace UnitTests
                 PianoLogic.SwapOctave(piano);
             }
 
-            Assert.AreEqual(result, piano.PianoKeys[index].Octave);
+            Assert.That(piano.PianoKeys[index].Octave, Is.EqualTo(result));
 
         }
 
@@ -40,7 +41,7 @@ namespace UnitTests
             if (b)
             {
                 PianoLogic.SwapOctave(piano);
-               
+
             }
 
 

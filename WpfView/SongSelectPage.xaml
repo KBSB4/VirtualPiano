@@ -34,15 +34,9 @@
                 <RowDefinition Height="3*"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Viewbox Height="100" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Label HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke">Current song</Label>
+            <Viewbox Grid.RowSpan="2" Grid.ColumnSpan="2">
+                <local:SelectedSongControl></local:SelectedSongControl>
             </Viewbox>
-            <Image Grid.Column="1"></Image>
-            <ScrollViewer Grid.Row="1" Grid.RowSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-                <WrapPanel Orientation="Vertical" Name="Scoreboard">
-                    <!--<Image Source="/Images/PianoHeroLogo.png"></Image>-->
-                </WrapPanel>
-            </ScrollViewer>
             <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource MenuButton}">
                 <Viewbox>
                     <Label x:Name="StartButton"  HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="center" FontWeight="Bold" Foreground="WhiteSmoke" MouseLeftButtonDown="StartButton_MouseLeftDown">Start</Label>
