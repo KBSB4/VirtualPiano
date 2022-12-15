@@ -13,6 +13,7 @@ namespace WpfView
         {
             SongCard = songCard;
             InitializeComponent();
+
             //Name and difficiulty
             Title.Content = songCard.SongTitle;
             DifficultyImage.Source = songCard.DifficultyImageSource;
@@ -21,11 +22,20 @@ namespace WpfView
             Random random = new();
             for (int i = 0; i < 10; i++)
             {
-                leaderBoard.Children.Add(new LeaderboardRecord(i, "LongnameUser" + i.ToString(), random.Next(0, 99999999)));
+                //User check
+                if (i == 5) //TODO replace with if user when database gets added
+                {
+                    if (i > 9)
+                    {
+                        leaderBoard.Children.RemoveAt(leaderBoard.Children.Count - 1);// Remove last one in list if user is outside top 10
+                    }
+                    leaderBoard.Children.Add(new LeaderboardRecord(i, "LongnameUser" + i.ToString(), random.Next(0, 99999999), true));
+                }
+                else
+                {
+                    leaderBoard.Children.Add(new LeaderboardRecord(i, "LongnameUser" + i.ToString(), random.Next(0, 99999999)));
+                }
             }
-            //TODO change top 3
-
-            //TODO get logged in user
         }
     }
 }
