@@ -55,7 +55,7 @@ namespace WpfView
             //string path = "../../../../WpfView/DebugMidi/sm64.mid";
             //string path = "../../../../WpfView/DebugMidi/RUshE.mid";
             //string path = "../../../../WpfView/DebugMidi/silent_night_easy.mid";
-            string path = "../../../../WpfView/DebugMidi/test2.mid";
+            string path = "./DebugMidi/test2.mid";
 
             //Prepare song
             MidiController.OpenMidi(path);
