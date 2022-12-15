@@ -22,6 +22,7 @@ namespace WpfView
     public partial class PracticePlayPiano : Page
     {
         private readonly MainMenu? _mainMenu;
+        private readonly SongSelectPage _songSelectPage;
         private readonly PianoGridGenerator pianoGrid;
         readonly PracticeNotesGenerator practiceNotes;
 
@@ -33,9 +34,10 @@ namespace WpfView
         private const int MAXNOTESCORE = 1000;
         private int maxTotalScore;
 
-        public PracticePlayPiano(MainMenu mainMenu)
+        public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
         {
             _mainMenu = mainMenu;
+            _songSelectPage = songSelectPage;
             InitializeComponent();
             _mainMenu?.CheckInputDevice(SettingsPage.IndexInputDevice);
             PianoController.CreatePiano();
@@ -44,6 +46,11 @@ namespace WpfView
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
             SongLogic.StartCountDown += StartCountDown;
+
+            //Clear out score
+            score = 0;
+            maxTotalScore = 0;
+            UpdateScoreVisual();
         }
 
 
@@ -142,6 +149,30 @@ namespace WpfView
                 catch (TaskCanceledException) //Just in case
                 {
                     Environment.Exit(0);
+                }
+
+                if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
+                {
+                    hasStarted = false;
+                    bool? dialogResult = false;
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        UploadScoreDialog uploadScoreDialog = new();
+                        dialogResult = uploadScoreDialog.ShowDialog();
+                    }));
+
+                    if((bool)dialogResult)
+                    {
+                        //TODO start upload proces, check if logged in
+                    } else
+                    {
+                        //Return to Songselectpage
+                        Dispatcher.Invoke(new Action(() =>
+                        {
+                            NavigationService?.Navigate(_songSelectPage);
+                        }));
+
+                    }
                 }
             }
         }
@@ -267,11 +298,8 @@ namespace WpfView
                         noteScore = 0;
                         rating = GetRating(0);
                     }
-
                     currentlyPlaying.Remove(key);
                     score += noteScore;
-
-                    Debug.WriteLine($"Score += {noteScore}");
                 }
             }
             UpdateScoreVisual();
