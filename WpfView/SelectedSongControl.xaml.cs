@@ -20,10 +20,10 @@ namespace WpfView
 
             //TODO database and get people
             Random random = new();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 11; i++)
             {
                 //User check
-                if (i == 5) //TODO replace with if user when database gets added
+                if (i == 10) //TODO replace with if user when database gets added
                 {
                     if (i > 9)
                     {
