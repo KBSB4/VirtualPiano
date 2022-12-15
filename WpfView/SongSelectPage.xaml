@@ -19,8 +19,9 @@
         </Grid.ColumnDefinitions>
         <Image Source="/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
         <Label HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Select a song</Label>
-        <ScrollViewer Grid.Row="1" Grid.RowSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-            <WrapPanel Orientation="Horizontal" Name="SongCards">
+
+        <ScrollViewer Grid.Row="1" Grid.RowSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" >
+            <WrapPanel Orientation="Horizontal" Name="SongCards" >
             </WrapPanel>
         </ScrollViewer>
 
