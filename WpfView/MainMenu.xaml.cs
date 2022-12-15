@@ -15,6 +15,8 @@ namespace WpfView
         public SettingsPage SettingsPage { get; set; }
         public SongSelectPage SongSelectPage { get; set; }
 
+        public AccountPage AccountPage { get; set; }
+
         //DO NOT REMOVE
         public IInputDevice? InputDevice;
 
@@ -24,6 +26,7 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
+            AccountPage = new AccountPage(this);
         }
 
         /// <summary>
@@ -103,6 +106,11 @@ namespace WpfView
         private void Practice_Button_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(SongSelectPage);
+        }
+
+        private void Account_Button_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(AccountPage);
         }
     }
 }

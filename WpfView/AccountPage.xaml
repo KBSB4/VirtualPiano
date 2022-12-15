@@ -1,0 +1,57 @@
+﻿<Page x:Class="WpfView.AccountPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfView"
+      mc:Ignorable="d" 
+      d:DesignHeight="1080" d:DesignWidth="1920"
+      Title="AccountPage">
+    <Page.DataContext>
+        <local:DataContextSettings/>
+    </Page.DataContext>
+
+    <Grid>
+        <Image Source="/Images/PianoHero_AccountPage_background.png" Stretch="Fill"/>
+        <Menu DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="Transparent">
+            <MenuItem Header="Back to Main Menu" Click="MainMenu_Click" Height="30" Foreground="White"  >
+                <MenuItem.Icon>
+                    <Image Source="Images/previous.png" Margin="3,-4,0,0" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+
+
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="2.5*"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="1" Width="1000" Opacity="50"  >
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition ></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+
+
+                </Grid>
+
+            </DockPanel>
+        </Grid>
+    </Grid>
+</Page>
