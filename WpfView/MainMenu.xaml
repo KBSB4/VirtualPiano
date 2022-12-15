@@ -48,10 +48,10 @@
             </Button>
             <Label Grid.Row="1" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Free-play</Label>
             
-            <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource MenuButton}" Click="Account_Button_Click">
+            <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource AccountButton}" Click="Account_Button_Click">
                 <Grid>
-                    <Ellipse Fill="White" Margin="0,0,0,0" Width="120" Height="120"></Ellipse>
-                    <Image Source="/Images/accountImage.png" Margin="0,0,0,0" Width="80" Height="80"></Image>
+                    <Rectangle Fill="White" Margin="32,55,32,55"></Rectangle>
+                    <Image Source="/Images/accountImage.png" Margin="20,40,20,40"></Image>
                 </Grid>
             </Button>
         </Grid>
