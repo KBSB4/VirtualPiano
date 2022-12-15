@@ -9,15 +9,9 @@ namespace WpfView
     /// </summary>
     public partial class LeaderboardRecord : UserControl
     {
-        public LeaderboardRecord()
-        {
-            InitializeComponent();
-            Position = "1";
-            UserName = "testRecord";
-            Score = "69420";
-        }
+        public LeaderboardRecord(int position, string userName, int score) : this(position, userName, score, false) { }
 
-        public LeaderboardRecord(int position, string userName, int score)
+        public LeaderboardRecord(int position, string userName, int score, bool CurrentUser)
         {
             Position = (position + 1).ToString();
             UserName = userName;
@@ -54,10 +48,15 @@ namespace WpfView
                     TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/DifficultyIconEZ.png") as ImageSource;
                     break;
                 default:
+
                     PositionLabel.Foreground = otherPosition;
                     UserLabel.Foreground = otherPosition;
                     ScoreLabel.Foreground = otherPosition;
-                    TrophyImage.Source = null;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/NoTrophy.png") as ImageSource;
+                    if (CurrentUser)
+                    {
+                        Background = new SolidColorBrush(Colors.OrangeRed);
+                    }
                     break;
             }
         }
