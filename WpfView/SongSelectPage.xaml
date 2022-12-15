@@ -35,7 +35,9 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <Viewbox Grid.RowSpan="2" Grid.ColumnSpan="2">
-                <local:SelectedSongControl></local:SelectedSongControl>
+                <WrapPanel Orientation="Horizontal" Name="Leaderboard">
+                    <Image Source="/Images/PianoHeroLogo.png" Name="nothingSelectedImage"></Image>
+                </WrapPanel>
             </Viewbox>
             <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource MenuButton}">
                 <Viewbox>

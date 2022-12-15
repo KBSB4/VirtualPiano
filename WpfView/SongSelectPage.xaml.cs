@@ -43,26 +43,21 @@ namespace WpfView
                     {
                         Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/PianoHeroLogo.png") as ImageSource
                     };
-                   Scoreboard.Children.Clear();
-                    Scoreboard.Children.Add(nothingSelectedImage);
+                    Leaderboard.Children.Clear();
+                    Leaderboard.Children.Add(nothingSelectedImage);
                     return;
                 }
             }
 
             //Select the clicked card
+            //TODO Alternatively change background to prevent changing size
             SelectedCard = songCard;
             SelectedCard.BorderThickness = new Thickness(1);
             SelectedCard.BorderBrush = new SolidColorBrush(Colors.Red);
 
-            Scoreboard.Children.Clear();
-            //TODO Alternatively change background to prevent changing size
-
-            //TODO Get leaderboard and display
-            for (int i = 0; i < 10; i++)
-            {
-                ScoreCardControl scoreCardControl = new("Username " + i, i, i);
-                Scoreboard.Children.Add(scoreCardControl);
-            }
+            Leaderboard.Children.Clear();
+            SelectedSongControl selectedSongControl = new();
+            Leaderboard.Children.Add(selectedSongControl);
         }
 
         /// <summary>
