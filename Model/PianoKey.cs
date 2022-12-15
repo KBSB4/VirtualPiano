@@ -9,8 +9,6 @@ namespace Model
         public bool PressedDown { get; set; }
         public NoteName Note { get; set; }
         public KeyBind? KeyBind { get; set; }
-
-
         public MetricTimeSpan? TimeStamp { get; set; }
         public MetricTimeSpan? Duration { get; set; }
 
