@@ -54,8 +54,16 @@ namespace WpfView
 
             //Show leaderboard
             //TODO Connect to database and send current user through to the control
-            Leaderboard.Children.Clear();
-            Leaderboard.Children.Add(new SelectedSongControl(SelectedCard));
+            CreateShowLeaderboard();
+        }
+
+        public void CreateShowLeaderboard()
+        {
+            if (SelectedCard is not null)
+            {
+                Leaderboard.Children.Clear();
+                Leaderboard.Children.Add(new SelectedSongControl(SelectedCard));
+            }
         }
 
         /// <summary>
