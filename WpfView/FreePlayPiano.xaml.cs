@@ -22,6 +22,8 @@ namespace WpfView
         private readonly PracticeNotesGenerator practiceNotes;
         private readonly MainMenu _mainMenu;
 
+        private bool BeenPlayed = false;
+
         public FreePlayPiano(MainMenu _mainMenu)
         {
             this._mainMenu = _mainMenu;
@@ -80,8 +82,17 @@ namespace WpfView
                     {
                         practiceNotes.StartExampleNote(e.Key);
                     }
-                    //TODO Add option to display keys live as if the piano is playing it
-                    //pianoGrid.DisplayPianoKey(e.Key);
+                    if (PlayLive.IsChecked)
+                    {
+                        new Thread(() =>
+                        {
+                            Thread.Sleep(2000);
+                            Dispatcher.Invoke(new Action(() =>
+                            {
+                                pianoGrid.DisplayPianoKey(e.Key);
+                            }));
+                        }).Start();
+                    }
                 }));
             }
             catch (TaskCanceledException) //Just in case
@@ -190,6 +201,7 @@ namespace WpfView
         {
             if (SongController.CurrentSong is null)
             {
+                BeenPlayed = false;
                 StartDialog();
             }
             else if (SongController.CurrentSong.IsPlaying)
@@ -199,6 +211,7 @@ namespace WpfView
             }
             else
             {
+                BeenPlayed = false;
                 StartDialog();
             }
         }
@@ -237,7 +250,16 @@ namespace WpfView
             if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
-                SongController.PlaySong();
+                if (!BeenPlayed)
+                {
+                    SongController.PlaySong();
+                    BeenPlayed = true;
+                }
+                else
+                {
+                    SongController.LoadSong();
+                    SongController.PlaySong();
+                }
             }
             else
             {
