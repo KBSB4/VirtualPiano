@@ -50,7 +50,7 @@
                 <MenuItem Header="_Play" Click="PlayMIDIFile" Foreground="Black"/>
                 <MenuItem Header="_Stop" Click="StopMIDIFile" Foreground="Black"/>
                 <Separator />
-                <MenuItem x:Name="IsolatedPiano" Header="_Isolate Piano" IsCheckable="true"/>
+                <MenuItem x:Name="IsolatedPiano" Header="_Isolate Piano" IsCheckable="true" Foreground="Black"/>
             </MenuItem>
         </Menu>
     </Grid>
