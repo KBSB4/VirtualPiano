@@ -1,10 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Model;
-using Model.DatabaseModels;
-using Model.Interfaces;
-using System.Data;
-
-namespace BusinessLogic
+﻿namespace BusinessLogic
 {
 	public class SQLDatabaseManager : IDatabaseManager
 	{
@@ -22,11 +16,27 @@ namespace BusinessLogic
 			throw new NotImplementedException();
 		}
 
-		public Task<User> GetUser(int id)
+		public async Task<User> GetUser(int id)
 		{
 			string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
 
+			await connection.OpenAsync();
+
+			SqlCommand command = new SqlCommand(query, connection);
+
+			SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = id };
+
+			command.Parameters.Add(userIdParam);
+
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+			User[] users = await ReadUsers(dataReader);
+
+			if (users.Length > 0)
+				return users[0];
+
 			return null;
+
 		}
 
 		#region Songs
