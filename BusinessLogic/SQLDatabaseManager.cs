@@ -11,6 +11,7 @@ using Melanchall.DryWetMidi.Core;
 using System.Data;
 using Model.Interfaces;
 using SharpDX;
+using System.Data.Common;
 
 namespace BusinessLogic
 {
@@ -28,6 +29,13 @@ namespace BusinessLogic
 		public Task<User> GetUser(string username)
 		{
 			throw new NotImplementedException();
+		}
+
+		public Task<User> GetUser(int id) 
+		{
+			string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
+
+			return null;
 		}
 
 		#region Songs
@@ -151,6 +159,80 @@ namespace BusinessLogic
 			}
 
 			return result.ToArray();
+		}
+
+		private async Task<User[]> ReadUsers(SqlDataReader dataReader)
+		{
+			List<User> result = new List<User>();
+
+			while (await dataReader.ReadAsync() ) 
+			{
+				result.Add(new User()
+				{
+					Name = await dataReader.GetFieldValueAsync<string>("username"),
+					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
+					Password = await dataReader.GetFieldValueAsync<string>("password"),
+					Email = await dataReader.GetFieldValueAsync<string>("email"),
+					isAdmin = await dataReader.GetFieldValueAsync<bool>("isAdmin")
+				});
+			}
+
+			return result.ToArray();
+		}
+
+
+		private async Task<Song> GetSong(int songId)
+		{
+			string query = "SELECT * FROM Song WHERE songId = @songId";
+
+			await connection.OpenAsync();
+
+			SqlCommand command = new SqlCommand(query, connection);
+
+			SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = songId };
+
+			command.Parameters.Add(songIdParam);
+
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+			Song[] result = await ReadSongs(dataReader);
+
+			if (result.Length > 0)
+				return result[0];
+
+			return null;
+		}
+		#endregion
+
+		#region Highscores
+		public async Task<Highscore[]> GetHighscores(int songId)
+		{
+			List<Highscore> highscores= new();
+
+			string query = "SELECT * FROM SongScore WHERE idSong = @songId";
+
+			await connection.OpenAsync();
+
+			SqlCommand command = new SqlCommand(query, connection);
+
+			SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = songId };
+
+			command.Parameters.Add(songIdParam);
+
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+			while (await dataReader.ReadAsync())
+			{
+				Highscore highscore = new();
+
+				highscore.User = await GetUser(await dataReader.GetFieldValueAsync<int>("idUser"));
+				highscore.Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong"));
+				highscore.Score = await dataReader.GetFieldValueAsync<int>("score");
+
+				highscores.Add(highscore);
+			}
+
+			return highscores.ToArray();
 		}
 		#endregion
 	}
