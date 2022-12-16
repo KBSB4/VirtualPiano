@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using SharpDX.Multimedia;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace WpfView
 {
@@ -11,10 +13,12 @@ namespace WpfView
         private readonly MainMenu _mainMenu;
         public PracticePlayPiano PracticePiano { get; set; }
 
+        private SongCardControl? SelectedCard { get; set; }
+
         public SongSelectPage(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
-            PracticePiano = new PracticePlayPiano(_mainMenu);
+            PracticePiano = new PracticePlayPiano(_mainMenu, this);
             InitializeComponent();
             AddSongs();
         }
@@ -23,10 +27,34 @@ namespace WpfView
         /// Temporary - Starts practice play
         /// </summary>
         /// <param name="ID"></param>
-        public void SongCard_Click(int ID)
+        public void SongCard_Click(SongCardControl songCard)
         {
-            PracticePiano.PlaySelectedSong(ID);
-            NavigationService?.Navigate(PracticePiano);
+            //Deselect if there is one
+            if (SelectedCard is not null)
+            {
+                SelectedCard.Background = null;
+                //If the same songcard is clicked that is selected -> deselect and show logo
+                if (SelectedCard.Equals(songCard))
+                {
+                    SelectedCard = null;
+                    Image nothingSelectedImage = new()
+                    {
+                        Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/PianoHeroLogo.png") as ImageSource
+                    };
+                    Leaderboard.Children.Clear();
+                    Leaderboard.Children.Add(nothingSelectedImage);
+                    return;
+                }
+            }
+
+            //Select the clicked card
+            SelectedCard = songCard;
+            SelectedCard.Background = new SolidColorBrush(Colors.OrangeRed);
+
+            //Show leaderboard
+            //TODO Connect to database and send current user through to the control
+            Leaderboard.Children.Clear();
+            Leaderboard.Children.Add(new SelectedSongControl(SelectedCard));
         }
 
         /// <summary>
@@ -49,6 +77,19 @@ namespace WpfView
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
+        }
+
+        private void StartButton_MouseLeftDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(SelectedCard is not null)
+            {
+                PracticePiano.PlaySelectedSong(SelectedCard.SongID);
+                NavigationService?.Navigate(PracticePiano);
+            } else
+            {
+                MessageBox.Show("Select a song from the list first before starting",
+                "You can't play nothing", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,6 +23,7 @@ namespace WpfView
     public partial class PracticePlayPiano : Page
     {
         private readonly MainMenu? _mainMenu;
+        private readonly SongSelectPage _songSelectPage;
         private readonly PianoGridGenerator pianoGrid;
         readonly PracticeNotesGenerator practiceNotes;
 
@@ -33,9 +35,10 @@ namespace WpfView
         private const int MAXNOTESCORE = 1000;
         private int maxTotalScore;
 
-        public PracticePlayPiano(MainMenu mainMenu)
+        public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
         {
             _mainMenu = mainMenu;
+            _songSelectPage = songSelectPage;
             InitializeComponent();
             _mainMenu?.CheckInputDevice(SettingsPage.IndexInputDevice);
             PianoController.CreatePiano();
@@ -88,9 +91,9 @@ namespace WpfView
             if (SongController.CurrentSong is null) return; 
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
             notesToBePressed.RemoveRange(0, 8);
-
             maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
-
+            score = 0;
+            UpdateScoreVisual();
         }
 
         /// <summary>
@@ -142,6 +145,30 @@ namespace WpfView
                 catch (TaskCanceledException) //Just in case
                 {
                     Environment.Exit(0);
+                }
+
+                if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
+                {
+                    hasStarted = false;
+                    bool? dialogResult = false;
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        UploadScoreDialog uploadScoreDialog = new();
+                        dialogResult = uploadScoreDialog.ShowDialog();
+                    }));
+
+                    if((bool)dialogResult)
+                    {
+                        //TODO start upload proces, check if logged in
+                    } else
+                    {
+                        //Return to Songselectpage
+                        Dispatcher.Invoke(new Action(() =>
+                        {
+                            NavigationService?.Navigate(_songSelectPage);
+                        }));
+
+                    }
                 }
             }
         }
@@ -267,11 +294,8 @@ namespace WpfView
                         noteScore = 0;
                         rating = GetRating(0);
                     }
-
                     currentlyPlaying.Remove(key);
                     score += noteScore;
-
-                    Debug.WriteLine($"Score += {noteScore}");
                 }
             }
             UpdateScoreVisual();

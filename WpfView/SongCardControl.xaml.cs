@@ -72,7 +72,7 @@ namespace WpfView
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Button? button = sender as Button;
-            if (button is not null && SongSelectPage is not null) { SongSelectPage.SongCard_Click(SongID); }
+            if (button is not null && SongSelectPage is not null) { SongSelectPage.SongCard_Click(this); }
         }
     }
 }
