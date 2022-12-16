@@ -1,6 +1,3 @@
-using BusinessLogic;
-using Model.DatabaseModels;
-using System;
 using System.Windows;
 
 namespace WpfView

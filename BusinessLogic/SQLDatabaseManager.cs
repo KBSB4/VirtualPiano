@@ -15,22 +15,22 @@ namespace BusinessLogic
 			"Password=Backing-Crumpet4;" +
 			"TrustServerCertificate=True;";
 
-		private SqlConnection connection = new SqlConnection(connectionString);
+		private SqlConnection connection = new(connectionString);
 
 		public Task<User> GetUser(string username)
 		{
 			throw new NotImplementedException();
 		}
 
-		public async Task<User> GetUser(int id) 
+		public async Task<User?> GetUser(int id)
 		{
 			string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
 
 			await connection.OpenAsync();
 
-			SqlCommand command = new SqlCommand(query, connection);
+			SqlCommand command = new(query, connection);
 
-			SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = id };
+			SqlParameter userIdParam = new("@userId", SqlDbType.Int) { Value = id };
 
 			command.Parameters.Add(userIdParam);
 
@@ -57,9 +57,9 @@ namespace BusinessLogic
 
 			await connection.OpenAsync();
 
-			SqlCommand command = new SqlCommand(query, connection);
+			SqlCommand command = new(query, connection);
 
-			SqlParameter nameParam = new SqlParameter("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
+			SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
 
 			command.Parameters.Add(nameParam);
 
@@ -83,9 +83,9 @@ namespace BusinessLogic
 
 			await connection.OpenAsync();
 
-			SqlParameter songnameParam = new SqlParameter("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
+			SqlParameter songnameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
 
-			SqlCommand command = new SqlCommand(query, connection);
+			SqlCommand command = new(query, connection);
 
 			command.Parameters.Add(songnameParam);
 
@@ -106,15 +106,15 @@ namespace BusinessLogic
 
 			await connection.OpenAsync();
 
-			SqlParameter midiParameter = new SqlParameter("@file", SqlDbType.VarBinary) { Value = song.FullFile };
+			SqlParameter midiParameter = new("@file", SqlDbType.VarBinary) { Value = song.FullFile };
 
-			SqlParameter nameParam = new SqlParameter("@name", SqlDbType.VarChar) { Value = song.Name };
+			SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = song.Name };
 
-			SqlParameter difficultyParam = new SqlParameter("@difficulty", SqlDbType.Int) { Value = song.Difficulty };
+			SqlParameter difficultyParam = new("@difficulty", SqlDbType.Int) { Value = song.Difficulty };
 
-			SqlParameter descriptionParam = new SqlParameter("@description", SqlDbType.VarChar) { Value = song.Description };
+			SqlParameter descriptionParam = new("@description", SqlDbType.VarChar) { Value = song.Description };
 
-			SqlCommand command = new SqlCommand(query, connection);
+			SqlCommand command = new(query, connection);
 
 			command.Parameters.AddRange(new SqlParameter[] { midiParameter, nameParam, difficultyParam, descriptionParam });
 
@@ -131,13 +131,11 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/>[] with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song[]> GetAllSongs()
 		{
-			List<Song> result = new List<Song>();
-
 			string query = "SELECT * FROM Song";
 
 			await connection.OpenAsync();
 
-			SqlCommand command = new SqlCommand(query, connection);
+			SqlCommand command = new(query, connection);
 
 			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
@@ -151,7 +149,7 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/> with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		private async Task<Song[]> ReadSongs(SqlDataReader dataReader)
 		{
-			List<Song> result = new List<Song>();
+			List<Song> result = new();
 
 			while (await dataReader.ReadAsync())
 			{
@@ -170,7 +168,7 @@ namespace BusinessLogic
 
 		private async Task<User[]> ReadUsers(SqlDataReader dataReader)
 		{
-			List<User> result = new List<User>();
+			List<User> result = new();
 
 			while (await dataReader.ReadAsync())
 			{
@@ -194,9 +192,9 @@ namespace BusinessLogic
 
 			await connection.OpenAsync();
 
-			SqlCommand command = new SqlCommand(query, connection);
+			SqlCommand command = new(query, connection);
 
-			SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = songId };
+			SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
 
 			command.Parameters.Add(songIdParam);
 
@@ -220,9 +218,9 @@ namespace BusinessLogic
 
 			await connection.OpenAsync();
 
-			SqlCommand command = new SqlCommand(query, connection);
+			SqlCommand command = new(query, connection);
 
-			SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = songId };
+			SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
 
 			command.Parameters.Add(songIdParam);
 
@@ -230,11 +228,12 @@ namespace BusinessLogic
 
 			while (await dataReader.ReadAsync())
 			{
-				Highscore highscore = new();
-
-				highscore.User = await GetUser(await dataReader.GetFieldValueAsync<int>("idUser"));
-				highscore.Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong"));
-				highscore.Score = await dataReader.GetFieldValueAsync<int>("score");
+				Highscore highscore = new()
+				{
+					User = await GetUser(await dataReader.GetFieldValueAsync<int>("idUser")),
+					Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong")),
+					Score = await dataReader.GetFieldValueAsync<int>("score")
+				};
 
 				highscores.Add(highscore);
 			}
