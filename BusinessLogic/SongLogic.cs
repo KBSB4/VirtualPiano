@@ -39,7 +39,6 @@ namespace BusinessLogic
             StartCountDown?.Invoke(null, new EventArgs());
 
             if (obj is not Song song) return;
-            //TODO Properly remake thread when song wants to be played again after it finishes
             song.SongTimerThread?.Start();
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);

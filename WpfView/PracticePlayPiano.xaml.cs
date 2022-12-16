@@ -54,7 +54,6 @@ namespace WpfView
         {
 
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
-            //TODO For demo do this based on easy and hero- rush e
 
             //string path = "../../../../WpfView/DebugMidi/sm64.mid";
             //string path = "../../../../WpfView/DebugMidi/RUshE.mid";
