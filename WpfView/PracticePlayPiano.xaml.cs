@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -88,7 +87,7 @@ namespace WpfView
             Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
             countDownThread.Start();
 
-            if (SongController.CurrentSong is null) return; 
+            if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
             notesToBePressed.RemoveRange(0, 8);
             maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
@@ -151,24 +150,37 @@ namespace WpfView
                 {
                     hasStarted = false;
                     bool? dialogResult = false;
+                    UploadScoreDialog? uploadScoreDialog = null;
                     Dispatcher.Invoke(new Action(() =>
                     {
-                        UploadScoreDialog uploadScoreDialog = new();
+                        uploadScoreDialog = new(score, maxTotalScore); ;
                         dialogResult = uploadScoreDialog.ShowDialog();
                     }));
 
-                    if((bool)dialogResult)
+                    if ((bool)dialogResult)
                     {
-                        //TODO start upload proces, check if logged in
-                    } else
-                    {
-                        //Return to Songselectpage
-                        Dispatcher.Invoke(new Action(() =>
+                        if (true) //TODO if logged in
                         {
-                            NavigationService?.Navigate(_songSelectPage);
-                        }));
+                            //TODO Upload score
 
+                            //Go to menu
+                            Dispatcher.Invoke(new Action(() =>
+                            {
+                                if (uploadScoreDialog is not null) uploadScoreDialog.Close();
+                            }));
+                        }
+                        else
+                        {
+                            //TODO Go to login, wait for a response then return here
+                        }
                     }
+
+                    //Return to Songselectpage and update leaderboard
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        _songSelectPage.CreateShowLeaderboard();
+                        NavigationService?.Navigate(_songSelectPage);
+                    }));
                 }
             }
         }
@@ -330,7 +342,7 @@ namespace WpfView
                     MetricTimeSpan pressedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
 
                     if (notesToBePressed is null) return;
-                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => 
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item =>
                     { if (item.TimeStamp is null) return false; Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds); return true; }).FirstOrDefault();
 
                     if (closestNote is not null)
