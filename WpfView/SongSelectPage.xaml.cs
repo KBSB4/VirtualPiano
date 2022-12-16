@@ -1,4 +1,5 @@
-﻿using SharpDX.Multimedia;
+﻿using Controller;
+using Model;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -60,13 +61,21 @@ namespace WpfView
         /// <summary>
         /// Temporary - Adds 10 random songs
         /// </summary>
-        private void AddSongs()
+        private async void AddSongs()
         {
-            for (int i = 0; i < 10; i++)
+            Song[] songs = await DatabaseController.GetAllSongs();
+
+            foreach (var item in songs)
             {
-                SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4, this);
+                SongCardControl songCardControl = new(item.SongId, item.Name, (int)item.Difficulty, this);
                 SongCards.Children.Add(songCardControl);
             }
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4, this);
+            //    SongCards.Children.Add(songCardControl);
+            //}
         }
 
         /// <summary>
@@ -81,11 +90,12 @@ namespace WpfView
 
         private void StartButton_MouseLeftDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if(SelectedCard is not null)
+            if (SelectedCard is not null)
             {
                 PracticePiano.PlaySelectedSong(SelectedCard.SongID);
                 NavigationService?.Navigate(PracticePiano);
-            } else
+            }
+            else
             {
                 MessageBox.Show("Select a song from the list first before starting",
                 "You can't play nothing", MessageBoxButton.OK, MessageBoxImage.Warning);
