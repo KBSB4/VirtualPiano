@@ -1,3 +1,6 @@
+using BusinessLogic;
+using Model.DatabaseModels;
+using System;
 using System.Windows;
 
 namespace WpfView
@@ -12,21 +15,15 @@ namespace WpfView
             Test();
             InitializeComponent();
             NavigationFrame.Navigate(new MainMenu());
+
+            doSomething()
         }
 
-        public async void Test()
-        {
-            //Song song = new()
-            //{
-            //    FullFile = File.ReadAllBytes("C:\\Users\\jaelk\\source\\repos\\VirtualPiano\\WpfView\\DebugMidi\\BEET.mid"),
-            //    Name = "BEET2",
-            //    Difficulty = Difficulty.Easy,
-            //    Description = "De nieuwe beethoom"
-            //};
+		private async void doSomething()
+		{
+			SQLDatabaseManager databaseManager = new SQLDatabaseManager();
 
-
-            //SQLDatabaseManager sQLDatabaseManager = new();
-            //await sQLDatabaseManager.UploadSong(song);
-        }
-    }
+            Highscore[] highscores = await databaseManager.GetHighscores(6);
+		}
+	}
 }
