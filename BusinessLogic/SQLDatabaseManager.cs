@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Data.SqlClient;
 using Model;
 using Model.DatabaseModels;
-using Microsoft.Data.SqlClient;
-using System.Diagnostics;
-using Melanchall.DryWetMidi.Core;
-using System.Data;
 using Model.Interfaces;
-using SharpDX;
-using System.Data.Common;
+using System.Data;
 
 namespace BusinessLogic
 {
-    public class SQLDatabaseManager : IDatabaseManager
+	public class SQLDatabaseManager : IDatabaseManager
 	{
 		private const string connectionString = "Data Source=127.0.0.1;" +
 			"Initial Catalog=PianoHero;" +
@@ -31,7 +22,7 @@ namespace BusinessLogic
 			throw new NotImplementedException();
 		}
 
-		public Task<User> GetUser(int id) 
+		public Task<User> GetUser(int id)
 		{
 			string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
 
@@ -130,7 +121,7 @@ namespace BusinessLogic
 
 			await connection.OpenAsync();
 
-			SqlCommand command = new SqlCommand(query, connection);	
+			SqlCommand command = new SqlCommand(query, connection);
 
 			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
@@ -165,7 +156,7 @@ namespace BusinessLogic
 		{
 			List<User> result = new List<User>();
 
-			while (await dataReader.ReadAsync() ) 
+			while (await dataReader.ReadAsync())
 			{
 				result.Add(new User()
 				{
@@ -181,9 +172,9 @@ namespace BusinessLogic
 		}
 
 
-		private async Task<Song> GetSong(int songId)
+		public async Task<Song?> GetSong(int songId)
 		{
-			string query = "SELECT * FROM Song WHERE songId = @songId";
+			string query = "SELECT * FROM Song WHERE idSong = @songId";
 
 			await connection.OpenAsync();
 
@@ -207,7 +198,7 @@ namespace BusinessLogic
 		#region Highscores
 		public async Task<Highscore[]> GetHighscores(int songId)
 		{
-			List<Highscore> highscores= new();
+			List<Highscore> highscores = new();
 
 			string query = "SELECT * FROM SongScore WHERE idSong = @songId";
 

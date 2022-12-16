@@ -6,8 +6,8 @@ using Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -50,24 +50,34 @@ namespace WpfView
         }
 
 
-        public void PlaySelectedSong(int songID)
+        public async void PlaySelectedSong(int songID)
         {
+
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
             //TODO For demo do this based on easy and hero- rush e
 
             //string path = "../../../../WpfView/DebugMidi/sm64.mid";
             //string path = "../../../../WpfView/DebugMidi/RUshE.mid";
             //string path = "../../../../WpfView/DebugMidi/silent_night_easy.mid";
-            string path = "../../../../WpfView/DebugMidi/test2.mid";
+            //string path = "../../../../WpfView/DebugMidi/test2.mid";
 
             //Prepare song
+            //MidiController.OpenMidi(path);
+
+            SQLDatabaseManager sQLDatabaseManager = new();
+            Song? x = await sQLDatabaseManager.GetSong(songID);
+            if (x is null) return;
+
+            string path = "currentlyPlaying.mid";
+
+            await File.WriteAllBytesAsync(path, x.FullFile);
             MidiController.OpenMidi(path);
-            SongController.LoadSong();
+            //SongController.LoadSong();
+
 
             //Play
             if (SongController.CurrentSong is null) return;
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
-            SongController.PlaySong();
 
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
             {
@@ -75,6 +85,7 @@ namespace WpfView
             };
             updateVisualNoteThread.Start();
 
+            SongController.PlaySong();
             hasStarted = true;
         }
 
@@ -88,7 +99,7 @@ namespace WpfView
             Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
             countDownThread.Start();
 
-            if (SongController.CurrentSong is null) return; 
+            if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
             notesToBePressed.RemoveRange(0, 8);
             maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
@@ -157,10 +168,11 @@ namespace WpfView
                         dialogResult = uploadScoreDialog.ShowDialog();
                     }));
 
-                    if((bool)dialogResult)
+                    if ((bool)dialogResult)
                     {
                         //TODO start upload proces, check if logged in
-                    } else
+                    }
+                    else
                     {
                         //Return to Songselectpage
                         Dispatcher.Invoke(new Action(() =>
@@ -330,7 +342,7 @@ namespace WpfView
                     MetricTimeSpan pressedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
 
                     if (notesToBePressed is null) return;
-                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => 
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item =>
                     { if (item.TimeStamp is null) return false; Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds); return true; }).FirstOrDefault();
 
                     if (closestNote is not null)
