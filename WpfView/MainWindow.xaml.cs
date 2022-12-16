@@ -1,3 +1,6 @@
+using BusinessLogic;
+using Model.DatabaseModels;
+using System;
 using System.Windows;
 
 namespace WpfView
@@ -11,6 +14,15 @@ namespace WpfView
         {
             InitializeComponent();
             NavigationFrame.Navigate(new MainMenu());
+
+            doSomething()
         }
-    }
+
+		private async void doSomething()
+		{
+			SQLDatabaseManager databaseManager = new SQLDatabaseManager();
+
+            Highscore[] highscores = await databaseManager.GetHighscores(6);
+		}
+	}
 }
