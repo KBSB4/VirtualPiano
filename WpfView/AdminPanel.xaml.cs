@@ -1,5 +1,10 @@
-﻿using System;
+﻿using BusinessLogic;
+using Controller;
+using Melanchall.DryWetMidi.Core;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,5 +34,31 @@ namespace WpfView
         {
 
         }
+
+
+        /// <summary>
+        ///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "MIDI Files (*.mid)|*.mid",
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
+
+            bool? fileOpened = openFileDialog.ShowDialog();
+            if (fileOpened == true)
+            {
+                //Get the path of specified file
+                MidiLogic.CurrentMidi = MidiFile.Read(openFileDialog.FileName);
+            }
+        }
+
+
+
     }
 }
