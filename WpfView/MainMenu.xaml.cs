@@ -14,6 +14,7 @@ namespace WpfView
         public FreePlayPiano FreePlay { get; set; }
         public SettingsPage SettingsPage { get; set; }
         public SongSelectPage SongSelectPage { get; set; }
+        public AdminPanel AdminPanel { get; set; }
 
         public AccountPage AccountPage { get; set; }
 
@@ -28,10 +29,7 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
-            AccountPage = new AccountPage(this);
-            this.AdminPanel = new AdminPanel();
-           
-
+            AdminPanel = new();
         }
 
         /// <summary>
@@ -110,7 +108,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void Practice_Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(SongSelectPage);
+            NavigationService?.Navigate(AdminPanel);
         }
 
         private void Account_Button_Click(object sender, RoutedEventArgs e)
