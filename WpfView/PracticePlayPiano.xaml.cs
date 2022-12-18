@@ -6,6 +6,7 @@ using Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace WpfView
     public partial class PracticePlayPiano : Page
     {
         private readonly MainMenu? _mainMenu;
+        private readonly SongSelectPage _songSelectPage;
         private readonly PianoGridGenerator pianoGrid;
         readonly PracticeNotesGenerator practiceNotes;
 
@@ -33,9 +35,10 @@ namespace WpfView
         private const int MAXNOTESCORE = 1000;
         private int maxTotalScore;
 
-        public PracticePlayPiano(MainMenu mainMenu)
+        public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
         {
             _mainMenu = mainMenu;
+            _songSelectPage = songSelectPage;
             InitializeComponent();
             _mainMenu?.CheckInputDevice(SettingsPage.IndexInputDevice);
             PianoController.CreatePiano();
@@ -47,24 +50,34 @@ namespace WpfView
         }
 
 
-        public void PlaySelectedSong(int songID)
+        public async void PlaySelectedSong(int songID)
         {
+
             //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
             //TODO For demo do this based on easy and hero- rush e
 
             //string path = "../../../../WpfView/DebugMidi/sm64.mid";
             //string path = "../../../../WpfView/DebugMidi/RUshE.mid";
             //string path = "../../../../WpfView/DebugMidi/silent_night_easy.mid";
-            string path = "../../../../WpfView/DebugMidi/test2.mid";
+            //string path = "../../../../WpfView/DebugMidi/test2.mid";
 
             //Prepare song
+            //MidiController.OpenMidi(path);
+
+            SQLDatabaseManager sQLDatabaseManager = new();
+            Song? x = await sQLDatabaseManager.GetSong(songID);
+            if (x is null) return;
+
+            string path = "currentlyPlaying.mid";
+
+            await File.WriteAllBytesAsync(path, x.FullFile);
             MidiController.OpenMidi(path);
-            SongController.LoadSong();
+            //SongController.LoadSong();
+
 
             //Play
             if (SongController.CurrentSong is null) return;
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
-            SongController.PlaySong();
 
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
             {
@@ -72,6 +85,7 @@ namespace WpfView
             };
             updateVisualNoteThread.Start();
 
+            SongController.PlaySong();
             hasStarted = true;
         }
 
@@ -85,12 +99,12 @@ namespace WpfView
             Thread countDownThread = new(new ParameterizedThreadStart(CountDown));
             countDownThread.Start();
 
-            if (SongController.CurrentSong is null) return; 
+            if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
             notesToBePressed.RemoveRange(0, 8);
-
             maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
-
+            score = 0;
+            UpdateScoreVisual();
         }
 
         /// <summary>
@@ -142,6 +156,31 @@ namespace WpfView
                 catch (TaskCanceledException) //Just in case
                 {
                     Environment.Exit(0);
+                }
+
+                if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
+                {
+                    hasStarted = false;
+                    bool? dialogResult = false;
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        UploadScoreDialog uploadScoreDialog = new();
+                        dialogResult = uploadScoreDialog.ShowDialog();
+                    }));
+
+                    if ((bool)dialogResult)
+                    {
+                        //TODO start upload proces, check if logged in
+                    }
+                    else
+                    {
+                        //Return to Songselectpage
+                        Dispatcher.Invoke(new Action(() =>
+                        {
+                            NavigationService?.Navigate(_songSelectPage);
+                        }));
+
+                    }
                 }
             }
         }
@@ -242,13 +281,12 @@ namespace WpfView
                 if (currentlyPlaying.Contains(key))
                 {
                     int noteScore;
-                    Rating rating;
 
                     MetricTimeSpan releasedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
 
                     if (notesToBePressed is null) return;
                     PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(releasedAt.TotalSeconds - (item.TimeStamp + item.Duration).TotalSeconds)).FirstOrDefault();
-                    if (closestNote is not null)
+                    if (closestNote is not null && !closestNote.PressedDown)
                     {
                         Debug.WriteLine($"Original note: {key} released at: {releasedAt} [][][] Closest note: {closestNote}");
                         int timeDifference = TimeSpan.Compare(releasedAt, (closestNote.TimeStamp + closestNote.Duration));
@@ -260,18 +298,14 @@ namespace WpfView
                         };
 
                         noteScore = Math.Max(MAXNOTESCORE - difference, 0);
-                        rating = GetRating(noteScore);
+                        closestNote.PressedDown = true;
                     }
                     else
                     {
                         noteScore = 0;
-                        rating = GetRating(0);
                     }
-
                     currentlyPlaying.Remove(key);
                     score += noteScore;
-
-                    Debug.WriteLine($"Score += {noteScore}");
                 }
             }
             UpdateScoreVisual();
@@ -306,10 +340,10 @@ namespace WpfView
                     MetricTimeSpan pressedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
 
                     if (notesToBePressed is null) return;
-                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => 
-                    { if (item.TimeStamp is null) return false; Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds); return true; }).FirstOrDefault();
 
-                    if (closestNote is not null)
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds)).FirstOrDefault();
+
+                    if (closestNote is not null && !closestNote.PressedDown)
                     {
                         currentlyPlaying.Add(key);
                         int timeDifference = TimeSpan.Compare(pressedAt, closestNote.TimeStamp);

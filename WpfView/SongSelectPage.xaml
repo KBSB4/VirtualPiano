@@ -19,8 +19,9 @@
         </Grid.ColumnDefinitions>
         <Image Source="/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
         <Label HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Select a song</Label>
-        <ScrollViewer Grid.Row="1" Grid.RowSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-            <WrapPanel Orientation="Horizontal" Name="SongCards">
+
+        <ScrollViewer Grid.Row="1" Grid.RowSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" >
+            <WrapPanel Orientation="Horizontal" Name="SongCards" >
             </WrapPanel>
         </ScrollViewer>
 
@@ -34,14 +35,14 @@
                 <RowDefinition Height="3*"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Viewbox Height="100" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Label HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke">Current song</Label>
+            <Viewbox Grid.RowSpan="2" Grid.ColumnSpan="2">
+                <WrapPanel Orientation="Horizontal" Name="Leaderboard">
+                    <Image Source="/Images/PianoHeroLogo.png" Name="nothingSelectedImage"></Image>
+                </WrapPanel>
             </Viewbox>
-            <Image Grid.Column="1"></Image>
-            <Image Grid.Row="1" Grid.ColumnSpan="2" Source="/Images/PianoHeroLogo.png"></Image>
             <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource MenuButton}">
                 <Viewbox>
-                    <Label  HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="center" FontWeight="Bold" Foreground="WhiteSmoke">Start</Label>
+                    <Label x:Name="StartButton"  HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="center" FontWeight="Bold" Foreground="WhiteSmoke" MouseLeftButtonDown="StartButton_MouseLeftDown">Start</Label>
                 </Viewbox>
             </Button>
         </Grid>
