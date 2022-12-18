@@ -29,5 +29,12 @@ namespace Controller
 		{
 			return await databaseManager.GetAllSongs();
 		}
+
+		public static async Task UploadSong(Song song)
+		{
+			 await databaseManager.UploadSong(song);
+		}
 	}
+
+
 }
