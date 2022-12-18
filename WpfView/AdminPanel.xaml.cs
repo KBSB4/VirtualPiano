@@ -2,6 +2,7 @@
 using Controller;
 using Melanchall.DryWetMidi.Core;
 using Microsoft.Win32;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,7 +32,7 @@ namespace WpfView
   
         public AdminPanel()
         {
-           
+            GenerateSongList();
             InitializeComponent();
         }
 
@@ -102,33 +103,39 @@ namespace WpfView
         {
             if (Validator())
             {
-                Upload();
+               Upload();
             }
                 
         }
 
-        public void Upload()
+        public async void Upload()
         {
             int difficulty = int.Parse(difficultyTextBox.Text);
-            using (SqlConnection connection = new SqlConnection())
+            Difficulty d = (Difficulty)difficulty;
+            Song song = new Song() { Description = descriptionTextBox.Text, Difficulty = d, File = MidiLogic.CurrentMidi, Name = titleTextBox.Text };
+            await DatabaseController.UploadSong(song);
+
+        }
+
+        public async void GenerateSongList()
+        {
+            Song[] songs = await DatabaseController.GetAllSongs();
+            Debug.WriteLine(songs.Count());
+            foreach (Song song in songs)
             {
-                String query = "INSERT INTO Song (name, midifile, difficulty, description) VALUES (@name, @file, @difficulty, @description)";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@id", titleTextBox);
-                    command.Parameters.AddWithValue("@file", MidiLogic.CurrentMidi);
-                    command.Parameters.AddWithValue("@difficulty", difficulty);
-                    command.Parameters.AddWithValue("@description", descriptionTextBox);
-
-                    connection.Open();
-                    int result = command.ExecuteNonQuery();
-
-                    // Check Error
-                    if (result < 0)
-                        Console.WriteLine("Error inserting data into Database!");
-                }
+                ListViewItem one = new ListViewItem() { Content = song.Name };
+                ListViewItem del = new ListViewItem() { Content = "X", Name = song.Name};
+                SongListAdminPanel.Items.Add(one);
+                RemoveSongsList.Items.Add(del);
             }
+
+        }
+
+
+        private void RemoveSongsList_Selected(object sender, RoutedEventArgs e)
+        {
+            ListViewItem DeleteSong = (ListViewItem)sender;
+            DatabaseController.DeleteSong(DeleteSong.Name);
         }
     }
 
