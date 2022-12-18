@@ -17,6 +17,8 @@ namespace BusinessLogic
 
 		private SqlConnection connection = new(connectionString);
 
+        
+
 		public Task<User> GetUser(string username)
 		{
 			throw new NotImplementedException();
@@ -53,7 +55,8 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/> with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song?> GetSong(string songname)
 		{
-			string query = "SELECT * FROM Song WHERE name = @name";
+            ProjectSettings.ExecuteSSHConnection();
+            string query = "SELECT * FROM Song WHERE name = @name";
 
 			await connection.OpenAsync();
 
@@ -102,7 +105,8 @@ namespace BusinessLogic
 		/// <param name="song"></param>
 		public async Task UploadSong(Song song)
 		{
-			string query = "INSERT INTO Song (name, midifile, difficulty, description) VALUES (@name, @file, @difficulty, @description)";
+            ProjectSettings.ExecuteSSHConnection();
+            string query = "INSERT INTO Song (name, midifile, difficulty, description) VALUES (@name, @file, @difficulty, @description)";
 
 			await connection.OpenAsync();
 
@@ -131,7 +135,9 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/>[] with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song[]> GetAllSongs()
 		{
-			string query = "SELECT * FROM Song";
+            ProjectSettings.ExecuteSSHConnection();
+
+            string query = "SELECT * FROM Song";
 
 			await connection.OpenAsync();
 

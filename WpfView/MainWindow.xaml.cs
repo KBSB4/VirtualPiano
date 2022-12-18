@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Windows;
+using BusinessLogic;
 
 namespace WpfView
 {
@@ -9,18 +11,19 @@ namespace WpfView
     {
         public MainWindow()
         {
-            Test();
             InitializeComponent();
             NavigationFrame.Navigate(new MainMenu());
-
-            doSomething()
+            
         }
 
-		private async void doSomething()
-		{
-			SQLDatabaseManager databaseManager = new SQLDatabaseManager();
+        
+    }
+            //    Description = "De nieuwe beethoom"
+            //};
 
-            Highscore[] highscores = await databaseManager.GetHighscores(6);
-		}
-	}
+
+            //SQLDatabaseManager sQLDatabaseManager = new();
+            //await sQLDatabaseManager.UploadSong(song);
+        }
+    }
 }

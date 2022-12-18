@@ -1,4 +1,6 @@
-﻿namespace BusinessLogic
+﻿using System.Diagnostics;
+
+namespace BusinessLogic
 {
 	public static class ProjectSettings
 	{
@@ -6,7 +8,8 @@
 		{
 			{ PianoHeroPath.PianoSoundsFolder, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/Piano/" },
 			{ PianoHeroPath.StartTune, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/StartTune.mid" },
-			{ PianoHeroPath.ImagesFolder, "/Images/"}
+			{ PianoHeroPath.ImagesFolder, "/Images/"},
+			{ PianoHeroPath.CMDFiles, "../../../../BusinessLogic/CMDFiles/databaseConnect.bat"}
 		};
 
 		/// <summary>
@@ -18,15 +21,34 @@
 		{
             return paths[directory];
 		}
-	}
 
-	/// <summary>
-	/// <b>Piano Hero</b> Directory - stores directories for quick access.
-	/// </summary>
-	public enum PianoHeroPath
+        public  static void ExecuteSSHConnection()
+        {
+            Process process = new Process(); 
+
+            string _batDir = GetPath(PianoHeroPath.CMDFiles);
+
+            process.StartInfo.FileName = _batDir;
+            process.StartInfo.CreateNoWindow = false;
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
+            process.WaitForExit();
+            //process.Close();
+            Debug.Write("Executed bat file");
+        }
+    }
+
+    
+
+
+    /// <summary>
+    /// <b>Piano Hero</b> Directory - stores directories for quick access.
+    /// </summary>
+    public enum PianoHeroPath
 	{
 		PianoSoundsFolder,
 		StartTune,
-		ImagesFolder
+		ImagesFolder,
+		CMDFiles
 	}
 }
