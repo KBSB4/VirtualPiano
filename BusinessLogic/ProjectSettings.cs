@@ -10,6 +10,7 @@ namespace BusinessLogic
 			{ PianoHeroPath.StartTune, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/StartTune.mid" },
 			{ PianoHeroPath.ImagesFolder, "/Images/"},
 			{ PianoHeroPath.BatchFolder, "../../../../BusinessLogic/BatchFiles/plink.exe"}
+
 		};
 
 		/// <summary>
@@ -19,7 +20,7 @@ namespace BusinessLogic
 		/// <returns></returns>
 		public static string GetPath(PianoHeroPath directory)
 		{
-            return paths[directory];
+			return paths[directory];
 		}
     }
 

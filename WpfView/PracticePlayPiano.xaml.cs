@@ -153,7 +153,7 @@ namespace WpfView
             }
         }
 
-        private void UploadScoreDialog()
+        private async void UploadScoreDialog()
         {
             if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
             {
@@ -170,8 +170,6 @@ namespace WpfView
                 {
                     if (true) //TODO if logged in
                     {
-                        //TODO Upload score  
-
                         Highscore highscore = new()
                         {
                             User = DatabaseController.GetUserByID(7).Result,
@@ -179,7 +177,24 @@ namespace WpfView
                             Score = score
                         };
 
-                        DatabaseController.UploadHighscore(highscore);
+                        //Check if score is already in the database
+                        Highscore[] highscores = await DatabaseController.GetHighscores(currentSong.Id);
+                        Highscore? FoundScore = highscores.Where(score => score.User.Id == highscore.User.Id).FirstOrDefault();
+
+                        if(FoundScore is null)
+                        {
+                            await DatabaseController.UploadHighscore(highscore);
+                        } else
+                        {
+                            if (FoundScore.Score < highscore.Score)
+                            {
+                                await DatabaseController.UpdateHighscore(highscore);
+                            } else
+                            {
+                                MessageBox.Show("Highscore is higher than current score",
+                                "There is no reason to upload your score.", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                        }   
 
                         //Go to menu
                         Dispatcher.Invoke(new Action(() =>
@@ -380,8 +395,8 @@ namespace WpfView
                     MetricTimeSpan pressedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
 
                     if (notesToBePressed is null) return;
-                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item =>
-                    { if (item.TimeStamp is null) return false; Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds); return true; }).FirstOrDefault();
+
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds)).FirstOrDefault();
 
                     if (closestNote is not null && !closestNote.PressedDown)
                     {

@@ -101,5 +101,12 @@ namespace Controller
 
             await uploadHighscoreTask;
         }
+
+        public static async Task UpdateHighscore(Highscore score)
+        {
+            Task updateHighscoreTask = databaseManager.UpdateHighscore(score);
+
+            await updateHighscoreTask;
+        }
     }
 }

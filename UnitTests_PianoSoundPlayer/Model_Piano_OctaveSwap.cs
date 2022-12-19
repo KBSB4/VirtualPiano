@@ -1,5 +1,4 @@
 ﻿using BusinessLogic;
-using Controller;
 using Model;
 
 namespace UnitTests
@@ -51,7 +50,7 @@ namespace UnitTests
                 PianoLogic.SwapOctave(piano);
             }
 
-            Assert.AreEqual(result, piano.PianoKeys[index].Octave);
+            Assert.That(piano.PianoKeys[index].Octave, Is.EqualTo(result));
 
         }
 
