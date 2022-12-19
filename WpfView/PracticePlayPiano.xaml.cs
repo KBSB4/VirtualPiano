@@ -202,6 +202,9 @@ namespace WpfView
                 }
 
                 //Return to Songselectpage and update leaderboard
+                SongLogic.StartCountDown -= StartCountDown;
+                SongController.CurrentSong.NotePlayed -= CurrentSong_NotePlayed;
+
                 Dispatcher.Invoke(new Action(() =>
                 {
                     _songSelectPage.CreateShowLeaderboard();
