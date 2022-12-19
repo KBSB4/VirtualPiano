@@ -71,7 +71,38 @@ namespace BusinessLogic
 			}
 		}
 
-		private async Task<User[]> ReadUsers(SqlDataReader dataReader)
+        public async Task<User?> GetLoggingInUser(string username, string password)
+        {
+            using (SqlConnection connection = new(connectionString))
+            {
+                string query = "SELECT * FROM UserAccount WHERE username = @username AND password = @password";
+
+                await connection.OpenAsync();
+
+                SqlCommand command = new(query, connection);
+
+                SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = username };
+
+                SqlParameter passwordParam = new("@password", SqlDbType.VarChar) { Value = password };
+
+                command.Parameters.Add(usernameParam);
+
+				command.Parameters.Add(passwordParam);
+
+                SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                User[] users = await ReadUsers(dataReader);
+
+                await CloseAndDispose(connection, command, dataReader);
+
+                if (users.Length > 0)
+                    return users[0];
+
+                return null;
+            }
+        }
+
+        private async Task<User[]> ReadUsers(SqlDataReader dataReader)
 		{
 			List<User> result = new();
 
@@ -323,7 +354,31 @@ namespace BusinessLogic
 				await CloseAndDispose(connection, command);
 			}
 		}
-		#endregion
+
+        public async Task UpdateHighscore(Highscore highscore)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "UPDATE SongScore SET score = @score WHERE idSong = @songId AND idUser = @userId";
+
+                await connection.OpenAsync();
+
+                SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
+
+                SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
+
+                SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
+
+                SqlCommand command = new(query, connection);
+
+                command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
+
+                await command.ExecuteNonQueryAsync();
+
+                await CloseAndDispose(connection, command);
+            }
+        }
+        #endregion
 
         private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
 		{
