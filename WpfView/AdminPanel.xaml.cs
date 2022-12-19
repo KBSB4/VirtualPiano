@@ -169,13 +169,12 @@ namespace WpfView
 		/// <returns></returns>
 		public bool IsUniqueSongName(string song)
 		{
-			Song? unique = songList.Find(x => x.Name == song);
-            	
-			if(unique is null)
+		    foreach(ListBoxItem item in SongListAdminPanel.Items)
 			{
-                return true;
-            }
-			return false;
+				if (item.Content.Equals(song)) return false;
+			}
+			
+            return true;
 		}
 
 		private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
