@@ -53,11 +53,11 @@ namespace WpfView
                     UserLabel.Foreground = otherPosition;
                     ScoreLabel.Foreground = otherPosition;
                     TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/NoTrophy.png") as ImageSource;
-                    if (CurrentUser)
-                    {
-                        Background = new SolidColorBrush(Colors.OrangeRed);
-                    }
                     break;
+            }
+            if (CurrentUser)
+            {
+                Background = new SolidColorBrush(Colors.OrangeRed);
             }
         }
 
