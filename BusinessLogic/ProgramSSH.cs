@@ -22,9 +22,9 @@ namespace BusinessLogic
             string argumentExtra = "1433:localhost:1433";
             ProcessStartInfo startInfo = new ProcessStartInfo();
             Process process = new Process();
-            startInfo.FileName = "plink.exe";
+			startInfo.FileName = ProjectSettings.GetPath(PianoHeroPath.BatchFolder);
 
-            startInfo.Arguments = $"-ssh -L {argumentExtra} {user}@{hostname} -pw {password}";
+			startInfo.Arguments = $"-ssh -L {argumentExtra} {user}@{hostname} -pw {password}";
             startInfo.CreateNoWindow = true;
             process.StartInfo = startInfo;
             
