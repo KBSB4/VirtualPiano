@@ -82,17 +82,17 @@ namespace WpfView
                     {
                         practiceNotes.StartExampleNote(e.Key);
                     }
-                    if (PlayLive.IsChecked)
-                    {
-                        new Thread(() =>
-                        {
-                            Thread.Sleep(2000);
-                            Dispatcher.Invoke(new Action(() =>
-                            {
-                                pianoGrid.DisplayPianoKey(e.Key);
-                            }));
-                        }).Start();
-                    }
+                    //if (PlayLive.IsChecked)
+                    //{
+                    //    new Thread(() =>
+                    //    {
+                    //        Thread.Sleep(2000);
+                    //        Dispatcher.Invoke(new Action(() =>
+                    //        {
+                    //            pianoGrid.DisplayPianoKey(e.Key);
+                    //        }));
+                    //    }).Start();
+                    //}
                 }));
             }
             catch (TaskCanceledException) //Just in case
