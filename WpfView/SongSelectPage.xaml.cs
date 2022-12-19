@@ -23,6 +23,18 @@ namespace WpfView
             PracticePiano = new PracticePlayPiano(_mainMenu, this);
             InitializeComponent();
             AddSongs();
+            KaraokeCheckBox.Checked += KaraokeCheckBox_Checked;
+            KaraokeCheckBox.Unchecked += KaraokeCheckBox_Unchecked;
+        }
+
+        private void KaraokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SongController.DoKaroake = false;
+        }
+
+        private void KaraokeCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            SongController.DoKaroake = true;
         }
 
         /// <summary>
