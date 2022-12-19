@@ -170,8 +170,7 @@ namespace WpfView
                 {
                     if (true) //TODO if logged in
                     {
-                        //TODO Upload score
-                        
+                        //TODO Upload score  
 
                         Highscore highscore = new()
                         {
@@ -180,7 +179,8 @@ namespace WpfView
                             Score = score
                         };
 
-                        DatabaseController.UploadScore(highscore);
+                        DatabaseController.UploadHighscore(highscore);
+
                         //Go to menu
                         Dispatcher.Invoke(new Action(() =>
                         {

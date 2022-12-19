@@ -290,15 +290,19 @@ namespace BusinessLogic
 			{
 				string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
 
-				SqlCommand command = new(query, connection);
+                await connection.OpenAsync();
 
-				SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
+                SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
 
-				SqlParameter userIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.User.Id };
+				SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
 
 				SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
 
-				command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam});
+                SqlCommand command = new(query, connection);
+
+                command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam});
+
+				await command.ExecuteNonQueryAsync();
 
 				await CloseAndDispose(connection, command);
 			}
