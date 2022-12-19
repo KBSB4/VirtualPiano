@@ -305,7 +305,7 @@ namespace BusinessLogic
 		}
 		#endregion
 
-		private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
+        private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
 		{
 			await CloseAndDispose(connection, command);
 			await dataReader.DisposeAsync();
@@ -316,5 +316,5 @@ namespace BusinessLogic
 			await connection.CloseAsync();
 			await command.DisposeAsync();
 		}
-	}
+    }
 }

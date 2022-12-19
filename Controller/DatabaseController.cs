@@ -2,29 +2,32 @@
 using Model;
 using Model.DatabaseModels;
 using Model.Interfaces;
-using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Controller
 {
-	public static class DatabaseController
-	{
-		private static IDatabaseManager databaseManager = new SQLDatabaseManager();
+    public static class DatabaseController
+    {
+        private static IDatabaseManager databaseManager = new SQLDatabaseManager();
 
-		/// <summary>
-		/// Deletes a song from a database using <see cref="databaseManager"/>
-		/// </summary>
-		/// <param name="songName"></param>
-		public static async Task DeleteSong(string songName)
-		{
-			Task deleteSongTask = databaseManager.DeleteSong(songName);
+        public static async Task<User?> GetUserByID(int userID)
+        {
+            Task<User?> getUserByIDTask = databaseManager.GetUser(userID);
 
-			await deleteSongTask;
-		}
+            User? result = await getUserByIDTask;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Deletes a song from a database using <see cref="databaseManager"/>
+        /// </summary>
+        /// <param name="songName"></param>
+        public static async Task DeleteSong(string songName)
+        {
+            Task deleteSongTask = databaseManager.DeleteSong(songName);
+
+            await deleteSongTask;
+        }
 
 		/// <summary>
 		/// Finds a song with <paramref name="songName"/> from a database using <see cref="databaseManager"/>
@@ -35,10 +38,10 @@ namespace Controller
 		{
 			Task<Song?> getSongTask = databaseManager.GetSong(songName);
 
-			Song? result = await getSongTask;
+            Song? result = await getSongTask;
 
-			return result;
-		}
+            return result;
+        }
 
 		/// <summary>
 		/// Finds a song with <paramref name="songId"/> from a database using <see cref="databaseManager"/>
@@ -49,10 +52,10 @@ namespace Controller
 		{
 			Task<Song?> getSongTask = databaseManager.GetSong(songId);
 
-			Song? result = await getSongTask;
+            Song? result = await getSongTask;
 
-			return result;
-		}
+            return result;
+        }
 
 		/// <summary>
 		/// Gets all songs from a database using <see cref="databaseManager"/>
@@ -62,10 +65,10 @@ namespace Controller
 		{
 			Task<Song[]> getAllSongsTask = databaseManager.GetAllSongs();
 
-			Song[] result = await getAllSongsTask;
+            Song[] result = await getAllSongsTask;
 
-			return result;
-		}
+            return result;
+        }
 
 		/// <summary>
 		/// Adds a <paramref name="song"/> to a database using <see cref="databaseManager"/> 
@@ -75,8 +78,8 @@ namespace Controller
 		{
 			Task uploadSongTask = databaseManager.UploadSong(song);
 
-			await uploadSongTask;
-		}
+            await uploadSongTask;
+        }
 
 		/// <summary>
 		/// Gets highscores from a song found by <paramref name="songId"/> from a database using <see cref="databaseManager"/> 
@@ -87,7 +90,7 @@ namespace Controller
 		{
 			Task<Highscore[]> getHighscoresTask = databaseManager.GetHighscores(songId);
 
-			Highscore[] result = await getHighscoresTask;
+            Highscore[] result = await getHighscoresTask;
 
 			return result;
 		}

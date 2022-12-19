@@ -3,6 +3,7 @@ using Controller;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using Model;
+using Model.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,6 +36,8 @@ namespace WpfView
         private const int MAXNOTESCORE = 1000;
         private int maxTotalScore;
 
+        Song currentSong;
+
         public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
         {
             _mainMenu = mainMenu;
@@ -51,18 +54,8 @@ namespace WpfView
 
         public async void PlaySelectedSong(int songID)
         {
-
-            //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
-
-            //string path = "../../../../WpfView/DebugMidi/sm64.mid";
-            //string path = "../../../../WpfView/DebugMidi/RUshE.mid";
-            //string path = "../../../../WpfView/DebugMidi/silent_night_easy.mid";
-            //string path = "../../../../WpfView/DebugMidi/test2.mid";
-
-            //Prepare song
-            //MidiController.OpenMidi(path);
-
             Song? x = await DatabaseController.GetSong(songID);
+            currentSong = x;
 
             if (x is null) return;
 
@@ -70,8 +63,6 @@ namespace WpfView
 
             await File.WriteAllBytesAsync(path, x.FullFile);
             MidiController.OpenMidi(path);
-            //SongController.LoadSong();
-
 
             //Play
             if (SongController.CurrentSong is null) return;
@@ -132,7 +123,7 @@ namespace WpfView
             {
                 CountDownImage.Visibility = Visibility.Hidden;
                 MenuBackButton.IsEnabled = true; //Prevents crash if you try to go back way too early
-            }));  
+            }));
         }
 
         /// <summary>
@@ -182,6 +173,14 @@ namespace WpfView
                         //TODO Upload score
                         
 
+                        Highscore highscore = new()
+                        {
+                            User = DatabaseController.GetUserByID(7).Result,
+                            Song = currentSong,
+                            Score = score
+                        };
+
+                        DatabaseController.UploadScore(highscore);
                         //Go to menu
                         Dispatcher.Invoke(new Action(() =>
                         {
