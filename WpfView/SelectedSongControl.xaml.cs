@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.DatabaseModels;
+using System;
 using System.Linq;
 using System.Windows.Controls;
 
@@ -11,7 +12,7 @@ namespace WpfView
     {
         public SongCardControl SongCard { get; set; }
         Random random = new();
-        public SelectedSongControl(SongCardControl songCard)
+        public SelectedSongControl(SongCardControl songCard, Highscore[] scores)
         {
             SongCard = songCard;
             InitializeComponent();
@@ -20,27 +21,24 @@ namespace WpfView
             Title.Content = songCard.SongTitle;
             DifficultyImage.Source = songCard.DifficultyImageSource;
 
-            int user = 2;
-
-            //TODO database and get people
-            for (int i = 0; i <= 9; i++)
+            foreach (Highscore score in scores)
             {
-                //User check
-                if (i == (user - 1)) //TODO replace with if user when database gets added
+                int position = Array.FindIndex(scores, item => item.Equals(score)) + 1;
+                if (score.User.Equals("Logged In User Here")) //TODO Replace with logged in user
                 {
-                    leaderBoard.Children.Add(new LeaderboardRecord(i, "LoggedInUser", random.Next(0, 99999999), true));
+                    if (position < 10)
+                    {
+                        leaderBoard.Children.RemoveAt(leaderBoard.Children.Count - 1);// Remove last one in list if user is outside top 10
+                    }
+                    leaderBoard.Children.Add(new LeaderboardRecord(position, score.User.Name, score.Score, true));
                 }
                 else
                 {
-                    leaderBoard.Children.Add(new LeaderboardRecord(i, RandomString(random.Next(4, 24)), random.Next(0, 99999999)));
+                    leaderBoard.Children.Add(new LeaderboardRecord(position, score.User.Name, score.Score));
                 }
             }
-            if ((user - 1) > 9)
-            {
-                leaderBoard.Children.RemoveAt(leaderBoard.Children.Count - 1);// Remove last one in list if user is outside top 10
-                leaderBoard.Children.Add(new LeaderboardRecord((user - 1), "LoggedInUser", random.Next(0, 99999999), true));
-            }
         }
+
 
         public string RandomString(int length)
         {
