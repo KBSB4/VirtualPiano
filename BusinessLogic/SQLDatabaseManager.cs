@@ -68,7 +68,7 @@ namespace BusinessLogic
 					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
 					Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
 					Email = await dataReader.GetFieldValueAsync<string>("email"),
-					isAdmin = await dataReader.GetFieldValueAsync<bool>("isAdmin")
+					isAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") == 0
 				});
 			}
 
@@ -255,7 +255,7 @@ namespace BusinessLogic
 			{
 				List<Highscore> highscores = new();
 
-				string query = "SELECT * FROM SongScore WHERE idSong = @songId";
+				string query = "SELECT * FROM SongScore WHERE idSong = @songId ORDER BY score DESC";
 
 				await connection.OpenAsync();
 
@@ -291,22 +291,26 @@ namespace BusinessLogic
 			{
 				string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
 
-				SqlCommand command = new(query, connection);
+                await connection.OpenAsync();
 
-				SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
+                SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
 
-				SqlParameter userIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.User.Id };
+				SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
 
 				SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
 
-				command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam });
+                SqlCommand command = new(query, connection);
+
+                command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam});
+
+				await command.ExecuteNonQueryAsync();
 
 				await CloseAndDispose(connection, command);
 			}
 		}
 		#endregion
 
-		private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
+        private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
 		{
 			await CloseAndDispose(connection, command);
 			await dataReader.DisposeAsync();
@@ -317,5 +321,5 @@ namespace BusinessLogic
 			await connection.CloseAsync();
 			await command.DisposeAsync();
 		}
-	}
+    }
 }

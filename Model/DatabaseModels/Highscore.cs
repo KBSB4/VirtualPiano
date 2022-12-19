@@ -11,5 +11,5 @@ namespace Model.DatabaseModels
 		public Song Song { get; set; }
 		public User User { get; set; }
 		public int Score { get; set; }
-	}
+    }
 }

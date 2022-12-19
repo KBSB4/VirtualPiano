@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Model.DatabaseModels;
+using System;
+using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace WpfView
 {
@@ -9,7 +12,7 @@ namespace WpfView
     public partial class SelectedSongControl : UserControl
     {
         public SongCardControl SongCard { get; set; }
-        public SelectedSongControl(SongCardControl songCard)
+        public SelectedSongControl(SongCardControl songCard, Highscore[] scores, string? description)
         {
             SongCard = songCard;
             InitializeComponent();
@@ -18,23 +21,33 @@ namespace WpfView
             Title.Content = songCard.SongTitle;
             DifficultyImage.Source = songCard.DifficultyImageSource;
 
-            //TODO database and get people
-            Random random = new();
-            for (int i = 0; i < 11; i++)
+            if (scores.Length > 0)
             {
-                //User check
-                if (i == 10) //TODO replace with if user when database gets added
+                foreach (Highscore score in scores)
                 {
-                    if (i > 9)
+                    int position = Array.FindIndex(scores, item => item.Equals(score));
+                    if (score.User.Name.Equals("Harris")) //TODO Replace with logged in user
                     {
-                        leaderBoard.Children.RemoveAt(leaderBoard.Children.Count - 1);// Remove last one in list if user is outside top 10
+                        if (position > 10)
+                        {
+                            leaderBoard.Children.RemoveAt(leaderBoard.Children.Count - 1);// Remove last one in list if user is outside top 10
+                        }
+                        leaderBoard.Children.Add(new LeaderboardRecord(position, score.User.Name, score.Score, true));
                     }
-                    leaderBoard.Children.Add(new LeaderboardRecord(i, "LongnameUser" + i.ToString(), random.Next(0, 99999999), true));
+                    else
+                    {
+                        leaderBoard.Children.Add(new LeaderboardRecord(position, score.User.Name, score.Score));
+                    }
                 }
-                else
+            } else
+            {
+                Label desc = new()
                 {
-                    leaderBoard.Children.Add(new LeaderboardRecord(i, "LongnameUser" + i.ToString(), random.Next(0, 99999999)));
-                }
+                    Content = description,
+                    Foreground = new SolidColorBrush(Colors.White),
+                    FontSize = 30
+                };
+                leaderBoard.Children.Add(desc);
             }
         }
     }

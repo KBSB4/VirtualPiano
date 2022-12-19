@@ -3,6 +3,7 @@ using Controller;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using Model;
+using Model.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,6 +36,8 @@ namespace WpfView
         private const int MAXNOTESCORE = 1000;
         private int maxTotalScore;
 
+        Song currentSong;
+
         public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
         {
             _mainMenu = mainMenu;
@@ -46,25 +49,13 @@ namespace WpfView
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
-            SongLogic.StartCountDown += StartCountDown;
-        }
 
+        }
 
         public async void PlaySelectedSong(int songID)
         {
-
-            //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
-            //TODO For demo do this based on easy and hero- rush e
-
-            //string path = "../../../../WpfView/DebugMidi/sm64.mid";
-            //string path = "../../../../WpfView/DebugMidi/RUshE.mid";
-            //string path = "../../../../WpfView/DebugMidi/silent_night_easy.mid";
-            //string path = "../../../../WpfView/DebugMidi/test2.mid";
-
-            //Prepare song
-            //MidiController.OpenMidi(path);
-
             Song? x = await DatabaseController.GetSong(songID);
+            currentSong = x;
 
             if (x is null) return;
 
@@ -72,11 +63,10 @@ namespace WpfView
 
             await File.WriteAllBytesAsync(path, x.FullFile);
             MidiController.OpenMidi(path);
-            //SongController.LoadSong();
-
 
             //Play
             if (SongController.CurrentSong is null) return;
+            SongLogic.StartCountDown += StartCountDown;
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
 
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
@@ -132,6 +122,7 @@ namespace WpfView
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Hidden;
+                MenuBackButton.IsEnabled = true; //Prevents crash if you try to go back way too early
             }));
         }
 
@@ -158,30 +149,79 @@ namespace WpfView
                     Environment.Exit(0);
                 }
 
-                if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
-                {
-                    hasStarted = false;
-                    bool? dialogResult = false;
-                    Dispatcher.Invoke(new Action(() =>
-                    {
-                        UploadScoreDialog uploadScoreDialog = new();
-                        dialogResult = uploadScoreDialog.ShowDialog();
-                    }));
+                UploadScoreDialog();
+            }
+        }
 
-                    if ((bool)dialogResult)
+        private void UploadScoreDialog()
+        {
+            if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
+            {
+                hasStarted = false;
+                bool? dialogResult = false;
+                UploadScoreDialog? uploadScoreDialog = null;
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    uploadScoreDialog = new(score, maxTotalScore); ;
+                    dialogResult = uploadScoreDialog.ShowDialog();
+                }));
+
+                if ((bool)dialogResult)
+                {
+                    if (true) //TODO if logged in
                     {
-                        //TODO start upload proces, check if logged in
+                        //TODO Upload score  
+
+                        Highscore highscore = new()
+                        {
+                            User = DatabaseController.GetUserByID(7).Result,
+                            Song = currentSong,
+                            Score = score
+                        };
+
+                        DatabaseController.UploadHighscore(highscore);
+
+                        //Go to menu
+                        Dispatcher.Invoke(new Action(() =>
+                        {
+                            if (uploadScoreDialog is not null) uploadScoreDialog.Close();
+                        }));
                     }
                     else
                     {
-                        //Return to Songselectpage
+                        //TODO Go to login, wait for a response then return here
+                        SettingsPage? accountPage = null;
                         Dispatcher.Invoke(new Action(() =>
                         {
-                            NavigationService?.Navigate(_songSelectPage);
+                            //NOTE SETTINGS PAGE IS TEMPORARY
+                            accountPage = new SettingsPage(this);
+                            NavigationService?.Navigate(accountPage);
                         }));
 
+                        while (accountPage is not null)
+                        {
+                            //await till we return and then open dialogue again
+                            if (accountPage.Closed)
+                            {
+                                //open dialogue box again
+                                accountPage = null;
+                                hasStarted = true; //So we can open the dialog again
+                                UploadScoreDialog();
+                                return;
+                            }
+                        }
                     }
                 }
+
+                //Return to Songselectpage and update leaderboard
+                SongLogic.StartCountDown -= StartCountDown;
+                SongController.CurrentSong.NotePlayed -= CurrentSong_NotePlayed;
+
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    _songSelectPage.CreateShowLeaderboard();
+                    NavigationService?.Navigate(_songSelectPage);
+                }));
             }
         }
 
@@ -340,8 +380,8 @@ namespace WpfView
                     MetricTimeSpan pressedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
 
                     if (notesToBePressed is null) return;
-
-                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds)).FirstOrDefault();
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item =>
+                    { if (item.TimeStamp is null) return false; Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds); return true; }).FirstOrDefault();
 
                     if (closestNote is not null && !closestNote.PressedDown)
                     {
@@ -411,8 +451,6 @@ namespace WpfView
             }
         }
 
-        #region Menubar event clicks
-
         /// <summary>
         /// lets the player go back to the main menu
         /// </summary>
@@ -420,21 +458,9 @@ namespace WpfView
         /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(_mainMenu);
+            hasStarted = false; //TODO rename name to be more clear
+            SongController.StopSong();
+            NavigationService?.Navigate(_songSelectPage);
         }
-
-        /// <summary>
-        /// lets the player go to the settings page of Piano Hero
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            if (_mainMenu is null) return;
-            _mainMenu.SettingsPage.GenerateInputDevices();
-            NavigationService?.Navigate(_mainMenu.SettingsPage);
-        }
-
-        #endregion
     }
 }
