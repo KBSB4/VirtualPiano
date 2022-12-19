@@ -238,7 +238,6 @@ namespace BusinessLogic
 
 			return result.ToArray();
 		}
-
 		#endregion
 
 		#region Highscores
