@@ -35,8 +35,10 @@ namespace WpfView
 		private byte[] lastOpenedFile;
 
 		private List<Song> songList = new();
-		public AdminPanel()
+		private MainMenu _mainMenu;
+		public AdminPanel(MainMenu mainMenu)
 		{
+			_mainMenu = mainMenu;
 			GenerateSongList();
 			InitializeComponent();
 		}
@@ -209,10 +211,13 @@ namespace WpfView
 			GenerateSongList();
 		}
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(_mainMenu);
+        }
+    }
 
-	}
-
-	class FemkesListBoxItem : ListBoxItem
+    class FemkesListBoxItem : ListBoxItem
 	{
 		public string songTitle { get; set; }
 	}

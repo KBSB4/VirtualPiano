@@ -74,9 +74,8 @@
         <Viewbox  Grid.ColumnSpan="2">
             <Label  Grid.ColumnSpan="2" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="130" Content="ADMIN"></Label>
         </Viewbox>
-        
-        
-        
+
+        <Button  Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Red" Width="50" Height="30" Foreground="White" FontSize="20" Content="X" Click="Button_Click_1"></Button>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>

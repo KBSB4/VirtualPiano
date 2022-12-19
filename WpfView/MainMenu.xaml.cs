@@ -25,7 +25,7 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
-            AdminPanel = new();
+            AdminPanel = new(this);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace WpfView
         private void Settings_Button_Click(object sender, RoutedEventArgs e)
         {
             SettingsPage.GenerateInputDevices(); // Gets all input devices
-            NavigationService?.Navigate(SettingsPage);
+            NavigationService?.Navigate(AdminPanel);
         }
 
         /// <summary>
