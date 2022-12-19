@@ -16,16 +16,33 @@ namespace BusinessLogic
 			"Password=Backing-Crumpet4;" +
 			"TrustServerCertificate=True;";
 
-		public SQLDatabaseManager()
-		{
-			//ProgramSSH.ExecuteSshConnection();
-		}
-
 		#region Users
 		public async Task<User> GetUser(string username)
 		{
-			throw new NotImplementedException();
-		}
+            using (SqlConnection connection = new(connectionString))
+            {
+                string query = "SELECT * FROM UserAccount WHERE idUser = @username";
+
+                await connection.OpenAsync();
+
+                SqlCommand command = new(query, connection);
+
+                SqlParameter userIdParam = new("@username", SqlDbType.VarChar) { Value = username };
+
+                command.Parameters.Add(userIdParam);
+
+                SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                User[] users = await ReadUsers(dataReader);
+
+                await CloseAndDispose(connection, command, dataReader);
+
+                if (users.Length > 0)
+                    return users[0];
+
+                return null;
+            }
+        }
 
 		public async Task<User?> GetUser(int id)
 		{
@@ -52,7 +69,6 @@ namespace BusinessLogic
 
 				return null;
 			}
-
 		}
 
 		private async Task<User[]> ReadUsers(SqlDataReader dataReader)
