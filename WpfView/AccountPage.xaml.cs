@@ -24,11 +24,11 @@ namespace WpfView
     public partial class AccountPage : Page
     {
         private readonly MainMenu _mainMenu;
-        private SecureString? loginUsername = new SecureString();
-        private SecureString? loginPassword = new SecureString();
-        private SecureString? newAccountUsername = new SecureString();
-        private SecureString? newAccountPassword = new SecureString();
-        private SecureString? newAccountConfirm = new SecureString();
+        private SecureString? LoginUsername { get; set; }
+        private SecureString? LoginPassword { get; set; }
+        private SecureString? NewAccountUsername { get; set; }
+        private SecureString? NewAccountPassword { get; set; }
+        private SecureString? NewAccountConfirm { get; set; }
         public AccountPage(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
@@ -38,16 +38,16 @@ namespace WpfView
 
         private void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            loginUsername = SaveStringSecure(Login_UsernameInput.Text);
-            loginPassword = SaveStringSecure(Login_PasswordInput.Password);
+            LoginUsername = SaveStringSecure(Login_UsernameInput.Text);
+            LoginPassword = SaveStringSecure(Login_PasswordInput.Password);
             ClearLoginInput();
         }
 
         private void Create_Button_Click(object sender, RoutedEventArgs e)
         {
-            newAccountUsername = SaveStringSecure(NewAccount_UsernameInput.Text);
-            newAccountPassword = SaveStringSecure(NewAccount_PasswordInput.Password);
-            newAccountConfirm = SaveStringSecure(NewAccount_ConfirmInput.Password);
+            NewAccountUsername = SaveStringSecure(NewAccount_UsernameInput.Text);
+            NewAccountPassword = SaveStringSecure(NewAccount_PasswordInput.Password);
+            NewAccountConfirm = SaveStringSecure(NewAccount_ConfirmInput.Password);
             ClearNewAccountInput();
         }
 
