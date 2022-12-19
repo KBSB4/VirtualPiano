@@ -10,6 +10,9 @@ namespace BusinessLogic
 {
     class ProgramSSH
     {
+        /// <summary>
+        /// makes a connection to the remote database (Microsoft SQL server) on a Linux VM. 
+        /// </summary>
        public static void ExecuteSshConnection()
         {
             AuthenticationMethod method = new PasswordAuthenticationMethod("student", "Arena-Enclose8");
