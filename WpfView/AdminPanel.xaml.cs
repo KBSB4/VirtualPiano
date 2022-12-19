@@ -21,6 +21,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using static Azure.Core.HttpHeader;
 
 namespace WpfView
 {
@@ -29,17 +30,13 @@ namespace WpfView
     /// </summary>
     public partial class AdminPanel : Page
     {
-  
+        private List<Song> songList = new();
         public AdminPanel()
         {
             GenerateSongList();
             InitializeComponent();
         }
 
-        private void ListViewItem_Selected(object sender, RoutedEventArgs e)
-        {
-
-        }
 
 
         /// <summary>
@@ -65,11 +62,21 @@ namespace WpfView
             }
         }
 
+
+        /// <summary>
+        /// Returns true if all fields are valid. 
+        /// </summary>
+        /// <returns></returns>
         public bool Validator()
         {
             bool isValid = true;
-            string errorMessage;
-            if (titleTextBox.Text.Length == 0)
+            string errorMessage = string.Empty;
+
+            if (IsUniqueSongName(titleTextBox.Text))
+            {
+                errorMessage = "Title has already been used!";
+            }
+            else if (titleTextBox.Text.Length == 0)
             {
                 errorMessage = "Title is required!";
             }
@@ -108,36 +115,104 @@ namespace WpfView
                 
         }
 
+        /// <summary>
+        /// Uploads a song to the databases and displays the song on the screen.
+        /// </summary>
         public async void Upload()
         {
             int difficulty = int.Parse(difficultyTextBox.Text);
             Difficulty d = (Difficulty)difficulty;
             Song song = new Song() { Description = descriptionTextBox.Text, Difficulty = d, File = MidiLogic.CurrentMidi, Name = titleTextBox.Text };
             await DatabaseController.UploadSong(song);
-
+            MakeSongVisable(song);
         }
 
+
+        /// <summary>
+        /// Gets all songs out of the database and displayes them on the screen.
+        /// </summary>
         public async void GenerateSongList()
         {
             Song[] songs = await DatabaseController.GetAllSongs();
-            Debug.WriteLine(songs.Count());
+            songList = songs.ToList();
             foreach (Song song in songs)
             {
-                ListViewItem one = new ListViewItem() { Content = song.Name };
-                //ListViewItem del = new ListViewItem() { Content = "X", Name = song.Name};
-                SongListAdminPanel.Items.Add(one);
-                //RemoveSongsList.Items.Add(del);
+                MakeSongVisable(song);
+            }
+        }
+
+        /// <summary>
+        /// Fills a listbox with songs 
+        /// </summary>
+        /// <param name="song"></param>
+        public void MakeSongVisable(Song song)
+        {
+            ListBoxItem one = new ListBoxItem() { Content = song.Name };
+            ListBoxItem del = new ListBoxItem() { Content = "X", Name = song.Name, };
+            SongListAdminPanel.Items.Add(one);
+            RemoveSongsList.Items.Add(del);
+        }
+
+
+        public async void DeleteSong( string name)
+        {
+           await DatabaseController.DeleteSong(name);
+        }
+
+        /// <summary>
+        /// Returns true if song name is unique.
+        /// </summary>
+        /// <param name="song"></param>
+        /// <returns></returns>
+        public bool IsUniqueSongName(string song)
+        {
+
+            foreach (Song s in songList)
+            {
+                if (s.Name.Equals(song))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ListBoxItem deleteSong = null;
+            foreach (ListBoxItem s in RemoveSongsList.Items)
+            {
+                if (s.IsSelected)
+                {
+                    deleteSong = (ListBoxItem)s;
+                }
             }
 
+            if (deleteSong != null)
+            {
+                DeleteSong(deleteSong.Name);
+                Song? found = songList.Find(x => x.Name.Equals(deleteSong.Name));
+                if(found != null) songList.Remove(found);
+                RenewUploadedSongList();
+            }
+
+
         }
 
-
-        private void RemoveSongsList_Selected(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Updates the screen after a song has been deleted.
+        /// </summary>
+        public void RenewUploadedSongList()
         {
-            ListViewItem DeleteSong = (ListViewItem)sender;
-            DatabaseController.DeleteSong(DeleteSong.Name);
+            SongListAdminPanel.Items.Clear();
+            RemoveSongsList.Items.Clear();
+            GenerateSongList();
         }
+
+
     }
 
-   
+     
+
+
 }

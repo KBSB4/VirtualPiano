@@ -23,7 +23,7 @@
             <ListView IsHitTestVisible="False" Name="SongListAdminPanel" Grid.Column="1" Grid.Row="2" Foreground="White" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False">
             </ListView>
 
-            <ListView Name="RemoveSongsList" Grid.Column="2" Grid.Row="2" Foreground="Red" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False">
+            <ListView Name="RemoveSongsList" Grid.Column="2" Grid.Row="2" Foreground="Red" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False" MouseUp="RemoveSongsList_MouseUp">
             </ListView>
 
 
