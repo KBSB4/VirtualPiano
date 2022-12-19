@@ -3,6 +3,7 @@ using Controller;
 using Melanchall.DryWetMidi.Core;
 using Microsoft.Win32;
 using Model;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -188,8 +189,12 @@ namespace WpfView
                 }
             }
 
+           
             if (deleteSong != null)
             {
+               DialogResult result = MessageBox.Show($"Are you sure u want to delete {deleteSong.Name}?", "Confirm Delete", MessageBoxButton.OKCancel);
+
+                if(MessageBoxResult.OK)
                 DeleteSong(deleteSong.Name);
                 Song? found = songList.Find(x => x.Name.Equals(deleteSong.Name));
                 if(found != null) songList.Remove(found);
