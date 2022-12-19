@@ -16,6 +16,11 @@ namespace BusinessLogic
 			"Password=Backing-Crumpet4;" +
 			"TrustServerCertificate=True;";
 
+		public SQLDatabaseManager()
+		{
+			//ProgramSSH.ExecuteSshConnection();
+		}
+
 		#region Users
 		public async Task<User> GetUser(string username)
 		{

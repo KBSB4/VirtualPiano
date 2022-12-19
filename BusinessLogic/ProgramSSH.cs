@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Renci.SshNet;
+using Renci.SshNet.Common;
 
 namespace BusinessLogic
 {
@@ -15,22 +16,22 @@ namespace BusinessLogic
         /// </summary>
        public static void ExecuteSshConnection()
         {
-            AuthenticationMethod method = new PasswordAuthenticationMethod("student", "Arena-Enclose8");
-            ConnectionInfo connectionInfo = new ConnectionInfo("145.44.234.89", "student", method);
-            SshClient client = new SshClient(connectionInfo);
-            if (!client.IsConnected)
-            {
-                Debug.WriteLine("Client is not connected yet");
-                client.Connect();
-                client.KeepAliveInterval = TimeSpan.FromHours(2);
-            }
+            string password = "Arena-Enclose8";
+            string user = "student";
+            string hostname = "145.44.234.89";
+            string argumentExtra = "1433:localhost:1433";
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            Process process = new Process();
+			startInfo.FileName = ProjectSettings.GetPath(PianoHeroPath.BatchFolder);
 
-            SshCommand readCommand = client.RunCommand("uname -mrs");
-            Debug.WriteLine(readCommand.Result);
-            SshCommand writeCommand = client.RunCommand("mkdir \"/home/student/Desktop/ssh_output\"");
-            Thread.Sleep(1000);
+			startInfo.Arguments = $"-ssh -L {argumentExtra} {user}@{hostname} -pw {password}";
+            startInfo.CreateNoWindow = true;
+            process.StartInfo = startInfo;
             
-
+            process.Start();
+            process.OutputDataReceived += (sender, args) => Debug.WriteLine(args.Data);
+            process.ErrorDataReceived += (sender, args) => Debug.WriteLine(args.Data);
+            
         }
     }
 }

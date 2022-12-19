@@ -77,8 +77,10 @@ namespace WpfView
 		{
 			bool isValid = true;
 			string errorMessage = string.Empty;
-
-			if (titleTextBox.Text.Length == 0)
+			if(songList.Count > 0 && !IsUniqueSongName(titleTextBox.Text)) {
+                errorMessage = "Title has already been used!";
+            }
+			else if (titleTextBox.Text.Length == 0)
 			{
 				errorMessage = "Title is required!";
 			}
@@ -136,6 +138,7 @@ namespace WpfView
 		public async void GenerateSongList()
 		{
 			Song[] songs = await DatabaseController.GetAllSongs();
+			songList = new List<Song>();
 			songList = songs.ToList();
 			foreach (Song song in songs)
 			{
@@ -168,15 +171,12 @@ namespace WpfView
 		/// <returns></returns>
 		public bool IsUniqueSongName(string song)
 		{
-
-			foreach (Song s in songList)
+		    foreach(ListBoxItem item in SongListAdminPanel.Items)
 			{
-				if (s.Name.Equals(song))
-				{
-					return false;
-				}
+				if (item.Content.Equals(song)) return false;
 			}
-			return true;
+			
+            return true;
 		}
 
 		private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)

@@ -6,9 +6,11 @@ namespace BusinessLogic
 	{
 		public static Dictionary<PianoHeroPath, string> paths = new()
 		{
-			{ PianoHeroPath.PianoSoundsFolder, "./PianoSoundPlayer/Sounds/Piano/" },
-			{ PianoHeroPath.StartTune, "./PianoSoundPlayer/Sounds/StartTune.mid" },
-			{ PianoHeroPath.ImagesFolder, "/Images/"}
+			{ PianoHeroPath.PianoSoundsFolder, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/Piano/" },
+			{ PianoHeroPath.StartTune, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/StartTune.mid" },
+			{ PianoHeroPath.ImagesFolder, "/Images/"},
+			{ PianoHeroPath.BatchFolder, "../../../../BusinessLogic/BatchFiles/plink.exe"}
+
 		};
 
 		/// <summary>
@@ -32,6 +34,7 @@ namespace BusinessLogic
 	{
 		PianoSoundsFolder,
 		StartTune,
-		ImagesFolder
+		ImagesFolder,
+		BatchFolder
 	}
 }

@@ -9,7 +9,8 @@
       Title="AdminPanel">
 
     <Grid>
-       
+
+        <Button Grid.Column="1" Background="White" Width="200" Height="40"></Button>
         <Image Source="/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
         <local:AspectRatioLayoutDecorator Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="1">
             <Image Source="/Images/SongCardBackGround.png"  ></Image>
@@ -20,10 +21,10 @@
         <Grid Grid.Row="1" Grid.Column="0">
             <Label Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="Uploaded Songs" VerticalContentAlignment="Top" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="50"></Label>
 
-            <ListBox IsHitTestVisible="False" Name="SongListAdminPanel" Grid.Column="1" Grid.Row="2" Foreground="White" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False">
+            <ListBox IsHitTestVisible="False" Name="SongListAdminPanel" Grid.Column="1" Grid.Row="2" Foreground="White" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
             </ListBox>
 
-            <ListBox Name="RemoveSongsList" Grid.Column="2" Grid.Row="2" Foreground="Red" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False" MouseUp="RemoveSongsList_MouseUp">
+            <ListBox Name="RemoveSongsList" Grid.Column="2" Grid.Row="2" Foreground="Red" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False" MouseUp="RemoveSongsList_MouseUp" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden">
             </ListBox>
 
 
