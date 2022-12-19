@@ -67,7 +67,7 @@ namespace BusinessLogic
 					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
 					Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
 					Email = await dataReader.GetFieldValueAsync<string>("email"),
-					isAdmin = await dataReader.GetFieldValueAsync<bool>("isAdmin")
+					isAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") == 0
 				});
 			}
 
@@ -254,7 +254,7 @@ namespace BusinessLogic
 			{
 				List<Highscore> highscores = new();
 
-				string query = "SELECT * FROM SongScore WHERE idSong = @songId";
+				string query = "SELECT * FROM SongScore WHERE idSong = @songId ORDER BY score DESC";
 
 				await connection.OpenAsync();
 

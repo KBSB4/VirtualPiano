@@ -23,10 +23,10 @@ namespace WpfView
 
             foreach (Highscore score in scores)
             {
-                int position = Array.FindIndex(scores, item => item.Equals(score)) + 1;
-                if (score.User.Equals("Logged In User Here")) //TODO Replace with logged in user
+                int position = Array.FindIndex(scores, item => item.Equals(score));
+                if (score.User.Name.Equals("Harris")) //TODO Replace with logged in user
                 {
-                    if (position < 10)
+                    if (position > 10)
                     {
                         leaderBoard.Children.RemoveAt(leaderBoard.Children.Count - 1);// Remove last one in list if user is outside top 10
                     }
@@ -37,14 +37,6 @@ namespace WpfView
                     leaderBoard.Children.Add(new LeaderboardRecord(position, score.User.Name, score.Score));
                 }
             }
-        }
-
-
-        public string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }
