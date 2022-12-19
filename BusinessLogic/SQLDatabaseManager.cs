@@ -16,10 +16,10 @@ namespace BusinessLogic
 			"Password=Backing-Crumpet4;" +
 			"TrustServerCertificate=True;";
 
-        public SQLDatabaseManager()
-        {
-            ProgramSSH.ExecuteSshConnection();
-        }
+		public SQLDatabaseManager()
+		{
+			//ProgramSSH.ExecuteSshConnection();
+		}
 
 		#region Users
 		public async Task<User> GetUser(string username)
@@ -85,7 +85,7 @@ namespace BusinessLogic
 		{
 			using (SqlConnection connection = new(connectionString))
 			{
-				
+
 				string query = "SELECT * FROM Song WHERE name = @name";
 
 				await connection.OpenAsync();
@@ -171,10 +171,10 @@ namespace BusinessLogic
 		/// <param name="song"></param>
 		public async Task UploadSong(Song song)
 		{
-            
-            using (SqlConnection connection = new(connectionString))
+
+			using (SqlConnection connection = new(connectionString))
 			{
-				
+
 				string query = "INSERT INTO Song (name, midifile, difficulty, description) VALUES (@name, @file, @difficulty, @description)";
 
 				await connection.OpenAsync();
@@ -203,7 +203,7 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/>[] with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song[]> GetAllSongs()
 		{
-			
+
 			using (SqlConnection connection = new(connectionString))
 			{
 				string query = "SELECT * FROM Song";
@@ -236,7 +236,7 @@ namespace BusinessLogic
 				result.Add(new Song()
 				{
 					Name = await dataReader.GetFieldValueAsync<string>("name"),
-					SongId = await dataReader.GetFieldValueAsync<int>("idSong"),
+					Id = await dataReader.GetFieldValueAsync<int>("idSong"),
 					FullFile = await dataReader.GetFieldValueAsync<byte[]>("midifile"),
 					Difficulty = await dataReader.GetFieldValueAsync<Difficulty>("difficulty"),
 					Description = await dataReader.GetFieldValueAsync<string>("description"),
@@ -281,6 +281,26 @@ namespace BusinessLogic
 				await CloseAndDispose(connection, command, dataReader);
 
 				return highscores.ToArray();
+			}
+		}
+
+		public async Task UploadHighscore(Highscore highscore)
+		{
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
+
+				SqlCommand command = new(query, connection);
+
+				SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
+
+				SqlParameter userIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.User.Id };
+
+				SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
+
+				command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam });
+
+				await CloseAndDispose(connection);
 			}
 		}
 		#endregion
