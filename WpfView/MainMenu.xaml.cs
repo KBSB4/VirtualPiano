@@ -94,7 +94,7 @@ namespace WpfView
         private void Settings_Button_Click(object sender, RoutedEventArgs e)
         {
             SettingsPage.GenerateInputDevices(); // Gets all input devices
-            NavigationService?.Navigate(SettingsPage);
+            NavigationService?.Navigate(AdminPanel);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void Practice_Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(AdminPanel);
+            NavigationService?.Navigate(SongSelectPage);
         }
     }
 }
