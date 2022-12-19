@@ -34,7 +34,7 @@ namespace WpfView
         List<PianoKey>? notesToBePressed;
         readonly List<PianoKey> currentlyPlaying = new();
         private const int MAXNOTESCORE = 1000;
-        private int maxTotalScore;
+        private int maxTotalScore = 0;
 
         Song currentSong;
 
@@ -92,7 +92,10 @@ namespace WpfView
             if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
             notesToBePressed.RemoveRange(0, 8);
-            maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
+
+            if (notesToBePressed.Count > 0)
+                maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
+            else maxTotalScore = 0;
             score = 0;
             UpdateScoreVisual();
         }
@@ -373,8 +376,16 @@ namespace WpfView
         {
             Dispatcher.Invoke(new Action(() =>
             {
-                ScoreBar.Value = Math.Round((double)score / maxTotalScore * 100);
-                ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
+                if (maxTotalScore > 0)
+                {
+                    ScoreBar.Value = Math.Round((double)score / maxTotalScore * 100);
+                    ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
+                }
+                else
+                {
+                    ScoreBar.Value = 0;
+					ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
+				}
             }));
         }
 
