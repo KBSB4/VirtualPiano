@@ -197,6 +197,17 @@ namespace WpfView
                             accountPage = new SettingsPage(this);
                             NavigationService?.Navigate(accountPage);
                         }));
+                    }
+                    else
+                    {
+                        //TODO Go to login, wait for a response then return here
+                        SettingsPage? accountPage = null;
+                        Dispatcher.Invoke(new Action(() =>
+                        {
+                            //NOTE SETTINGS PAGE IS TEMPORARY
+                            accountPage = new SettingsPage(this);
+                            NavigationService?.Navigate(accountPage);
+                        }));
 
                         while (accountPage is not null)
                         {
