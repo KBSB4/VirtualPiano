@@ -19,6 +19,8 @@ namespace Model.Interfaces
 		#region Users
 		public Task<User> GetUser(string username);
         public Task<User> GetUser(int userID);
+
+		public Task UploadNewUser(User user);
         #endregion
 
 		#region Highscore

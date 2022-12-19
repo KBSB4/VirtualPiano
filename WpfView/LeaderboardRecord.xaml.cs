@@ -59,10 +59,7 @@ namespace WpfView
             {
                 Background = new SolidColorBrush(Colors.OrangeRed);
             }
-                    break;
-            }
         }
-
         public string Position
         {
             get { return (string)GetValue(PositionProperty); }

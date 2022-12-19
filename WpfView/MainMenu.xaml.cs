@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace WpfView
 {
@@ -14,9 +15,10 @@ namespace WpfView
         public FreePlayPiano FreePlay { get; set; }
         public SettingsPage SettingsPage { get; set; }
         public SongSelectPage SongSelectPage { get; set; }
+        public AccountPage AccountPage { get; set; }
         public AdminPanel AdminPanel { get; set; }
 
-        public AdminPanel AdminPanel { get; set; }
+        private bool loggedIn = false;
 
         //DO NOT REMOVE
         public IInputDevice? InputDevice;
@@ -27,6 +29,7 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
+            AccountPage = new AccountPage(this);
             AdminPanel = new();
         }
 
@@ -111,7 +114,8 @@ namespace WpfView
 
         private void Account_Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(AdminPanel);
+            if (loggedIn) NavigationService?.Navigate(AdminPanel);
+            else NavigationService?.Navigate(AccountPage);
         }
     }
 }

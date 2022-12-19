@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Controller;
+using Model.DatabaseModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -27,6 +29,7 @@ namespace WpfView
         private SecureString? LoginUsername { get; set; }
         private SecureString? LoginPassword { get; set; }
         private SecureString? NewAccountUsername { get; set; }
+        private SecureString? NewAccountEmail { get; set; }
         private SecureString? NewAccountPassword { get; set; }
         private SecureString? NewAccountConfirm { get; set; }
         public AccountPage(MainMenu mainMenu)
@@ -36,22 +39,34 @@ namespace WpfView
             InitializeComponent();
         }
 
-        private void Login_Button_Click(object sender, RoutedEventArgs e)
+        private async void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            LoginUsername = SaveStringSecure(Login_UsernameInput.Text);
-            LoginPassword = SaveStringSecure(Login_PasswordInput.Password);
+            LoginUsername = SaveSecureString(Login_UsernameInput.Text);
+            LoginPassword = SaveSecureString(Login_PasswordInput.Password);
             ClearLoginInput();
         }
 
         private void Create_Button_Click(object sender, RoutedEventArgs e)
         {
-            NewAccountUsername = SaveStringSecure(NewAccount_UsernameInput.Text);
-            NewAccountPassword = SaveStringSecure(NewAccount_PasswordInput.Password);
-            NewAccountConfirm = SaveStringSecure(NewAccount_ConfirmInput.Password);
+            NewAccountUsername = SaveSecureString(NewAccount_UsernameInput.Text);
+            NewAccountEmail = SaveSecureString(NewAccount_EmailInput.Text);
+            NewAccountPassword = SaveSecureString(NewAccount_PasswordInput.Password);
+            NewAccountConfirm = SaveSecureString(NewAccount_ConfirmInput.Password);
+            UploadNewUser();
             ClearNewAccountInput();
         }
 
-        private SecureString SaveStringSecure(string password)
+        private async void UploadNewUser()
+        {
+            User user = new();
+            user.Name = NewAccount_UsernameInput.Text;
+            user.Password = NewAccount_PasswordInput.Password;
+            //user.isAdmin = TODO specify who is admin and who is not
+            user.Email = NewAccount_EmailInput.Text;
+            await DatabaseController.UploadNewUser(user);
+        }
+
+        private SecureString SaveSecureString(string password)
         {
             SecureString secureString = new SecureString();
             foreach (char charachter in password)
