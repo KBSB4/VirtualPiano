@@ -19,16 +19,18 @@ namespace BusinessLogic
             string password = "Arena-Enclose8";
             string user = "student";
             string hostname = "145.44.234.89";
-            string argumentExtra = "1433:localhost:1433";
-            ProcessStartInfo startInfo = new ProcessStartInfo();
+            string listen = "1433:localhost:1433";
+            int port = 22;
+            
             Process process = new Process();
-			startInfo.FileName = ProjectSettings.GetPath(PianoHeroPath.BatchFolder);
-
-			startInfo.Arguments = $"-ssh -L {argumentExtra} {user}@{hostname} -pw {password}";
-            startInfo.CreateNoWindow = true;
-            process.StartInfo = startInfo;
+			process.StartInfo.FileName = ProjectSettings.GetPath(PianoHeroPath.BatchFolder);
+            //process.StartInfo.FileName = "plink.exe";
+			process.StartInfo.Arguments = $"-ssh {hostname} -P {port} -l {user} -L {listen}  -pw {password} -batch -N";
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
             
             process.Start();
+           
             process.OutputDataReceived += (sender, args) => Debug.WriteLine(args.Data);
             process.ErrorDataReceived += (sender, args) => Debug.WriteLine(args.Data);
             
