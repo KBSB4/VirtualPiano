@@ -16,6 +16,11 @@ namespace BusinessLogic
 			"Password=Backing-Crumpet4;" +
 			"TrustServerCertificate=True;";
 
+        public SQLDatabaseManager()
+        {
+            ProgramSSH.ExecuteSshConnection();
+        }
+
 		#region Users
 		public async Task<User> GetUser(string username)
 		{
@@ -80,7 +85,7 @@ namespace BusinessLogic
 		{
 			using (SqlConnection connection = new(connectionString))
 			{
-				ProjectSettings.ExecuteSSHConnection();
+				
 				string query = "SELECT * FROM Song WHERE name = @name";
 
 				await connection.OpenAsync();
@@ -166,9 +171,10 @@ namespace BusinessLogic
 		/// <param name="song"></param>
 		public async Task UploadSong(Song song)
 		{
-			using (SqlConnection connection = new(connectionString))
+            
+            using (SqlConnection connection = new(connectionString))
 			{
-				ProjectSettings.ExecuteSSHConnection();
+				
 				string query = "INSERT INTO Song (name, midifile, difficulty, description) VALUES (@name, @file, @difficulty, @description)";
 
 				await connection.OpenAsync();
@@ -197,6 +203,7 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/>[] with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song[]> GetAllSongs()
 		{
+			
 			using (SqlConnection connection = new(connectionString))
 			{
 				string query = "SELECT * FROM Song";
