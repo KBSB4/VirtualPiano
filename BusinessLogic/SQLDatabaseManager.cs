@@ -18,7 +18,8 @@ namespace BusinessLogic
 
 		public SQLDatabaseManager()
 		{
-			//ProgramSSH.ExecuteSshConnection();
+			//ProgramSSH.ExecuteSsh();
+			ProgramSSH.ExecuteSshConnection();
 		}
 
 		#region Users
