@@ -300,7 +300,7 @@ namespace BusinessLogic
 
 				command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam });
 
-				await CloseAndDispose(connection);
+				await CloseAndDispose(connection, command);
 			}
 		}
 		#endregion
