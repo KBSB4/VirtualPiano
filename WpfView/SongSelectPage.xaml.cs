@@ -1,5 +1,6 @@
 ﻿using Controller;
 using Model;
+using Model.DatabaseModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -53,16 +54,17 @@ namespace WpfView
             SelectedCard.Background = new SolidColorBrush(Colors.OrangeRed);
 
             //Show leaderboard
-            //TODO Connect to database and send current user through to the control
             CreateShowLeaderboard();
         }
 
-        public void CreateShowLeaderboard()
+        public async void CreateShowLeaderboard()
         {
             if (SelectedCard is not null)
             {
                 Leaderboard.Children.Clear();
-                Leaderboard.Children.Add(new SelectedSongControl(SelectedCard));
+                //TODO Connect to database and send current user through to the control
+                Highscore[] highscores = await DatabaseController.GetHighscores(SelectedCard.SongID);
+                Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores));
             }
         }
 
