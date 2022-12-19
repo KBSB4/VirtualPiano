@@ -65,7 +65,7 @@ namespace BusinessLogic
 				{
 					Name = await dataReader.GetFieldValueAsync<string>("username"),
 					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
-					Password = await dataReader.GetFieldValueAsync<string>("password"),
+					Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
 					Email = await dataReader.GetFieldValueAsync<string>("email"),
 					isAdmin = await dataReader.GetFieldValueAsync<bool>("isAdmin")
 				});
