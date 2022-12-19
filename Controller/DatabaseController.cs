@@ -1,5 +1,6 @@
 ﻿using BusinessLogic;
 using Model;
+using Model.DatabaseModels;
 using Model.Interfaces;
 using SharpDX;
 using System;
@@ -53,6 +54,15 @@ namespace Controller
 			Task uploadSongTask = databaseManager.UploadSong(song);
 
 			await uploadSongTask;
+		}
+
+		public static async Task<Highscore[]> GetHighscores(int songId)
+		{
+			Task<Highscore[]> getHighscoresTask = databaseManager.GetHighscores(songId);
+
+			Highscore[] result = await getHighscoresTask;
+
+			return result;
 		}
 	}
 
