@@ -27,6 +27,9 @@
     <None Remove="Images\settingsIcon.png" />
     <None Remove="Images\SongCardBackground.png" />
     <None Remove="Images\SongSelectBackGround.png" />
+    <None Remove="Images\ThrophySilver.png" />
+    <None Remove="Images\ThropyBronze.png" />
+    <None Remove="Images\TrophyGold.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,6 +63,9 @@
     <Resource Include="Images\settingsIcon.png" />
     <Resource Include="Images\SongCardBackground.png" />
     <Resource Include="Images\SongSelectBackGround.png" />
+    <Resource Include="Images\ThrophySilver.png" />
+    <Resource Include="Images\ThropyBronze.png" />
+    <Resource Include="Images\TrophyGold.png" />
   </ItemGroup>
 
 </Project>
