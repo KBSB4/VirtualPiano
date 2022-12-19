@@ -383,7 +383,7 @@ namespace WpfView
                 }
                 else
                 {
-                    ScoreBar.Value = 0;
+                    ScoreBar.Value = 100;
 					ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
 				}
             }));
