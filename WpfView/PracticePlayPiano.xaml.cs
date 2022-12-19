@@ -46,9 +46,8 @@ namespace WpfView
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
-            SongLogic.StartCountDown += StartCountDown;
-        }
 
+        }
 
         public async void PlaySelectedSong(int songID)
         {
@@ -76,6 +75,7 @@ namespace WpfView
 
             //Play
             if (SongController.CurrentSong is null) return;
+            SongLogic.StartCountDown += StartCountDown;
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
 
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
@@ -131,7 +131,8 @@ namespace WpfView
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Hidden;
-            }));
+                MenuBackButton.IsEnabled = true; //Prevents crash if you try to go back way too early
+            }));  
         }
 
         /// <summary>
@@ -157,42 +158,67 @@ namespace WpfView
                     Environment.Exit(0);
                 }
 
-                if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
+                UploadScoreDialog();
+            }
+        }
+
+        private void UploadScoreDialog()
+        {
+            if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
+            {
+                hasStarted = false;
+                bool? dialogResult = false;
+                UploadScoreDialog? uploadScoreDialog = null;
+                Dispatcher.Invoke(new Action(() =>
                 {
-                    hasStarted = false;
-                    bool? dialogResult = false;
-                    UploadScoreDialog? uploadScoreDialog = null;
-                    Dispatcher.Invoke(new Action(() =>
-                    {
-                        uploadScoreDialog = new(score, maxTotalScore); ;
-                        dialogResult = uploadScoreDialog.ShowDialog();
-                    }));
+                    uploadScoreDialog = new(score, maxTotalScore); ;
+                    dialogResult = uploadScoreDialog.ShowDialog();
+                }));
 
-                    if ((bool)dialogResult)
+                if ((bool)dialogResult)
+                {
+                    if (false) //TODO if logged in
                     {
-                        if (true) //TODO if logged in
+                        //TODO Upload score
+
+                        //Go to menu
+                        Dispatcher.Invoke(new Action(() =>
                         {
-                            //TODO Upload score
+                            if (uploadScoreDialog is not null) uploadScoreDialog.Close();
+                        }));
+                    }
+                    else
+                    {
+                        //TODO Go to login, wait for a response then return here
+                        SettingsPage? accountPage = null;
+                        Dispatcher.Invoke(new Action(() =>
+                        {
+                            //NOTE SETTINGS PAGE IS TEMPORARY
+                            accountPage = new SettingsPage(this);
+                            NavigationService?.Navigate(accountPage);
+                        }));
 
-                            //Go to menu
-                            Dispatcher.Invoke(new Action(() =>
+                        while (accountPage is not null)
+                        {
+                            //await till we return and then open dialogue again
+                            if (accountPage.Closed)
                             {
-                                if (uploadScoreDialog is not null) uploadScoreDialog.Close();
-                            }));
-                        }
-                        else
-                        {
-                            //TODO Go to login, wait for a response then return here
+                                //open dialogue box again
+                                accountPage = null;
+                                hasStarted = true; //So we can open the dialog again
+                                UploadScoreDialog();
+                                return;
+                            }
                         }
                     }
-
-                    //Return to Songselectpage and update leaderboard
-                    Dispatcher.Invoke(new Action(() =>
-                    {
-                        _songSelectPage.CreateShowLeaderboard();
-                        NavigationService?.Navigate(_songSelectPage);
-                    }));
                 }
+
+                //Return to Songselectpage and update leaderboard
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    _songSelectPage.CreateShowLeaderboard();
+                    NavigationService?.Navigate(_songSelectPage);
+                }));
             }
         }
 
@@ -422,8 +448,6 @@ namespace WpfView
             }
         }
 
-        #region Menubar event clicks
-
         /// <summary>
         /// lets the player go back to the main menu
         /// </summary>
@@ -431,21 +455,9 @@ namespace WpfView
         /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(_mainMenu);
+            hasStarted = false; //TODO rename name to be more clear
+            SongController.StopSong();
+            NavigationService?.Navigate(_songSelectPage);
         }
-
-        /// <summary>
-        /// lets the player go to the settings page of Piano Hero
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            if (_mainMenu is null) return;
-            _mainMenu.SettingsPage.GenerateInputDevices();
-            NavigationService?.Navigate(_mainMenu.SettingsPage);
-        }
-
-        #endregion
     }
 }

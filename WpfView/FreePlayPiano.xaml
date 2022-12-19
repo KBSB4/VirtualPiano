@@ -29,7 +29,7 @@
         </Grid>
 
         <Menu Grid.Row="0" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#FF292929" Panel.ZIndex="2">
-            <MenuItem Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White"  >
+            <MenuItem x:Name="BackMenu" Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                 <MenuItem.Icon>
                     <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
@@ -50,7 +50,7 @@
                 <MenuItem Header="_Play" Click="PlayMIDIFile" Foreground="Black"/>
                 <MenuItem Header="_Stop" Click="StopMIDIFile" Foreground="Black"/>
                 <Separator />
-                <MenuItem x:Name="IsolatedPiano" Header="_Isolate Piano" IsCheckable="true" Foreground="Black"/>
+                <MenuItem x:Name="KaraokeBox" Header="_Karaoke Mode" IsCheckable="true" Foreground="Black"/>
             </MenuItem>
         </Menu>
     </Grid>

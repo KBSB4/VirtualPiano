@@ -82,17 +82,6 @@ namespace WpfView
                     {
                         practiceNotes.StartExampleNote(e.Key);
                     }
-                    //if (PlayLive.IsChecked)
-                    //{
-                    //    new Thread(() =>
-                    //    {
-                    //        Thread.Sleep(2000);
-                    //        Dispatcher.Invoke(new Action(() =>
-                    //        {
-                    //            pianoGrid.DisplayPianoKey(e.Key);
-                    //        }));
-                    //    }).Start();
-                    //}
                 }));
             }
             catch (TaskCanceledException) //Just in case
@@ -176,6 +165,7 @@ namespace WpfView
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
+            StopMIDIFile(this, new RoutedEventArgs());
         }
 
         /// <summary>
@@ -187,6 +177,7 @@ namespace WpfView
         {
             _mainMenu.SettingsPage.GenerateInputDevices();
             NavigationService?.Navigate(_mainMenu.SettingsPage);
+            StopMIDIFile(this, new RoutedEventArgs());
         }
 
         #endregion
@@ -202,7 +193,7 @@ namespace WpfView
             if (SongController.CurrentSong is null)
             {
                 BeenPlayed = false;
-                StartDialog();
+                StartDialog(KaraokeBox.IsChecked);
             }
             else if (SongController.CurrentSong.IsPlaying)
             {
@@ -212,14 +203,14 @@ namespace WpfView
             else
             {
                 BeenPlayed = false;
-                StartDialog();
+                StartDialog(KaraokeBox.IsChecked);
             }
         }
 
         /// <summary>
         /// Open dialog and prepares MIDI
         /// </summary>
-        private static void StartDialog()
+        private static void StartDialog(bool Karoake)
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -233,7 +224,7 @@ namespace WpfView
             {
                 //Get the path of specified file
                 MidiController.OpenMidi(openFileDialog.FileName);
-                SongController.LoadSong();
+                SongController.LoadSong(Karoake);
             }
         }
 
@@ -244,12 +235,10 @@ namespace WpfView
         /// <param name="e"></param>
         private void PlayMIDIFile(object sender, RoutedEventArgs e)
         {
-            //Boolean isisolated = IsolatedPiano.IsChecked; Planned for later
             MidiFile? currentMidiFile = MidiController.GetMidiFile();
 
             if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
-                SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
                 if (!BeenPlayed)
                 {
                     SongController.PlaySong();
@@ -257,9 +246,10 @@ namespace WpfView
                 }
                 else
                 {
-                    SongController.LoadSong();
+                    SongController.LoadSong(KaraokeBox.IsChecked);
                     SongController.PlaySong();
                 }
+                SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
             }
             else
             {
@@ -284,8 +274,10 @@ namespace WpfView
         /// <param name="e"></param>
         private void StopMIDIFile(object sender, RoutedEventArgs e)
         {
+            //TODO Fix playing the song again if stopped, currently only doesn countdown again
             if (SongController.CurrentSong is not null && SongController.CurrentSong.IsPlaying)
             {
+                SongController.CurrentSong.NotePlayed -= CurrentSong_NotePlayed;
                 SongController.StopSong();
             }
             else
