@@ -62,9 +62,8 @@ namespace WpfView
             if (SelectedCard is not null)
             {
                 Leaderboard.Children.Clear();
-                //TODO Connect to database and send current user through to the control
                 Highscore[] highscores = await DatabaseController.GetHighscores(SelectedCard.SongID);
-                Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores));
+                Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores, SelectedCard.Description));
             }
         }
 
@@ -80,12 +79,6 @@ namespace WpfView
                 SongCardControl songCardControl = new(item.SongId, item.Name, item.Description, (int)item.Difficulty, this);
                 SongCards.Children.Add(songCardControl);
             }
-
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4, this);
-            //    SongCards.Children.Add(songCardControl);
-            //}
         }
 
         /// <summary>
