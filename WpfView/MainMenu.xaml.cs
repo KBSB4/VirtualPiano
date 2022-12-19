@@ -17,6 +17,8 @@ namespace WpfView
 
         public AccountPage AccountPage { get; set; }
 
+        public AdminPanel AdminPanel { get; set; }
+
         //DO NOT REMOVE
         public IInputDevice? InputDevice;
 
@@ -27,6 +29,9 @@ namespace WpfView
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
             AccountPage = new AccountPage(this);
+            this.AdminPanel = new AdminPanel();
+           
+
         }
 
         /// <summary>
@@ -110,7 +115,7 @@ namespace WpfView
 
         private void Account_Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(AccountPage);
+            NavigationService?.Navigate(AdminPanel);
         }
     }
 }
