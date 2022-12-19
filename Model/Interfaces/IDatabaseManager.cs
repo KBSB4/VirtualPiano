@@ -22,6 +22,8 @@ namespace Model.Interfaces
 
 		#region Highscore
 		public Task<Highscore[]> GetHighscores(int songId);
+
+		public Task UploadHighscore(Highscore highscore);
 		#endregion
 	}
 }

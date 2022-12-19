@@ -67,7 +67,7 @@ namespace WpfView
 
             foreach (var item in songs)
             {
-                SongCardControl songCardControl = new(item.SongId, item.Name, (int)item.Difficulty, this);
+                SongCardControl songCardControl = new(item.Id, item.Name, (int)item.Difficulty, this);
                 SongCards.Children.Add(songCardControl);
             }
 
