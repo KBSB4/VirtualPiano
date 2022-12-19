@@ -21,7 +21,7 @@ namespace WpfView
             _mainMenu = mainMenu;
             PracticePiano = new PracticePlayPiano(_mainMenu, this);
             InitializeComponent();
-            AddSongs();
+           // AddSongs();
         }
 
         /// <summary>

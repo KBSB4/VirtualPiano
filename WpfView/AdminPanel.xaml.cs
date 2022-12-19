@@ -30,9 +30,10 @@ namespace WpfView
     public partial class AdminPanel : Page
     {
   
+        private List<Song> Songs= new List<Song>();
         public AdminPanel()
         {
-            GenerateSongList();
+           // GenerateSongList();
             InitializeComponent();
         }
 
@@ -65,6 +66,11 @@ namespace WpfView
             }
         }
 
+
+        /// <summary>
+        /// Returns true if all input fields are valid.
+        /// </summary>
+        /// <returns></returns>
         public bool Validator()
         {
             bool isValid = true;
@@ -113,29 +119,85 @@ namespace WpfView
             int difficulty = int.Parse(difficultyTextBox.Text);
             Difficulty d = (Difficulty)difficulty;
             Song song = new Song() { Description = descriptionTextBox.Text, Difficulty = d, File = MidiLogic.CurrentMidi, Name = titleTextBox.Text };
-            await DatabaseController.UploadSong(song);
+            Songs.Add(song); // TODO REMOVE  USED FOR TESTING
+            MakeSongVisable(song);
+
+           // await DatabaseController.UploadSong(song);
 
         }
 
+        /// <summary>
+        /// Retrieves all the songs that are stored in the database
+        /// </summary>
         public async void GenerateSongList()
         {
-            Song[] songs = await DatabaseController.GetAllSongs();
-            Debug.WriteLine(songs.Count());
-            foreach (Song song in songs)
+           // Song[] songs = await DatabaseController.GetAllSongs();
+           // Debug.WriteLine(songs.Count());
+            foreach (Song song in Songs)
             {
-                ListViewItem one = new ListViewItem() { Content = song.Name };
-                ListViewItem del = new ListViewItem() { Content = "X", Name = song.Name};
-                SongListAdminPanel.Items.Add(one);
-                RemoveSongsList.Items.Add(del);
+                MakeSongVisable(song);
             }
 
         }
 
+        public void MakeSongVisable(Song song)
+        {
+            ListBoxItem one = new ListBoxItem() { Content = song.Name};
+            ListBoxItem del = new ListBoxItem() { Content = "X", Name = song.Name, };
+            SongListAdminPanel.Items.Add(one);
+            RemoveSongsList.Items.Add(del);
+        }
 
-        private void RemoveSongsList_Selected(object sender, RoutedEventArgs e)
+      
+
+        private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
         {
             ListViewItem DeleteSong = (ListViewItem)sender;
-            DatabaseController.DeleteSong(DeleteSong.Name);
+            //DatabaseController.DeleteSong(DeleteSong.Name);
+        }
+
+        private void RemoveSongsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListBoxItem DeleteSong = null; 
+            
+
+            foreach(ListBoxItem s in RemoveSongsList.Items)
+            {
+                if(s.IsSelected)
+                {
+                    DeleteSong= (ListBoxItem)s;
+                }
+            }
+           
+            
+            if(DeleteSong != null)
+            {
+               // SongListAdminPanel.Items.Remove(ItemDel(DeleteSong.Name));
+               Songs.Remove(ItemDel(DeleteSong.Name));
+               RemoveSongsList.Items.Clear();
+                SongListAdminPanel.Items.Clear();
+               GenerateSongList();
+            }
+            
+           
+            MessageBox.Show("worsk");
+        }
+
+        public Song ItemDel(string name)
+        {
+            foreach (var item in Songs)
+            {
+                if (item.Name.Equals(name))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+        public void RenewList()
+        {
+            SongListAdminPanel.Items.Clear();
+            GenerateSongList();
         }
     }
 
