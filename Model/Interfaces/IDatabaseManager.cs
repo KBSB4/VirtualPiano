@@ -18,10 +18,13 @@ namespace Model.Interfaces
 
 		#region Users
 		public Task<User> GetUser(string username);
-		#endregion
+        public Task<User> GetUser(int userID);
+        #endregion
 
 		#region Highscore
 		public Task<Highscore[]> GetHighscores(int songId);
+
+		public Task UploadHighscore(Highscore highscore);
 		#endregion
 	}
 }

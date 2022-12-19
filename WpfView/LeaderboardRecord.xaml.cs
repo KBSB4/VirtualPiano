@@ -20,10 +20,10 @@ namespace WpfView
 
             //Change colour of top 3 and add trophy image
             //TODO Change images to trophies
-            SolidColorBrush firstPosition = new SolidColorBrush(Colors.Gold);
-            SolidColorBrush secondPosition = new SolidColorBrush(Colors.Silver);
-            SolidColorBrush thirdPosition = new SolidColorBrush(Colors.Brown);
-            SolidColorBrush otherPosition = new SolidColorBrush(Colors.White);
+            SolidColorBrush firstPosition = new(Colors.Gold);
+            SolidColorBrush secondPosition = new(Colors.Silver);
+            SolidColorBrush thirdPosition = new(Colors.Brown);
+            SolidColorBrush otherPosition = new(Colors.White);
 
             TrophyImage.Height = 40;
             TrophyImage.Width = 40;
@@ -33,19 +33,19 @@ namespace WpfView
                     PositionLabel.Foreground = firstPosition;
                     UserLabel.Foreground = firstPosition;
                     ScoreLabel.Foreground = firstPosition;
-                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/DifficultyIconHero.png") as ImageSource;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/TrophyGold.png") as ImageSource;
                     break;
                 case 1:
                     PositionLabel.Foreground = secondPosition;
                     UserLabel.Foreground = secondPosition;
                     ScoreLabel.Foreground = secondPosition;
-                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/DifficultyIconMedium.png") as ImageSource;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/ThrophySilver.png") as ImageSource;
                     break;
                 case 2:
                     PositionLabel.Foreground = thirdPosition;
                     UserLabel.Foreground = thirdPosition;
                     ScoreLabel.Foreground = thirdPosition;
-                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/DifficultyIconEZ.png") as ImageSource;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/ThropyBronze.png") as ImageSource;
                     break;
                 default:
 
@@ -53,10 +53,12 @@ namespace WpfView
                     UserLabel.Foreground = otherPosition;
                     ScoreLabel.Foreground = otherPosition;
                     TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/NoTrophy.png") as ImageSource;
-                    if (CurrentUser)
-                    {
-                        Background = new SolidColorBrush(Colors.OrangeRed);
-                    }
+                    break;
+            }
+            if (CurrentUser)
+            {
+                Background = new SolidColorBrush(Colors.OrangeRed);
+            }
                     break;
             }
         }

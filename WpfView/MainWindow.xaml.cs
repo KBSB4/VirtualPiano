@@ -15,15 +15,5 @@ namespace WpfView
             NavigationFrame.Navigate(new MainMenu());
             
         }
-
-        
-    }
-            //    Description = "De nieuwe beethoom"
-            //};
-
-
-            //SQLDatabaseManager sQLDatabaseManager = new();
-            //await sQLDatabaseManager.UploadSong(song);
-        }
     }
 }

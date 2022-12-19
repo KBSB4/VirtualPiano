@@ -16,8 +16,6 @@ namespace WpfView
         public SongSelectPage SongSelectPage { get; set; }
         public AdminPanel AdminPanel { get; set; }
 
-        public AccountPage AccountPage { get; set; }
-
         public AdminPanel AdminPanel { get; set; }
 
         //DO NOT REMOVE

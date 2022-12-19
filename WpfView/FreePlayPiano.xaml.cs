@@ -22,6 +22,8 @@ namespace WpfView
         private readonly PracticeNotesGenerator practiceNotes;
         private readonly MainMenu _mainMenu;
 
+        private bool BeenPlayed = false;
+
         public FreePlayPiano(MainMenu _mainMenu)
         {
             this._mainMenu = _mainMenu;
@@ -80,8 +82,6 @@ namespace WpfView
                     {
                         practiceNotes.StartExampleNote(e.Key);
                     }
-                    //TODO Add option to display keys live as if the piano is playing it
-                    //pianoGrid.DisplayPianoKey(e.Key);
                 }));
             }
             catch (TaskCanceledException) //Just in case
@@ -165,6 +165,7 @@ namespace WpfView
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
+            StopMIDIFile(null, new RoutedEventArgs());
         }
 
         /// <summary>
@@ -176,6 +177,7 @@ namespace WpfView
         {
             _mainMenu.SettingsPage.GenerateInputDevices();
             NavigationService?.Navigate(_mainMenu.SettingsPage);
+            StopMIDIFile(null, new RoutedEventArgs());
         }
 
         #endregion
@@ -190,7 +192,8 @@ namespace WpfView
         {
             if (SongController.CurrentSong is null)
             {
-                StartDialog();
+                BeenPlayed = false;
+                StartDialog(KaraokeBox.IsChecked);
             }
             else if (SongController.CurrentSong.IsPlaying)
             {
@@ -199,14 +202,15 @@ namespace WpfView
             }
             else
             {
-                StartDialog();
+                BeenPlayed = false;
+                StartDialog(KaraokeBox.IsChecked);
             }
         }
 
         /// <summary>
         /// Open dialog and prepares MIDI
         /// </summary>
-        private static void StartDialog()
+        private static void StartDialog(bool Karoake)
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -220,7 +224,7 @@ namespace WpfView
             {
                 //Get the path of specified file
                 MidiController.OpenMidi(openFileDialog.FileName);
-                SongController.LoadSong();
+                SongController.LoadSong(Karoake);
             }
         }
 
@@ -231,13 +235,21 @@ namespace WpfView
         /// <param name="e"></param>
         private void PlayMIDIFile(object sender, RoutedEventArgs e)
         {
-            //Boolean isisolated = IsolatedPiano.IsChecked; Planned for later
             MidiFile? currentMidiFile = MidiController.GetMidiFile();
 
             if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
+                if (!BeenPlayed)
+                {
+                    SongController.PlaySong();
+                    BeenPlayed = true;
+                }
+                else
+                {
+                    SongController.LoadSong(KaraokeBox.IsChecked);
+                    SongController.PlaySong();
+                }
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
-                SongController.PlaySong();
             }
             else
             {
@@ -260,13 +272,15 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StopMIDIFile(object sender, RoutedEventArgs e)
+        private void StopMIDIFile(object? sender, RoutedEventArgs e)
         {
+            //TODO Fix playing the song again if stopped, currently only doesn countdown again
             if (SongController.CurrentSong is not null && SongController.CurrentSong.IsPlaying)
             {
+                SongController.CurrentSong.NotePlayed -= CurrentSong_NotePlayed;
                 SongController.StopSong();
             }
-            else
+            else if(sender is not null)
             {
                 MessageBox.Show("There is no MIDI playing right now.",
                 "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -5,7 +5,7 @@ namespace Model
 {
     public class Song
     {
-        public int SongId { get; set; }
+        public int Id { get; set; }
         public MidiFile File { get; set; }
         public string Name { get; set; }
         public Difficulty Difficulty { get; set; }

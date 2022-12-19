@@ -21,21 +21,6 @@ namespace BusinessLogic
 		{
             return paths[directory];
 		}
-
-        public  static void ExecuteSSHConnection()
-        {
-            Process process = new Process(); 
-
-            string _batDir = GetPath(PianoHeroPath.CMDFiles);
-
-            process.StartInfo.FileName = _batDir;
-            process.StartInfo.CreateNoWindow = false;
-            process.StartInfo.UseShellExecute = false;
-            process.Start();
-            process.WaitForExit();
-            //process.Close();
-            Debug.Write("Executed bat file");
-        }
     }
 
     

@@ -20,11 +20,11 @@
         <Grid Grid.Row="1" Grid.Column="0">
             <Label Grid.Column="1" Grid.ColumnSpan="2" Foreground="White" Content="Uploaded Songs" VerticalContentAlignment="Top" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="50"></Label>
 
-            <ListView IsHitTestVisible="False" Name="SongListAdminPanel" Grid.Column="1" Grid.Row="2" Foreground="White" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False">
-            </ListView>
+            <ListBox IsHitTestVisible="False" Name="SongListAdminPanel" Grid.Column="1" Grid.Row="2" Foreground="White" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False">
+            </ListBox>
 
-            <ListView Name="RemoveSongsList" Grid.Column="2" Grid.Row="2" Foreground="Red" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False">
-            </ListView>
+            <ListBox Name="RemoveSongsList" Grid.Column="2" Grid.Row="2" Foreground="Red" Background="Transparent" FontWeight="Bold" FontSize="35" BorderThickness="0" Focusable="False" MouseUp="RemoveSongsList_MouseUp">
+            </ListBox>
 
 
             <Grid.ColumnDefinitions>
