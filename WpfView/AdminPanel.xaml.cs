@@ -40,6 +40,7 @@ namespace WpfView
 
 
 
+
         /// <summary>
         ///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
         /// </summary>
@@ -188,17 +189,17 @@ namespace WpfView
                     deleteSong = (ListBoxItem)s;
                 }
             }
-
-           
             if (deleteSong != null)
             {
-               DialogResult result = MessageBox.Show($"Are you sure u want to delete {deleteSong.Name}?", "Confirm Delete", MessageBoxButton.OKCancel);
+               var result = MessageBox.Show($"Are you sure u want to delete {deleteSong.Name}?", "Confirm Delete", MessageBoxButton.OKCancel);
 
-                if(MessageBoxResult.OK)
-                DeleteSong(deleteSong.Name);
-                Song? found = songList.Find(x => x.Name.Equals(deleteSong.Name));
-                if(found != null) songList.Remove(found);
-                RenewUploadedSongList();
+                if (result == MessageBoxResult.OK)
+                {
+                    DeleteSong(deleteSong.Name);
+                    Song? found = songList.Find(x => x.Name.Equals(deleteSong.Name));
+                    if (found != null) songList.Remove(found);
+                    RenewUploadedSongList();
+                }
             }
 
 
