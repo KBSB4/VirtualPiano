@@ -74,7 +74,7 @@ namespace WpfView
             DependencyProperty.Register("DifficultyImageSource", typeof(ImageSource), typeof(SongCardControl), new PropertyMetadata(default(ImageSource)));
 
         /// <summary>
-        /// Temporary - starts practice play
+        /// Select the card
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
