@@ -150,7 +150,7 @@ namespace WpfView
         public void MakeSongVisable(Song song)
         {
             ListBoxItem one = new ListBoxItem() { Content = song.Name };
-            ListBoxItem del = new ListBoxItem() { Content = "X", Name = song.Name, };
+            ListBoxItem del = new ListBoxItem() { Content = "X", Name = song.Name.Replace(" ","")};
             SongListAdminPanel.Items.Add(one);
             RemoveSongsList.Items.Add(del);
         }
@@ -196,7 +196,7 @@ namespace WpfView
                 if (result == MessageBoxResult.OK)
                 {
                     DeleteSong(deleteSong.Name);
-                    Song? found = songList.Find(x => x.Name.Equals(deleteSong.Name));
+                    Song? found = songList.Find(x => x.Name.Replace(" ", "").Equals(deleteSong.Name));
                     if (found != null) songList.Remove(found);
                     RenewUploadedSongList();
                 }
