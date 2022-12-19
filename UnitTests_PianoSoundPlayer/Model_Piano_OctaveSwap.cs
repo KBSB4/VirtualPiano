@@ -12,7 +12,8 @@ namespace UnitTests
         //TODO update tests
         public void SetUp()
         {
-            piano = new();
+            PianoController.CreatePiano();
+            piano = PianoController.Piano;
         }
 
 

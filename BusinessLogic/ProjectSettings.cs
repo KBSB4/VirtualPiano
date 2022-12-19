@@ -1,4 +1,6 @@
-﻿namespace BusinessLogic
+﻿using System.Diagnostics;
+
+namespace BusinessLogic
 {
 	public static class ProjectSettings
 	{
@@ -18,12 +20,15 @@
 		{
 			return paths[directory];
 		}
-	}
+    }
 
-	/// <summary>
-	/// <b>Piano Hero</b> Directory - stores directories for quick access.
-	/// </summary>
-	public enum PianoHeroPath
+    
+
+
+    /// <summary>
+    /// <b>Piano Hero</b> Directory - stores directories for quick access.
+    /// </summary>
+    public enum PianoHeroPath
 	{
 		PianoSoundsFolder,
 		StartTune,

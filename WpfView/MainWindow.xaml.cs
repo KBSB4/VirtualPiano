@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Windows;
+using BusinessLogic;
 
 namespace WpfView
 {
@@ -11,6 +13,7 @@ namespace WpfView
         {
             InitializeComponent();
             NavigationFrame.Navigate(new MainMenu());
+            
         }
     }
 }

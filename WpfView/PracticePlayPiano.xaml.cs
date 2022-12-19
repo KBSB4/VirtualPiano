@@ -3,9 +3,11 @@ using Controller;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.Multimedia;
 using Model;
+using Model.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +24,7 @@ namespace WpfView
     public partial class PracticePlayPiano : Page
     {
         private readonly MainMenu? _mainMenu;
+        private readonly SongSelectPage _songSelectPage;
         private readonly PianoGridGenerator pianoGrid;
         readonly PracticeNotesGenerator practiceNotes;
 
@@ -33,9 +36,12 @@ namespace WpfView
         private const int MAXNOTESCORE = 1000;
         private int maxTotalScore;
 
-        public PracticePlayPiano(MainMenu mainMenu)
+        Song currentSong;
+
+        public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
         {
             _mainMenu = mainMenu;
+            _songSelectPage = songSelectPage;
             InitializeComponent();
             _mainMenu?.CheckInputDevice(SettingsPage.IndexInputDevice);
             PianoController.CreatePiano();
@@ -43,28 +49,25 @@ namespace WpfView
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
-            SongLogic.StartCountDown += StartCountDown;
+
         }
 
-
-        public void PlaySelectedSong(int songID)
+        public async void PlaySelectedSong(int songID)
         {
-            //TODO In the future, this should get the song file from the database based on the songID and then play it. For now we set our own path for testing
-            //TODO For demo do this based on easy and hero- rush e
+            Song? x = await DatabaseController.GetSong(songID);
+            currentSong = x;
 
-            //string path = "../../../../WpfView/DebugMidi/sm64.mid";
-            //string path = "../../../../WpfView/DebugMidi/RUshE.mid";
-            //string path = "../../../../WpfView/DebugMidi/silent_night_easy.mid";
-            string path = "./DebugMidi/test2.mid";
+            if (x is null) return;
 
-            //Prepare song
+            string path = "currentlyPlaying.mid";
+
+            await File.WriteAllBytesAsync(path, x.FullFile);
             MidiController.OpenMidi(path);
-            SongController.LoadSong();
 
             //Play
             if (SongController.CurrentSong is null) return;
+            SongLogic.StartCountDown += StartCountDown;
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
-            SongController.PlaySong();
 
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
             {
@@ -72,6 +75,7 @@ namespace WpfView
             };
             updateVisualNoteThread.Start();
 
+            SongController.PlaySong();
             hasStarted = true;
         }
 
@@ -88,9 +92,9 @@ namespace WpfView
             if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
             notesToBePressed.RemoveRange(0, 8);
-
             maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
-
+            score = 0;
+            UpdateScoreVisual();
         }
 
         /// <summary>
@@ -118,6 +122,7 @@ namespace WpfView
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Hidden;
+                MenuBackButton.IsEnabled = true; //Prevents crash if you try to go back way too early
             }));
         }
 
@@ -143,6 +148,95 @@ namespace WpfView
                 {
                     Environment.Exit(0);
                 }
+
+                UploadScoreDialog();
+            }
+        }
+
+        private async void UploadScoreDialog()
+        {
+            if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
+            {
+                hasStarted = false;
+                bool? dialogResult = false;
+                UploadScoreDialog? uploadScoreDialog = null;
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    uploadScoreDialog = new(score, maxTotalScore); ;
+                    dialogResult = uploadScoreDialog.ShowDialog();
+                }));
+
+                if ((bool)dialogResult)
+                {
+                    if (true) //TODO if logged in
+                    {
+                        Highscore highscore = new()
+                        {
+                            User = DatabaseController.GetUserByID(7).Result,
+                            Song = currentSong,
+                            Score = score
+                        };
+
+                        //Check if score is already in the database
+                        Highscore[] highscores = await DatabaseController.GetHighscores(currentSong.Id);
+                        Highscore? FoundScore = highscores.Where(score => score.User.Id == highscore.User.Id).FirstOrDefault();
+
+                        if(FoundScore is null)
+                        {
+                            await DatabaseController.UploadHighscore(highscore);
+                        } else
+                        {
+                            if (FoundScore.Score < highscore.Score)
+                            {
+                                await DatabaseController.UpdateHighscore(highscore);
+                            } else
+                            {
+                                MessageBox.Show("Highscore is higher than current score",
+                                "There is no reason to upload your score.", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                        }   
+
+                        //Go to menu
+                        Dispatcher.Invoke(new Action(() =>
+                        {
+                            if (uploadScoreDialog is not null) uploadScoreDialog.Close();
+                        }));
+                    }
+                    else
+                    {
+                        //TODO Go to login, wait for a response then return here
+                        SettingsPage? accountPage = null;
+                        Dispatcher.Invoke(new Action(() =>
+                        {
+                            //NOTE SETTINGS PAGE IS TEMPORARY
+                            accountPage = new SettingsPage(this);
+                            NavigationService?.Navigate(accountPage);
+                        }));
+
+                        while (accountPage is not null)
+                        {
+                            //await till we return and then open dialogue again
+                            if (accountPage.Closed)
+                            {
+                                //open dialogue box again
+                                accountPage = null;
+                                hasStarted = true; //So we can open the dialog again
+                                UploadScoreDialog();
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                //Return to Songselectpage and update leaderboard
+                SongLogic.StartCountDown -= StartCountDown;
+                SongController.CurrentSong.NotePlayed -= CurrentSong_NotePlayed;
+
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    _songSelectPage.CreateShowLeaderboard();
+                    NavigationService?.Navigate(_songSelectPage);
+                }));
             }
         }
 
@@ -242,7 +336,6 @@ namespace WpfView
                 if (currentlyPlaying.Contains(key))
                 {
                     int noteScore;
-                    Rating rating;
 
                     MetricTimeSpan releasedAt = (MetricTimeSpan)SongLogic.PlaybackDevice.GetCurrentTime(TimeSpanType.Metric);
 
@@ -266,13 +359,9 @@ namespace WpfView
                     else
                     {
                         noteScore = 0;
-                        rating = GetRating(0);
                     }
-
                     currentlyPlaying.Remove(key);
                     score += noteScore;
-
-                    Debug.WriteLine($"Score += {noteScore}");
                 }
             }
             UpdateScoreVisual();
@@ -378,8 +467,6 @@ namespace WpfView
             }
         }
 
-        #region Menubar event clicks
-
         /// <summary>
         /// lets the player go back to the main menu
         /// </summary>
@@ -387,21 +474,9 @@ namespace WpfView
         /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(_mainMenu);
+            hasStarted = false; //TODO rename name to be more clear
+            SongController.StopSong();
+            NavigationService?.Navigate(_songSelectPage);
         }
-
-        /// <summary>
-        /// lets the player go to the settings page of Piano Hero
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            if (_mainMenu is null) return;
-            _mainMenu.SettingsPage.GenerateInputDevices();
-            NavigationService?.Navigate(_mainMenu.SettingsPage);
-        }
-
-        #endregion
     }
 }
