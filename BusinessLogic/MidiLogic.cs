@@ -19,7 +19,7 @@ namespace BusinessLogic
 		{
 			if (file.Chunks.Count == 0) return null;
 
-			MidiFile newFile = AddStartTune(file);
+            MidiFile newFile = AddStartTune(file);
 			List<TrackChunk> trackList = newFile.GetTrackChunks().ToList();
 
 			tempoMap = newFile.GetTempoMap();
