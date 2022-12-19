@@ -353,7 +353,6 @@ namespace WpfView
                         };
 
                         noteScore = Math.Max(MAXNOTESCORE - difference, 0);
-                        rating = GetRating(noteScore);
                         closestNote.PressedDown = true;
                     }
                     else
