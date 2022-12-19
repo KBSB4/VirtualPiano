@@ -133,8 +133,13 @@ namespace BusinessLogic
                 //Stops the keys from appearing
                 song.PianoKeys = new();
 
+                //Remove event e
+                song.NotePlayed -= Song_NotePlayed;
+
                 if (PlaybackDevice is null || OutputDevice is null) return;
                 PlaybackDevice.PlaybackEnd = new MetricTimeSpan(0);
+                Thread.Sleep(500);
+                //TODO Is the accessviolationexception fixed yet???
                 PlaybackDevice.Dispose();
                 OutputDevice.Dispose();
             }
