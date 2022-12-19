@@ -91,7 +91,12 @@ namespace Controller
 
 			return result;
 		}
-	}
 
+        public static async Task UploadHighscore(Highscore score)
+        {
+            Task uploadHighscoreTask = databaseManager.UploadHighscore(score);
 
+            await uploadHighscoreTask;
+        }
+    }
 }

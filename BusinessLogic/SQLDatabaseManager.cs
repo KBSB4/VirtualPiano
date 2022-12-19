@@ -298,7 +298,7 @@ namespace BusinessLogic
 
 				SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
 
-				command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam });
+				command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam});
 
 				await CloseAndDispose(connection, command);
 			}

@@ -177,9 +177,10 @@ namespace WpfView
 
                 if ((bool)dialogResult)
                 {
-                    if (false) //TODO if logged in
+                    if (true) //TODO if logged in
                     {
                         //TODO Upload score
+                        
 
                         //Go to menu
                         Dispatcher.Invoke(new Action(() =>
