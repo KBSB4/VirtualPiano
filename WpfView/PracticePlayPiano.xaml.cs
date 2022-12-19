@@ -64,8 +64,8 @@ namespace WpfView
             //Prepare song
             //MidiController.OpenMidi(path);
 
-            SQLDatabaseManager sQLDatabaseManager = new();
-            Song? x = await sQLDatabaseManager.GetSong(songID);
+            Song? x = await DatabaseController.GetSong(songID);
+
             if (x is null) return;
 
             string path = "currentlyPlaying.mid";

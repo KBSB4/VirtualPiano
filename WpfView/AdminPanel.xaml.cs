@@ -124,9 +124,9 @@ namespace WpfView
             foreach (Song song in songs)
             {
                 ListViewItem one = new ListViewItem() { Content = song.Name };
-                ListViewItem del = new ListViewItem() { Content = "X", Name = song.Name};
+                //ListViewItem del = new ListViewItem() { Content = "X", Name = song.Name};
                 SongListAdminPanel.Items.Add(one);
-                RemoveSongsList.Items.Add(del);
+                //RemoveSongsList.Items.Add(del);
             }
 
         }

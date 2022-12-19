@@ -3,6 +3,7 @@ using Model;
 using Model.DatabaseModels;
 using Model.Interfaces;
 using System.Data;
+using System.Data.Common;
 
 namespace BusinessLogic
 {
@@ -15,37 +16,59 @@ namespace BusinessLogic
 			"Password=Backing-Crumpet4;" +
 			"TrustServerCertificate=True;";
 
-		private SqlConnection connection = new(connectionString);
-
-        
-
-		public Task<User> GetUser(string username)
+		#region Users
+		public async Task<User> GetUser(string username)
 		{
 			throw new NotImplementedException();
 		}
 
 		public async Task<User?> GetUser(int id)
 		{
-			string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
+			using (SqlConnection connection = new(connectionString))
+			{
+				string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
 
-			await connection.OpenAsync();
+				await connection.OpenAsync();
 
-			SqlCommand command = new(query, connection);
+				SqlCommand command = new(query, connection);
 
-			SqlParameter userIdParam = new("@userId", SqlDbType.Int) { Value = id };
+				SqlParameter userIdParam = new("@userId", SqlDbType.Int) { Value = id };
 
-			command.Parameters.Add(userIdParam);
+				command.Parameters.Add(userIdParam);
 
-			SqlDataReader dataReader = await command.ExecuteReaderAsync();
+				SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-			User[] users = await ReadUsers(dataReader);
+				User[] users = await ReadUsers(dataReader);
 
-			if (users.Length > 0)
-				return users[0];
+				await CloseAndDispose(connection, command, dataReader);
 
-			return null;
+				if (users.Length > 0)
+					return users[0];
+
+				return null;
+			}
 
 		}
+
+		private async Task<User[]> ReadUsers(SqlDataReader dataReader)
+		{
+			List<User> result = new();
+
+			while (await dataReader.ReadAsync())
+			{
+				result.Add(new User()
+				{
+					Name = await dataReader.GetFieldValueAsync<string>("username"),
+					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
+					Password = await dataReader.GetFieldValueAsync<string>("password"),
+					Email = await dataReader.GetFieldValueAsync<string>("email"),
+					isAdmin = await dataReader.GetFieldValueAsync<bool>("isAdmin")
+				});
+			}
+
+			return result.ToArray();
+		}
+		#endregion
 
 		#region Songs
 		/// <summary>
@@ -55,25 +78,62 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/> with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song?> GetSong(string songname)
 		{
-            ProjectSettings.ExecuteSSHConnection();
-            string query = "SELECT * FROM Song WHERE name = @name";
+			using (SqlConnection connection = new(connectionString))
+			{
+				ProjectSettings.ExecuteSSHConnection();
+				string query = "SELECT * FROM Song WHERE name = @name";
 
-			await connection.OpenAsync();
+				await connection.OpenAsync();
 
-			SqlCommand command = new(query, connection);
+				SqlCommand command = new(query, connection);
 
-			SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
+				SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
 
-			command.Parameters.Add(nameParam);
+				command.Parameters.Add(nameParam);
 
-			SqlDataReader dataReader = await command.ExecuteReaderAsync();
+				SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-			Song[] result = await ReadSongs(dataReader);
+				Song[] result = await ReadSongs(dataReader);
 
-			if (result.Length > 0)
-				return result[0];
+				await CloseAndDispose(connection, command, dataReader);
 
-			return null;
+				if (result.Length > 0)
+					return result[0];
+
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the first found song in the Song table using <paramref name="songId"/> to find it.
+		/// </summary>
+		/// <param name="songname"></param>
+		/// <returns>New <see cref="Song"/> with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
+		public async Task<Song?> GetSong(int songId)
+		{
+			using (SqlConnection connection = new(connectionString))
+			{
+				string query = "SELECT * FROM Song WHERE idSong = @songId";
+
+				await connection.OpenAsync();
+
+				SqlCommand command = new(query, connection);
+
+				SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
+
+				command.Parameters.Add(songIdParam);
+
+				SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+				Song[] result = await ReadSongs(dataReader);
+
+				await CloseAndDispose(connection, command, dataReader);
+
+				if (result.Length > 0)
+					return result[0];
+
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -82,21 +142,22 @@ namespace BusinessLogic
 		/// <param name="songname"></param>
 		public async Task DeleteSong(string songname)
 		{
-			string query = "DELETE FROM Song WHERE name = @name";
+			using (SqlConnection connection = new(connectionString))
+			{
+				string query = "DELETE FROM Song WHERE name = @name";
 
-			await connection.OpenAsync();
+				await connection.OpenAsync();
 
-			SqlParameter songnameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
+				SqlParameter songnameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
 
-			SqlCommand command = new(query, connection);
+				SqlCommand command = new(query, connection);
 
-			command.Parameters.Add(songnameParam);
+				command.Parameters.Add(songnameParam);
 
-			await command.ExecuteNonQueryAsync();
+				await command.ExecuteNonQueryAsync();
 
-			await command.DisposeAsync();
-
-			await connection.CloseAsync();
+				await CloseAndDispose(connection, command);
+			}
 		}
 
 		/// <summary>
@@ -105,28 +166,29 @@ namespace BusinessLogic
 		/// <param name="song"></param>
 		public async Task UploadSong(Song song)
 		{
-            ProjectSettings.ExecuteSSHConnection();
-            string query = "INSERT INTO Song (name, midifile, difficulty, description) VALUES (@name, @file, @difficulty, @description)";
+			using (SqlConnection connection = new(connectionString))
+			{
+				ProjectSettings.ExecuteSSHConnection();
+				string query = "INSERT INTO Song (name, midifile, difficulty, description) VALUES (@name, @file, @difficulty, @description)";
 
-			await connection.OpenAsync();
+				await connection.OpenAsync();
 
-			SqlParameter midiParameter = new("@file", SqlDbType.VarBinary) { Value = song.FullFile };
+				SqlParameter midiParameter = new("@file", SqlDbType.VarBinary) { Value = song.FullFile };
 
-			SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = song.Name };
+				SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = song.Name };
 
-			SqlParameter difficultyParam = new("@difficulty", SqlDbType.Int) { Value = song.Difficulty };
+				SqlParameter difficultyParam = new("@difficulty", SqlDbType.Int) { Value = song.Difficulty };
 
-			SqlParameter descriptionParam = new("@description", SqlDbType.VarChar) { Value = song.Description };
+				SqlParameter descriptionParam = new("@description", SqlDbType.VarChar) { Value = song.Description };
 
-			SqlCommand command = new(query, connection);
+				SqlCommand command = new(query, connection);
 
-			command.Parameters.AddRange(new SqlParameter[] { midiParameter, nameParam, difficultyParam, descriptionParam });
+				command.Parameters.AddRange(new SqlParameter[] { midiParameter, nameParam, difficultyParam, descriptionParam });
 
-			await command.ExecuteNonQueryAsync();
+				await command.ExecuteNonQueryAsync();
 
-			await command.DisposeAsync();
-
-			await connection.CloseAsync();
+				await CloseAndDispose(connection, command);
+			}
 		}
 
 		/// <summary>
@@ -135,17 +197,22 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/>[] with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song[]> GetAllSongs()
 		{
-            ProjectSettings.ExecuteSSHConnection();
+			using (SqlConnection connection = new(connectionString))
+			{
+				string query = "SELECT * FROM Song";
 
-            string query = "SELECT * FROM Song";
+				await connection.OpenAsync();
 
-			await connection.OpenAsync();
+				SqlCommand command = new(query, connection);
 
-			SqlCommand command = new(query, connection);
+				SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-			SqlDataReader dataReader = await command.ExecuteReaderAsync();
+				Song[] result = await ReadSongs(dataReader);
 
-			return await ReadSongs(dataReader);
+				await CloseAndDispose(connection, command, dataReader);
+
+				return result;
+			}
 		}
 
 		/// <summary>
@@ -172,80 +239,56 @@ namespace BusinessLogic
 			return result.ToArray();
 		}
 
-		private async Task<User[]> ReadUsers(SqlDataReader dataReader)
-		{
-			List<User> result = new();
-
-			while (await dataReader.ReadAsync())
-			{
-				result.Add(new User()
-				{
-					Name = await dataReader.GetFieldValueAsync<string>("username"),
-					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
-					Password = await dataReader.GetFieldValueAsync<string>("password"),
-					Email = await dataReader.GetFieldValueAsync<string>("email"),
-					isAdmin = await dataReader.GetFieldValueAsync<bool>("isAdmin")
-				});
-			}
-
-			return result.ToArray();
-		}
-
-
-		public async Task<Song?> GetSong(int songId)
-		{
-			string query = "SELECT * FROM Song WHERE idSong = @songId";
-
-			await connection.OpenAsync();
-
-			SqlCommand command = new(query, connection);
-
-			SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
-
-			command.Parameters.Add(songIdParam);
-
-			SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-			Song[] result = await ReadSongs(dataReader);
-
-			if (result.Length > 0)
-				return result[0];
-
-			return null;
-		}
 		#endregion
 
 		#region Highscores
 		public async Task<Highscore[]> GetHighscores(int songId)
 		{
-			List<Highscore> highscores = new();
-
-			string query = "SELECT * FROM SongScore WHERE idSong = @songId";
-
-			await connection.OpenAsync();
-
-			SqlCommand command = new(query, connection);
-
-			SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
-
-			command.Parameters.Add(songIdParam);
-
-			SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-			while (await dataReader.ReadAsync())
+			using (SqlConnection connection = new(connectionString))
 			{
-				Highscore highscore = new()
+				List<Highscore> highscores = new();
+
+				string query = "SELECT * FROM SongScore WHERE idSong = @songId";
+
+				await connection.OpenAsync();
+
+				SqlCommand command = new(query, connection);
+
+				SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
+
+				command.Parameters.Add(songIdParam);
+
+				SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+				while (await dataReader.ReadAsync())
 				{
-					User = await GetUser(await dataReader.GetFieldValueAsync<int>("idUser")),
-					Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong")),
-					Score = await dataReader.GetFieldValueAsync<int>("score")
-				};
+					Highscore highscore = new()
+					{
+						User = await GetUser(await dataReader.GetFieldValueAsync<int>("idUser")),
+						Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong")),
+						Score = await dataReader.GetFieldValueAsync<int>("score")
+					};
 
-				highscores.Add(highscore);
+					highscores.Add(highscore);
+				}
+
+				await CloseAndDispose(connection, command, dataReader);
+
+				return highscores.ToArray();
 			}
-
-			return highscores.ToArray();
 		}
 		#endregion
+
+		private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
+		{
+			await CloseAndDispose(connection, command);
+			await dataReader.DisposeAsync();
+		}
+
+		private async Task CloseAndDispose(SqlConnection connection, SqlCommand command)
+		{
+			await connection.CloseAsync();
+			await command.DisposeAsync();
+		}
 	}
 }
