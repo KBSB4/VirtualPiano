@@ -93,16 +93,16 @@ namespace WpfView
             }
         }
 
-        /// <summary>
-        /// Return to main menu
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
         }
 
+        /// <summary>
+        /// Start the currently selected song, if no song selected show warning
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartButton_MouseLeftDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (SelectedCard is not null)
