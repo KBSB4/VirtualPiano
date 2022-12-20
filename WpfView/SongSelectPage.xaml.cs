@@ -57,7 +57,6 @@ namespace WpfView
             CreateShowLeaderboard();
         }
 
-        //TODO unit test
         public async void CreateShowLeaderboard()
         {
             if (SelectedCard is not null)
