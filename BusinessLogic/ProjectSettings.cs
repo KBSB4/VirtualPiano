@@ -6,8 +6,8 @@ namespace BusinessLogic
 	{
 		public static Dictionary<PianoHeroPath, string> paths = new()
 		{
-			{ PianoHeroPath.PianoSoundsFolder, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/Piano/" },
-			{ PianoHeroPath.StartTune, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/StartTune.mid" },
+			{ PianoHeroPath.PianoSoundsFolder, "./PianoSoundPlayer/Sounds/Piano/" },
+			{ PianoHeroPath.StartTune, "./PianoSoundPlayer/Sounds/StartTune.mid" },
 			{ PianoHeroPath.ImagesFolder, "/Images/"}
 		};
 
@@ -18,7 +18,7 @@ namespace BusinessLogic
 		/// <returns></returns>
 		public static string GetPath(PianoHeroPath directory)
 		{
-            return paths[directory];
+			return paths[directory];
 		}
     }
 

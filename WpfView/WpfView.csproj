@@ -70,4 +70,25 @@
     <Resource Include="Images\TrophyGold.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DebugMidi\BEET.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\RUshE.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\silent_night_easy.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\sm64.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\test.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\test2.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
