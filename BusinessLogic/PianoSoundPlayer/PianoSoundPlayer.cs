@@ -152,7 +152,7 @@ namespace BusinessLogic.SoundPlayer
             SourceVoice? sourceVoice = GetSourceVoice(noteName, octave);
             if (sourceVoice is not null)
             {
-				sourceVoice?.SetVolume(volume);
+				sourceVoice?.SetVolume(volume * volume);
 
 				return new FadingAudio(sourceVoice);
             }
