@@ -11,6 +11,13 @@ namespace WpfView
     public partial class SelectedSongControl : UserControl
     {
         public SongCardControl SongCard { get; set; }
+
+        /// <summary>
+        /// Create leaderboard with all information
+        /// </summary>
+        /// <param name="songCard"></param>
+        /// <param name="scores"></param>
+        /// <param name="description"></param>
         public SelectedSongControl(SongCardControl songCard, Highscore[] scores, string? description)
         {
             SongCard = songCard;

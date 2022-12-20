@@ -274,7 +274,6 @@ namespace WpfView
         /// <param name="e"></param>
         private void StopMIDIFile(object? sender, RoutedEventArgs e)
         {
-            //TODO Fix playing the song again if stopped, currently only doesn countdown again
             if (SongController.CurrentSong is not null && SongController.CurrentSong.IsPlaying)
             {
                 SongController.CurrentSong.NotePlayed -= CurrentSong_NotePlayed;

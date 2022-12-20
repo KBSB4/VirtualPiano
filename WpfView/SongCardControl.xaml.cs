@@ -20,8 +20,11 @@ namespace WpfView
             InitializeComponent();
             SongID = id;
             SongTitle = songTitle;
+            //If no description, show nothing
             Description = description ?? "";
             Difficulty = difficulty;
+
+            //Set difficulty icon
             DifficultyImageSource = Difficulty switch
             {
                 0 => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconEZ.png", UriKind.Relative)),
@@ -30,6 +33,8 @@ namespace WpfView
                 3 => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconHero.png", UriKind.Relative)),
                 _ => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconEZ.png", UriKind.Relative)),
             };
+
+            //For event click
             SongSelectPage = songSelectPage;
         }
 

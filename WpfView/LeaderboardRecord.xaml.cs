@@ -19,7 +19,6 @@ namespace WpfView
             InitializeComponent();
 
             //Change colour of top 3 and add trophy image
-            //TODO Change images to trophies
             SolidColorBrush firstPosition = new(Colors.Gold);
             SolidColorBrush secondPosition = new(Colors.Silver);
             SolidColorBrush thirdPosition = new(Colors.Brown);
@@ -27,6 +26,7 @@ namespace WpfView
 
             TrophyImage.Height = 40;
             TrophyImage.Width = 40;
+
             switch (position)
             {
                 case 0:
@@ -55,6 +55,8 @@ namespace WpfView
                     TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/NoTrophy.png") as ImageSource;
                     break;
             }
+
+            //If logged in, show
             if (CurrentUser)
             {
                 Background = new SolidColorBrush(Colors.OrangeRed);
