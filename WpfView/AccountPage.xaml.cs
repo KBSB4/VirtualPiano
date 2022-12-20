@@ -26,12 +26,6 @@ namespace WpfView
     public partial class AccountPage : Page
     {
         private readonly MainMenu _mainMenu;
-        private SecureString? LoginUsername { get; set; }
-        private SecureString? LoginPassword { get; set; }
-        private SecureString? NewAccountUsername { get; set; }
-        private SecureString? NewAccountEmail { get; set; }
-        private SecureString? NewAccountPassword { get; set; }
-        private SecureString? NewAccountConfirm { get; set; }
         public AccountPage(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
@@ -39,19 +33,14 @@ namespace WpfView
             InitializeComponent();
         }
 
-        private async void Login_Button_Click(object sender, RoutedEventArgs e)
+        private void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            LoginUsername = SaveSecureString(Login_UsernameInput.Text);
-            LoginPassword = SaveSecureString(Login_PasswordInput.Password);
+            if(Login_PasswordIsValid().Result == true) { Debug.WriteLine("Password is valid!"); }
             ClearLoginInput();
         }
 
         private void Create_Button_Click(object sender, RoutedEventArgs e)
         {
-            NewAccountUsername = SaveSecureString(NewAccount_UsernameInput.Text);
-            NewAccountEmail = SaveSecureString(NewAccount_EmailInput.Text);
-            NewAccountPassword = SaveSecureString(NewAccount_PasswordInput.Password);
-            NewAccountConfirm = SaveSecureString(NewAccount_ConfirmInput.Password);
             UploadNewUser();
             ClearNewAccountInput();
         }
@@ -61,33 +50,48 @@ namespace WpfView
             User user = new();
             user.Name = NewAccount_UsernameInput.Text;
             user.Password = NewAccount_PasswordInput.Password;
-            //user.isAdmin = TODO specify who is admin and who is not
             user.Email = NewAccount_EmailInput.Text;
             await DatabaseController.UploadNewUser(user);
         }
 
-        private SecureString SaveSecureString(string password)
-        {
-            SecureString secureString = new SecureString();
-            foreach (char charachter in password)
-            {
-                secureString.AppendChar(charachter);
-            }
-            return secureString;
-        }
-
         private void ClearLoginInput()
         {
-            Login_UsernameInput.Text = "";
-            Login_PasswordInput.Password = "";
+            Login_UsernameInput.Text = string.Empty;
+            Login_PasswordInput.Password = string.Empty;
         }
 
         private void ClearNewAccountInput()
         {
-            NewAccount_UsernameInput.Text = "";
-            NewAccount_PasswordInput.Password = "";
-            NewAccount_ConfirmInput.Password = "";
+            NewAccount_UsernameInput.Text = string.Empty;
+            NewAccount_EmailInput.Text= string.Empty;
+            NewAccount_PasswordInput.Password = string.Empty;
+            NewAccount_ConfirmInput.Password = string.Empty;
         }
+
+        #region Validation Methods
+
+        private async void Login_NameAndPassAreValid()
+        {
+            bool isValid = true;
+            string usernameInput = Login_UsernameInput.Text;
+            string passwordInput = Login_PasswordInput.Password;
+
+            User[]? userList = await DatabaseController.GetAllUsernamesAndPassphrases();
+            foreach (User user in userList)
+            {
+                if (user.Name.Equals(usernameInput))
+                {
+                    
+                }
+                else 
+                {
+                    isValid = false;
+                    NewAccount_UsernameInput.Foreground = new SolidColorBrush(Color.FromRgb(10,10,10));
+                }
+            }
+        }
+
+        #endregion
 
         #region Menubar event clicks
 

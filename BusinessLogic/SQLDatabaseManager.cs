@@ -154,15 +154,47 @@ namespace BusinessLogic
             }
         }
 
-#endregion
+        public async Task<User[]?> GetAllUsernamesAndPassphrases(string username, string passphrase)
+        {
+            using (SqlConnection connection = new(connectionString))
+            {
+                string query = "SELECT username, passphrase FROM UserAccount";
 
-#region Songs
-/// <summary>
-/// Gets the first found song in the Song table using <paramref name="songname"/> to find it.
-/// </summary>
-/// <param name="songname"></param>
-/// <returns>New <see cref="Song"/> with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
-public async Task<Song?> GetSong(string songname)
+                await connection.OpenAsync();
+
+                SqlCommand command = new(query, connection);
+
+                SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = username };
+
+                SqlParameter passphraseParam = new("@passphrase", SqlDbType.VarChar) { Value = passphrase };
+
+                command.Parameters.Add(usernameParam);
+                command.Parameters.Add(passphraseParam);
+
+                SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                List<User> result = new();
+
+                while (await dataReader.ReadAsync())
+                {
+                    result.Add(new User()
+                    {
+                        Name = await dataReader.GetFieldValueAsync<string>("username"),
+                        Password = await dataReader.GetFieldValueAsync<string>("passphrase")
+                    });
+                }
+                return result.ToArray();
+            }
+        }
+        #endregion
+
+        #region Songs
+        /// <summary>
+        /// Gets the first found song in the Song table using <paramref name="songname"/> to find it.
+        /// </summary>
+        /// <param name="songname"></param>
+        /// <returns>New <see cref="Song"/> with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
+        public async Task<Song?> GetSong(string songname)
         {
             using (SqlConnection connection = new(connectionString))
             {

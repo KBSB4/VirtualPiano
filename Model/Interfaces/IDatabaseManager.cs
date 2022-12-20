@@ -21,6 +21,8 @@ namespace Model.Interfaces
         public Task<User> GetUser(int userID);
 
 		public Task UploadNewUser(User user);
+
+		public Task<User[]?> GetAllUsernamesAndPassphrases();
         #endregion
 
 		#region Highscore

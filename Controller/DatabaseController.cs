@@ -31,6 +31,15 @@ namespace Controller
 			await uploadNewUser;
 		}
 
+		public static async Task<User[]?> GetAllUsernamesAndPassphrases()
+		{
+			Task<User[]?> getAllUsernamesAndPassphrasesTask = databaseManager.GetAllUsernamesAndPassphrases();
+
+			User[]? result = await getAllUsernamesAndPassphrasesTask;
+
+			return result;
+		}
+
 		/// <summary>
 		/// Deletes a song from a database using <see cref="databaseManager"/>
 		/// </summary>
