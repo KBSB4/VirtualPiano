@@ -21,7 +21,7 @@ namespace WpfView
             //Change colour of top 3 and add trophy image
             SolidColorBrush firstPosition = new(Colors.Gold);
             SolidColorBrush secondPosition = new(Colors.Silver);
-            SolidColorBrush thirdPosition = new(Colors.Brown);
+            SolidColorBrush thirdPosition = new(Colors.SaddleBrown);
             SolidColorBrush otherPosition = new(Colors.White);
 
             TrophyImage.Height = 40;
