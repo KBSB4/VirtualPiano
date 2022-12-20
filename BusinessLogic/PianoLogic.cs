@@ -10,6 +10,7 @@ namespace BusinessLogic
     {
         public static Piano? Piano { get; set; }
         public static PianoSoundPlayer? SoundPlayer { get; set; }
+        public static float Volume { get; set; }
 
         //Used to play multiple keys at once, also tracks the playing keys
         public static Dictionary<PianoKey, FadingAudio> CurrentPlayingAudio { get => currentPlayingAudio; set => currentPlayingAudio = value; }
@@ -143,7 +144,7 @@ namespace BusinessLogic
         {
             if (!CurrentPlayingAudio.ContainsKey(key))
             {
-                FadingAudio? fadingAudio = SoundPlayer?.GetFadingAudio(key.Note, (int)key.Octave);
+                FadingAudio? fadingAudio = SoundPlayer?.GetFadingAudio(key.Note, (int)key.Octave, Volume);
 
                 if (fadingAudio is not null)
                 {
