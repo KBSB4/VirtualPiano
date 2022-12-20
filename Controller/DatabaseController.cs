@@ -5,6 +5,7 @@ using Model.Interfaces;
 using SharpDX;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Controller
 
 		public static async Task<User?> GetUserByID(int userID)
 		{
-			Task<User?> getUserByIDTask = databaseManager.GetUser(userID);
+			Task<User?> getUserByIDTask = databaseManager.GetUserById(userID);
 
 			User? result = await getUserByIDTask;
 
@@ -26,16 +27,25 @@ namespace Controller
 
 		public static async Task UploadNewUser(User user)
 		{
-			Task uploadNewUser = databaseManager.UploadNewUser(user);
+			Task uploadNewUserTask = databaseManager.UploadNewUser(user);
 
-			await uploadNewUser;
+			await uploadNewUserTask;
 		}
 
-		public static async Task<User[]?> GetAllUsernamesAndPassphrases()
+		public static async Task<User?> GetLoggingInUser(string username, string password)
 		{
-			Task<User[]?> getAllUsernamesAndPassphrasesTask = databaseManager.GetAllUsernamesAndPassphrases();
+            Task<User?> getLoggingInUserTask = databaseManager.GetLoggingInUser(username, password);
 
-			User[]? result = await getAllUsernamesAndPassphrasesTask;
+            User? result = await getLoggingInUserTask;
+
+            return result;
+        }
+
+		public static async Task<User[]?> GetAllUsers()
+		{
+			Task<User[]?> getAllUsersTask = databaseManager.GetAllUsers();
+
+			User[]? result = await getAllUsersTask;
 
 			return result;
 		}

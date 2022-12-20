@@ -1,4 +1,5 @@
 ﻿using Melanchall.DryWetMidi.Core;
+using Model.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +10,15 @@ namespace BusinessLogic
 {
     public static class ValidationLogic
     {
+        #region AccountPage Field Validation
+        public static bool AccountPageValidateLoggingInCredentials(User? user)
+        {
+            if (user is not null) return true;
+            else { return false; }
+        }
+        #endregion
 
-
-
-
-
-
-
-
-        #region AdminPanel Field validation Logic
+        #region AdminPanel Field Validation
         public static string AdminPanelValidateTitle(string title)
         {
             string errorMessage = string.Empty;
@@ -55,6 +56,5 @@ namespace BusinessLogic
             return errorMessage;
         }
         #endregion
-
     }
-    }
+}

@@ -35,7 +35,7 @@ namespace WpfView
 
         private void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            if(Login_PasswordIsValid().Result == true) { Debug.WriteLine("Password is valid!"); }
+            Login_NameAndPassAreValid(Login_UsernameInput.Text, Login_PasswordInput.Password);
             ClearLoginInput();
         }
 
@@ -70,24 +70,19 @@ namespace WpfView
 
         #region Validation Methods
 
-        private async void Login_NameAndPassAreValid()
+        private async void Login_NameAndPassAreValid(string usernameInput, string passwordInput)
         {
-            bool isValid = true;
-            string usernameInput = Login_UsernameInput.Text;
-            string passwordInput = Login_PasswordInput.Password;
-
-            User[]? userList = await DatabaseController.GetAllUsernamesAndPassphrases();
-            foreach (User user in userList)
+            User? user = await DatabaseController.GetLoggingInUser(usernameInput, passwordInput);
+            if(ValidationController.AccountPageUserCredentialsAreValid(user))
             {
-                if (user.Name.Equals(usernameInput))
-                {
-                    
-                }
-                else 
-                {
-                    isValid = false;
-                    NewAccount_UsernameInput.Foreground = new SolidColorBrush(Color.FromRgb(10,10,10));
-                }
+                _mainMenu.loggedIn = true;
+                if(user.isAdmin) NavigationService?.Navigate(_mainMenu.AdminPanel);
+                else NavigationService?.Navigate(_mainMenu);
+            }
+            else
+            {
+                Login_UsernameInput.Background = new SolidColorBrush(Colors.Red);
+                Login_PasswordInput.Background = new SolidColorBrush(Colors.Red);
             }
         }
 

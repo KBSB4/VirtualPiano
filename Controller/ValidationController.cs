@@ -1,5 +1,6 @@
 ﻿using BusinessLogic;
 using Melanchall.DryWetMidi.Core;
+using Model.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,10 @@ namespace Controller
     public static class ValidationController
     {
 
-
-
+        public static bool AccountPageUserCredentialsAreValid(User? user)
+        {
+            return ValidationLogic.AccountPageValidateLoggingInCredentials(user);
+        }
 
         public static string AdminPanelValidationMessageTitle(string title)
         {

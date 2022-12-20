@@ -26,7 +26,7 @@ namespace BusinessLogic
         {
             using (SqlConnection connection = new(connectionString))
             {
-                string query = "SELECT * FROM UserAccount WHERE idUser = @username";
+                string query = "SELECT * FROM UserAccount WHERE username = @username";
 
                 await connection.OpenAsync();
 
@@ -49,7 +49,7 @@ namespace BusinessLogic
             }
         }
 
-        public async Task<User?> GetUser(int id)
+        public async Task<User?> GetUserById(int id)
         {
             using (SqlConnection connection = new(connectionString))
             {
@@ -80,7 +80,7 @@ namespace BusinessLogic
         {
             using (SqlConnection connection = new(connectionString))
             {
-                string query = "SELECT * FROM UserAccount WHERE username = @username AND password = @password";
+                string query = "SELECT * FROM UserAccount WHERE username = @username AND passphrase = @passphrase";
 
                 await connection.OpenAsync();
 
@@ -88,7 +88,7 @@ namespace BusinessLogic
 
                 SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = username };
 
-                SqlParameter passwordParam = new("@password", SqlDbType.VarChar) { Value = password };
+                SqlParameter passwordParam = new("@passphrase", SqlDbType.VarChar) { Value = password };
 
                 command.Parameters.Add(usernameParam);
 
@@ -101,9 +101,29 @@ namespace BusinessLogic
                 await CloseAndDispose(connection, command, dataReader);
 
                 if (users.Length > 0)
-                    return users[0];
-
+                    if (username == users[0].Name && password == users[0].Password) return users[0];
+                    else { return null; }
                 return null;
+            }
+        }
+
+        public async Task<User[]?> GetAllUsers()
+        {
+            using (SqlConnection connection = new(connectionString))
+            {
+                string query = "SELECT * FROM UserAccount";
+
+                await connection.OpenAsync();
+
+                SqlCommand command = new(query, connection);
+
+                SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+                User[] result = await ReadUsers(dataReader);
+
+                await CloseAndDispose(connection, command, dataReader);
+
+                return result;
             }
         }
 
@@ -119,7 +139,7 @@ namespace BusinessLogic
                     Id = await dataReader.GetFieldValueAsync<int>("idUser"),
                     Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
                     Email = await dataReader.GetFieldValueAsync<string>("email"),
-                    isAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") == 0
+                    isAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
                 });
             }
 
@@ -151,39 +171,6 @@ namespace BusinessLogic
                 await command.ExecuteNonQueryAsync();
 
                 await CloseAndDispose(connection, command);
-            }
-        }
-
-        public async Task<User[]?> GetAllUsernamesAndPassphrases(string username, string passphrase)
-        {
-            using (SqlConnection connection = new(connectionString))
-            {
-                string query = "SELECT username, passphrase FROM UserAccount";
-
-                await connection.OpenAsync();
-
-                SqlCommand command = new(query, connection);
-
-                SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = username };
-
-                SqlParameter passphraseParam = new("@passphrase", SqlDbType.VarChar) { Value = passphrase };
-
-                command.Parameters.Add(usernameParam);
-                command.Parameters.Add(passphraseParam);
-
-                SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-                List<User> result = new();
-
-                while (await dataReader.ReadAsync())
-                {
-                    result.Add(new User()
-                    {
-                        Name = await dataReader.GetFieldValueAsync<string>("username"),
-                        Password = await dataReader.GetFieldValueAsync<string>("passphrase")
-                    });
-                }
-                return result.ToArray();
             }
         }
         #endregion
@@ -316,7 +303,6 @@ namespace BusinessLogic
         /// <returns>New <see cref="Song"/>[] with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
         public async Task<Song[]> GetAllSongs()
         {
-
             using (SqlConnection connection = new(connectionString))
             {
                 string query = "SELECT * FROM Song";
@@ -383,7 +369,7 @@ namespace BusinessLogic
                 {
                     Highscore highscore = new()
                     {
-                        User = await GetUser(await dataReader.GetFieldValueAsync<int>("idUser")),
+                        User = await GetUserById(await dataReader.GetFieldValueAsync<int>("idUser")),
                         Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong")),
                         Score = await dataReader.GetFieldValueAsync<int>("score")
                     };

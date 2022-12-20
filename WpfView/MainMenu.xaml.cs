@@ -1,4 +1,5 @@
 ﻿using Melanchall.DryWetMidi.Multimedia;
+using Model.DatabaseModels;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -18,7 +19,9 @@ namespace WpfView
         public AccountPage AccountPage { get; set; }
         public AdminPanel AdminPanel { get; set; }
 
-        private bool loggedIn = false;
+        public bool loggedIn = false;
+
+        //public User loggedInUser = ;
 
         //DO NOT REMOVE
         public IInputDevice? InputDevice;
@@ -30,7 +33,7 @@ namespace WpfView
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
             AccountPage = new AccountPage(this);
-            AdminPanel = new();
+            AdminPanel = new(this);
         }
 
         /// <summary>
