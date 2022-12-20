@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Renci.SshNet;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Renci.SshNet;
 
 namespace BusinessLogic
 {
@@ -13,7 +8,7 @@ namespace BusinessLogic
         /// <summary>
         /// makes a connection to the remote database (Microsoft SQL server) on a Linux VM. 
         /// </summary>
-       public static void ExecuteSshConnection()
+        public static void ExecuteSshConnection()
         {
             AuthenticationMethod method = new PasswordAuthenticationMethod("student", "Arena-Enclose8");
             ConnectionInfo connectionInfo = new ConnectionInfo("145.44.234.89", "student", method);
@@ -29,8 +24,6 @@ namespace BusinessLogic
             Debug.WriteLine(readCommand.Result);
             SshCommand writeCommand = client.RunCommand("mkdir \"/home/student/Desktop/ssh_output\"");
             Thread.Sleep(1000);
-            
-
         }
     }
 }

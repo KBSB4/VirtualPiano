@@ -19,7 +19,7 @@ namespace BusinessLogic
 		{
 			if (file.Chunks.Count == 0) return null;
 
-            MidiFile newFile = AddStartTune(file);
+			MidiFile newFile = AddStartTune(file);
 			List<TrackChunk> trackList = newFile.GetTrackChunks().ToList();
 
 			tempoMap = newFile.GetTempoMap();
@@ -143,7 +143,7 @@ namespace BusinessLogic
 		/// <returns></returns>
 		public static MidiFile RemovePianoNotes(MidiFile file)
 		{
-            List<TrackChunk> trackList = file.GetTrackChunks().ToList();
+			List<TrackChunk> trackList = file.GetTrackChunks().ToList();
 			tempoMap = file.GetTempoMap();
 			FourBitNumber pianoChannel = GetPianoChannel(trackList);
 			file.RemoveNotes(x => x.Channel == pianoChannel);

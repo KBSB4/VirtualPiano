@@ -27,11 +27,11 @@ namespace Model
             PianoKeys = pianoKeys;
         }
 
-		public Song()
-		{
-		}
+        public Song() //todo for what
+        {
+        }
 
-		public static void InvokeNotePlayed(Song song, PianoKeyEventArgs pianoKeyEventArgs)
+        public static void InvokeNotePlayed(Song song, PianoKeyEventArgs pianoKeyEventArgs)
         {
             song.NotePlayed?.Invoke(song, pianoKeyEventArgs);
         }

@@ -279,7 +279,7 @@ namespace WpfView
                 SongController.CurrentSong.NotePlayed -= CurrentSong_NotePlayed;
                 SongController.StopSong();
             }
-            else if(sender is not null)
+            else if (sender is not null)
             {
                 MessageBox.Show("There is no MIDI playing right now.",
                 "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -1,7 +1,6 @@
 ﻿using BusinessLogic;
 using Melanchall.DryWetMidi.Core;
 using Model;
-using System.Runtime.CompilerServices;
 
 namespace Controller
 {

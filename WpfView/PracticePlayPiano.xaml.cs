@@ -195,20 +195,22 @@ namespace WpfView
                         Highscore[] highscores = await DatabaseController.GetHighscores(currentSong.Id);
                         Highscore? FoundScore = highscores.Where(score => score.User.Id == highscore.User.Id).FirstOrDefault();
 
-                        if(FoundScore is null)
+                        if (FoundScore is null)
                         {
                             await DatabaseController.UploadHighscore(highscore);
-                        } else
+                        }
+                        else
                         {
                             if (FoundScore.Score < highscore.Score)
                             {
                                 await DatabaseController.UpdateHighscore(highscore);
-                            } else
+                            }
+                            else
                             {
                                 MessageBox.Show("Highscore is higher than current score",
                                 "There is no reason to upload your score.", MessageBoxButton.OK, MessageBoxImage.Information);
                             }
-                        }   
+                        }
 
                         //Go to menu
                         Dispatcher.Invoke(new Action(() =>
@@ -390,7 +392,8 @@ namespace WpfView
                 if (maxTotalScore > 0)
                 {
                     ScoreBar.Value = Math.Round((double)score / maxTotalScore * 100);
-                } else
+                }
+                else
                 {
                     ScoreBar.Value = 100;
                 }
