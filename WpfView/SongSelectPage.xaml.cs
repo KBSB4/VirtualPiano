@@ -21,7 +21,13 @@ namespace WpfView
         {
             _mainMenu = mainMenu;
             PracticePiano = new PracticePlayPiano(_mainMenu, this);
+            _mainMenu.IsVisibleChanged += _mainMenu_IsVisibleChanged;
             InitializeComponent();
+            AddSongs();
+        }
+
+        private void _mainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
             AddSongs();
         }
 
@@ -72,6 +78,7 @@ namespace WpfView
         /// </summary>
         private async void AddSongs()
         {
+            SongCards.Children.Clear();
             Song[] songs = await DatabaseController.GetAllSongs();
 
             foreach (var item in songs)
