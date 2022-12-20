@@ -48,7 +48,6 @@ namespace WpfView
                     TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/ThropyBronze.png") as ImageSource;
                     break;
                 default:
-
                     PositionLabel.Foreground = otherPosition;
                     UserLabel.Foreground = otherPosition;
                     ScoreLabel.Foreground = otherPosition;

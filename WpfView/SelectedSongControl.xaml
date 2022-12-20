@@ -36,7 +36,7 @@
                             <RowDefinition Height="3*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Viewbox>
-                            <Label x:Name="Title" Content="Song title" FontSize="60" Foreground="WhiteSmoke" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
+                            <Label x:Name="Title" Margin="40,0,0,0" Content="Song title" FontSize="60" Foreground="WhiteSmoke" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
                         </Viewbox>
                         <Image x:Name="DifficultyImage" Source="/Images/DifficultyIconEZ.png" Grid.Column="1" Margin="10"></Image>
                         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Name="leaderBoard">

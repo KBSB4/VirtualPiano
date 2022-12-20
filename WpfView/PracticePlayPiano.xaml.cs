@@ -387,7 +387,13 @@ namespace WpfView
         {
             Dispatcher.Invoke(new Action(() =>
             {
-                ScoreBar.Value = Math.Round((double)score / maxTotalScore * 100);
+                if (maxTotalScore > 0)
+                {
+                    ScoreBar.Value = Math.Round((double)score / maxTotalScore * 100);
+                } else
+                {
+                    ScoreBar.Value = 100;
+                }
                 ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
             }));
         }
