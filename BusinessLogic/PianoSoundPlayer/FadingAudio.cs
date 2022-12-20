@@ -35,7 +35,12 @@ namespace BusinessLogic.SoundPlayer
         /// <param name="fadeOutSpeed"></param>
         public void StopPlaying(float fadeOutSpeed)
         {
-            if (SourceVoice != null)
+            float sourceVoiceVolume = 0;
+            SourceVoice.GetVolume(out sourceVoiceVolume);
+
+            fadeOutSpeed = fadeOutSpeed * sourceVoiceVolume;
+
+			if (SourceVoice != null)
             {
                 if (fadeOutSpeed == 0 || fadeOutSpeed > 1000)
                 {
@@ -53,7 +58,7 @@ namespace BusinessLogic.SoundPlayer
         /// Selfexplanatory
         /// </summary>
         /// <param name="state"></param>
-        public static void DecreaseVolume(object? state)
+        private static void DecreaseVolume(object? state)
         {
             if (state is not object[] array)
             {

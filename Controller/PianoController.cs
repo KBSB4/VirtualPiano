@@ -74,5 +74,10 @@ namespace Controller
 		{
 			PianoLogic.StopPianoSound(key);
 		}
+
+		public static void SetVolume(float volume)
+		{
+			PianoLogic.Volume = volume;
+		}
 	}
 }
