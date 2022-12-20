@@ -16,6 +16,7 @@ namespace BusinessLogic
 			"Password=Backing-Crumpet4;" +
 			"TrustServerCertificate=True;"; //Readonly prevents decompile
 
+		//TODO unit tests
 		#region Users
 
 		/// <summary>
