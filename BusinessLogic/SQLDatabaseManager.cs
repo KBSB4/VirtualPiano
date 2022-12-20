@@ -9,14 +9,20 @@ namespace BusinessLogic
 {
 	public class SQLDatabaseManager : IDatabaseManager
 	{
-		private const string connectionString = "Data Source=127.0.0.1;" +
+		private readonly string connectionString = "Data Source=127.0.0.1;" +
 			"Initial Catalog=PianoHero;" +
 			"Persist Security Info=True;" +
 			"User ID=SA;" +
 			"Password=Backing-Crumpet4;" +
-			"TrustServerCertificate=True;";
+			"TrustServerCertificate=True;"; //Readonly prevents decompile
 
 		#region Users
+
+		/// <summary>
+		/// Get User by username
+		/// </summary>
+		/// <param name="username"></param>
+		/// <returns></returns>
 		public async Task<User> GetUser(string username)
 		{
             using (SqlConnection connection = new(connectionString))
@@ -44,6 +50,11 @@ namespace BusinessLogic
             }
         }
 
+		/// <summary>
+		/// Get user by userid
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
 		public async Task<User?> GetUser(int id)
 		{
 			using (SqlConnection connection = new(connectionString))
@@ -71,6 +82,12 @@ namespace BusinessLogic
 			}
 		}
 
+		/// <summary>
+		/// UNFINISHED - Get logged in user
+		/// </summary>
+		/// <param name="username"></param>
+		/// <param name="password"></param>
+		/// <returns></returns>
         public async Task<User?> GetLoggingInUser(string username, string password)
         {
             using (SqlConnection connection = new(connectionString))
@@ -102,6 +119,11 @@ namespace BusinessLogic
             }
         }
 
+		/// <summary>
+		/// Get all users
+		/// </summary>
+		/// <param name="dataReader"></param>
+		/// <returns></returns>
         private async Task<User[]> ReadUsers(SqlDataReader dataReader)
 		{
 			List<User> result = new();
@@ -295,6 +317,12 @@ namespace BusinessLogic
 		#endregion
 
 		#region Highscores
+
+		/// <summary>
+		/// Get all highscores of specified songid
+		/// </summary>
+		/// <param name="songId"></param>
+		/// <returns></returns>
 		public async Task<Highscore[]> GetHighscores(int songId)
 		{
 			using (SqlConnection connection = new(connectionString))
@@ -331,6 +359,11 @@ namespace BusinessLogic
 			}
 		}
 
+		/// <summary>
+		/// Upload highscore
+		/// </summary>
+		/// <param name="highscore"></param>
+		/// <returns></returns>
 		public async Task UploadHighscore(Highscore highscore)
 		{
 			using (SqlConnection connection = new SqlConnection(connectionString))
@@ -355,6 +388,11 @@ namespace BusinessLogic
 			}
 		}
 
+		/// <summary>
+		/// Update highscore
+		/// </summary>
+		/// <param name="highscore"></param>
+		/// <returns></returns>
         public async Task UpdateHighscore(Highscore highscore)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -380,12 +418,25 @@ namespace BusinessLogic
         }
         #endregion
 
+		/// <summary>
+		/// Close connection and clear everything
+		/// </summary>
+		/// <param name="connection"></param>
+		/// <param name="command"></param>
+		/// <param name="dataReader"></param>
+		/// <returns></returns>
         private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
 		{
 			await CloseAndDispose(connection, command);
 			await dataReader.DisposeAsync();
 		}
 
+		/// <summary>
+		/// Close connection and clear command
+		/// </summary>
+		/// <param name="connection"></param>
+		/// <param name="command"></param>
+		/// <returns></returns>
 		private async Task CloseAndDispose(SqlConnection connection, SqlCommand command)
 		{
 			await connection.CloseAsync();

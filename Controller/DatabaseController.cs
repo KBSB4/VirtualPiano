@@ -95,6 +95,11 @@ namespace Controller
 			return result;
 		}
 
+        /// <summary>
+        /// Upload highscore with the <see cref="Highscore"/> class
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
         public static async Task UploadHighscore(Highscore score)
         {
             Task uploadHighscoreTask = databaseManager.UploadHighscore(score);
@@ -102,6 +107,11 @@ namespace Controller
             await uploadHighscoreTask;
         }
 
+        /// <summary>
+        /// Update highscore with the <see cref="Highscore"/> class
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
         public static async Task UpdateHighscore(Highscore score)
         {
             Task updateHighscoreTask = databaseManager.UpdateHighscore(score);
