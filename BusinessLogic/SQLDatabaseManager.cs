@@ -9,7 +9,7 @@ namespace BusinessLogic
 {
 	public class SQLDatabaseManager : IDatabaseManager
 	{
-		private const string connectionString = "Data Source=127.0.0.1;" +
+		private readonly string connectionString = "Data Source=127.0.0.1;" +
 			"Initial Catalog=PianoHero;" +
 			"Persist Security Info=True;" +
 			"User ID=SA;" +

@@ -193,8 +193,11 @@ namespace WpfView
 				{
 					DeleteSong(deleteSong.songTitle);
 					Song? found = songList.Find(x => x.Name.Equals(deleteSong.songTitle));
-					if (found != null) songList.Remove(found);
-					RenewUploadedSongList();
+					if (found != null)
+					{
+						songList.Remove(found);
+						RenewUploadedSongList();
+					}
 				}
 			}
 
