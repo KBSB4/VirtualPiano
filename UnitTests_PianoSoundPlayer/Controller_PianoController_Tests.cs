@@ -18,7 +18,7 @@ namespace UnitTests
         public void PianoController_CreatePiano()
         {
             PianoController.CreatePiano();
-            Assert.IsNotNull(PianoController.Piano);
+            Assert.That(PianoController.Piano, Is.Not.Null);
             //Assert.IsNotNull(PianoController._player);
         }
 

@@ -1,34 +1,31 @@
 ﻿using Controller;
 using Melanchall.DryWetMidi.Core;
 using Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UnitTests
 {
-	
+
 	public class Controller_MIDIController_Tests
 	{
 		[Test]
 		[TestCase("\\")]
 		public void MIDIController_OpenMidi_LoadFileTest(string file)
 		{
-			
-			Assert.DoesNotThrow(() =>
+			Assert.Multiple(() =>
 			{
-				MidiController.OpenMidi(file);
-			});
+				Assert.DoesNotThrow(() =>
+				{
+					MidiController.OpenMidi(file);
+				});
 
-			Assert.Null(SongController.CurrentSong);
+				Assert.That(SongController.CurrentSong, Is.Null);
+			});
 		}
 
 		[Test]
 		public void MIDIController_Convert_EmptyFile()
 		{
-			MidiFile file = new MidiFile();
+			MidiFile file = new();
 			Song? song = MidiController.Convert(file);
 
 			Assert.That(song, Is.Null);

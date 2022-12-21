@@ -28,7 +28,7 @@ namespace BusinessLogic
 		}
 
 		#region Users
-		public async Task<User> GetUser(string username)
+		public async Task<User?> GetUser(string username)
 		{
 			using SqlConnection connection = new(connectionString);
 			string query = "SELECT * FROM UserAccount WHERE idUser = @username";
@@ -78,7 +78,7 @@ namespace BusinessLogic
 			return null;
 		}
 
-		public async Task<User?> GetLoggingInUser(string username, string password)
+		public static async Task<User?> GetLoggingInUser(string username, string password)
 		{
 			using SqlConnection connection = new(connectionString);
 			string query = "SELECT * FROM UserAccount WHERE username = @username AND password = @password";
@@ -107,7 +107,7 @@ namespace BusinessLogic
 			return null;
 		}
 
-		private async Task<User[]> ReadUsers(SqlDataReader dataReader)
+		private static async Task<User[]> ReadUsers(SqlDataReader dataReader)
 		{
 			List<User> result = new();
 
@@ -118,8 +118,8 @@ namespace BusinessLogic
 					Name = await dataReader.GetFieldValueAsync<string>("username"),
 					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
 					Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
-					Email = await dataReader.IsDBNullAsync("email") ? null : await dataReader.GetFieldValueAsync<string>("email"),
-					isAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") == 0
+					Email = await dataReader.IsDBNullAsync("email") ? null : await dataReader.GetFieldValueAsync<string?>("email"),
+					isAdmin = await dataReader.GetFieldValueAsync<byte?>("isAdmin") == 0
 				});
 			}
 
@@ -243,7 +243,7 @@ namespace BusinessLogic
 		/// Gets all the songs from the sql database
 		/// </summary>
 		/// <returns>New <see cref="Song"/>[] with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
-		public async Task<Song[]> GetAllSongs()
+		public async Task<Song[]?> GetAllSongs()
 		{
 			using SqlConnection connection = new(connectionString);
 			string query = "SELECT * FROM Song";
@@ -266,7 +266,7 @@ namespace BusinessLogic
 		/// </summary>
 		/// <param name="dataReader"></param>
 		/// <returns>New <see cref="Song"/> with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
-		private async Task<Song[]> ReadSongs(SqlDataReader dataReader)
+		private static async Task<Song[]> ReadSongs(SqlDataReader dataReader)
 		{
 			List<Song> result = new();
 
@@ -278,7 +278,7 @@ namespace BusinessLogic
 					Id = await dataReader.GetFieldValueAsync<int>("idSong"),
 					FullFile = await dataReader.GetFieldValueAsync<byte[]>("midifile"),
 					Difficulty = await dataReader.GetFieldValueAsync<Difficulty>("difficulty"),
-					Description = await dataReader.GetFieldValueAsync<string>("description"),
+					Description = await dataReader.GetFieldValueAsync<string?>("description"),
 				});
 			}
 
@@ -287,7 +287,7 @@ namespace BusinessLogic
 		#endregion
 
 		#region Highscores
-		public async Task<Highscore[]> GetHighscores(int songId)
+		public async Task<Highscore[]?> GetHighscores(int songId)
 		{
 			using SqlConnection connection = new(connectionString);
 			List<Highscore> highscores = new();
@@ -375,13 +375,13 @@ namespace BusinessLogic
 		}
 		#endregion
 
-		private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
+		private static async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
 		{
 			await CloseAndDispose(connection, command);
 			await dataReader.DisposeAsync();
 		}
 
-		private async Task CloseAndDispose(SqlConnection connection, SqlCommand command)
+		private static async Task CloseAndDispose(SqlConnection connection, SqlCommand command)
 		{
 			await connection.CloseAsync();
 			await command.DisposeAsync();
