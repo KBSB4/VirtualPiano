@@ -8,25 +8,18 @@ namespace BusinessLogic
 {
 	public class SQLDatabaseManager : IDatabaseManager
 	{
-		// Server=127.0.0.1;User ID=SA;Password=Backing-Crumpet4;Encrypt=yes;Trusted_Connection=no;TrustServerCertificate=True;
-		// Server=127.0.0.1:1433;Initial Catalog=PianoHero;User ID=SA;Password=Backing-Crumpet4;Encrypt=yes;
-		private const string connectionString = "Server=127.0.0.1;User ID=SA;Password=Backing-Crumpet4;Encrypt=yes;Trusted_Connection=no;TrustServerCertificate=True;Initial Catalog=PianoHero;";
-		//	"Server=127.0.0.1" +
-		//	//"Data Source=localhost;" +
-		//	"Initial Catalog=PianoHero;" +
-		//	//		"Persist Security Info=True;" +
-		//	"User ID=SA;" +
-		//	"Password=Backing-Crumpet4;";
-		////+
-		////"TrustServerCertificate=True;";
+		private const string connectionString =
+			"Server=127.0.0.1;" +
+			"User ID=SA;" +
+			"Password=Backing-Crumpet4;" +
+			"Encrypt=yes;" +
+			"Trusted_Connection=no;" +
+			"TrustServerCertificate=True;" +
+			"Initial Catalog=PianoHero;";
 
 		public SQLDatabaseManager()
 		{
-			//ProgramSSH.ExecuteSshConnection();
-
-			//ProgramSSH.ExecuteSsh();
 			new Thread(new ThreadStart(Connect)).Start();
-			//Thread.Sleep(500);
 		}
 
 		private void Connect()
@@ -37,87 +30,81 @@ namespace BusinessLogic
 		#region Users
 		public async Task<User> GetUser(string username)
 		{
-			using (SqlConnection connection = new(connectionString))
-			{
-				string query = "SELECT * FROM UserAccount WHERE idUser = @username";
+			using SqlConnection connection = new(connectionString);
+			string query = "SELECT * FROM UserAccount WHERE idUser = @username";
 
-				await connection.OpenAsync();
+			await connection.OpenAsync();
 
-				SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-				SqlParameter userIdParam = new("@username", SqlDbType.VarChar) { Value = username };
+			SqlParameter userIdParam = new("@username", SqlDbType.VarChar) { Value = username };
 
-				command.Parameters.Add(userIdParam);
+			command.Parameters.Add(userIdParam);
 
-				SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-				User[] users = await ReadUsers(dataReader);
+			User[] users = await ReadUsers(dataReader);
 
-				await CloseAndDispose(connection, command, dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-				if (users.Length > 0)
-					return users[0];
+			if (users.Length > 0)
+				return users[0];
 
-				return null;
-			}
+			return null;
 		}
 
 		public async Task<User?> GetUser(int id)
 		{
-			using (SqlConnection connection = new(connectionString))
-			{
-				string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
+			using SqlConnection connection = new(connectionString);
+			string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
 
-				await connection.OpenAsync();
+			await connection.OpenAsync();
 
-				SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-				SqlParameter userIdParam = new("@userId", SqlDbType.Int) { Value = id };
+			SqlParameter userIdParam = new("@userId", SqlDbType.Int) { Value = id };
 
-				command.Parameters.Add(userIdParam);
+			command.Parameters.Add(userIdParam);
 
-				SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-				User[] users = await ReadUsers(dataReader);
+			User[] users = await ReadUsers(dataReader);
 
-				await CloseAndDispose(connection, command, dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-				if (users.Length > 0)
-					return users[0];
+			if (users.Length > 0)
+				return users[0];
 
-				return null;
-			}
+			return null;
 		}
 
 		public async Task<User?> GetLoggingInUser(string username, string password)
 		{
-			using (SqlConnection connection = new(connectionString))
-			{
-				string query = "SELECT * FROM UserAccount WHERE username = @username AND password = @password";
+			using SqlConnection connection = new(connectionString);
+			string query = "SELECT * FROM UserAccount WHERE username = @username AND password = @password";
 
-				await connection.OpenAsync();
+			await connection.OpenAsync();
 
-				SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-				SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = username };
+			SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = username };
 
-				SqlParameter passwordParam = new("@password", SqlDbType.VarChar) { Value = password };
+			SqlParameter passwordParam = new("@password", SqlDbType.VarChar) { Value = password };
 
-				command.Parameters.Add(usernameParam);
+			command.Parameters.Add(usernameParam);
 
-				command.Parameters.Add(passwordParam);
+			command.Parameters.Add(passwordParam);
 
-				SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-				User[] users = await ReadUsers(dataReader);
+			User[] users = await ReadUsers(dataReader);
 
-				await CloseAndDispose(connection, command, dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-				if (users.Length > 0)
-					return users[0];
+			if (users.Length > 0)
+				return users[0];
 
-				return null;
-			}
+			return null;
 		}
 
 		private async Task<User[]> ReadUsers(SqlDataReader dataReader)
@@ -148,29 +135,27 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/> with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song?> GetSong(string songname)
 		{
-			using (SqlConnection connection = new(connectionString))
-			{
-				string query = "SELECT * FROM Song WHERE name = @name";
+			using SqlConnection connection = new(connectionString);
+			string query = "SELECT * FROM Song WHERE name = @name";
 
-				await connection.OpenAsync();
+			await connection.OpenAsync();
 
-				SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-				SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
+			SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
 
-				command.Parameters.Add(nameParam);
+			command.Parameters.Add(nameParam);
 
-				SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-				Song[] result = await ReadSongs(dataReader);
+			Song[] result = await ReadSongs(dataReader);
 
-				await CloseAndDispose(connection, command, dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-				if (result.Length > 0)
-					return result[0];
+			if (result.Length > 0)
+				return result[0];
 
-				return null;
-			}
+			return null;
 		}
 
 		/// <summary>
@@ -180,29 +165,27 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/> with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song?> GetSong(int songId)
 		{
-			using (SqlConnection connection = new(connectionString))
-			{
-				string query = "SELECT * FROM Song WHERE idSong = @songId";
+			using SqlConnection connection = new(connectionString);
+			string query = "SELECT * FROM Song WHERE idSong = @songId";
 
-				await connection.OpenAsync();
+			await connection.OpenAsync();
 
-				SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-				SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
+			SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
 
-				command.Parameters.Add(songIdParam);
+			command.Parameters.Add(songIdParam);
 
-				SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-				Song[] result = await ReadSongs(dataReader);
+			Song[] result = await ReadSongs(dataReader);
 
-				await CloseAndDispose(connection, command, dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-				if (result.Length > 0)
-					return result[0];
+			if (result.Length > 0)
+				return result[0];
 
-				return null;
-			}
+			return null;
 		}
 
 		/// <summary>
@@ -211,22 +194,20 @@ namespace BusinessLogic
 		/// <param name="songname"></param>
 		public async Task DeleteSong(string songname)
 		{
-			using (SqlConnection connection = new(connectionString))
-			{
-				string query = "DELETE FROM Song WHERE name = @name";
+			using SqlConnection connection = new(connectionString);
+			string query = "DELETE FROM Song WHERE name = @name";
 
-				await connection.OpenAsync();
+			await connection.OpenAsync();
 
-				SqlParameter songnameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
+			SqlParameter songnameParam = new("@name", SqlDbType.VarChar) { Value = songname, Size = songname.Length };
 
-				SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-				command.Parameters.Add(songnameParam);
+			command.Parameters.Add(songnameParam);
 
-				await command.ExecuteNonQueryAsync();
+			await command.ExecuteNonQueryAsync();
 
-				await CloseAndDispose(connection, command);
-			}
+			await CloseAndDispose(connection, command);
 		}
 
 		/// <summary>
@@ -235,30 +216,27 @@ namespace BusinessLogic
 		/// <param name="song"></param>
 		public async Task UploadSong(Song song)
 		{
+			using SqlConnection connection = new(connectionString);
 
-			using (SqlConnection connection = new(connectionString))
-			{
+			string query = "INSERT INTO Song (name, midifile, difficulty, description) VALUES (@name, @file, @difficulty, @description)";
 
-				string query = "INSERT INTO Song (name, midifile, difficulty, description) VALUES (@name, @file, @difficulty, @description)";
+			await connection.OpenAsync();
 
-				await connection.OpenAsync();
+			SqlParameter midiParameter = new("@file", SqlDbType.VarBinary) { Value = song.FullFile };
 
-				SqlParameter midiParameter = new("@file", SqlDbType.VarBinary) { Value = song.FullFile };
+			SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = song.Name };
 
-				SqlParameter nameParam = new("@name", SqlDbType.VarChar) { Value = song.Name };
+			SqlParameter difficultyParam = new("@difficulty", SqlDbType.Int) { Value = song.Difficulty };
 
-				SqlParameter difficultyParam = new("@difficulty", SqlDbType.Int) { Value = song.Difficulty };
+			SqlParameter descriptionParam = new("@description", SqlDbType.VarChar) { Value = song.Description };
 
-				SqlParameter descriptionParam = new("@description", SqlDbType.VarChar) { Value = song.Description };
+			SqlCommand command = new(query, connection);
 
-				SqlCommand command = new(query, connection);
+			command.Parameters.AddRange(new SqlParameter[] { midiParameter, nameParam, difficultyParam, descriptionParam });
 
-				command.Parameters.AddRange(new SqlParameter[] { midiParameter, nameParam, difficultyParam, descriptionParam });
+			await command.ExecuteNonQueryAsync();
 
-				await command.ExecuteNonQueryAsync();
-
-				await CloseAndDispose(connection, command);
-			}
+			await CloseAndDispose(connection, command);
 		}
 
 		/// <summary>
@@ -267,23 +245,20 @@ namespace BusinessLogic
 		/// <returns>New <see cref="Song"/>[] with <b>SongId</b>, <b>Name</b>, <b>FullFile</b>, <b>Difficulty</b> and <b>Description</b></returns>
 		public async Task<Song[]> GetAllSongs()
 		{
+			using SqlConnection connection = new(connectionString);
+			string query = "SELECT * FROM Song";
 
-			using (SqlConnection connection = new(connectionString))
-			{
-				string query = "SELECT * FROM Song";
+			await connection.OpenAsync();
 
-				await connection.OpenAsync();
+			SqlCommand command = new(query, connection);
 
-				SqlCommand command = new(query, connection);
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-				SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			Song[] result = await ReadSongs(dataReader);
 
-				Song[] result = await ReadSongs(dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-				await CloseAndDispose(connection, command, dataReader);
-
-				return result;
-			}
+			return result;
 		}
 
 		/// <summary>
@@ -314,86 +289,89 @@ namespace BusinessLogic
 		#region Highscores
 		public async Task<Highscore[]> GetHighscores(int songId)
 		{
-			using (SqlConnection connection = new(connectionString))
+			using SqlConnection connection = new(connectionString);
+			List<Highscore> highscores = new();
+
+			string query = "SELECT * FROM SongScore WHERE idSong = @songId ORDER BY score DESC";
+
+			await connection.OpenAsync();
+
+			SqlCommand command = new(query, connection);
+
+			SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
+
+			command.Parameters.Add(songIdParam);
+
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+			while (await dataReader.ReadAsync())
 			{
-				List<Highscore> highscores = new();
-
-				string query = "SELECT * FROM SongScore WHERE idSong = @songId ORDER BY score DESC";
-
-				await connection.OpenAsync();
-
-				SqlCommand command = new(query, connection);
-
-				SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = songId };
-
-				command.Parameters.Add(songIdParam);
-
-				SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-				while (await dataReader.ReadAsync())
+				Highscore highscore = new()
 				{
-					Highscore highscore = new()
-					{
-						User = await GetUser(await dataReader.GetFieldValueAsync<int>("idUser")),
-						Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong")),
-						Score = await dataReader.GetFieldValueAsync<int>("score")
-					};
+					User = await GetUser(await dataReader.GetFieldValueAsync<int>("idUser")),
+					Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong")),
+					Score = await dataReader.GetFieldValueAsync<int>("score")
+				};
 
-					highscores.Add(highscore);
-				}
-
-				await CloseAndDispose(connection, command, dataReader);
-
-				return highscores.ToArray();
+				highscores.Add(highscore);
 			}
+
+			await CloseAndDispose(connection, command, dataReader);
+
+			return highscores.ToArray();
 		}
 
 		public async Task UploadHighscore(Highscore highscore)
 		{
-			using (SqlConnection connection = new SqlConnection(connectionString))
+			using SqlConnection connection = new(connectionString);
+			string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
+
+			await connection.OpenAsync();
+
+			SqlParameter songIdParam = new("@songId", SqlDbType.Int)
 			{
-				string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
+				Value = highscore.Song.Id
+			};
 
-				await connection.OpenAsync();
+			SqlParameter userIdParam = new("@userId", SqlDbType.Int)
+			{
+				Value = highscore.User.Id
+			};
 
-				SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
+			SqlParameter scoreParam = new("@score", SqlDbType.Int)
+			{
+				Value = highscore.Score
+			};
 
-				SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
+			SqlCommand command = new(query, connection);
 
-				SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
+			command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
 
-				SqlCommand command = new(query, connection);
+			await command.ExecuteNonQueryAsync();
 
-				command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
-
-				await command.ExecuteNonQueryAsync();
-
-				await CloseAndDispose(connection, command);
-			}
+			await CloseAndDispose(connection, command);
 		}
 
 		public async Task UpdateHighscore(Highscore highscore)
 		{
-			using (SqlConnection connection = new SqlConnection(connectionString))
-			{
-				string query = "UPDATE SongScore SET score = @score WHERE idSong = @songId AND idUser = @userId";
+			using SqlConnection connection = new(connectionString);
+			string query = "UPDATE SongScore SET score = @score WHERE idSong = @songId AND idUser = @userId";
 
-				await connection.OpenAsync();
+			await connection.OpenAsync();
 
-				SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
+			SqlParameter songIdParam = new("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
 
-				SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
+			SqlParameter userIdParam = new("@userId", SqlDbType.Int) { Value = highscore.User.Id };
 
-				SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
+			SqlParameter scoreParam = new("@score", SqlDbType.Int) { Value = highscore.Score };
 
-				SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-				command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
+			command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
 
-				await command.ExecuteNonQueryAsync();
+			await command.ExecuteNonQueryAsync();
 
-				await CloseAndDispose(connection, command);
-			}
+			await CloseAndDispose(connection, command);
 		}
 		#endregion
 
