@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="LanguageData.json" />
     <None Remove="PianoSoundPlayer\Sounds\Piano\A2.wav" />
     <None Remove="PianoSoundPlayer\Sounds\Piano\A3.wav" />
     <None Remove="PianoSoundPlayer\Sounds\Piano\A4.wav" />
@@ -59,6 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="LanguageData.json" />
     <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\A2.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
