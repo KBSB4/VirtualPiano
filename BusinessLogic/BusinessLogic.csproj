@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="LanguageData.json" />
     <None Remove="PianoSoundPlayer\Sounds\Piano\A2.wav" />
     <None Remove="PianoSoundPlayer\Sounds\Piano\A3.wav" />
     <None Remove="PianoSoundPlayer\Sounds\Piano\A4.wav" />
@@ -60,7 +59,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="LanguageData.json" />
     <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\A2.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -213,12 +211,19 @@
   <ItemGroup>
     <PackageReference Include="Melanchall.DryWetMidi" Version="6.1.3" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="SharpDX.XAudio2" Version="4.2.0" />
     <PackageReference Include="SSH.NET" Version="2020.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LanguageData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

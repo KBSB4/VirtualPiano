@@ -1,1 +1,16 @@
-﻿
+{
+  "languages": [
+    {
+      "Code": 1,
+      "Name": "Nederlands",
+      "Translations": {
+        "MainMenu_Settings": "Instellingen",
+        "Settings_Volume": "Volume",
+        "Settings_InputDevice": "Ingangsapparaat",
+        "MainMenu_Play": "Spelen",
+        "MainMenu_FreePlay": "Vrij Spel"
+      }
+    }
+  ],
+  "preferredLanguage": 1
+}

@@ -1,4 +1,6 @@
-﻿using Melanchall.DryWetMidi.Multimedia;
+﻿using Controller;
+using Melanchall.DryWetMidi.Multimedia;
+using Model;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -26,6 +28,16 @@ namespace WpfView
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
             AdminPanel = new(this);
+
+            //TODO Temp
+            TranslateText();
+        }
+
+        public void TranslateText()
+        {
+            SettingsLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Settings);
+            PlayLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Play);
+            FreePlayLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_FreePlay);
         }
 
         /// <summary>

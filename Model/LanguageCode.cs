@@ -3,7 +3,7 @@
     /// <summary>
     /// Languages
     /// </summary>
-    public enum LanguageKey
+    public enum LanguageCode
     {
         EN,
         NL
