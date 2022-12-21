@@ -3,23 +3,35 @@ using Model;
 using Model.DatabaseModels;
 using Model.Interfaces;
 using System.Data;
-using System.Data.Common;
 
 namespace BusinessLogic
 {
 	public class SQLDatabaseManager : IDatabaseManager
 	{
-		private const string connectionString = "Data Source=127.0.0.1;" +
-			"Initial Catalog=PianoHero;" +
-			"Persist Security Info=True;" +
-			"User ID=SA;" +
-			"Password=Backing-Crumpet4;" +
-			"TrustServerCertificate=True;";
+		// Server=127.0.0.1;User ID=SA;Password=Backing-Crumpet4;Encrypt=yes;Trusted_Connection=no;TrustServerCertificate=True;
+		// Server=127.0.0.1:1433;Initial Catalog=PianoHero;User ID=SA;Password=Backing-Crumpet4;Encrypt=yes;
+		private const string connectionString = "Server=127.0.0.1;User ID=SA;Password=Backing-Crumpet4;Encrypt=yes;Trusted_Connection=no;TrustServerCertificate=True;Initial Catalog=PianoHero;";
+		//	"Server=127.0.0.1" +
+		//	//"Data Source=localhost;" +
+		//	"Initial Catalog=PianoHero;" +
+		//	//		"Persist Security Info=True;" +
+		//	"User ID=SA;" +
+		//	"Password=Backing-Crumpet4;";
+		////+
+		////"TrustServerCertificate=True;";
 
 		public SQLDatabaseManager()
 		{
-			//ProgramSSH.ExecuteSsh();
 			//ProgramSSH.ExecuteSshConnection();
+
+			//ProgramSSH.ExecuteSsh();
+			new Thread(new ThreadStart(Connect)).Start();
+			//Thread.Sleep(500);
+		}
+
+		private void Connect()
+		{
+			ProgramSSH.ExecuteSshConnection();
 		}
 
 		#region Users
@@ -86,7 +98,6 @@ namespace BusinessLogic
 		{
 			using (SqlConnection connection = new(connectionString))
 			{
-
 				string query = "SELECT * FROM Song WHERE name = @name";
 
 				await connection.OpenAsync();
@@ -291,17 +302,17 @@ namespace BusinessLogic
 			{
 				string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
 
-                await connection.OpenAsync();
+				await connection.OpenAsync();
 
-                SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
+				SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
 
 				SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
 
 				SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
 
-                SqlCommand command = new(query, connection);
+				SqlCommand command = new(query, connection);
 
-                command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam});
+				command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
 
 				await command.ExecuteNonQueryAsync();
 
@@ -310,7 +321,7 @@ namespace BusinessLogic
 		}
 		#endregion
 
-        private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
+		private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
 		{
 			await CloseAndDispose(connection, command);
 			await dataReader.DisposeAsync();
@@ -321,5 +332,5 @@ namespace BusinessLogic
 			await connection.CloseAsync();
 			await command.DisposeAsync();
 		}
-    }
+	}
 }
