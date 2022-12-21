@@ -1,4 +1,10 @@
-﻿namespace BusinessLogic
+﻿using Microsoft.Data.SqlClient;
+using Model;
+using Model.DatabaseModels;
+using Model.Interfaces;
+using System.Data;
+
+namespace BusinessLogic
 {
 	public class SQLDatabaseManager : IDatabaseManager
 	{
