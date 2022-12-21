@@ -8,7 +8,7 @@ namespace BusinessLogic
 {
 	public class SQLDatabaseManager : IDatabaseManager
 	{
-		private readonly string connectionString =
+		private static readonly string connectionString =
 			"Server=127.0.0.1;" +
 			"User ID=SA;" +
 			"Password=Backing-Crumpet4;" +

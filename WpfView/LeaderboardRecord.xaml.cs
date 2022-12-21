@@ -33,7 +33,7 @@ namespace WpfView
                     PositionLabel.Foreground = firstPosition;
                     UserLabel.Foreground = firstPosition;
                     ScoreLabel.Foreground = firstPosition;
-                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("pack://application:,,,Images/TrophyGold.png") as ImageSource;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("pack://application:,,,/Images/TrophyGold.png") as ImageSource;
                     break;
                 case 1:
                     PositionLabel.Foreground = secondPosition;
