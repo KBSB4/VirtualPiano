@@ -26,16 +26,16 @@ namespace UnitTests
             Highscore score = new()
             {
                 User = DatabaseController.GetUserByID(12).Result,
-                Song = await DatabaseController.GetSong(12),
+                Song = await DatabaseController.GetSong(57),
                 Score = -555
             };
             await DatabaseController.UpdateHighscore(score);
             score.Score = -556;
             await DatabaseController.UpdateHighscore(score);
 
-            Highscore[] highscores = await DatabaseController.GetHighscores(55);
-            Highscore databasescore = highscores.Where(item => item.User.Equals(score.User)).FirstOrDefault();
-            Assert.Equals(score.Score, databasescore.Score);
+            Highscore[] highscores = await DatabaseController.GetHighscores(57);
+            Highscore databasescore = highscores.Where(item => item.User.Id == score.User.Id).FirstOrDefault();
+            Assert.AreEqual(score.Score, databasescore.Score);
         }
     }
 }
