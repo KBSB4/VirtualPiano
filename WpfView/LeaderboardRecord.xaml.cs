@@ -33,25 +33,25 @@ namespace WpfView
                     PositionLabel.Foreground = firstPosition;
                     UserLabel.Foreground = firstPosition;
                     ScoreLabel.Foreground = firstPosition;
-                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/TrophyGold.png") as ImageSource;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("pack://application:,,,Images/TrophyGold.png") as ImageSource;
                     break;
                 case 1:
                     PositionLabel.Foreground = secondPosition;
                     UserLabel.Foreground = secondPosition;
                     ScoreLabel.Foreground = secondPosition;
-                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/ThrophySilver.png") as ImageSource;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("pack://application:,,,/Images/ThrophySilver.png") as ImageSource;
                     break;
                 case 2:
                     PositionLabel.Foreground = thirdPosition;
                     UserLabel.Foreground = thirdPosition;
                     ScoreLabel.Foreground = thirdPosition;
-                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/ThropyBronze.png") as ImageSource;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("pack://application:,,,/Images/ThropyBronze.png") as ImageSource;
                     break;
                 default:
                     PositionLabel.Foreground = otherPosition;
                     UserLabel.Foreground = otherPosition;
                     ScoreLabel.Foreground = otherPosition;
-                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/NoTrophy.png") as ImageSource;
+                    TrophyImage.Source = new ImageSourceConverter().ConvertFromString("pack://application:,,,/Images/NoTrophy.png") as ImageSource;
                     break;
             }
 

@@ -2,6 +2,7 @@
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.MusicTheory;
 using Model;
+using System.Reflection;
 using Octave = Model.Octave;
 
 namespace BusinessLogic
@@ -24,7 +25,7 @@ namespace BusinessLogic
         public static void CreatePiano()
         {
             Piano = new Piano();
-            SoundPlayer = new(ProjectSettings.GetPath(PianoHeroPath.PianoSoundsFolder), "", ".wav");
+            SoundPlayer = new("", ".wav");
             AssembleKeyBindings(Piano);
         }
 

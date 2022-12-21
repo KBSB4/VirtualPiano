@@ -2,6 +2,7 @@
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Model;
+using System.Reflection;
 
 namespace BusinessLogic
 {
@@ -113,7 +114,11 @@ namespace BusinessLogic
 				TimeDivision = midiFile.TimeDivision
 			};
 
-			MidiFile StartTune = MidiFile.Read(ProjectSettings.GetPath(PianoHeroPath.StartTune));
+			var assembly = Assembly.GetExecutingAssembly();
+			var file = assembly.GetManifestResourceStream(ProjectSettings.GetPath(PianoHeroPath.StartTune));
+            MidiFile StartTune = MidiFile.Read(file); 
+
+
 			// Add all parts after shifting them
 			long addedSoFarMicroseconds = 0;
 

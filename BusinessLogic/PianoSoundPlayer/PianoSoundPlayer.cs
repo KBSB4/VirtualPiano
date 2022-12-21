@@ -2,6 +2,7 @@
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace BusinessLogic.SoundPlayer
 {
@@ -31,11 +32,11 @@ namespace BusinessLogic.SoundPlayer
         /// <param name="soundsFolder"></param>
         /// <param name="pianoSoundPrefix"></param>
         /// <param name="pianoSoundSuffix"></param>
-        public PianoSoundPlayer(string soundsFolder, string pianoSoundPrefix, string pianoSoundSuffix)
+        public PianoSoundPlayer(string pianoSoundPrefix, string pianoSoundSuffix)
         {
-            pianoFilesFolder = soundsFolder;
             this.pianoSoundPrefix = pianoSoundPrefix;
             this.pianoSoundSuffix = pianoSoundSuffix;
+            pianoFilesFolder = ProjectSettings.GetPath(PianoHeroPath.PianoSoundsFolder) + pianoSoundPrefix;
             VerifyDirectory();
             device = new XAudio2();
             _ = new MasteringVoice(device);
@@ -47,8 +48,14 @@ namespace BusinessLogic.SoundPlayer
         /// <exception cref="DirectoryNotFoundException"></exception>
         private void VerifyDirectory()
         {
-            if (!Directory.Exists(pianoFilesFolder))
-                throw new DirectoryNotFoundException(pianoFilesFolder + " was not found");
+            var assembly = Assembly.GetExecutingAssembly();
+            string[] names = assembly.GetManifestResourceNames();
+
+            foreach(string str in names)
+            {
+                if (str.StartsWith(pianoFilesFolder)) return;
+            }
+            throw new DirectoryNotFoundException(pianoFilesFolder + " was not found");
         }
 
         /// <summary>
@@ -110,12 +117,17 @@ namespace BusinessLogic.SoundPlayer
         /// <returns></returns>
         public SourceVoice? GetSourceVoice(NoteName noteName, int octave)
         {
-            string file = pianoFilesFolder + pianoSoundPrefix + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
-            if (!File.Exists(file))
+            var assembly = Assembly.GetExecutingAssembly();
+            string[] names = assembly.GetManifestResourceNames();
+
+            string file = pianoFilesFolder + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
+
+            if (!names.Contains(file))
             {
                 return null;
             }
-            SoundStream stream = new(File.OpenRead(file));
+
+            SoundStream stream = new(assembly.GetManifestResourceStream(file));
             WaveFormat waveFormat = stream.Format;
             AudioBuffer buffer = new()
             {

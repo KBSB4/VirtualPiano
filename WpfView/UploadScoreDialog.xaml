@@ -15,7 +15,7 @@
             <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Image Source="/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
+        <Image Source="pack://application:,,,/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
         <Label HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Upload Score?</Label>
         <Label HorizontalAlignment="Center" FontSize="50" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,10,0,0" Grid.Row="1">Your Score</Label>
         <Label x:Name="ScoreLabel" HorizontalAlignment="Center" FontSize="40" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,92,0,0" Grid.Row="1">0</Label>
