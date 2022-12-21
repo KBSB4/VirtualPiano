@@ -30,9 +30,7 @@ namespace UnitTests
             }
 
             Assert.That(piano.PianoKeys[index].Octave, Is.EqualTo(result));
-
         }
-
 
         [TestCase(true, 0, Octave.Two)]
         [TestCase(true, 12, Octave.Three)]
@@ -41,19 +39,14 @@ namespace UnitTests
             if (b)
             {
                 PianoLogic.SwapOctave(piano);
-
             }
-
 
             if (b)
             {
-
                 PianoLogic.SwapOctave(piano);
             }
 
             Assert.That(piano.PianoKeys[index].Octave, Is.EqualTo(result));
-
         }
-
     }
 }

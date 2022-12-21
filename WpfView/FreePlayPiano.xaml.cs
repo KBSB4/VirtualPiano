@@ -224,7 +224,8 @@ namespace WpfView
             {
                 //Get the path of specified file
                 MidiController.OpenMidi(openFileDialog.FileName);
-                SongController.LoadSong(Karoake);
+                SongController.DoKaroake = Karoake;
+                SongController.LoadSong();
             }
         }
 
@@ -246,7 +247,8 @@ namespace WpfView
                 }
                 else
                 {
-                    SongController.LoadSong(KaraokeBox.IsChecked);
+                    SongController.DoKaroake = KaraokeBox.IsChecked;
+					SongController.LoadSong();
                     SongController.PlaySong();
                 }
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;

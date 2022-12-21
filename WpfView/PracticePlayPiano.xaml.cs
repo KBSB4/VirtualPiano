@@ -37,7 +37,7 @@ namespace WpfView
         List<PianoKey>? notesToBePressed;
         readonly List<PianoKey> currentlyPlaying = new();
         private const int MAXNOTESCORE = 1000;
-        private int maxTotalScore;
+        private int maxTotalScore = 0;
 
         //NOTE Temporary till we properly get current user for highscore
         Song currentSong;
@@ -100,7 +100,10 @@ namespace WpfView
             if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
             notesToBePressed.RemoveRange(0, 8);
-            maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
+
+            if (notesToBePressed.Count > 0)
+                maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
+            else maxTotalScore = 0;
             score = 0;
             UpdateScoreVisual();
         }

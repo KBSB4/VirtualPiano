@@ -7,7 +7,7 @@ namespace Controller
 {
     public static class DatabaseController
     {
-        private static IDatabaseManager databaseManager = new SQLDatabaseManager();
+        private static readonly IDatabaseManager databaseManager = new SQLDatabaseManager();
 
         public static async Task<User?> GetUserByID(int userID)
         {
@@ -61,11 +61,11 @@ namespace Controller
         /// Gets all songs from a database using <see cref="databaseManager"/>
         /// </summary>
         /// <returns>A new <see cref="Song"/>[], could be an empty array</returns>
-        public static async Task<Song[]> GetAllSongs()
+        public static async Task<Song[]?> GetAllSongs()
         {
-            Task<Song[]> getAllSongsTask = databaseManager.GetAllSongs();
+            Task<Song[]?> getAllSongsTask = databaseManager.GetAllSongs();
 
-            Song[] result = await getAllSongsTask;
+            Song[]? result = await getAllSongsTask;
 
             return result;
         }
@@ -86,11 +86,11 @@ namespace Controller
         /// </summary>
         /// <param name="songId"></param>
         /// <returns>New <see cref="Highscore"/>[], is empty if nothing found</returns>
-        public static async Task<Highscore[]> GetHighscores(int songId)
+        public static async Task<Highscore[]?> GetHighscores(int songId)
         {
-            Task<Highscore[]> getHighscoresTask = databaseManager.GetHighscores(songId);
+            Task<Highscore[]?> getHighscoresTask = databaseManager.GetHighscores(songId);
 
-            Highscore[] result = await getHighscoresTask;
+            Highscore[]? result = await getHighscoresTask;
 
             return result;
         }

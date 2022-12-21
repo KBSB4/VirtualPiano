@@ -1,5 +1,4 @@
 ﻿using Renci.SshNet;
-using System.Diagnostics;
 
 namespace BusinessLogic
 {
@@ -10,20 +9,13 @@ namespace BusinessLogic
         /// </summary>
         public static void ExecuteSshConnection()
         {
-            AuthenticationMethod method = new PasswordAuthenticationMethod("student", "Arena-Enclose8");
-            ConnectionInfo connectionInfo = new ConnectionInfo("145.44.234.89", "student", method);
-            SshClient client = new SshClient(connectionInfo);
-            if (!client.IsConnected)
-            {
-                Debug.WriteLine("Client is not connected yet");
-                client.Connect();
-                client.KeepAliveInterval = TimeSpan.FromHours(2);
-            }
+            SshClient client = new("145.44.234.89", "student", "Arena-Enclose8");
+            client.Connect();
 
-            SshCommand readCommand = client.RunCommand("uname -mrs");
-            Debug.WriteLine(readCommand.Result);
-            SshCommand writeCommand = client.RunCommand("mkdir \"/home/student/Desktop/ssh_output\"");
-            Thread.Sleep(1000);
+            ForwardedPortLocal port = new("127.0.0.1", 1433, "127.0.0.1", 1433);
+            client.AddForwardedPort(port);
+            port.Start();
+            Thread.Sleep(10000000);
         }
     }
 }

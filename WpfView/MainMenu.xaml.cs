@@ -25,7 +25,7 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
-            AdminPanel = new();
+            AdminPanel = new(this);
         }
 
         /// <summary>

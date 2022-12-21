@@ -13,21 +13,21 @@ namespace Model
         public Queue<PianoKey> PianoKeys { get; set; }
         public Thread? SongTimerThread { get; set; }
         public bool IsPlaying { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public byte[] FullFile { get; set; }
 
         public event EventHandler<PianoKeyEventArgs>? NotePlayed;
 
-        public Song(MidiFile file, string name, Difficulty difficulty, MetricTimeSpan duration, Queue<PianoKey> pianoKeys)
+        public Song(MidiFile file, string name, Difficulty difficulty, MetricTimeSpan? duration, Queue<PianoKey> pianoKeys)
         {
             File = file;
             Name = name;
-            Difficulty = difficulty;
             Duration = duration;
+            Difficulty = difficulty;
             PianoKeys = pianoKeys;
         }
 
-        public Song() //todo for what
+        public Song() //required
         {
         }
 
