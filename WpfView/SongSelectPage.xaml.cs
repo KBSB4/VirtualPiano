@@ -59,7 +59,7 @@ namespace WpfView
                     SelectedCard = null;
                     Image nothingSelectedImage = new()
                     {
-                        Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/PianoHeroLogo.png") as ImageSource
+                        Source = new ImageSourceConverter().ConvertFromString("pack://application:,,,/Images/PianoHeroLogo.png") as ImageSource
                     };
                     Leaderboard.Children.Clear();
                     Leaderboard.Children.Add(nothingSelectedImage);

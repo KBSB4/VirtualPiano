@@ -12,12 +12,12 @@ using System.Windows.Input;
 
 namespace WpfView
 {
-	/// <summary>
-	/// Interaction logic for AdminPanel.xaml
-	/// </summary>
-	public partial class AdminPanel : Page
-	{
-		private byte[] lastOpenedFile;
+    /// <summary>
+    /// Interaction logic for AdminPanel.xaml
+    /// </summary>
+    public partial class AdminPanel : Page
+    {
+        private byte[] lastOpenedFile;
 
 		private List<Song> songList = new();
 		private readonly MainMenu _mainMenu;
@@ -28,30 +28,30 @@ namespace WpfView
 			InitializeComponent();
 		}
 
-		/// <summary>
-		///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
-		{
-			MidiLogic.CurrentMidi = null;
-			var openFileDialog = new OpenFileDialog
-			{
-				Filter = "MIDI Files (*.mid)|*.mid",
-				FilterIndex = 2,
-				RestoreDirectory = true
-			};
+        /// <summary>
+        ///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
+        {
+            MidiLogic.CurrentMidi = null;
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "MIDI Files (*.mid)|*.mid",
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
 
-			bool? fileOpened = openFileDialog.ShowDialog();
-			if (fileOpened == true)
-			{
-				//Get the path of specified file
-				MidiLogic.CurrentMidi = MidiFile.Read(openFileDialog.FileName);
+            bool? fileOpened = openFileDialog.ShowDialog();
+            if (fileOpened == true)
+            {
+                //Get the path of specified file
+                MidiLogic.CurrentMidi = MidiFile.Read(openFileDialog.FileName);
 
-				lastOpenedFile = File.ReadAllBytes(openFileDialog.FileName);
-			}
-		}
+                lastOpenedFile = File.ReadAllBytes(openFileDialog.FileName);
+            }
+        }
 
 
 		/// <summary>
@@ -91,19 +91,19 @@ namespace WpfView
 				return isValid;
 			}
 
-			MessageBox.Show(errorMessage, "Invalid value", MessageBoxButton.OK, MessageBoxImage.Error);
-			isValid = false;
-			return isValid;
-		}
+            MessageBox.Show(errorMessage, "Invalid value", MessageBoxButton.OK, MessageBoxImage.Error);
+            isValid = false;
+            return isValid;
+        }
 
-		private void Button_Click(object sender, RoutedEventArgs e)
-		{
-			if (Validator())
-			{
-				Upload();
-			}
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (Validator())
+            {
+                Upload();
+            }
 
-		}
+        }
 
 		/// <summary>
 		/// Uploads a song to the databases and displays the song on the screen.
@@ -172,11 +172,11 @@ namespace WpfView
 			return true;
 		}
 
-		private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
-		{
-			FemkesListBoxItem deleteSong = null;
+        private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            FemkesListBoxItem deleteSong = null;
 
-			deleteSong = (FemkesListBoxItem)((ListBox)sender).SelectedItem;
+            deleteSong = (FemkesListBoxItem)((ListBox)sender).SelectedItem;
 
 			if (deleteSong != null)
 			{
@@ -195,7 +195,7 @@ namespace WpfView
 			}
 
 
-		}
+        }
 
 		/// <summary>
 		/// Updates the screen after a song has been deleted.

@@ -8,7 +8,7 @@ namespace BusinessLogic
 {
 	public class SQLDatabaseManager : IDatabaseManager
 	{
-		private const string connectionString =
+		private static readonly string connectionString =
 			"Server=127.0.0.1;" +
 			"User ID=SA;" +
 			"Password=Backing-Crumpet4;" +
@@ -123,9 +123,9 @@ namespace BusinessLogic
 				});
 			}
 
-			return result.ToArray();
-		}
-		#endregion
+            return result.ToArray();
+        }
+        #endregion
 
 		#region Songs
 		/// <summary>
@@ -282,9 +282,9 @@ namespace BusinessLogic
 				});
 			}
 
-			return result.ToArray();
-		}
-		#endregion
+            return result.ToArray();
+        }
+        #endregion
 
 		#region Highscores
 		public async Task<Highscore[]?> GetHighscores(int songId)

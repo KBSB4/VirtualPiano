@@ -27,7 +27,7 @@ namespace Model
             PianoKeys = pianoKeys;
         }
 
-        public Song()
+        public Song() //required
         {
         }
 

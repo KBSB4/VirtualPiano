@@ -17,7 +17,7 @@
             <ColumnDefinition Width="3*"></ColumnDefinition>
             <ColumnDefinition Width="2*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Image Source="/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
+        <Image Source="pack://application:,,,/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
         <Label HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Select a song</Label>
 
         <ScrollViewer Grid.Row="1" Grid.RowSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" >
@@ -37,7 +37,7 @@
             </Grid.RowDefinitions>
             <Viewbox Grid.RowSpan="2" Grid.ColumnSpan="2">
                 <WrapPanel Orientation="Horizontal" Name="Leaderboard">
-                    <Image Source="/Images/PianoHeroLogo.png" Name="nothingSelectedImage"></Image>
+                    <Image Source="pack://application:,,,/Images/PianoHeroLogo.png" Name="nothingSelectedImage"></Image>
                 </WrapPanel>
             </Viewbox>
 
@@ -56,7 +56,7 @@
         <Menu Grid.Row="0" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#00ffffff">
             <MenuItem Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White">
                 <MenuItem.Icon>
-                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                    <Image Source="pack://application:,,,/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
             </MenuItem>
         </Menu>

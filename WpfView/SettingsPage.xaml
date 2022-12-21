@@ -12,11 +12,11 @@
     </Page.DataContext>
 
     <Grid>
-        <Image Source="/Images/PianoHeroMenuBackground_1.png" Stretch="Fill"/>
+        <Image Source="pack://application:,,,/Images/PianoHeroMenuBackground_1.png" Stretch="Fill"/>
         <Menu DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="Transparent">
                 <MenuItem Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                     <MenuItem.Icon>
-                        <Image Source="Images/previous.png" Margin="3,-4,0,0" />
+                    <Image Source="pack://application:,,,/Images/previous.png" Margin="3,-4,0,0" />
                     </MenuItem.Icon>
                 </MenuItem>
             </Menu>
