@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\PianoHeroLogo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
     <None Remove="Images\DifficultyIconMedium.png" />
     <None Remove="Images\midi.png" />
     <None Remove="Images\NoTrophy.png" />
+    <None Remove="Images\PianoHeroLogo.ico" />
     <None Remove="Images\PianoHeroLogo.png" />
     <None Remove="Images\PianoHeroMenuBackground.png" />
     <None Remove="Images\PianoHeroMenuBackground.psd" />
@@ -49,6 +51,7 @@
     <Resource Include="Images\DifficultyIconMedium.png" />
     <Resource Include="Images\midi.png" />
     <Resource Include="Images\NoTrophy.png" />
+    <Resource Include="Images\PianoHeroLogo.ico" />
     <Resource Include="Images\PianoHeroMenuBackground.png" />
   </ItemGroup>
 

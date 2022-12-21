@@ -20,9 +20,6 @@
         }
     }
 
-
-
-
     /// <summary>
     /// <b>Piano Hero</b> Directory - stores directories for quick access.
     /// </summary>

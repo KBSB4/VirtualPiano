@@ -116,7 +116,7 @@ namespace BusinessLogic
 
 			var assembly = Assembly.GetExecutingAssembly();
 			var file = assembly.GetManifestResourceStream(ProjectSettings.GetPath(PianoHeroPath.StartTune));
-            MidiFile StartTune = MidiFile.Read(file); 
+			MidiFile StartTune = MidiFile.Read(file);
 
 
 			// Add all parts after shifting them
@@ -136,7 +136,7 @@ namespace BusinessLogic
 				addedSoFarMicroseconds += currentDuration.TotalMicroseconds;
 			}
 
-			midiFileOut.Write("current-playing-song.mid", true);
+			midiFileOut.Write("current-playing-song.mid", true, MidiFileFormat.MultiTrack);
 
 			return midiFileOut;
 		}
