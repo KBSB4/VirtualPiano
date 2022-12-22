@@ -6,26 +6,29 @@ namespace BusinessLogic
 	public class LanguageDataManager
 	{
 		private Language? currentLanguage;
+		private string JSONPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PianoHero\\LanguageData.json";
+		private string JSONDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PianoHero\\";
+
 
 		public LanguageDataManager()
 		{
-			CreateLanguages();
-			currentLanguage = GetLanguage(GetPreferredLanguage());
+			if (!File.Exists(JSONPath)) return;
+            currentLanguage = GetLanguage(GetPreferredLanguage());
 		}
 
 		public LanguageData GetLanguageData()
 		{
-			string openedjson = File.ReadAllText("LanguageData.json");
+			string openedjson = File.ReadAllText(JSONPath);
 			return JsonConvert.DeserializeObject<LanguageData>(openedjson);
 		}
 
-        public void SetPreferredLanguage(LanguageCode code)
-        {
-            LanguageData languageData = GetLanguageData();
-            languageData.preferredLanguage = code;
-            WriteLanguageData(languageData);
-            currentLanguage = GetLanguage(GetPreferredLanguage());
-        }
+		public void SetPreferredLanguage(LanguageCode code)
+		{
+			LanguageData languageData = GetLanguageData();
+			languageData.preferredLanguage = code;
+			WriteLanguageData(languageData);
+			currentLanguage = GetLanguage(GetPreferredLanguage());
+		}
 
 		public LanguageCode GetPreferredLanguage()
 		{
@@ -41,10 +44,10 @@ namespace BusinessLogic
 			return languageData.languages.Where(lang => lang.Code == code).FirstOrDefault();
 		}
 
-        public string GetTranslation(TranslationKey key)
-        {
-            return currentLanguage.Translations[key];
-        }
+		public string GetTranslation(TranslationKey key)
+		{
+			return currentLanguage.Translations[key];
+		}
 
 		public List<Language> GetAllLanguages()
 		{
@@ -96,9 +99,10 @@ namespace BusinessLogic
 		//      Menubar_SongSelect_Start,
 		//      Menubar_SongSelect_Karaoke,
 
-		//TODO Temp
-		public static void CreateLanguages()
+		public void CreateLanguages()
 		{
+			if (File.Exists(JSONPath)) return;
+
 			LanguageData languageData = new();
 
 			Language dutch = new Language();
@@ -137,17 +141,21 @@ namespace BusinessLogic
 
 			};
 
-			languageData.languages = new();
-			languageData.languages.Add(english);
-			languageData.languages.Add(dutch);
-			languageData.preferredLanguage = LanguageCode.NL;
+            languageData.languages = new()
+            {
+                english,
+                dutch
+            };
+            languageData.preferredLanguage = LanguageCode.NL;
 			WriteLanguageData(languageData);
+			currentLanguage = GetLanguage(GetPreferredLanguage());
 		}
 
-		private static void WriteLanguageData(LanguageData languageData)
+		private void WriteLanguageData(LanguageData languageData)
 		{
-			string rararar = JsonConvert.SerializeObject(languageData, Formatting.Indented);
-			File.WriteAllText("LanguageData.json", rararar);
+			string JSONSerialized = JsonConvert.SerializeObject(languageData, Formatting.Indented);
+			if (!Directory.Exists(JSONDirectory)) Directory.CreateDirectory(JSONDirectory);
+		    File.WriteAllText(JSONPath, JSONSerialized);
 		}
 	}
 }

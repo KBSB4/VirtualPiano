@@ -1,3 +1,4 @@
+using Controller;
 using System.Windows;
 
 namespace WpfView
@@ -11,6 +12,7 @@ namespace WpfView
         {
             InitializeComponent();
             NavigationFrame.Navigate(new MainMenu());
+            LanguageController.CreateJSON();
         }
     }
 }

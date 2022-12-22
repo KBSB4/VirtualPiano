@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
@@ -27,12 +28,11 @@ namespace WpfView
             DataContext = new DataContextSettings();
             InitializeComponent();
 			IsVisibleChanged += SettingsPage_IsVisibleChanged;
-
-            GenerateLanguages();
         }
 
 		private void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+            GenerateLanguages();
             UpdateUI();
 		}
 
@@ -152,7 +152,11 @@ namespace WpfView
 
 			foreach (Language language in languageData.languages)
 			{
-				LanguageBox.Items.Add(language.Name);
+                if (LanguageBox.FindName(language.Name) is null)
+                {
+                    ComboBoxItem ToAddLanguage = new() { Content = language.Name };
+                    LanguageBox.Items.Add(ToAddLanguage);
+                }
 			}
 
             LanguageBox.SelectedIndex = (int)languageData.preferredLanguage;
