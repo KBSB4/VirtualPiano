@@ -1,14 +1,10 @@
 ﻿using Melanchall.DryWetMidi.Multimedia;
 using Model.DatabaseModels;
-using SharpDX.Multimedia;
 using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WpfView
 {
@@ -37,6 +33,7 @@ namespace WpfView
             AccountPage = new AccountPage(this, null);
             AdminPanel = new(this);
             Account_ChangeIconBasedOnUser();
+            CheckInputDevice(1);
         }
 
         /// <summary>
@@ -130,9 +127,9 @@ namespace WpfView
             else
             {
                 MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo);
-                if(result == MessageBoxResult.Yes) 
+                if (result == MessageBoxResult.Yes)
                 {
-                    loggedInUser= null;
+                    loggedInUser = null;
                     Account_ChangeIconBasedOnUser();
                 }
             }
