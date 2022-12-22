@@ -21,6 +21,7 @@
         MainMenu_Play,
         Menubar_SongSelect_SelectSong,
         Menubar_SongSelect_Start,
+        Menubar_SongSelect_Karaoke,
 
         MainMenu_FreePlay,
     }
