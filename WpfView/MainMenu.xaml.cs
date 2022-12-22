@@ -19,7 +19,7 @@ namespace WpfView
         public AccountPage AccountPage { get; set; }
         public AdminPanel AdminPanel { get; set; }
 
-        public User? loggedInUser { get; set; }
+        public User? LoggedInUser { get; set; }
 
         //DO NOT REMOVE
         public IInputDevice? InputDevice;
@@ -123,13 +123,13 @@ namespace WpfView
         /// <param name="e"></param>
         private void Account_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (loggedInUser is null) NavigationService?.Navigate(AccountPage);
+            if (LoggedInUser is null) NavigationService?.Navigate(AccountPage);
             else
             {
                 MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
                 {
-                    loggedInUser = null;
+                    LoggedInUser = null;
                     Account_ChangeIconBasedOnUser();
                 }
             }
@@ -140,7 +140,7 @@ namespace WpfView
         /// </summary>
         public void Account_ChangeIconBasedOnUser()
         {
-            if (loggedInUser is null)
+            if (LoggedInUser is null)
             {
                 AccountIconImage.Source = new BitmapImage(new Uri("/Images/accountImage.png", UriKind.Relative));
                 AccountIconImage.Margin = new Thickness(20, 40, 20, 40);

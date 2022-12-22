@@ -77,9 +77,9 @@ namespace WpfView
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageDifficulty(difficultyTextBox.Text);
             }
-            else if (!ValidationController.AdminPanelValidationMessageMidiFile(MidiLogic.CurrentMidi).Equals(string.Empty))
+            else if (!ValidationController.AdminPanelValidationMessageMidiFile().Equals(string.Empty))
             {
-                errorMessage = ValidationController.AdminPanelValidationMessageMidiFile(MidiLogic.CurrentMidi);
+                errorMessage = ValidationController.AdminPanelValidationMessageMidiFile();
             }
             else
             {
@@ -204,9 +204,9 @@ namespace WpfView
         //TODO: Terrible name, please change
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (_mainMenu.loggedInUser is not null)
+            if (_mainMenu.LoggedInUser is not null)
             {
-                _mainMenu.loggedInUser = null;
+                _mainMenu.LoggedInUser = null;
             }
             _mainMenu.Account_ChangeIconBasedOnUser();
             NavigationService?.Navigate(_mainMenu);

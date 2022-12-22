@@ -59,7 +59,7 @@ namespace WpfView
             {
                 Login_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
                 Login_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-                _mainMenu.loggedInUser = user;
+                _mainMenu.LoggedInUser = user;
                 if (user is not null && user.IsAdmin) NavigationService?.Navigate(_mainMenu.AdminPanel);
                 else
                 {

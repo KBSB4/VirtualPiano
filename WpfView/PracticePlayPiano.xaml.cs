@@ -213,11 +213,11 @@ namespace WpfView
                 //If true, we upload
                 if ((bool)dialogResult)
                 {
-                    if (_mainMenu.loggedInUser is not null)
+                    if (_mainMenu.LoggedInUser is not null)
                     {
                         Highscore highscore = new()
                         {
-                            User = _mainMenu.loggedInUser,
+                            User = _mainMenu.LoggedInUser,
                             Song = SongController.CurrentSong,
                             Score = score
                         };
