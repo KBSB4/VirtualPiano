@@ -105,7 +105,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void Settings_Button_Click(object sender, RoutedEventArgs e)
         {
-            SettingsPage.GenerateInputDevices(); // Gets all input devices
+            SettingsPage.RefreshBoxes();
             NavigationService?.Navigate(SettingsPage);
         }
 

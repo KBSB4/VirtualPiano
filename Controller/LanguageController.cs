@@ -16,5 +16,10 @@ namespace Controller
         {
             languageDataManager.SetPreferredLanguage(code);
         }
+
+        public static LanguageData GetAllLanguages()
+        {
+            return languageDataManager.GetAllLanguages();
+        }
     }
 }

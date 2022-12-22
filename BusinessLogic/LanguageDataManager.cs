@@ -19,12 +19,13 @@ namespace BusinessLogic
 			return JsonConvert.DeserializeObject<LanguageData>(openedjson);
 		}
 
-		public void SetPreferredLanguage(LanguageCode code)
-		{
-			LanguageData languageData = GetLanguageData();
-			languageData.preferredLanguage = code;
-			WriteLanguageData(languageData);
-		}
+        public void SetPreferredLanguage(LanguageCode code)
+        {
+            LanguageData languageData = GetLanguageData();
+            languageData.preferredLanguage = code;
+            WriteLanguageData(languageData);
+            currentLanguage = GetLanguage(GetPreferredLanguage());
+        }
 
 		public LanguageCode GetPreferredLanguage()
 		{
@@ -40,10 +41,10 @@ namespace BusinessLogic
 			return languageData.languages.Where(lang => lang.Code == code).FirstOrDefault();
 		}
 
-		public string GetTranslation(TranslationKey key)
-		{
-			return currentLanguage.Translations[key];
-		}
+        public string GetTranslation(TranslationKey key)
+        {
+            return currentLanguage.Translations[key];
+        }
 
 
 		//Menubar_BackToMain,

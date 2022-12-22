@@ -1,4 +1,5 @@
 ﻿using Controller;
+using Model;
 using System;
 using System.Data;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace WpfView
         private readonly Page _mainMenu;
         private int count = InputDevice.GetDevicesCount();
         public static int IndexInputDevice { get; set; }
+        public static int IndexLanguage { get; set; }
         public bool Closed = false;
 
         public SettingsPage(MainMenu mainMenu)
@@ -25,12 +27,30 @@ namespace WpfView
             InitializeComponent();
         }
 
-        //NOTE TEMPORARY, AWAITING FOR ACCOUNT
         public SettingsPage(PracticePlayPiano ppp)
         {
             _mainMenu = ppp;
             DataContext = new DataContextSettings();
             InitializeComponent();
+        }
+
+        public void GenerateLanguages()
+        {
+            LanguageData languageData = LanguageController.GetAllLanguages();
+            if (LanguageBox is null) return;
+
+            foreach (Language language in languageData.languages)
+            {
+                if (!LanguageBox.Items.Cast<ComboBoxItem>().Any(cbi => cbi.Content.Equals(language.Name)))
+                {
+                    ComboBoxItem ToAddLanguage = new() { Content = language.Name };
+                    LanguageBox.Items.Add(ToAddLanguage);
+                    ToAddLanguage.Selected += ToAddLanguage_Selected;
+                }
+            }
+
+            //TODO set current language
+           // LanguageBox.SelectedIndex = LanguageBox.Items.IndexOf(languageData.languages.Where(lang => lang.Code == languageData.preferredLanguage).First().Name);
         }
 
         /// <summary>
@@ -84,6 +104,21 @@ namespace WpfView
             }
         }
 
+        private void ToAddLanguage_Selected(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ComboBoxItem selecedItem = (ComboBoxItem)sender;
+                IndexLanguage = LanguageBox.Items.IndexOf(sender);
+                Language language = LanguageController.GetAllLanguages().languages.Where(lang => lang.Name.Equals(selecedItem.Content)).FirstOrDefault();
+                LanguageController.SetPreferredLanguage(language.Code);
+            }
+            catch (Exception ex)
+            {
+              
+            }
+        }
+
         /// <summary>
         /// Return to main menu
         /// </summary>
@@ -92,9 +127,6 @@ namespace WpfView
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
-            //TODO MOVE TO ACCOUNT PAGE
-            //Tell that we are closed to the page
-            Closed = true;
         }
 
         /// <summary>
@@ -102,26 +134,25 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Input_DropDownOpened(object sender, EventArgs e)
+        private void DropDownOpened(object sender, EventArgs e)
+        {
+            RefreshBoxes();
+        }
+
+        public void RefreshBoxes()
         {
             GenerateInputDevices();
             input.Items.Refresh();
+            if (LanguageBox is not null)
+            {
+                GenerateLanguages();
+                LanguageBox.Items.Refresh();
+            }
         }
 
-        /// <summary>
-        /// Update inputdevices items in settings
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //TODO REMOVE IF ELSE WHEN ACCOUNT PAGE IS IMPLEMENTED
-            if (_mainMenu is MainMenu ls)
-            {
-                ls?.CheckInputDevice(IndexInputDevice);
-                GenerateInputDevices();
-                input.Items.Refresh();
-            }
+            RefreshBoxes();
         }
 
 		private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
