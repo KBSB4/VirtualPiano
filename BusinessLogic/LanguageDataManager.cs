@@ -1,5 +1,6 @@
 ﻿using Model;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace BusinessLogic
 {
@@ -146,7 +147,13 @@ namespace BusinessLogic
                 english,
                 dutch
             };
-            languageData.preferredLanguage = LanguageCode.NL;
+
+			//Get system language in 2 letters
+            CultureInfo ci = CultureInfo.InstalledUICulture;
+            var r = new RegionInfo(ci.LCID);
+            string regionName = r.TwoLetterISORegionName;
+
+            languageData.preferredLanguage = (LanguageCode) Enum.Parse(typeof(LanguageCode), regionName);
 			WriteLanguageData(languageData);
 			currentLanguage = GetLanguage(GetPreferredLanguage());
 		}
