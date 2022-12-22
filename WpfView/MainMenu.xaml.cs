@@ -34,7 +34,7 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
-            AccountPage = new AccountPage(this);
+            AccountPage = new AccountPage(this, null);
             AdminPanel = new(this);
             Account_ChangeIconBasedOnUser();
         }

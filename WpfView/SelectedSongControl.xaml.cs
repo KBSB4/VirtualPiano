@@ -18,10 +18,16 @@ namespace WpfView
         /// <param name="songCard"></param>
         /// <param name="scores"></param>
         /// <param name="description"></param>
-        public SelectedSongControl(SongCardControl songCard, Highscore[] scores, string? description)
+        public SelectedSongControl(SongCardControl songCard, Highscore[] scores, string? description, User? loggeduser)
         {
             SongCard = songCard;
             InitializeComponent();
+            int userId = 0;
+
+            if(loggeduser is not null)
+            {
+                userId = loggeduser.Id;
+            }
 
             //Name and difficiulty
             Title.Content = songCard.SongTitle;
@@ -33,7 +39,7 @@ namespace WpfView
                 foreach (Highscore score in scores)
                 {
                     int position = Array.FindIndex(scores, item => item.Equals(score)); //Find position in list
-                    if (score.User.Name.Equals("Harris")) //TODO Replace with logged in user
+                    if (score.User.Id == userId) //If current user logged in
                     {
                         if (position > 10)
                         {

@@ -184,12 +184,11 @@ namespace WpfView
                 //If true, we upload
                 if ((bool)dialogResult)
                 {
-                    if (true) //TODO if logged in
+                    if (_mainMenu.loggedInUser is not null)
                     {
-                        //TODO wait for log in to be implemented and do this better
                         Highscore highscore = new()
                         {
-                            User = DatabaseController.GetUserByID(7).Result,
+                            User = _mainMenu.loggedInUser,
                             Song = currentSong,
                             Score = score
                         };
@@ -223,12 +222,10 @@ namespace WpfView
                     }
                     else
                     {
-                        //TODO Go to login, wait for a response then return here
-                        SettingsPage? accountPage = null;
+                        AccountPage? accountPage = null;
                         Dispatcher.Invoke(new Action(() =>
                         {
-                            //NOTE SETTINGS PAGE IS TEMPORARY
-                            accountPage = new SettingsPage(this);
+                            accountPage = new AccountPage(_mainMenu, this);
                             NavigationService?.Navigate(accountPage);
                         }));
 

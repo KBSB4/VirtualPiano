@@ -28,11 +28,15 @@ namespace WpfView
     public partial class AccountPage : Page
     {
         private readonly MainMenu _mainMenu;
+        private readonly PracticePlayPiano? _practicePlayPiano;
 
         private bool AllFieldsAreValid { get; set; }
-        public AccountPage(MainMenu mainMenu)
+        public bool Closed = false;
+
+        public AccountPage(MainMenu mainMenu, PracticePlayPiano? ppp)
         {
             _mainMenu = mainMenu;
+            _practicePlayPiano = ppp;
             DataContext = new DataContextSettings();
             InitializeComponent();
         }
@@ -75,8 +79,7 @@ namespace WpfView
                 if (user is not null && user.isAdmin) NavigationService?.Navigate(_mainMenu.AdminPanel);
                 else
                 {
-                    NavigationService?.Navigate(_mainMenu); 
-                    _mainMenu.Account_ChangeIconBasedOnUser();
+                    CloseLogin();
                 }
             }
             else
@@ -178,8 +181,23 @@ namespace WpfView
         /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
+            CloseLogin();
+        }
+
+        private void CloseLogin()
+        {
             _mainMenu.Account_ChangeIconBasedOnUser();
-            NavigationService?.Navigate(_mainMenu);
+            Closed = true;
+
+            if (_practicePlayPiano is null)
+            {
+                NavigationService?.Navigate(_mainMenu);
+            }
+            else
+            {
+                NavigationService?.Navigate(_practicePlayPiano);
+            }
+
             ClearLoginFields();
             ClearNewAccountFields();
         }
