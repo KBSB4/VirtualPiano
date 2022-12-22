@@ -63,9 +63,9 @@ namespace WpfView
 		}
 
 		private void UpdateUI()
-		{
-
-		}
+        {
+            MenuBackButton.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
+        }
 
 		/// <summary>
 		/// Get song from database by ID and start playing

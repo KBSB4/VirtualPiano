@@ -9,7 +9,6 @@ namespace WpfView
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         private int _indexInputDevice;
-        private int _indexLanguage;
 
         public int IndexinputDevice
         {
@@ -17,16 +16,9 @@ namespace WpfView
             set { _indexInputDevice = value; OnPropertyChanged(); }
         }
 
-        public int IndexLanguage
-        {
-            get { return _indexLanguage; }
-            set { _indexLanguage = value; OnPropertyChanged(); }
-        }
-
         public void OnPropertyChanged()
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IndexinputDevice)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IndexLanguage)));
         }
     }
 }

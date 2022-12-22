@@ -29,8 +29,6 @@ namespace WpfView
             SongSelectPage = new SongSelectPage(this);
             AdminPanel = new(this);
 
-            //TODO Temp
-            TranslateText();
 			IsVisibleChanged += MainMenu_IsVisibleChanged;
         }
 
@@ -41,11 +39,6 @@ namespace WpfView
 
 		private void UpdateUI()
 		{
-			
-		}
-
-		public void TranslateText()
-        {
             SettingsLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Settings);
             PlayLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Play);
             FreePlayLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_FreePlay);

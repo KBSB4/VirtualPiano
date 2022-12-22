@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Controller;
+using Model;
+using System.Windows;
 namespace WpfView
 {
     /// <summary>
@@ -27,8 +29,12 @@ namespace WpfView
 
 		private void UpdateUI()
 		{
-
-		}
+            TitleLabel.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_Title);
+            YourScoreLabel.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_YourScore);
+            YourMaxScoreLabel.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_MaxScore);
+            UploadButton.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_UploadButton);
+            MenuButton.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_MenuButton);
+        }
 
 		/// <summary>
 		/// Return true for upload

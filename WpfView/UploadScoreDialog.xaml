@@ -16,12 +16,12 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Image Source="pack://application:,,,/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
-        <Label HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Upload Score?</Label>
-        <Label HorizontalAlignment="Center" FontSize="50" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,10,0,0" Grid.Row="1">Your Score</Label>
+        <Label x:Name="TitleLabel" HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Upload Score?</Label>
+        <Label x:Name="YourScoreLabel" HorizontalAlignment="Center" FontSize="50" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,10,0,0" Grid.Row="1">Your Score</Label>
         <Label x:Name="ScoreLabel" HorizontalAlignment="Center" FontSize="40" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,92,0,0" Grid.Row="1">0</Label>
-        <Label HorizontalAlignment="Center" FontSize="30" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,174,0,0" Grid.Row="1">Max Score</Label>
+        <Label x:Name="YourMaxScoreLabel" HorizontalAlignment="Center" FontSize="30" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,174,0,0" Grid.Row="1">Max Score</Label>
         <Label x:Name="MaxScoreLabel" HorizontalAlignment="Center" FontSize="25" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,224,0,0" Grid.Row="1">0</Label>
-        <Button Content="Upload" HorizontalAlignment="Left" Margin="118,36,0,0" Grid.Row="2" VerticalAlignment="Top" Height="66" Width="180" FontSize="40" Click="Upload_Click" Foreground="White" Background="Black"/>
-        <Button Content="Back to Menu" HorizontalAlignment="Left" Margin="697,36,0,0" Grid.Row="2" VerticalAlignment="Top" Height="66" Width="180" FontSize="25" Click="Menu_Click" Background="Black" Foreground="White"/>
+        <Button x:Name="UploadButton" Content="Upload" HorizontalAlignment="Left" Margin="118,36,0,0" Grid.Row="2" VerticalAlignment="Top" Height="66" Width="180" FontSize="40" Click="Upload_Click" Foreground="White" Background="Black"/>
+        <Button x:Name="MenuButton" Content="Back to Menu" HorizontalAlignment="Left" Margin="697,36,0,0" Grid.Row="2" VerticalAlignment="Top" Height="66" Width="180" FontSize="25" Click="Menu_Click" Background="Black" Foreground="White"/>
     </Grid>
 </Window>

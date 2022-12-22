@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace WpfView
 {
@@ -50,8 +51,13 @@ namespace WpfView
 
 		private void UpdateUI()
 		{
-
-		}
+            BackMenu.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
+            SettingsMenuItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_Settings);
+            OpenItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Open);
+            PlayItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Play);
+            StopItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Stop);
+            KaraokeBox.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Karaoke);
+        }
 
 		/// <summary>
 		/// Thread that updates the visual position of already placed notes

@@ -35,9 +35,11 @@ namespace WpfView
 		}
 
 		private void UpdateUI()
-		{
-
-		}
+        {
+            TitleLabel.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_SelectSong);
+            KaraokeLabel.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_Karaoke);
+            StartButton.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_Start);
+        }
 
 		private void KaraokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {

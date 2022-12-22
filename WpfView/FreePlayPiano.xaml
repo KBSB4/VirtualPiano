@@ -36,7 +36,7 @@
             </MenuItem>
 
 
-            <MenuItem Name="MainItem"  Header="Settings" Height="30" Click="Settings_Click" Foreground="White" >
+            <MenuItem Name="SettingsMenuItem"  Header="Settings" Height="30" Click="Settings_Click" Foreground="White" >
                 <MenuItem.Icon>
                     <Image Source="pack://application:,,,/Images/settings.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
@@ -46,9 +46,9 @@
                 <MenuItem.Icon>
                     <Image Source="pack://application:,,,/Images/midi.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
-                <MenuItem Header="_Open" Click="OpenMIDIFileDialog" Foreground="Black" />
-                <MenuItem Header="_Play" Click="PlayMIDIFile" Foreground="Black"/>
-                <MenuItem Header="_Stop" Click="StopMIDIFile" Foreground="Black"/>
+                <MenuItem x:Name="OpenItem" Header="_Open" Click="OpenMIDIFileDialog" Foreground="Black" />
+                <MenuItem x:Name="PlayItem" Header="_Play" Click="PlayMIDIFile" Foreground="Black"/>
+                <MenuItem x:Name="StopItem" Header="_Stop" Click="StopMIDIFile" Foreground="Black"/>
                 <Separator />
                 <MenuItem x:Name="KaraokeBox" Header="_Karaoke Mode" IsCheckable="true" Foreground="Black"/>
             </MenuItem>
