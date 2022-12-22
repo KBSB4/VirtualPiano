@@ -31,9 +31,23 @@ namespace WpfView
             List<Language> language = LanguageController.GetAllLanguages();
             if (LanguageBox is null) return;
             IndexLanguage = LanguageBox.Items.IndexOf(language.Where(lang => lang.Code == LanguageController.GetPreferredLanguage()).First().Name);
+
+			IsVisibleChanged += SettingsPage_IsVisibleChanged;
         }
 
-        public SettingsPage(PracticePlayPiano ppp)
+		private void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+            UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+            LanguageLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Language);
+            VolumeLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Volume);
+            InputDeviceLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_InputDevice);
+		}
+
+		public SettingsPage(PracticePlayPiano ppp)
         {
             _mainMenu = ppp;
             DataContext = new DataContextSettings();
@@ -116,7 +130,10 @@ namespace WpfView
                 Language? language = LanguageController.GetAllLanguages().Where(lang => lang.Name.Equals(selecedItem.Content)).FirstOrDefault();
 
                 if (language != null)
+                {
                     LanguageController.SetPreferredLanguage(language.Code);
+                    UpdateUI();
+				}
             }
             catch (Exception ex)
             {

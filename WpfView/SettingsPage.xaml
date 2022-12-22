@@ -48,9 +48,9 @@
                     </Grid.RowDefinitions>
                        
 
-                    <Label Grid.Row="1"  Content="Volume:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalContentAlignment="Center"></Label>
+                    <Label x:Name="VolumeLabel" Grid.Row="1"  Content="Volume:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalContentAlignment="Center"></Label>
                     <Slider x:Name="VolumeSlider" Grid.Row="1" Grid.Column="1" Width="300"  HorizontalAlignment="Center" VerticalAlignment="Center" Maximum="100" TickPlacement="BottomRight" TickFrequency="5" IsSnapToTickEnabled="True" Foreground="White" ValueChanged="VolumeSlider_ValueChanged" Value="50"></Slider>
-                    <Label Grid.Row="2"  Content="Input device:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalAlignment="Center"  ></Label>
+                    <Label x:Name="InputDeviceLabel" Grid.Row="2"  Content="Input device:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalAlignment="Center"  ></Label>
 
                     <ComboBox Name="input" Grid.Row="2" Grid.Column="1" Height="50" Width="300" Background="Black" Opacity="0.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" FontWeight="Bold" SelectedIndex="{Binding IndexinputDevice}" DropDownOpened="DropDownOpened" SelectionChanged="SelectionChanged">
                         <ComboBox.ItemContainerStyle>
@@ -66,7 +66,7 @@
                         <ComboBoxItem Name="NoneSelected" Content="None"></ComboBoxItem>
                     </ComboBox>
                         
-                    <Label Grid.Row="3"  Content="Language:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalAlignment="Center"></Label>
+                    <Label x:Name="LanguageLabel" Grid.Row="3"  Content="Language:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalAlignment="Center"></Label>
                     <ComboBox Name="LanguageBox" Grid.Row="3" Grid.Column="1" Height="50" Width="300" Background="Black" Opacity="0.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" FontWeight="Bold" SelectedIndex="{Binding IndexLanguage}" DropDownOpened="DropDownOpened" SelectionChanged="SelectionChanged">
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="ComboBoxItem">
