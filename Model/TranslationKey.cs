@@ -38,16 +38,22 @@
 		AccountPage_RegisterPasswordConfirm,
 		AccountPage_RegisterButton,
 
-        MessageBox_HighscoreHigherThan,
-        MessageBox_SelectSongBeforeStart,
-        MessageBox_LogOut,
-        MessageBox_MidiStillPlaying,
-        MessageBox_NoMidiSelected,
-        MessageBox_NoMidiPlaying,
+		MessageBox_HighscoreHigherThanText,
+		MessageBox_HighscoreHigherThanCaption,
+		MessageBox_SelectSongBeforeStartText,
+		MessageBox_SelectSongBeforeStartCaption,
+		MessageBox_LogOutText,
+		MessageBox_LogOutCaptiom,
+		MessageBox_MidiStillPlayingText,
+		MessageBox_MidiStillPlayingCaption,
+		MessageBox_NoMidiSelectedText,
+		MessageBox_NoMidiSelectedCaption,
+		MessageBox_NoMidiPlayingText,
+		MessageBox_NoMidiPlayingCaption,
 
-        Menubar_SongSelect_SelectSong,
+
+		Menubar_SongSelect_SelectSong,
         Menubar_SongSelect_Start,
         Menubar_SongSelect_Karaoke,
-
-    }
+	}
 }
