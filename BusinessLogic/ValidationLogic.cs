@@ -1,12 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
-using Model.DatabaseModels;
-using Renci.SshNet.Messages;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Model.DatabaseModels;
 
 namespace BusinessLogic
 {
@@ -20,21 +12,21 @@ namespace BusinessLogic
             {
                 return false;
             }
-            else 
-            { 
-                return true; 
+            else
+            {
+                return true;
             }
         }
 
         public static bool AccountPage_Login_UserCredentialsAreValid(User? user)
         {
-            if(user is not null)
+            if (user is not null)
             {
                 return true;
-            } 
-            else 
-            { 
-                return false; 
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -52,13 +44,13 @@ namespace BusinessLogic
 
         public static bool AccountPage_NewAccount_PassAndConfirmPassAreEqual(string password, string confirmpass)
         {
-            if(password == confirmpass)
+            if (password == confirmpass)
             {
                 return true;
             }
-            else 
-            { 
-                return false; 
+            else
+            {
+                return false;
             }
         }
         #endregion
@@ -94,7 +86,7 @@ namespace BusinessLogic
         }
 
 
-        public static string AdminPanelValidateMidiFile(MidiFile file)
+        public static string AdminPanelValidateMidiFile()
         {
             string errorMessage = string.Empty;
             if (MidiLogic.CurrentMidi == null) errorMessage = "MidiFile required!";

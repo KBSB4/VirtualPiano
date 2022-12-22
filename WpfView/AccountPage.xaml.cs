@@ -1,24 +1,8 @@
-﻿using BusinessLogic;
-using Controller;
+﻿using Controller;
 using Model.DatabaseModels;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Printing;
-using System.Security;
-using System.Security.RightsManagement;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfView
 {
@@ -56,7 +40,7 @@ namespace WpfView
 
         private async void NewAccount_UploadNewUser()
         {
-            if(AllFieldsAreValid) 
+            if (AllFieldsAreValid)
             {
                 User user = new();
                 user.Name = NewAccount_UsernameInput.Text;
@@ -76,7 +60,7 @@ namespace WpfView
                 Login_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
                 Login_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
                 _mainMenu.loggedInUser = user;
-                if (user is not null && user.isAdmin) NavigationService?.Navigate(_mainMenu.AdminPanel);
+                if (user is not null && user.IsAdmin) NavigationService?.Navigate(_mainMenu.AdminPanel);
                 else
                 {
                     CloseLogin();
@@ -86,7 +70,7 @@ namespace WpfView
             {
                 AllFieldsAreValid = false;
                 Login_UsernameInput.Text = string.Empty;
-                Login_PasswordInput.Password= string.Empty;
+                Login_PasswordInput.Password = string.Empty;
                 Login_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
                 Login_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
             }
