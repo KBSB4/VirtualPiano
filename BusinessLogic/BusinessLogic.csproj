@@ -220,10 +220,4 @@
     <ProjectReference Include="..\Model\Model.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="LanguageData.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

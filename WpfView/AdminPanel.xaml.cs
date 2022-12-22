@@ -26,14 +26,25 @@ namespace WpfView
 			_mainMenu = mainMenu;
 			GenerateSongList();
 			InitializeComponent();
+			IsVisibleChanged += UI_IsVisibleChanged;
 		}
 
-        /// <summary>
-        ///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
+		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+
+		}
+
+		/// <summary>
+		///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
         {
             MidiLogic.CurrentMidi = null;
             var openFileDialog = new OpenFileDialog

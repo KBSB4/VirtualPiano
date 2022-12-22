@@ -54,13 +54,24 @@ namespace WpfView
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
 
-        }
+			IsVisibleChanged += UI_IsVisibleChanged;
+		}
 
-        /// <summary>
-        /// Get song from database by ID and start playing
-        /// </summary>
-        /// <param name="songID"></param>
-        public async void PlaySelectedSong(int songID)
+		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+
+		}
+
+		/// <summary>
+		/// Get song from database by ID and start playing
+		/// </summary>
+		/// <param name="songID"></param>
+		public async void PlaySelectedSong(int songID)
         {
             Song? x = await DatabaseController.GetSong(songID);
             currentSong = x;

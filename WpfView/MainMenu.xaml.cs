@@ -31,9 +31,20 @@ namespace WpfView
 
             //TODO Temp
             TranslateText();
+			IsVisibleChanged += MainMenu_IsVisibleChanged;
         }
 
-        public void TranslateText()
+		private void MainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+            UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+			
+		}
+
+		public void TranslateText()
         {
             SettingsLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Settings);
             PlayLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Play);

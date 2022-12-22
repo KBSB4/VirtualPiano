@@ -40,13 +40,24 @@ namespace WpfView
                 IsBackground = true
             };
             updateVisualNoteThread.Start();
-        }
+			IsVisibleChanged += UI_IsVisibleChanged;
+		}
 
-        /// <summary>
-        /// Thread that updates the visual position of already placed notes
-        /// </summary>
-        /// <param name="obj"></param>
-        private void UpdateVisualNotes(object? obj)
+		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+
+		}
+
+		/// <summary>
+		/// Thread that updates the visual position of already placed notes
+		/// </summary>
+		/// <param name="obj"></param>
+		private void UpdateVisualNotes(object? obj)
         {
             var next = DateTime.Now;
             while (true)

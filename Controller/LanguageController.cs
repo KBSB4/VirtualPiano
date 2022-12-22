@@ -22,6 +22,11 @@ namespace Controller
             return languageDataManager.GetPreferredLanguage();
         }
 
+        public static LanguageData GetLanguageData()
+        {
+            return languageDataManager.GetLanguageData();
+        }
+
         public static List<Language> GetAllLanguages()
         {
             return languageDataManager.GetAllLanguages();

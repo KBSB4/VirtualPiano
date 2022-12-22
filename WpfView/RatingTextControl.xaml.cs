@@ -42,13 +42,24 @@ namespace WpfView
             InitializeComponent();
             Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateRatingText));
             updateVisualNoteThread.Start();
-        }
+			IsVisibleChanged += UI_IsVisibleChanged;
+		}
 
-        /// <summary>
-        /// Updates text
-        /// </summary>
-        /// <param name="obj"></param>
-        private void UpdateRatingText(object? obj)
+		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+
+		}
+
+		/// <summary>
+		/// Updates text
+		/// </summary>
+		/// <param name="obj"></param>
+		private void UpdateRatingText(object? obj)
         {
             Thread.Sleep(1000);
             Dispatcher.Invoke(new Action(() =>

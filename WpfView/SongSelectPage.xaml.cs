@@ -26,9 +26,20 @@ namespace WpfView
             AddSongs();
             KaraokeCheckBox.Checked += KaraokeCheckBox_Checked;
             KaraokeCheckBox.Unchecked += KaraokeCheckBox_Unchecked;
-        }
+			IsVisibleChanged += UI_IsVisibleChanged;
+		}
 
-        private void KaraokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
+		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+
+		}
+
+		private void KaraokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             SongController.DoKaroake = false;
         }

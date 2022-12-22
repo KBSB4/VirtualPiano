@@ -17,14 +17,25 @@ namespace WpfView
             InitializeComponent();
             ScoreLabel.Content = score;
             MaxScoreLabel.Content = maxscore;
-        }
+			IsVisibleChanged += UI_IsVisibleChanged;
+		}
 
-        /// <summary>
-        /// Return true for upload
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Upload_Click(object sender, RoutedEventArgs e)
+		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+
+		}
+
+		/// <summary>
+		/// Return true for upload
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Upload_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
             Close();

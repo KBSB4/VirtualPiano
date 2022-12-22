@@ -19,7 +19,6 @@ namespace WpfView
         private readonly Page _mainMenu;
         private int count = InputDevice.GetDevicesCount();
         public static int IndexInputDevice { get; set; }
-        public static int IndexLanguage { get; set; }
         public bool Closed = false;
 
         public SettingsPage(MainMenu mainMenu)
@@ -27,12 +26,9 @@ namespace WpfView
             _mainMenu = mainMenu;
             DataContext = new DataContextSettings();
             InitializeComponent();
-
-            List<Language> language = LanguageController.GetAllLanguages();
-            if (LanguageBox is null) return;
-            IndexLanguage = LanguageBox.Items.IndexOf(language.Where(lang => lang.Code == LanguageController.GetPreferredLanguage()).First().Name);
-
 			IsVisibleChanged += SettingsPage_IsVisibleChanged;
+
+            GenerateLanguages();
         }
 
 		private void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -52,22 +48,6 @@ namespace WpfView
             _mainMenu = ppp;
             DataContext = new DataContextSettings();
             InitializeComponent();
-        }
-
-        public void GenerateLanguages()
-        {
-            List<Language> languages = LanguageController.GetAllLanguages();
-            if (LanguageBox is null) return;
-
-            foreach (Language language in languages)
-            {
-                if (!LanguageBox.Items.Cast<ComboBoxItem>().Any(cbi => cbi.Content.Equals(language.Name)))
-                {
-                    ComboBoxItem ToAddLanguage = new() { Content = language.Name };
-                    LanguageBox.Items.Add(ToAddLanguage);
-                    ToAddLanguage.Selected += ToAddLanguage_Selected;
-                }
-            }
         }
 
 		/// <summary>
@@ -121,26 +101,6 @@ namespace WpfView
             }
         }
 
-        private void ToAddLanguage_Selected(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ComboBoxItem selecedItem = (ComboBoxItem)sender;
-                IndexLanguage = LanguageBox.Items.IndexOf(sender);
-                Language? language = LanguageController.GetAllLanguages().Where(lang => lang.Name.Equals(selecedItem.Content)).FirstOrDefault();
-
-                if (language != null)
-                {
-                    LanguageController.SetPreferredLanguage(language.Code);
-                    UpdateUI();
-				}
-            }
-            catch (Exception ex)
-            {
-              
-            }
-        }
-
         /// <summary>
         /// Return to main menu
         /// </summary>
@@ -150,6 +110,7 @@ namespace WpfView
         {
             NavigationService?.Navigate(_mainMenu);
         }
+
 
         /// <summary>
         /// Refreshes the ComboBoxItems when selected
@@ -165,17 +126,37 @@ namespace WpfView
         {
             GenerateInputDevices();
             input.Items.Refresh();
-            if (LanguageBox is not null)
-            {
-                GenerateLanguages();
-                LanguageBox.Items.Refresh();
-            }
+
         }
 
         private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ComboBox comboBox = (ComboBox)sender;
+
+			if (comboBox.Equals(LanguageBox))
+            {
+                List<Language> languages = LanguageController.GetAllLanguages();
+                LanguageCode code = languages[comboBox.SelectedIndex].Code;
+
+                LanguageController.SetPreferredLanguage(code);
+                UpdateUI();
+            }
+
             RefreshBoxes();
         }
+
+		public void GenerateLanguages()
+		{
+			LanguageData languageData = LanguageController.GetLanguageData();
+			if (LanguageBox is null) return;
+
+			foreach (Language language in languageData.languages)
+			{
+				LanguageBox.Items.Add(language.Name);
+			}
+
+            LanguageBox.SelectedIndex = (int)languageData.preferredLanguage;
+		}
 
 		private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
 		{

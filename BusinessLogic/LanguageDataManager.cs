@@ -13,7 +13,7 @@ namespace BusinessLogic
 			currentLanguage = GetLanguage(GetPreferredLanguage());
 		}
 
-		private static LanguageData GetLanguageData()
+		public LanguageData GetLanguageData()
 		{
 			string openedjson = File.ReadAllText("LanguageData.json");
 			return JsonConvert.DeserializeObject<LanguageData>(openedjson);
@@ -138,6 +138,7 @@ namespace BusinessLogic
 			};
 
 			languageData.languages = new();
+			languageData.languages.Add(english);
 			languageData.languages.Add(dutch);
 			languageData.preferredLanguage = LanguageCode.NL;
 			WriteLanguageData(languageData);
