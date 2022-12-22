@@ -1,6 +1,17 @@
 {
   "languages": [
     {
+      "Code": 0,
+      "Name": "English",
+      "Translations": {
+        "MainMenu_Settings": "Settings",
+        "Settings_Volume": "Volume",
+        "Settings_InputDevice": "InputDevice",
+        "MainMenu_Play": "Play",
+        "MainMenu_FreePlay": "Free Play"
+      }
+    },
+    {
       "Code": 1,
       "Name": "Nederlands",
       "Translations": {
@@ -12,5 +23,5 @@
       }
     }
   ],
-  "preferredLanguage": 1
+  "preferredLanguage": 0
 }

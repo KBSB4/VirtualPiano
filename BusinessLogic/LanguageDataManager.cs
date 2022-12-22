@@ -24,6 +24,7 @@ namespace BusinessLogic
             LanguageData languageData = GetLanguageData();
             languageData.preferredLanguage = code;
             WriteLanguageData(languageData);
+            currentLanguage = GetLanguage(GetPreferredLanguage());
         }
 
         public LanguageCode GetPreferredLanguage()
@@ -40,6 +41,11 @@ namespace BusinessLogic
             return languageData.languages.Where(lang => lang.Code == code).FirstOrDefault();
         }
 
+        public LanguageData? GetAllLanguages()
+        {
+            return GetLanguageData();
+        }
+
         public string GetTranslation(TranslationKey key)
         {
             return currentLanguage.Translations[key];
@@ -49,8 +55,21 @@ namespace BusinessLogic
         public static void CreateLanguages()
         {
             LanguageData languageData = new();
+            languageData.languages = new();
 
             Language language = new Language();
+            language.Code = LanguageCode.EN;
+            language.Name = "English";
+            language.Translations = new() {
+                {TranslationKey.MainMenu_Settings, "Settings" },
+                {TranslationKey.Settings_Volume, "Volume" },
+                {TranslationKey.Settings_InputDevice, "InputDevice" },
+                {TranslationKey.MainMenu_Play, "Play" },
+                {TranslationKey.MainMenu_FreePlay, "Free Play" }
+            };
+            languageData.languages.Add(language);
+            
+            language = new Language();
             language.Code = LanguageCode.NL;
             language.Name = "Nederlands";
             language.Translations = new() {
@@ -60,9 +79,8 @@ namespace BusinessLogic
                 {TranslationKey.MainMenu_Play, "Spelen" },
                 {TranslationKey.MainMenu_FreePlay, "Vrij Spel" }
             };
-
-            languageData.languages = new();
             languageData.languages.Add(language);
+
             languageData.preferredLanguage = LanguageCode.NL;
             WriteLanguageData(languageData);
         }
