@@ -113,8 +113,8 @@ namespace BusinessLogic
 			MidiFile midiFileOut = midiFile;
 
 			var trackChunk = new PatternBuilder()
-				.Note("C2", new MetricTimeSpan(0, 0, 2))
-				.Note("B5", new MetricTimeSpan(0, 0, 2))
+				.Note("C2", new MetricTimeSpan(0, 0, 2), (SevenBitNumber)0)
+				.Note("B5", new MetricTimeSpan(0, 0, 2), (SevenBitNumber)0)
 				// Insert a pause with length of 2 seconds
 				.StepForward(new MetricTimeSpan(0, 0, 2))
 				.Build()
