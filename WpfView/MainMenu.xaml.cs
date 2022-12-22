@@ -115,7 +115,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void Practice_Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(AdminPanel);
+            NavigationService?.Navigate(SongSelectPage);
         }
 
         /// <summary>
