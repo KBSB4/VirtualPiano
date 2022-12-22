@@ -1,10 +1,14 @@
 ﻿using Melanchall.DryWetMidi.Multimedia;
 using Model.DatabaseModels;
+using SharpDX.Multimedia;
 using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WpfView
 {
@@ -19,9 +23,7 @@ namespace WpfView
         public AccountPage AccountPage { get; set; }
         public AdminPanel AdminPanel { get; set; }
 
-        public bool loggedIn = false;
-
-        //public User loggedInUser = ;
+        public User? loggedInUser { get; set; }
 
         //DO NOT REMOVE
         public IInputDevice? InputDevice;
@@ -34,6 +36,7 @@ namespace WpfView
             SongSelectPage = new SongSelectPage(this);
             AccountPage = new AccountPage(this);
             AdminPanel = new(this);
+            Account_ChangeIconBasedOnUser();
         }
 
         /// <summary>
@@ -115,10 +118,42 @@ namespace WpfView
             NavigationService?.Navigate(AdminPanel);
         }
 
+        /// <summary>
+        /// Navigates to <see cref="AccountPage"/> if the user is not logged in,
+        /// otherwise gives the user the option to logout.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Account_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (loggedIn) NavigationService?.Navigate(AdminPanel);
-            else NavigationService?.Navigate(AccountPage);
+            if (loggedInUser is null) NavigationService?.Navigate(AccountPage);
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo);
+                if(result == MessageBoxResult.Yes) 
+                {
+                    loggedInUser= null;
+                    Account_ChangeIconBasedOnUser();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Changes the image of <see cref="AccountIconImage"/> based on if the user is logged in or not.
+        /// </summary>
+        public void Account_ChangeIconBasedOnUser()
+        {
+            if (loggedInUser is null)
+            {
+                AccountIconImage.Source = new BitmapImage(new Uri("/Images/accountImage.png", UriKind.Relative));
+                AccountIconImage.Margin = new Thickness(20, 40, 20, 40);
+                WhiteRectForIcon.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                WhiteRectForIcon.Visibility = Visibility.Hidden;
+                AccountIconImage.Source = new BitmapImage(new Uri("/Images/log-out.png", UriKind.Relative));
+            }
         }
     }
 }

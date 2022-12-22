@@ -25,6 +25,15 @@ namespace Controller
 			return result;
 		}
 
+		public static async Task<User?> GetUserByName(string username)
+		{
+			Task<User?> getUserByName = databaseManager.GetUserByName(username);
+
+			User? result = await getUserByName;
+
+			return result;
+		}
+
 		public static async Task UploadNewUser(User user)
 		{
 			Task uploadNewUserTask = databaseManager.UploadNewUser(user);

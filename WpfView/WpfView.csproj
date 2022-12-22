@@ -16,6 +16,7 @@
     <None Remove="Images\DifficultyIconHard.png" />
     <None Remove="Images\DifficultyIconHero.png" />
     <None Remove="Images\DifficultyIconMedium.png" />
+    <None Remove="Images\log-out.png" />
     <None Remove="Images\midi.png" />
     <None Remove="Images\PianoHeroLogo.png" />
     <None Remove="Images\PianoHeroMenuBackground.png" />
@@ -49,6 +50,7 @@
     <Resource Include="Images\DifficultyIconHard.png" />
     <Resource Include="Images\DifficultyIconHero.png" />
     <Resource Include="Images\DifficultyIconMedium.png" />
+    <Resource Include="Images\log-out.png" />
     <Resource Include="Images\midi.png" />
     <Resource Include="Images\PianoHeroMenuBackground.png" />
   </ItemGroup>

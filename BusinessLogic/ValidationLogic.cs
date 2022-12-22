@@ -1,7 +1,9 @@
 ﻿using Melanchall.DryWetMidi.Core;
 using Model.DatabaseModels;
+using Renci.SshNet.Messages;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +13,53 @@ namespace BusinessLogic
     public static class ValidationLogic
     {
         #region AccountPage Field Validation
-        public static bool AccountPageValidateLoggingInCredentials(User? user)
+
+        public static bool AccountPage_Login_UsernameIsUnique(User? user)
         {
-            if (user is not null) return true;
-            else { return false; }
+            if (user is not null)
+            {
+                return false;
+            }
+            else 
+            { 
+                return true; 
+            }
+        }
+
+        public static bool AccountPage_Login_UserCredentialsAreValid(User? user)
+        {
+            if(user is not null)
+            {
+                return true;
+            } 
+            else 
+            { 
+                return false; 
+            }
+        }
+
+        public static bool AccountPage_NewAccount_UserCredentialsAreValid(User? user)
+        {
+            if (user is not null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool AccountPage_NewAccount_PassAndConfirmPassAreEqual(string password, string confirmpass)
+        {
+            if(password == confirmpass)
+            {
+                return true;
+            }
+            else 
+            { 
+                return false; 
+            }
         }
         #endregion
 

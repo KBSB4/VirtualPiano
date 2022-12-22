@@ -22,7 +22,7 @@ namespace BusinessLogic
         }
 
         #region Users
-        public async Task<User> GetUser(string username)
+        public async Task<User> GetUserByName(string username)
         {
             using (SqlConnection connection = new(connectionString))
             {
@@ -102,7 +102,6 @@ namespace BusinessLogic
 
                 if (users.Length > 0)
                     if (username == users[0].Name && password == users[0].Password) return users[0];
-                    else { return null; }
                 return null;
             }
         }
