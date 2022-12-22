@@ -94,10 +94,7 @@ namespace WpfView
             }
             catch (Exception ex)
             {
-                if (ex is IndexOutOfRangeException)
-                {
-                    MessageBox.Show($"Selected item in combobox {input.Name} was out of range");
-                }
+
             }
         }
 

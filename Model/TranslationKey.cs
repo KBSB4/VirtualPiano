@@ -38,7 +38,8 @@
 		AccountPage_RegisterPasswordConfirm,
 		AccountPage_RegisterButton,
 
-		MessageBox_HighscoreHigherThanText,
+		
+        MessageBox_HighscoreHigherThanText,
 		MessageBox_HighscoreHigherThanCaption,
 		MessageBox_SelectSongBeforeStartText,
 		MessageBox_SelectSongBeforeStartCaption,
@@ -55,5 +56,5 @@
 		Menubar_SongSelect_SelectSong,
         Menubar_SongSelect_Start,
         Menubar_SongSelect_Karaoke,
-	}
+    }
 }

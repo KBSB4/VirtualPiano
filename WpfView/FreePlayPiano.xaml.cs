@@ -214,8 +214,8 @@ namespace WpfView
             }
             else if (SongController.CurrentSong.IsPlaying)
             {
-                MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
-                "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingText),
+                LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingCaption), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
@@ -274,14 +274,15 @@ namespace WpfView
             {
                 if (currentMidiFile is null)
                 {
-                    MessageBox.Show("Select a MIDI File first before playing",
-                    "No MIDI selected", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiSelectedText),
+                                        LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiSelectedCaption), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 if (SongController.CurrentSong is not null && SongController.CurrentSong.IsPlaying)
                 {
-                    MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
-                    "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingText),
+                    LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingCaption), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -300,8 +301,8 @@ namespace WpfView
             }
             else if (sender is not null)
             {
-                MessageBox.Show("There is no MIDI playing right now.",
-                "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiPlayingText),
+                LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiPlayingCaption), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion

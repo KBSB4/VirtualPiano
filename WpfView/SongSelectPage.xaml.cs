@@ -132,8 +132,8 @@ namespace WpfView
             }
             else
             {
-                MessageBox.Show("Select a song from the list first before starting",
-                "You can't play nothing", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_SelectSongBeforeStartText),
+                LanguageController.GetTranslation(TranslationKey.MessageBox_SelectSongBeforeStartCaption), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

@@ -221,8 +221,8 @@ namespace WpfView
                             }
                             else
                             {
-                                MessageBox.Show("Highscore is higher than current score",
-                                "There is no reason to upload your score.", MessageBoxButton.OK, MessageBoxImage.Information);
+                                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_HighscoreHigherThanText),
+                                LanguageController.GetTranslation(TranslationKey.MessageBox_HighscoreHigherThanCaption), MessageBoxButton.OK, MessageBoxImage.Information);
                             }
                         }
 
