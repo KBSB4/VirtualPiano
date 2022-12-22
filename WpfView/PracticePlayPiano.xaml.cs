@@ -99,10 +99,15 @@ namespace WpfView
 
             if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
-            notesToBePressed.RemoveRange(0, 2);
+            if (notesToBePressed.Count > 0)
+            {
+                notesToBePressed.RemoveRange(0, 2);
+            }
 
             if (notesToBePressed.Count > 0)
+            {
                 maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
+            }
             else maxTotalScore = 0;
             score = 0;
             UpdateScoreVisual();
