@@ -12,11 +12,11 @@ using System.Windows.Input;
 
 namespace WpfView
 {
-	/// <summary>
-	/// Interaction logic for AdminPanel.xaml
-	/// </summary>
-	public partial class AdminPanel : Page
-	{
+    /// <summary>
+    /// Interaction logic for AdminPanel.xaml
+    /// </summary>
+    public partial class AdminPanel : Page
+    {
         private byte[] lastOpenedFile;
 
         private List<Song> songList = new();
@@ -67,16 +67,20 @@ namespace WpfView
             if (!ValidationController.AdminPanelValidationMessageTitle(titleTextBox.Text).Equals(string.Empty))
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageTitle(titleTextBox.Text);
-            }else if(songList.Count > 0 && !IsUniqueSongName(titleTextBox.Text))
+            }
+            else if (songList.Count > 0 && !IsUniqueSongName(titleTextBox.Text))
             {
                 errorMessage = "Title has already been used!";
-            }else if(!ValidationController.AdminPanelValidationMessageDescription(descriptionTextBox.Text).Equals(string.Empty))
+            }
+            else if (!ValidationController.AdminPanelValidationMessageDescription(descriptionTextBox.Text).Equals(string.Empty))
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageDescription(descriptionTextBox.Text);
-            }else if(!ValidationController.AdminPanelValidationMessageDifficulty(difficultyTextBox.Text).Equals(string.Empty))
+            }
+            else if (!ValidationController.AdminPanelValidationMessageDifficulty(difficultyTextBox.Text).Equals(string.Empty))
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageDifficulty(difficultyTextBox.Text);
-            }else if (!ValidationController.AdminPanelValidationMessageMidiFile(MidiLogic.CurrentMidi).Equals(string.Empty))
+            }
+            else if (!ValidationController.AdminPanelValidationMessageMidiFile(MidiLogic.CurrentMidi).Equals(string.Empty))
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageMidiFile(MidiLogic.CurrentMidi);
             }
@@ -84,7 +88,7 @@ namespace WpfView
             {
                 return isValid;
             }
-            
+
 
             MessageBox.Show(errorMessage, "Invalid value", MessageBoxButton.OK, MessageBoxImage.Error);
             isValid = false;
@@ -159,9 +163,6 @@ namespace WpfView
 
             return true;
         }
-			}
-			return true;
-		}
 
         private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -169,20 +170,15 @@ namespace WpfView
             if (deleteSong != null)
             {
                 var result = MessageBox.Show($"Are you sure u want to delete {deleteSong.songTitle}?", "Confirm Delete", MessageBoxButton.OKCancel);
-			if (deleteSong != null)
-                if (result == MessageBoxResult.OK)
-                {
-                    DeleteSong(deleteSong.songTitle);
-                    Song? found = songList.Find(x => x.Name.Equals(deleteSong.songTitle));
-                    if (found != null) songList.Remove(found);
-                    RenewUploadedSongList();
-                }
+                if (deleteSong != null)
+                    if (result == MessageBoxResult.OK)
+                    {
+                        DeleteSong(deleteSong.songTitle);
+                        Song? found = songList.Find(x => x.Name.Equals(deleteSong.songTitle));
+                        if (found != null) songList.Remove(found);
+                        RenewUploadedSongList();
+                    }
             }
-					RenewUploadedSongList();
-				}
-			}
-
-
         }
 
         /// <summary>
@@ -192,21 +188,16 @@ namespace WpfView
         {
             SongListAdminPanel.Items.Clear();
             RemoveSongsList.Items.Clear();
+        }
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
         }
+
+
+        class FemkesListBoxItem : ListBoxItem
+        {
+            public string songTitle { get; set; }
+        }
     }
-
-    class FemkesListBoxItem : ListBoxItem
-    {
-        public string songTitle { get; set; }
-    }
-	{
-		public string songTitle { get; set; }
-	}
-
-
-
-
 }

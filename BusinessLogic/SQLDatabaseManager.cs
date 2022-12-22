@@ -22,6 +22,11 @@ namespace BusinessLogic
 			new Thread(new ThreadStart(Connect)).Start();
 		}
 
+        private void Connect()
+        {
+			ProgramSSH.ExecuteSshConnection();
+        }
+
         #region Users
         public async Task<User> GetUserByName(string username)
         {
@@ -356,7 +361,7 @@ namespace BusinessLogic
 			{
 				Highscore highscore = new()
 				{
-					User = await GetUser(await dataReader.GetFieldValueAsync<int>("idUser")),
+					User = await GetUserById(await dataReader.GetFieldValueAsync<int>("idUser")),
 					Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong")),
 					Score = await dataReader.GetFieldValueAsync<int>("score")
 				};
