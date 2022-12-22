@@ -41,6 +41,7 @@ namespace WpfView
         private void _mainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             AddSongs();
+            CreateShowLeaderboard();
         }
 
         /// <summary>
