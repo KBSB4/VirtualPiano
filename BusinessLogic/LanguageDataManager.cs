@@ -121,6 +121,34 @@ namespace BusinessLogic
 				{TranslationKey.Settings_Volume, "Volume" },
 				{TranslationKey.Settings_InputDevice, "Ingangsapparaat" },
 				{TranslationKey.Settings_Language, "Taal" },
+
+				///MenuBar
+				{TranslationKey.Menubar_SongSelect_Karaoke, "Karaoke" },
+				{TranslationKey.Menubar_SongSelect_SelectSong, "Lied kiezen" },
+				{TranslationKey.Menubar_SongSelect_Start, "Starten" },
+
+				//Account page
+				{TranslationKey.AccountPage_LoginButton, "Inloggen" },
+				{TranslationKey.AccountPage_LoginPassword, "Wachtwoord" },
+				{TranslationKey.AccountPage_LoginTitle, "Inloggen" },
+				{TranslationKey.AccountPage_LoginUsername, "Gebruikersnaam" },
+
+				{TranslationKey.AccountPage_RegisterTitle, "Nieuwe gebruiker" },
+				{TranslationKey.AccountPage_RegisterButton, "Registreren" },
+				{TranslationKey.AccountPage_RegisterEmail, "Email-adres" },
+				{TranslationKey.AccountPage_RegisterPassword, "Wachtwoord" },
+				{TranslationKey.AccountPage_RegisterPasswordConfirm, "Bevestig wachtwoord" },
+				{TranslationKey.AccountPage_RegisterUsername, "Gebruikersnaam" },
+
+				//Messagesboxes
+				{TranslationKey.MessageBox_HighscoreHigherThanText, "NL Highscore is higher than current score" },
+				{TranslationKey.MessageBox_HighscoreHigherThanCaption, "NL There is no reason to upload your score." },
+				{TranslationKey.MessageBox_MidiStillPlayingCaption, "NL MIDI is still playing" },
+				{TranslationKey.MessageBox_MidiStillPlayingText, "NL There is a MIDI still playing! Stop the playback of the current playing MIDI to continue" },
+				{TranslationKey.MessageBox_SelectSongBeforeStartCaption, "NL No MIDI selected" },
+				{TranslationKey.MessageBox_SelectSongBeforeStartText, "NL Select a MIDI File first before playing" },
+				{TranslationKey.MessageBox_NoMidiPlayingText, "NL There is no MIDI playing right now." },
+				{TranslationKey.MessageBox_NoMidiPlayingCaption, "NL No MIDI playing" },
 			};
 
 			//English
@@ -139,6 +167,33 @@ namespace BusinessLogic
 				{TranslationKey.Settings_InputDevice, "Input device" },
 				{TranslationKey.Settings_Language, "Language" },
 
+				//MenuBar
+				{TranslationKey.Menubar_SongSelect_Karaoke, "Karaoke" },
+				{TranslationKey.Menubar_SongSelect_SelectSong, "Select song" },
+				{TranslationKey.Menubar_SongSelect_Start, "Start" },
+
+				//Account page
+				{TranslationKey.AccountPage_LoginButton, "Log in" },
+				{TranslationKey.AccountPage_LoginPassword, "Password" },
+				{TranslationKey.AccountPage_LoginTitle, "Log in" },
+				{TranslationKey.AccountPage_LoginUsername, "Username" },
+
+				{TranslationKey.AccountPage_RegisterTitle, "New account" },
+				{TranslationKey.AccountPage_RegisterButton, "Sign up" },
+				{TranslationKey.AccountPage_RegisterEmail, "Emailadress" },
+				{TranslationKey.AccountPage_RegisterPassword, "Password" },
+				{TranslationKey.AccountPage_RegisterPasswordConfirm, "Confirm Password" },
+				{TranslationKey.AccountPage_RegisterUsername, "Username" },
+
+				//Messagesboxes
+				{TranslationKey.MessageBox_HighscoreHigherThanText, "Highscore is higher than current score" },
+				{TranslationKey.MessageBox_HighscoreHigherThanCaption, "There is no reason to upload your score." },
+				{TranslationKey.MessageBox_MidiStillPlayingCaption, "MIDI is still playing" },
+				{TranslationKey.MessageBox_MidiStillPlayingText, "There is a MIDI still playing! Stop the playback of the current playing MIDI to continue" },
+				{TranslationKey.MessageBox_SelectSongBeforeStartCaption, "No MIDI selected" },
+				{TranslationKey.MessageBox_SelectSongBeforeStartText, "Select a MIDI File first before playing" },
+				{TranslationKey.MessageBox_NoMidiPlayingText, "There is no MIDI playing right now." },
+				{TranslationKey.MessageBox_NoMidiPlayingCaption, "No MIDI playing" },
 
 			};
 
