@@ -25,6 +25,10 @@ namespace WpfView
             _mainMenu = mainMenu;
             DataContext = new DataContextSettings();
             InitializeComponent();
+
+            LanguageData languageData = LanguageController.GetAllLanguages();
+            if (LanguageBox is null) return;
+            IndexLanguage = LanguageBox.Items.IndexOf(languageData.languages.Where(lang => lang.Code == languageData.preferredLanguage).First().Name);
         }
 
         public SettingsPage(PracticePlayPiano ppp)
@@ -48,9 +52,6 @@ namespace WpfView
                     ToAddLanguage.Selected += ToAddLanguage_Selected;
                 }
             }
-
-            //TODO set current language
-           // LanguageBox.SelectedIndex = LanguageBox.Items.IndexOf(languageData.languages.Where(lang => lang.Code == languageData.preferredLanguage).First().Name);
         }
 
         /// <summary>
