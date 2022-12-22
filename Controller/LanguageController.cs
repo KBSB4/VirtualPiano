@@ -24,12 +24,18 @@ namespace Controller
 
         public static LanguageData GetLanguageData()
         {
+           
             return languageDataManager.GetLanguageData();
         }
 
         public static List<Language> GetAllLanguages()
         {
             return languageDataManager.GetAllLanguages();
+        }
+
+        public static void CreateJSON()
+        {
+            languageDataManager.CreateLanguages();
         }
     }
 }
