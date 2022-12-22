@@ -99,7 +99,7 @@ namespace WpfView
 
             if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
-            notesToBePressed.RemoveRange(0, 8);
+            notesToBePressed.RemoveRange(0, 2);
 
             if (notesToBePressed.Count > 0)
                 maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
@@ -119,17 +119,26 @@ namespace WpfView
                 CountDownImage.Visibility = Visibility.Visible;
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownReady.png", UriKind.Relative));
             }));
-            Thread.Sleep(2500);
+            Tempo x = Tempo.FromBeatsPerMinute(SongController.CurrentSong.File.GetTempoMap().GetTempoAtTime((MetricTimeSpan)TimeSpan.FromSeconds(20)).BeatsPerMinute);
+            double b = (60d / x.BeatsPerMinute) * 2.5d;
+            //double b = ((60d / 93d) * 5000d);
+            double y = b;
+            //int y = (int)Math.Ceiling(b);
+            Thread.Sleep(TimeSpan.FromSeconds(y));
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownSet.png", UriKind.Relative));
             }));
-            Thread.Sleep(2500);
+            //Thread.Sleep(2000);
+            Thread.Sleep(TimeSpan.FromSeconds(y));
+            //Thread.Sleep((MetricTimeSpan)TimeSpan.FromSeconds(y));
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownGo.png", UriKind.Relative));
             }));
-            Thread.Sleep(2500);
+            Thread.Sleep(TimeSpan.FromSeconds(y));
+            //Thread.Sleep(2000);
+            //Thread.Sleep((MetricTimeSpan)TimeSpan.FromSeconds(y));
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Hidden;
