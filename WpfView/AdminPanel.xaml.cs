@@ -113,7 +113,7 @@ namespace WpfView
             Difficulty d = (Difficulty)difficulty;
             Song song = new Song() { Description = descriptionTextBox.Text, Difficulty = d, FullFile = lastOpenedFile, File = MidiLogic.CurrentMidi, Name = titleTextBox.Text };
             await DatabaseController.UploadSong(song);
-            MakeSongVisable(song);
+            MakeSongVisible(song);
         }
 
 
@@ -127,7 +127,7 @@ namespace WpfView
             songList = songs.ToList();
             foreach (Song song in songs)
             {
-                MakeSongVisable(song);
+                MakeSongVisible(song);
             }
         }
 
@@ -135,10 +135,10 @@ namespace WpfView
         /// Fills a listbox with songs 
         /// </summary>
         /// <param name="song"></param>
-        public void MakeSongVisable(Song song)
+        public void MakeSongVisible(Song song)
         {
             ListBoxItem one = new ListBoxItem() { Content = song.Name };
-            ListBoxItem del = new FemkesListBoxItem() { songTitle = song.Name, Content = "X" };
+            ListBoxItem del = new FemkesListBoxItem() { SongTitle = song.Name, Content = "X" };
             SongListAdminPanel.Items.Add(one);
             RemoveSongsList.Items.Add(del);
         }
@@ -167,17 +167,23 @@ namespace WpfView
         private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
         {
             FemkesListBoxItem deleteSong = null;
+
+            deleteSong = (FemkesListBoxItem)((ListBox)sender).SelectedItem;
+
             if (deleteSong != null)
             {
-                var result = MessageBox.Show($"Are you sure u want to delete {deleteSong.songTitle}?", "Confirm Delete", MessageBoxButton.OKCancel);
-                if (deleteSong != null)
-                    if (result == MessageBoxResult.OK)
+                var result = MessageBox.Show($"Are you sure u want to delete {deleteSong.SongTitle}?", "Confirm Delete", MessageBoxButton.OKCancel);
+
+                if (result == MessageBoxResult.OK)
+                {
+                    DeleteSong(deleteSong.SongTitle);
+                    Song? found = songList.Find(x => x.Name.Equals(deleteSong.SongTitle));
+                    if (found != null)
                     {
-                        DeleteSong(deleteSong.songTitle);
-                        Song? found = songList.Find(x => x.Name.Equals(deleteSong.songTitle));
-                        if (found != null) songList.Remove(found);
+                        songList.Remove(found);
                         RenewUploadedSongList();
                     }
+                }
             }
         }
 
@@ -188,16 +194,22 @@ namespace WpfView
         {
             SongListAdminPanel.Items.Clear();
             RemoveSongsList.Items.Clear();
+            GenerateSongList();
         }
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            if (_mainMenu.loggedInUser is not null)
+            {
+                _mainMenu.loggedInUser = null;
+            }
+            _mainMenu.Account_ChangeIconBasedOnUser();
             NavigationService?.Navigate(_mainMenu);
         }
 
 
         class FemkesListBoxItem : ListBoxItem
         {
-            public string songTitle { get; set; }
+            public string SongTitle { get; set; }
         }
     }
 }

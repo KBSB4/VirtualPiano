@@ -79,9 +79,12 @@ namespace WpfView
         {
             if (SelectedCard is not null)
             {
-                Leaderboard.Children.Clear();
                 Highscore[] highscores = await DatabaseController.GetHighscores(SelectedCard.SongID);
+                //if (SelectedCard is not null)
+                //{
+                Leaderboard.Children.Clear();
                 Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores, SelectedCard.Description, _mainMenu.loggedInUser));
+                //}
             }
         }
 
@@ -90,9 +93,10 @@ namespace WpfView
         /// </summary>
         private async void AddSongs()
         {
-            SongCards.Children.Clear();
-            Song[] songs = await DatabaseController.GetAllSongs();
+            Song[]? songs = await DatabaseController.GetAllSongs();
 
+            SongCards.Children.Clear();
+            if (songs is null) return;
             foreach (var item in songs)
             {
                 SongCardControl songCardControl = new(item.Id, item.Name, item.Description, (int)item.Difficulty, this);
