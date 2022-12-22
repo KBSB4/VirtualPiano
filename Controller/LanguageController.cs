@@ -17,6 +17,11 @@ namespace Controller
             languageDataManager.SetPreferredLanguage(code);
         }
 
+        public static LanguageCode GetPreferredLanguage()
+        {
+            return languageDataManager.GetPreferredLanguage();
+        }
+
         public static List<Language> GetAllLanguages()
         {
             return languageDataManager.GetAllLanguages();
