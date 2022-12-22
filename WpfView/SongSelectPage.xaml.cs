@@ -98,6 +98,12 @@ namespace WpfView
                 SongCardControl songCardControl = new(item.Id, item.Name, item.Description, (int)item.Difficulty, this);
                 SongCards.Children.Add(songCardControl);
             }
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4, this);
+            //    SongCards.Children.Add(songCardControl);
+            //}
         }
 
         private void MainMenu_Click(object sender, RoutedEventArgs e)

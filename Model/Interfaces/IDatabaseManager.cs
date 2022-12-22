@@ -17,9 +17,15 @@ namespace Model.Interfaces
         #endregion
 
 		#region Users
-		public Task<User?> GetUser(string username);
-		public Task<User?> GetUser(int userID);
-		#endregion
+		public Task<User> GetUserByName(string username);
+        public Task<User?> GetUserById(int userID);
+
+		public Task UploadNewUser(User user);
+
+		public Task<User[]?> GetAllUsers();
+
+		public Task<User?> GetLoggingInUser(string username, string password);
+        #endregion
 
 		#region Highscore
 		public Task<Highscore[]?> GetHighscores(int songId);
