@@ -28,9 +28,9 @@ namespace WpfView
             DataContext = new DataContextSettings();
             InitializeComponent();
 
-            List<Language> languageData = LanguageController.GetAllLanguages();
+            List<Language> language = LanguageController.GetAllLanguages();
             if (LanguageBox is null) return;
-            IndexLanguage = LanguageBox.Items.IndexOf(languageData.Where(lang => lang.Code == LanguageController.GetPreferredLanguage()).First().Name);
+            IndexLanguage = LanguageBox.Items.IndexOf(language.Where(lang => lang.Code == LanguageController.GetPreferredLanguage()).First().Name);
         }
 
         public SettingsPage(PracticePlayPiano ppp)
