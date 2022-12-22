@@ -46,6 +46,11 @@ namespace BusinessLogic
             return currentLanguage.Translations[key];
         }
 
+		public List<Language> GetAllLanguages()
+		{
+			return GetLanguageData().languages;
+		}
+
 
 		//Menubar_BackToMain,
 		//      Menubar_Settings,
@@ -141,7 +146,7 @@ namespace BusinessLogic
 		private static void WriteLanguageData(LanguageData languageData)
 		{
 			string rararar = JsonConvert.SerializeObject(languageData, Formatting.Indented);
-			File.WriteAllText("C:\\Users\\Harris\\Source\\Repos\\KBSB4\\VirtualPiano\\BusinessLogic\\LanguageData.json", rararar);
+			File.WriteAllText("LanguageData.json", rararar);
 		}
 	}
 }

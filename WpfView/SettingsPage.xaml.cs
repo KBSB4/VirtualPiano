@@ -1,7 +1,9 @@
 ﻿using Controller;
 using Model;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,10 +38,10 @@ namespace WpfView
 
         public void GenerateLanguages()
         {
-            LanguageData languageData = LanguageController.GetAllLanguages();
+            List<Language> languages = LanguageController.GetAllLanguages();
             if (LanguageBox is null) return;
 
-            foreach (Language language in languageData.languages)
+            foreach (Language language in languages)
             {
                 if (!LanguageBox.Items.Cast<ComboBoxItem>().Any(cbi => cbi.Content.Equals(language.Name)))
                 {
@@ -53,10 +55,10 @@ namespace WpfView
            // LanguageBox.SelectedIndex = LanguageBox.Items.IndexOf(languageData.languages.Where(lang => lang.Code == languageData.preferredLanguage).First().Name);
         }
 
-        /// <summary>
-        /// Shows all the available MIDI-keyboard input devices
-        /// </summary>
-        public void GenerateInputDevices()
+		/// <summary>
+		/// Shows all the available MIDI-keyboard input devices
+		/// </summary>
+		public void GenerateInputDevices()
         {
             if (count == InputDevice.GetDevicesCount())
             {
@@ -110,8 +112,10 @@ namespace WpfView
             {
                 ComboBoxItem selecedItem = (ComboBoxItem)sender;
                 IndexLanguage = LanguageBox.Items.IndexOf(sender);
-                Language language = LanguageController.GetAllLanguages().languages.Where(lang => lang.Name.Equals(selecedItem.Content)).FirstOrDefault();
-                LanguageController.SetPreferredLanguage(language.Code);
+                Language? language = LanguageController.GetAllLanguages().Where(lang => lang.Name.Equals(selecedItem.Content)).FirstOrDefault();
+
+                if (language != null)
+                    LanguageController.SetPreferredLanguage(language.Code);
             }
             catch (Exception ex)
             {
