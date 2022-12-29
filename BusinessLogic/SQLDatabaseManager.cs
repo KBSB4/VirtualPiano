@@ -447,7 +447,7 @@ namespace BusinessLogic
         /// <returns><see cref="Task"/></returns>
         public async Task UploadHighscore(Highscore highscore)
         {
-            if (highscore is not null) return;
+            if (highscore is null) return;
             using SqlConnection connection = new(connectionString);
             string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
 

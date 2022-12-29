@@ -41,8 +41,7 @@ namespace WpfView
 
         Thread? updateVisualNoteThread;
 
-        //NOTE Temporary till we properly get current user for highscore
-        //Song currentSong;
+        private Song? selectedSong;
         private bool stopVisualNoteThread;
 
         public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
@@ -84,7 +83,7 @@ namespace WpfView
         /// <param name="songID"></param>
         public async void PlaySelectedSong(int songID)
         {
-            Song? selectedSong = await DatabaseController.GetSong(songID);
+            selectedSong = await DatabaseController.GetSong(songID);
 
             if (selectedSong is not null && selectedSong?.FullFile is not null)
             {
@@ -237,7 +236,7 @@ namespace WpfView
                         Highscore highscore = new()
                         {
                             User = _mainMenu.LoggedInUser,
-                            Song = SongController.CurrentSong,
+                            Song = selectedSong,
                             Score = score
                         };
 

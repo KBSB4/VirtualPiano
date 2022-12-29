@@ -196,7 +196,7 @@ namespace BusinessLogic
 		        {TranslationKey.Play_SongFinishedScreen_Title, "Upload Score?" },
                 {TranslationKey.Play_SongFinishedScreen_YourScore, "Your Score" },
                 {TranslationKey.Play_SongFinishedScreen_MaxScore, "Max Score" },
-                {TranslationKey.Play_SongFinishedScreen_UploadButton, "Upload Score" },
+                {TranslationKey.Play_SongFinishedScreen_UploadButton, "Upload" },
                 {TranslationKey.Play_SongFinishedScreen_MenuButton, "Back to Menu" },
 
 
