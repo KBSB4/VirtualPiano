@@ -117,7 +117,7 @@ namespace BusinessLogic
             {
                 return null;
             }
-            else if (user is not null)
+            else if (user is null)
             {
                 return "Please fill in an Email that is unique!";
             }
