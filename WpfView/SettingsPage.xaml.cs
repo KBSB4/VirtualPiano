@@ -1,7 +1,11 @@
 ﻿using Controller;
+using Model;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
@@ -21,12 +25,26 @@ namespace WpfView
             _mainMenu = mainMenu;
             DataContext = new DataContextSettings();
             InitializeComponent();
+			IsVisibleChanged += SettingsPage_IsVisibleChanged;
         }
 
-        /// <summary>
-        /// Shows all the available MIDI-keyboard input devices
-        /// </summary>
-        public void GenerateInputDevices()
+		private void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+            GenerateLanguages();
+            UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+            LanguageLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Language);
+            VolumeLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Volume);
+            InputDeviceLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_InputDevice);
+		}
+
+		/// <summary>
+		/// Shows all the available MIDI-keyboard input devices
+		/// </summary>
+		public void GenerateInputDevices()
         {
             if (count == InputDevice.GetDevicesCount())
             {
@@ -67,10 +85,7 @@ namespace WpfView
             }
             catch (Exception ex)
             {
-                if (ex is IndexOutOfRangeException)
-                {
-                    MessageBox.Show($"Selected item in combobox {input.Name} was out of range");
-                }
+
             }
         }
 
@@ -84,28 +99,56 @@ namespace WpfView
             NavigationService?.Navigate(_mainMenu);
         }
 
+
         /// <summary>
         /// Refreshes the ComboBoxItems when selected
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Input_DropDownOpened(object sender, EventArgs e)
+        private void DropDownOpened(object sender, EventArgs e)
         {
-            GenerateInputDevices();
-            input.Items.Refresh();
+            RefreshBoxes();
         }
 
-        /// <summary>
-        /// Update inputdevices items in settings
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void RefreshBoxes()
         {
-            _mainMenu.CheckInputDevice(IndexInputDevice);
             GenerateInputDevices();
             input.Items.Refresh();
+
         }
+
+        private void SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+
+			if (comboBox.Equals(LanguageBox))
+            {
+                List<Language> languages = LanguageController.GetAllLanguages();
+                LanguageCode code = languages[comboBox.SelectedIndex].Code;
+
+                LanguageController.SetPreferredLanguage(code);
+                UpdateUI();
+            }
+
+            RefreshBoxes();
+        }
+
+		public void GenerateLanguages()
+		{
+			LanguageData languageData = LanguageController.GetLanguageData();
+			if (LanguageBox is null) return;
+
+			foreach (Language language in languageData.languages)
+			{
+                if (LanguageBox.FindName(language.Name) is null)
+                {
+                    ComboBoxItem ToAddLanguage = new() { Content = language.Name };
+                    LanguageBox.Items.Add(ToAddLanguage);
+                }
+			}
+
+            LanguageBox.SelectedIndex = (int)languageData.preferredLanguage;
+		}
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {

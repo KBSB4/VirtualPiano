@@ -21,14 +21,27 @@ namespace WpfView
         {
             _mainMenu = mainMenu;
             PracticePiano = new PracticePlayPiano(_mainMenu, this);
-            IsVisibleChanged += _mainMenu_IsVisibleChanged;
+            IsVisibleChanged += MainMenu_IsVisibleChanged;
             InitializeComponent();
             AddSongs();
             KaraokeCheckBox.Checked += KaraokeCheckBox_Checked;
             KaraokeCheckBox.Unchecked += KaraokeCheckBox_Unchecked;
+			IsVisibleChanged += UI_IsVisibleChanged;
+		}
+
+		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+        {
+            TitleLabel.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_SelectSong);
+            KaraokeLabel.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_Karaoke);
+            StartButton.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_Start);
         }
 
-        private void KaraokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
+		private void KaraokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             SongController.DoKaroake = false;
         }
@@ -124,8 +137,8 @@ namespace WpfView
             }
             else
             {
-                MessageBox.Show("Select a song from the list first before starting",
-                "You can't play nothing", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_SelectSongBeforeStartText),
+                LanguageController.GetTranslation(TranslationKey.MessageBox_SelectSongBeforeStartCaption), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

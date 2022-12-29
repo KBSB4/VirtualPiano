@@ -57,13 +57,24 @@ namespace WpfView
             KeyDown += KeyPressed;
             KeyUp += KeyReleased;
 
+			IsVisibleChanged += UI_IsVisibleChanged;
+		}
+
+		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+        {
+            MenuBackButton.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
         }
 
-        /// <summary>
-        /// Get song from database by ID and start playing
-        /// </summary>
-        /// <param name="songID"></param>
-        public async void PlaySelectedSong(int songID)
+		/// <summary>
+		/// Get song from database by ID and start playing
+		/// </summary>
+		/// <param name="songID"></param>
+		public async void PlaySelectedSong(int songID)
         {
             Song? selectedSong = await DatabaseController.GetSong(songID);
 
@@ -238,8 +249,8 @@ namespace WpfView
                             }
                             else
                             {
-                                MessageBox.Show("Highscore is higher than current score",
-                                "There is no reason to upload your score.", MessageBoxButton.OK, MessageBoxImage.Information);
+                                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_HighscoreHigherThanText),
+                                LanguageController.GetTranslation(TranslationKey.MessageBox_HighscoreHigherThanCaption), MessageBoxButton.OK, MessageBoxImage.Information);
                             }
                         }
 

@@ -30,21 +30,22 @@ namespace WpfView
     {
         private byte[] lastOpenedFile;
 
-        private List<Song> songList = new();
-        private readonly MainMenu _mainMenu;
-        public AdminPanel(MainMenu mainMenu)
-        {
-            _mainMenu = mainMenu;
-            GenerateSongList();
-            InitializeComponent();
-        }
+		private List<Song> songList = new();
+		private readonly MainMenu _mainMenu;
+		public AdminPanel(MainMenu mainMenu)
+		{
+			_mainMenu = mainMenu;
+			GenerateSongList();
+			InitializeComponent();
+		}
 
-        /// <summary>
-        ///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
+
+		/// <summary>
+		///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
         {
             MidiLogic.CurrentMidi = null;
             var openFileDialog = new OpenFileDialog

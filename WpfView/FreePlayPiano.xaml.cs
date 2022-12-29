@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace WpfView
 {
@@ -40,13 +41,29 @@ namespace WpfView
                 IsBackground = true
             };
             updateVisualNoteThread.Start();
+			IsVisibleChanged += UI_IsVisibleChanged;
+		}
+
+		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+            BackMenu.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
+            SettingsMenuItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_Settings);
+            OpenItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Open);
+            PlayItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Play);
+            StopItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Stop);
+            KaraokeBox.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Karaoke);
         }
 
-        /// <summary>
-        /// Thread that updates the visual position of already placed notes
-        /// </summary>
-        /// <param name="obj"></param>
-        private void UpdateVisualNotes(object? obj)
+		/// <summary>
+		/// Thread that updates the visual position of already placed notes
+		/// </summary>
+		/// <param name="obj"></param>
+		private void UpdateVisualNotes(object? obj)
         {
             var next = DateTime.Now;
             while (true)
@@ -197,8 +214,8 @@ namespace WpfView
             }
             else if (SongController.CurrentSong.IsPlaying)
             {
-                MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
-                "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingText),
+                LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingCaption), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
@@ -257,14 +274,15 @@ namespace WpfView
             {
                 if (currentMidiFile is null)
                 {
-                    MessageBox.Show("Select a MIDI File first before playing",
-                    "No MIDI selected", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiSelectedText),
+                                        LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiSelectedCaption), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 if (SongController.CurrentSong is not null && SongController.CurrentSong.IsPlaying)
                 {
-                    MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
-                    "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingText),
+                    LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingCaption), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -283,8 +301,8 @@ namespace WpfView
             }
             else if (sender is not null)
             {
-                MessageBox.Show("There is no MIDI playing right now.",
-                "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiPlayingText),
+                LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiPlayingCaption), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion

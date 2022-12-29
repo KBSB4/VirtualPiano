@@ -30,7 +30,7 @@
                     <Image Source="/Images/SettingsIcon.png" Margin="30"></Image>
                 </Grid>
             </Button>
-            <Label Grid.Row="1" Grid.Column="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Settings</Label>
+            <Label x:Name="SettingsLabel" Grid.Row="1" Grid.Column="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Settings</Label>
 
             <Button Grid.Column="2" Grid.Row="1" Style="{StaticResource MenuButton}" Click="Practice_Button_Click">
                 <Grid>
@@ -38,7 +38,7 @@
                     <Image Source="/Images/PianoHeroLogo.png" Margin="40"></Image>
                 </Grid>
             </Button>
-            <Label Grid.Row="1" Grid.Column="2" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Play</Label>
+            <Label x:Name="PlayLabel" Grid.Row="1" Grid.Column="2" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Play</Label>
 
             <Button Grid.Column="3" Grid.Row="1" Style="{StaticResource MenuButton}" Click="FreePlay_Button_Click">
                 <Grid>
@@ -46,7 +46,7 @@
                     <Image Source="/Images/pianoIcon.png" Margin="60"></Image>
                 </Grid>
             </Button>
-            <Label Grid.Row="1" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Free-play</Label>
+            <Label x:Name="FreePlayLabel" Grid.Row="1" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Free-play</Label>
             
             <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource AccountButton}" Click="Account_Button_Click">
                 <Grid>

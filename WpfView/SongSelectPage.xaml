@@ -18,7 +18,7 @@
             <ColumnDefinition Width="2*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Image Source="pack://application:,,,/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
-        <Label HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Select a song</Label>
+        <Label x:Name="TitleLabel" HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Select a song</Label>
 
         <ScrollViewer Grid.Row="1" Grid.RowSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" >
             <WrapPanel Orientation="Horizontal" Name="SongCards" >
@@ -42,7 +42,7 @@
             </Viewbox>
 
             <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
-                <Label VerticalAlignment="Center" FontSize="30" Foreground="White" FontWeight="Bold">Karaoke mode</Label>
+                <Label x:Name="KaraokeLabel" VerticalAlignment="Center" FontSize="30" Foreground="White" FontWeight="Bold">Karaoke mode</Label>
                 <CheckBox VerticalAlignment="Center" Name="KaraokeCheckBox" Style="{StaticResource CircleCheckbox}" Width="30" Height="30"/>
             </StackPanel>
 

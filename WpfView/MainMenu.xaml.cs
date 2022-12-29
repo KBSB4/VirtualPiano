@@ -1,4 +1,6 @@
-﻿using Melanchall.DryWetMidi.Multimedia;
+﻿using Controller;
+using Melanchall.DryWetMidi.Multimedia;
+using Model;
 using Model.DatabaseModels;
 using System;
 using System.Diagnostics;
@@ -33,7 +35,19 @@ namespace WpfView
             AccountPage = new AccountPage(this, null);
             AdminPanel = new(this);
             Account_ChangeIconBasedOnUser();
-            CheckInputDevice(1);
+			IsVisibleChanged += MainMenu_IsVisibleChanged;
+        }
+
+		private void MainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+            UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+            SettingsLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Settings);
+            PlayLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Play);
+            FreePlayLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_FreePlay);
         }
 
         /// <summary>
@@ -101,7 +115,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void Settings_Button_Click(object sender, RoutedEventArgs e)
         {
-            SettingsPage.GenerateInputDevices(); // Gets all input devices
+            SettingsPage.RefreshBoxes();
             NavigationService?.Navigate(SettingsPage);
         }
 
