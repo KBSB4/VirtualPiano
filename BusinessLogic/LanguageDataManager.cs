@@ -104,11 +104,11 @@ namespace BusinessLogic
                 {TranslationKey.Menubar_SongSelect_Start, "Starten" },
 
 				//Upload dialog box
-		        {TranslationKey.Play_SongFinishedScreen_Title, "Score uploaden?" },
+		        {TranslationKey.Play_SongFinishedScreen_Title, "Upload?" },
                 {TranslationKey.Play_SongFinishedScreen_YourScore, "Uw score" },
                 {TranslationKey.Play_SongFinishedScreen_MaxScore, "Maximale Score" },
                 {TranslationKey.Play_SongFinishedScreen_UploadButton, "Score uploaden" },
-                {TranslationKey.Play_SongFinishedScreen_MenuButton, "Terug naar hoofdmenu" },
+                {TranslationKey.Play_SongFinishedScreen_MenuButton, "Hoofdmenu" },
 
 				//Messagesboxes
 				{TranslationKey.MessageBox_HighscoreHigherThanText, "Topscore is hoger dan behaalde score" },
