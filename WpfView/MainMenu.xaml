@@ -50,8 +50,8 @@
             
             <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource AccountButton}" Click="Account_Button_Click">
                 <Grid>
-                    <Rectangle Fill="White" Margin="32,55,32,55"></Rectangle>
-                    <Image Source="/Images/accountImage.png" Margin="20,40,20,40"></Image>
+                    <Rectangle Name="WhiteRectForIcon" Fill="White" Margin="32,55,32,55"></Rectangle>
+                    <Image Name="AccountIconImage"></Image>
                 </Grid>
             </Button>
         </Grid>

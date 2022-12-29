@@ -1,9 +1,13 @@
-﻿using System;
+﻿using BusinessLogic;
+using Controller;
+using Model.DatabaseModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Printing;
 using System.Security;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,11 +28,8 @@ namespace WpfView
     public partial class AccountPage : Page
     {
         private readonly MainMenu _mainMenu;
-        private SecureString? LoginUsername { get; set; }
-        private SecureString? LoginPassword { get; set; }
-        private SecureString? NewAccountUsername { get; set; }
-        private SecureString? NewAccountPassword { get; set; }
-        private SecureString? NewAccountConfirm { get; set; }
+
+        private bool AllFieldsAreValid { get; set; }
         public AccountPage(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
@@ -38,41 +39,135 @@ namespace WpfView
 
         private void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            LoginUsername = SaveStringSecure(Login_UsernameInput.Text);
-            LoginPassword = SaveStringSecure(Login_PasswordInput.Password);
-            ClearLoginInput();
+            Login_NameAndPassAreValid(Login_UsernameInput.Text, Login_PasswordInput.Password);
         }
 
         private void Create_Button_Click(object sender, RoutedEventArgs e)
         {
-            NewAccountUsername = SaveStringSecure(NewAccount_UsernameInput.Text);
-            NewAccountPassword = SaveStringSecure(NewAccount_PasswordInput.Password);
-            NewAccountConfirm = SaveStringSecure(NewAccount_ConfirmInput.Password);
-            ClearNewAccountInput();
+            //NewAccount_UsernameIsUnique(NewAccount_UsernameInput.Text);
+            NewAccount_NameAndPassAreUnique(NewAccount_UsernameInput.Text, NewAccount_PasswordInput.Password);
+            //NewAccount_PassAndConfirmPassAreEqual(NewAccount_PasswordInput.Password, NewAccount_ConfirmInput.Password);
+            NewAccount_UploadNewUser();
         }
 
-        private SecureString SaveStringSecure(string password)
+        private async void NewAccount_UploadNewUser()
         {
-            SecureString secureString = new SecureString();
-            foreach (char charachter in password)
+            if(AllFieldsAreValid) 
             {
-                secureString.AppendChar(charachter);
+                User user = new();
+                user.Name = NewAccount_UsernameInput.Text;
+                user.Password = NewAccount_PasswordInput.Password;
+                user.Email = NewAccount_EmailInput.Text;
+                await DatabaseController.UploadNewUser(user);
             }
-            return secureString;
         }
 
-        private void ClearLoginInput()
+        #region Validation Methods
+
+        private async void Login_NameAndPassAreValid(string usernameInput, string passwordInput)
         {
-            Login_UsernameInput.Text = "";
-            Login_PasswordInput.Password = "";
+            User? user = await DatabaseController.GetLoggingInUser(usernameInput, passwordInput);
+            if (ValidationController.AccountPage_Login_UserCredentialsAreValid(user))
+            {
+                Login_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+                Login_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+                _mainMenu.loggedInUser = user;
+                if (user is not null && user.IsAdmin) NavigationService?.Navigate(_mainMenu.AdminPanel);
+                else
+                {
+                    NavigationService?.Navigate(_mainMenu); 
+                    _mainMenu.Account_ChangeIconBasedOnUser();
+                }
+            }
+            else
+            {
+                AllFieldsAreValid = false;
+                Login_UsernameInput.Text = string.Empty;
+                Login_PasswordInput.Password= string.Empty;
+                Login_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+                Login_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+            }
         }
 
-        private void ClearNewAccountInput()
+        private async void NewAccount_UsernameIsUnique(string username)
         {
-            NewAccount_UsernameInput.Text = "";
-            NewAccount_PasswordInput.Password = "";
-            NewAccount_ConfirmInput.Password = "";
+            User? user = await DatabaseController.GetUserByName(username);
+            if (ValidationController.AccountPage_NewAccount_UsernameIsUnique(user))
+            {
+                AllFieldsAreValid = true;
+                NewAccount_UsernameInput.Text = string.Empty;
+                NewAccount_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            }
+            else
+            {
+                AllFieldsAreValid = false;
+                NewAccount_UsernameInput.Text = string.Empty;
+                NewAccount_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+            }
         }
+
+        private async void NewAccount_NameAndPassAreUnique(string username, string password)
+        {
+            User? user = await DatabaseController.GetLoggingInUser(username, password);
+            if (ValidationController.AccountPage_NewAccount_UserCredentialsAreValid(user))
+            {
+                AllFieldsAreValid = true;
+                NewAccount_UsernameInput.Text = string.Empty;
+                NewAccount_PasswordInput.Password = string.Empty;
+                NewAccount_ConfirmInput.Password = string.Empty;
+                NewAccount_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+                NewAccount_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            }
+            else
+            {
+                AllFieldsAreValid = false;
+                NewAccount_UsernameInput.Text = string.Empty;
+                NewAccount_PasswordInput.Password = string.Empty;
+                NewAccount_ConfirmInput.Password = string.Empty;
+                NewAccount_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+                NewAccount_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+            }
+            return;
+        }
+
+        private void NewAccount_PassAndConfirmPassAreEqual(string password, string confirmpass)
+        {
+            if (ValidationController.AccountPage_NewAccount_PassAndConfirmPassAreEqual(password, confirmpass))
+            {
+                AllFieldsAreValid = true;
+                NewAccount_ConfirmInput.Password = string.Empty;
+                NewAccount_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+                NewAccount_ConfirmInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+            }
+            else
+            {
+                AllFieldsAreValid = false;
+                NewAccount_PasswordInput.Password = string.Empty;
+                NewAccount_ConfirmInput.Password = string.Empty;
+                NewAccount_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+                NewAccount_ConfirmInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+            }
+            return;
+        }
+
+        #endregion
+
+        #region Fields clear methods
+
+        private void ClearLoginFields()
+        {
+            Login_UsernameInput.Text = string.Empty;
+            Login_PasswordInput.Password = string.Empty;
+        }
+
+        private void ClearNewAccountFields()
+        {
+            NewAccount_UsernameInput.Text = string.Empty;
+            NewAccount_EmailInput.Text = string.Empty;
+            NewAccount_PasswordInput.Password = string.Empty;
+            NewAccount_ConfirmInput.Password = string.Empty;
+        }
+        #endregion
 
         #region Menubar event clicks
 
@@ -83,7 +178,10 @@ namespace WpfView
         /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
+            _mainMenu.Account_ChangeIconBasedOnUser();
             NavigationService?.Navigate(_mainMenu);
+            ClearLoginFields();
+            ClearNewAccountFields();
         }
 
         #endregion
