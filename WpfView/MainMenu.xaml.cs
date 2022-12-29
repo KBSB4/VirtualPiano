@@ -126,8 +126,8 @@ namespace WpfView
             if (LoggedInUser is null) NavigationService?.Navigate(AccountPage);
             else
             {
-                MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes)
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if(result == MessageBoxResult.Yes) 
                 {
                     LoggedInUser = null;
                     Account_ChangeIconBasedOnUser();
