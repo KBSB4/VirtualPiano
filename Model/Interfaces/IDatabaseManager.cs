@@ -17,7 +17,7 @@ namespace Model.Interfaces
         #endregion
 
 		#region Users
-		public Task<User> GetUserByName(string username);
+		public Task<User?> GetUserByName(string username);
         public Task<User?> GetUserById(int userID);
 
 		public Task UploadNewUser(User user);

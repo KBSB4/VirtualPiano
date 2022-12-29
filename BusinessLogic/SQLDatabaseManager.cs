@@ -28,7 +28,7 @@ namespace BusinessLogic
         }
 
         #region Users
-        public async Task<User> GetUserByName(string username)
+        public async Task<User?> GetUserByName(string username)
         {
             using (SqlConnection connection = new(connectionString))
             {
@@ -38,9 +38,9 @@ namespace BusinessLogic
 
                 SqlCommand command = new(query, connection);
 
-                SqlParameter userIdParam = new("@username", SqlDbType.VarChar) { Value = username };
+                SqlParameter userNameParam = new("@username", SqlDbType.VarChar) { Value = username };
 
-                command.Parameters.Add(userIdParam);
+                command.Parameters.Add(userNameParam);
 
                 SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
