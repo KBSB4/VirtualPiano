@@ -28,7 +28,7 @@ namespace BusinessLogic
             }
             else if (user is null) 
             {
-                return "PLease fill in an Username that exists!";
+                return "Please fill in an Username that exists!";
             }
             else
             {
