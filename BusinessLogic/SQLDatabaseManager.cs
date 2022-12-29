@@ -22,10 +22,10 @@ namespace BusinessLogic
 			new Thread(new ThreadStart(Connect)).Start();
 		}
 
-		private void Connect()
-		{
-			ProgramSSH.ExecuteSshConnection();
-		}
+            private void Connect() 
+            {
+                ProgramSSH.ExecuteSshConnection();
+            }
 
 		#region Users
 		public async Task<User?> GetUserByName(string username)
@@ -124,7 +124,7 @@ namespace BusinessLogic
 			return result;
 		}
 
-		private static async Task<User[]> ReadUsers(SqlDataReader dataReader)
+        private async Task<User[]> ReadUsers(SqlDataReader dataReader)
 		{
 			List<User> result = new();
 
@@ -135,7 +135,7 @@ namespace BusinessLogic
 					Name = await dataReader.GetFieldValueAsync<string>("username"),
 					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
 					Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
-					Email = await dataReader.GetFieldValueAsync<string>("email"),
+					Email = await dataReader.IsDBNullAsync("email") ? null : await dataReader.GetFieldValueAsync<string>("email"),
 					IsAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
 				});
 			}
@@ -158,7 +158,7 @@ namespace BusinessLogic
 
 			SqlParameter passwordParam = new("@passphrase", SqlDbType.VarChar) { Value = user.Password };
 
-			SqlParameter isAdminParam = new("@isAdmin", SqlDbType.TinyInt) { Value = user.IsAdmin };
+                SqlParameter isAdminParam = new("@isAdmin", SqlDbType.TinyInt) { Value = user.IsAdmin };
 
 			SqlParameter emailParam = new("@email", SqlDbType.VarChar) { Value = user.Email };
 
@@ -370,10 +370,11 @@ namespace BusinessLogic
 			return highscores.ToArray();
 		}
 
-		public async Task UploadHighscore(Highscore highscore)
-		{
-			using SqlConnection connection = new(connectionString);
-			string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
+        public async Task UploadHighscore(Highscore highscore)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
 
 			await connection.OpenAsync();
 
@@ -382,24 +383,19 @@ namespace BusinessLogic
 				Value = highscore.Song.Id
 			};
 
-			SqlParameter userIdParam = new("@userId", SqlDbType.Int)
-			{
-				Value = highscore.User.Id
-			};
+                SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
 
-			SqlParameter scoreParam = new("@score", SqlDbType.Int)
-			{
-				Value = highscore.Score
-			};
+                SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
 
 			SqlCommand command = new(query, connection);
 
-			command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
+                command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
 
-			await command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
 
-			await CloseAndDispose(connection, command);
-		}
+                await CloseAndDispose(connection, command);
+            }
+        }
 
 		public async Task UpdateHighscore(Highscore highscore)
 		{
@@ -420,20 +416,21 @@ namespace BusinessLogic
 
 			await command.ExecuteNonQueryAsync();
 
-			await CloseAndDispose(connection, command);
-		}
-		#endregion
+				await CloseAndDispose(connection, command);
+			}
 
-		private static async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
-		{
-			await CloseAndDispose(connection, command);
-			await dataReader.DisposeAsync();
-		}
+        #endregion
 
-		private static async Task CloseAndDispose(SqlConnection connection, SqlCommand command)
-		{
-			await connection.CloseAsync();
-			await command.DisposeAsync();
-		}
-	}
+        private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
+        {
+            await CloseAndDispose(connection, command);
+            await dataReader.DisposeAsync();
+        }
+
+        private async Task CloseAndDispose(SqlConnection connection, SqlCommand command)
+        {
+            await connection.CloseAsync();
+            await command.DisposeAsync();
+        }
+    }
 }

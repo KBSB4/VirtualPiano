@@ -21,7 +21,7 @@ namespace WpfView
         {
             _mainMenu = mainMenu;
             PracticePiano = new PracticePlayPiano(_mainMenu, this);
-            _mainMenu.IsVisibleChanged += MainMenu_IsVisibleChanged;
+            IsVisibleChanged += _mainMenu_IsVisibleChanged;
             InitializeComponent();
             AddSongs();
             KaraokeCheckBox.Checked += KaraokeCheckBox_Checked;
