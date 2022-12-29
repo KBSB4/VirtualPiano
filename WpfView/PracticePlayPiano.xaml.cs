@@ -23,20 +23,24 @@ namespace WpfView
     /// </summary>
     public partial class PracticePlayPiano : Page
     {
+        //Window properties
         private readonly MainMenu? _mainMenu;
         private readonly SongSelectPage _songSelectPage;
         private readonly PianoGridGenerator pianoGrid;
         readonly PracticeNotesGenerator practiceNotes;
 
-        bool hasStarted = false;
+        //Prevents playing before song starts and allows dialogbox to appear
+        bool Playing = false;
 
+        //Score properties
         int score = 0;
         List<PianoKey>? notesToBePressed;
         readonly List<PianoKey> currentlyPlaying = new();
         private const int MAXNOTESCORE = 1000;
         private int maxTotalScore = 0;
 
-        private Song currentSong;
+        //NOTE Temporary till we properly get current user for highscore
+        Song currentSong;
 
         public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
         {
@@ -52,6 +56,10 @@ namespace WpfView
 
         }
 
+        /// <summary>
+        /// Get song from database by ID and start playing
+        /// </summary>
+        /// <param name="songID"></param>
         public async void PlaySelectedSong(int songID)
         {
             Song? x = await DatabaseController.GetSong(songID);
@@ -76,7 +84,7 @@ namespace WpfView
             updateVisualNoteThread.Start();
 
             SongController.PlaySong();
-            hasStarted = true;
+            Playing = true;
         }
 
         /// <summary>
@@ -156,11 +164,15 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Opens dialog box after song has finished played
+        /// </summary>
         private async void UploadScoreDialog()
         {
-            if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && hasStarted)
+            if (SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying && Playing)
             {
-                hasStarted = false;
+                //Open UploadScoreDialog
+                Playing = false;
                 bool? dialogResult = false;
                 UploadScoreDialog? uploadScoreDialog = null;
                 Dispatcher.Invoke(new Action(() =>
@@ -169,10 +181,12 @@ namespace WpfView
                     dialogResult = uploadScoreDialog.ShowDialog();
                 }));
 
+                //If true, we upload
                 if ((bool)dialogResult)
                 {
                     if (true) //TODO if logged in
                     {
+                        //TODO wait for log in to be implemented and do this better
                         Highscore highscore = new()
                         {
                             User = DatabaseController.GetUserByID(7).Result,
@@ -180,24 +194,26 @@ namespace WpfView
                             Score = score
                         };
 
-                        //Check if score is already in the database
+                        //Check if score is already in the database so we just update it
                         Highscore[] highscores = await DatabaseController.GetHighscores(currentSong.Id);
                         Highscore? FoundScore = highscores.Where(score => score.User.Id == highscore.User.Id).FirstOrDefault();
 
-                        if(FoundScore is null)
+                        if (FoundScore is null)
                         {
                             await DatabaseController.UploadHighscore(highscore);
-                        } else
+                        }
+                        else
                         {
                             if (FoundScore.Score < highscore.Score)
                             {
                                 await DatabaseController.UpdateHighscore(highscore);
-                            } else
+                            }
+                            else
                             {
                                 MessageBox.Show("Highscore is higher than current score",
                                 "There is no reason to upload your score.", MessageBoxButton.OK, MessageBoxImage.Information);
                             }
-                        }   
+                        }
 
                         //Go to menu
                         Dispatcher.Invoke(new Action(() =>
@@ -223,7 +239,7 @@ namespace WpfView
                             {
                                 //open dialogue box again
                                 accountPage = null;
-                                hasStarted = true; //So we can open the dialog again
+                                Playing = true; //So we can open the dialog again
                                 UploadScoreDialog();
                                 return;
                             }
@@ -273,7 +289,7 @@ namespace WpfView
         /// <param name="e"></param>
         public void OnMidiEventReceived(object? sender, MidiEventReceivedEventArgs e)
         {
-            if (hasStarted)
+            if (Playing)
             {
                 PianoKey? key = PianoController.ParseMidiNote(e.Event);
 
@@ -290,7 +306,7 @@ namespace WpfView
         /// <param name="e"></param>
         public void KeyPressed(object? source, KeyEventArgs e)
         {
-            if (hasStarted)
+            if (Playing)
             {
                 int intValue = (int)e.Key;
 
@@ -379,13 +395,12 @@ namespace WpfView
                 if (maxTotalScore > 0)
                 {
                     ScoreBar.Value = Math.Round((double)score / maxTotalScore * 100);
-                    ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
                 }
                 else
                 {
                     ScoreBar.Value = 100;
-					ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
-				}
+                }
+                ScoreLabel.Content = "Score = " + score + "/" + maxTotalScore;
             }));
         }
 
@@ -469,7 +484,7 @@ namespace WpfView
         /// <param name="e"></param>
         public void KeyReleased(object source, KeyEventArgs e)
         {
-            if (hasStarted)
+            if (Playing)
             {
                 int intValue = (int)e.Key;
                 PianoKey? key = PianoController.GetReleasedKey(intValue);
@@ -484,7 +499,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
-            hasStarted = false; //TODO rename name to be more clear
+            Playing = false; //TODO rename name to be more clear
             SongController.StopSong();
             NavigationService?.Navigate(_songSelectPage);
         }
