@@ -16,10 +16,10 @@ namespace BusinessLogic
             "Password=Backing-Crumpet4;" +
             "TrustServerCertificate=True;";
 
-        public SQLDatabaseManager()
-        {
-            //ProgramSSH.ExecuteSshConnection();
-        }
+		public SQLDatabaseManager()
+		{
+			ProgramSSH.ExecuteSshConnection();
+		}
 
         #region Users
         public async Task<User> GetUserByName(string username)
@@ -127,20 +127,20 @@ namespace BusinessLogic
         }
 
         private async Task<User[]> ReadUsers(SqlDataReader dataReader)
-        {
-            List<User> result = new();
+		{
+			List<User> result = new();
 
-            while (await dataReader.ReadAsync())
-            {
-                result.Add(new User()
-                {
-                    Name = await dataReader.GetFieldValueAsync<string>("username"),
-                    Id = await dataReader.GetFieldValueAsync<int>("idUser"),
-                    Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
-                    Email = await dataReader.GetFieldValueAsync<string>("email"),
-                    isAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
-                });
-            }
+			while (await dataReader.ReadAsync())
+			{
+				result.Add(new User()
+				{
+					Name = await dataReader.GetFieldValueAsync<string>("username"),
+					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
+					Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
+					Email = await dataReader.IsDBNullAsync("email") ? null : await dataReader.GetFieldValueAsync<string>("email"),
+					isAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
+				});
+			}
 
             return result.ToArray();
         }
@@ -405,6 +405,30 @@ namespace BusinessLogic
                 await CloseAndDispose(connection, command);
             }
         }
+
+        public async Task UpdateHighscore(Highscore highscore)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "UPDATE SongScore SET score = @score WHERE idSong = @songId AND idUser = @userId";
+
+                await connection.OpenAsync();
+
+                SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
+
+                SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
+
+                SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
+
+                SqlCommand command = new(query, connection);
+
+                command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
+
+                await command.ExecuteNonQueryAsync();
+
+				await CloseAndDispose(connection, command);
+			}
+		}
 
         public async Task UpdateHighscore(Highscore highscore)
         {

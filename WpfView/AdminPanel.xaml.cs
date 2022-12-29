@@ -34,14 +34,14 @@ namespace WpfView
 	{
         private byte[] lastOpenedFile;
 
-        private List<Song> songList = new();
-        private MainMenu _mainMenu;
-        public AdminPanel(MainMenu mainMenu)
-        {
-            _mainMenu = mainMenu;
-            GenerateSongList();
-            InitializeComponent();
-        }
+		private List<Song> songList = new();
+		private MainMenu _mainMenu;
+		public AdminPanel(MainMenu mainMenu)
+		{
+			_mainMenu = mainMenu;
+			GenerateSongList();
+			InitializeComponent();
+		}
 
         /// <summary>
         ///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>

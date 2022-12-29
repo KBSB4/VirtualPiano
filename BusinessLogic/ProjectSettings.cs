@@ -9,7 +9,8 @@ namespace BusinessLogic
 			{ PianoHeroPath.PianoSoundsFolder, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/Piano/" },
 			{ PianoHeroPath.StartTune, "../../../../BusinessLogic/PianoSoundPlayer/Sounds/StartTune.mid" },
 			{ PianoHeroPath.ImagesFolder, "/Images/"},
-			{ PianoHeroPath.CMDFiles, "../../../../BusinessLogic/CMDFiles/databaseConnect.bat"}
+			{ PianoHeroPath.BatchFolder, "../../../../BusinessLogic/BatchFiles/plink.exe"}
+
 		};
 
 		/// <summary>
@@ -19,7 +20,7 @@ namespace BusinessLogic
 		/// <returns></returns>
 		public static string GetPath(PianoHeroPath directory)
 		{
-            return paths[directory];
+			return paths[directory];
 		}
     }
 
@@ -34,6 +35,6 @@ namespace BusinessLogic
 		PianoSoundsFolder,
 		StartTune,
 		ImagesFolder,
-		CMDFiles
+		BatchFolder
 	}
 }

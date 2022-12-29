@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Controller;
+using System;
 using System.Data;
 using System.Linq;
 using System.Windows;
@@ -122,5 +123,11 @@ namespace WpfView
                 input.Items.Refresh();
             }
         }
-    }
+
+		private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+            //Volume changed
+            PianoController.SetVolume((float)(e.NewValue / ((Slider)e.Source).Maximum));
+		}
+	}
 }
