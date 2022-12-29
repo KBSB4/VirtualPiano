@@ -429,30 +429,6 @@ namespace BusinessLogic
 				await CloseAndDispose(connection, command);
 			}
 		}
-
-        public async Task UpdateHighscore(Highscore highscore)
-        {
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = "UPDATE SongScore SET score = @score WHERE idSong = @songId AND idUser = @userId";
-
-                await connection.OpenAsync();
-
-                SqlParameter songIdParam = new SqlParameter("@songId", SqlDbType.Int) { Value = highscore.Song.Id };
-
-                SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
-
-                SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
-
-                SqlCommand command = new(query, connection);
-
-                command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
-
-                await command.ExecuteNonQueryAsync();
-
-                await CloseAndDispose(connection, command);
-            }
-        }
         #endregion
 
         private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
