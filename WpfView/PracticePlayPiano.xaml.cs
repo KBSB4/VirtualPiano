@@ -459,7 +459,10 @@ namespace WpfView
 
                     if (notesToBePressed is null) return;
 
-                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds)).FirstOrDefault();
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => {
+                        if (item.TimeStamp is null) return 99999;
+                        return Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds);
+                        }).FirstOrDefault();
 
                     if (closestNote is not null && !closestNote.PressedDown)
                     {

@@ -191,10 +191,12 @@ namespace WpfView
 
         private async void UploadNewUser()
         {
-            User user = new();
-            user.Name = NewAccount_UsernameInput.Text;
-            user.Password = NewAccount_PasswordInput.Password;
-            user.Email = NewAccount_EmailInput.Text;
+            User user = new()
+            {
+                Name = NewAccount_UsernameInput.Text,
+                Password = NewAccount_PasswordInput.Password,
+                Email = NewAccount_EmailInput.Text
+            };
             await DatabaseController.UploadNewUser(user);
             ClearAllFields();
             SetFieldSuccesBackground(NewAccount_PasswordInput);
@@ -205,34 +207,34 @@ namespace WpfView
 
         #region Validation Feedback Methods
 
-        private void SetFieldErrorBackground(TextBox textBox)
+        private static void SetFieldErrorBackground(TextBox textBox)
         {
             textBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
             textBox.Clear();
         }
 
-        private void SetFieldErrorBackground(PasswordBox passwordBox)
+        private static void SetFieldErrorBackground(PasswordBox passwordBox)
         {
             passwordBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
             passwordBox.Clear();
         }
 
-        private void SetFieldSuccesBackground(TextBox textBox)
+        private static void SetFieldSuccesBackground(TextBox textBox)
         {
             textBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
 
-        private void SetFieldSuccesBackground(PasswordBox passwordBox)
+        private static void SetFieldSuccesBackground(PasswordBox passwordBox)
         {
             passwordBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
 
-        private void ClearField(TextBox textBox)
+        private static void ClearField(TextBox textBox)
         {
             textBox.Clear();
         }
 
-        private void ClearField(PasswordBox passwordBox)
+        private static void ClearField(PasswordBox passwordBox)
         {
             passwordBox.Clear();
         }
@@ -253,8 +255,7 @@ namespace WpfView
 
         private void ClearErrorMessage()
         {
-            if (FinalErrorMessage is not null)
-                FinalErrorMessage.Clear();
+            FinalErrorMessage?.Clear();
         }
 
         private void ClearAllFields()

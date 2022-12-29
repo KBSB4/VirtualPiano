@@ -158,9 +158,9 @@ namespace WpfView
         public void GenerateLanguages()
         {
             LanguageData? languageData = LanguageController.GetLanguageData();
-            if (LanguageBox is not null && languageData?.languages is not null)
+            if (LanguageBox is not null && languageData?.Languages is not null)
             {
-                foreach (Language language in languageData.languages)
+                foreach (Language language in languageData.Languages)
                 {
                     if (!LanguageBox.Items.Cast<ComboBoxItem>().Any(cbi => cbi.Content.Equals(language.Name)))
                     {
@@ -168,7 +168,7 @@ namespace WpfView
                         LanguageBox.Items.Add(ToAddLanguage);
                     }
                 }
-                LanguageBox.SelectedIndex = (int)languageData.preferredLanguage;
+                LanguageBox.SelectedIndex = (int)languageData.PreferredLanguage;
             }
         }
 

@@ -60,11 +60,11 @@ namespace BusinessLogic
             for (int i = 0; i < AmountOfKeys; i++)
             {
                 PianoKey key = piano.PianoKeys[i];
-                if (piano.lowerOctaveActive) key.Octave += 2;
+                if (piano.LowerOctaveActive) key.Octave += 2;
                 else key.Octave -= 2;
             }
 
-            piano.lowerOctaveActive = !piano.lowerOctaveActive;
+            piano.LowerOctaveActive = !piano.LowerOctaveActive;
         }
 
         /// <summary>

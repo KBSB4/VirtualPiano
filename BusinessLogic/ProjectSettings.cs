@@ -2,12 +2,14 @@
 {
     public static class ProjectSettings
     {
-        public static Dictionary<PianoHeroPath, string> paths = new()
+        private static Dictionary<PianoHeroPath, string> paths = new()
         {
             { PianoHeroPath.PianoSoundsFolder, "BusinessLogic.PianoSoundPlayer.Sounds.Piano." },
             { PianoHeroPath.StartTune, "BusinessLogic.PianoSoundPlayer.Sounds.StartTune.mid" },
             { PianoHeroPath.ImagesFolder, "/Images/"}
         };
+
+        public static Dictionary<PianoHeroPath, string> Paths { get => paths; set => paths = value; }
 
         /// <summary>
         /// Get path of directory
@@ -16,7 +18,7 @@
         /// <returns></returns>
         public static string GetPath(PianoHeroPath directory)
         {
-            return paths[directory];
+            return Paths[directory];
         }
     }
 

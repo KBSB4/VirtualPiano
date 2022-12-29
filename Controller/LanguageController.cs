@@ -5,7 +5,7 @@ namespace Controller
 {
     public static class LanguageController
     {
-        private static LanguageDataManager languageDataManager = new();
+        private static readonly LanguageDataManager languageDataManager = new();
 
         
         public static string? GetTranslation(TranslationKey translationKey)

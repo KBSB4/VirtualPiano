@@ -2,7 +2,7 @@
 {
     public class LanguageData
     {
-        public List<Language>? languages;
-        public LanguageCode preferredLanguage;
+        public List<Language>? Languages;
+        public LanguageCode PreferredLanguage;
     }
 }

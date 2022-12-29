@@ -38,7 +38,7 @@ namespace BusinessLogic
             LanguageData? languageData = GetLanguageData();
             if (languageData is not null)
             {
-                languageData.preferredLanguage = code;
+                languageData.PreferredLanguage = code;
                 WriteLanguageData(languageData);
                 currentLanguage = GetLanguage(GetPreferredLanguage());
             }
@@ -52,7 +52,7 @@ namespace BusinessLogic
         {
             LanguageData? languageData = GetLanguageData();
             if (languageData is null) return LanguageCode.EN;
-            return languageData.preferredLanguage;
+            return languageData.PreferredLanguage;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace BusinessLogic
         {
             LanguageData? languageData = GetLanguageData();
             if (languageData is null) return null;
-            return languageData.languages?.Where(lang => lang.Code == code).FirstOrDefault();
+            return languageData.Languages?.Where(lang => lang.Code == code).FirstOrDefault();
         }
 
         /// <summary>
@@ -79,14 +79,14 @@ namespace BusinessLogic
         }
 
         /// <summary>
-        /// Returns a list of all available languages
+        /// Returns a list of all available Languages
         /// </summary>
         /// <returns>List of <see cref="Language"/></returns>
         public List<Language>? GetAllLanguages()
         {
             LanguageData? languageData = GetLanguageData();
             if (languageData is null) return null;
-            return languageData.languages;
+            return languageData.Languages;
         }
 
         /// <summary>
@@ -98,12 +98,13 @@ namespace BusinessLogic
 
             LanguageData languageData = new();
 
-            Language dutch = new Language();
+            Language dutch = new()
+            {
+                //Nederlands
+                Code = LanguageCode.NL,
+                Name = "Nederlands",
+                Translations = new() {
 
-            //Nederlands
-            dutch.Code = LanguageCode.NL;
-            dutch.Name = "Nederlands";
-            dutch.Translations = new() {
                 //Main menu
 				{TranslationKey.MainMenu_Settings, "Instellingen" },
                 {TranslationKey.MainMenu_Play, "Spelen" },
@@ -158,13 +159,15 @@ namespace BusinessLogic
                 {TranslationKey.MessageBox_NoMidiPlayingCaption, "Er speelt geen midi" },
                 {TranslationKey.MessageBox_NoMidiSelectedText, "Er is geen midi geselecteerd" },
                 {TranslationKey.MessageBox_NoMidiSelectedCaption, "Selecteer eerst een midi" },
+            }
             };
 
             //English
-            Language english = new Language();
-            english.Code = LanguageCode.EN;
-            english.Name = "English";
-            english.Translations = new()
+            Language english = new()
+            {
+                Code = LanguageCode.EN,
+                Name = "English",
+                Translations = new()
             {
                 //Main menu
 				{TranslationKey.MainMenu_Settings, "Settings" },
@@ -222,9 +225,10 @@ namespace BusinessLogic
                 {TranslationKey.MessageBox_NoMidiSelectedText, "No midi selected! " },
                 {TranslationKey.MessageBox_NoMidiSelectedCaption, "Select a midi first before playing" },
 
+            }
             };
 
-            languageData.languages = new()
+            languageData.Languages = new()
             {
                 english,
                 dutch
@@ -235,7 +239,7 @@ namespace BusinessLogic
             var r = new RegionInfo(ci.LCID);
             string regionName = r.TwoLetterISORegionName;
 
-            languageData.preferredLanguage = (LanguageCode)Enum.Parse(typeof(LanguageCode), regionName);
+            languageData.PreferredLanguage = (LanguageCode)Enum.Parse(typeof(LanguageCode), regionName);
             WriteLanguageData(languageData);
             currentLanguage = GetLanguage(GetPreferredLanguage());
         }
