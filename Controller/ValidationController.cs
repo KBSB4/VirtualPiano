@@ -1,36 +1,47 @@
 ﻿using BusinessLogic;
-using Melanchall.DryWetMidi.Core;
 using Model.DatabaseModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using static BusinessLogic.ValidationLogic;
 
 namespace Controller
 {
     public static class ValidationController
     {
-        public static bool AccountPage_NewAccount_PassAndConfirmPassAreEqual(string password, string confirmpass)
+        #region AccountPage Login Validation Methods
+
+        public static string? AccountPage_Login_ValidateUsernameField(string? username, User? user)
         {
-            return ValidationLogic.AccountPage_NewAccount_PassAndConfirmPassAreEqual(password, confirmpass);
-        }
-        public static bool AccountPage_NewAccount_UsernameIsUnique(User? user)
-        {
-            return ValidationLogic.AccountPage_Login_UsernameIsUnique(user);
+            return ValidationLogic.AccountPage_Login_ValidateUsernameField(username, user);
         }
 
-        public static bool AccountPage_Login_UserCredentialsAreValid(User? user)
+        public static string? AccountPage_Login_ValidatePasswordField(string? password, User? user)
         {
-            return ValidationLogic.AccountPage_Login_UserCredentialsAreValid(user);
+            return ValidationLogic.AccountPage_Login_ValidatePasswordField(password, user);
         }
 
-        public static bool AccountPage_NewAccount_UserCredentialsAreValid(User? user)
+        #endregion
+
+        #region AccountPage NewAccount Validation Methods
+
+        public static string? AccountPage_NewAccount_ValidateUsernameField(string? username, User? user)
         {
-            return ValidationLogic.AccountPage_NewAccount_UserCredentialsAreValid(user);
+            return ValidationLogic.AccountPage_NewAccount_ValidateUsernameField(username, user);
         }
+
+        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User[]? users)
+        {
+            return ValidationLogic.AccountPage_NewAccount_ValidateEmailField(email, users);
+        }
+
+        public static string? AccountPage_NewAccount_ValidatePasswordField(string? password)
+        {
+            return ValidationLogic.AccountPage_NewAccount_ValidatePasswordField(password);
+        }
+
+        public static string? AccountPage_NewAccount_ValidateConfirmField(string? password, string? confirmpass)
+        {
+            return ValidationLogic.AccountPage_NewAccount_ValidateConfirmField(password, confirmpass);
+        }
+
+        #endregion
 
         public static string AdminPanelValidationMessageTitle(string title)
         {
@@ -46,10 +57,10 @@ namespace Controller
         {
             return ValidationLogic.AdminPanelValidateDifficulty(diff);
         }
-     
-        public static string AdminPanelValidationMessageMidiFile(MidiFile file)
+
+        public static string AdminPanelValidationMessageMidiFile()
         {
-            return ValidationLogic.AdminPanelValidateMidiFile(file);
+            return ValidationLogic.AdminPanelValidateMidiFile();
         }
 
 

@@ -38,9 +38,10 @@ namespace WpfView
             SongController.DoKaroake = true;
         }
 
-        private void _mainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void MainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             AddSongs();
+            CreateShowLeaderboard();
         }
 
         /// <summary>
@@ -79,9 +80,12 @@ namespace WpfView
         {
             if (SelectedCard is not null)
             {
-                Leaderboard.Children.Clear();
-                Highscore[] highscores = await DatabaseController.GetHighscores(SelectedCard.SongID);
-                Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores, SelectedCard.Description));
+                Highscore[]? highscores = await DatabaseController.GetHighscores(SelectedCard.SongID);
+                if (highscores is not null)
+                {
+                    Leaderboard.Children.Clear();
+                    Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores, SelectedCard.Description, _mainMenu.LoggedInUser));
+                }
             }
         }
 
@@ -90,20 +94,15 @@ namespace WpfView
         /// </summary>
         private async void AddSongs()
         {
-            SongCards.Children.Clear();
-            Song[] songs = await DatabaseController.GetAllSongs();
+            Song[]? songs = await DatabaseController.GetAllSongs();
 
+            SongCards.Children.Clear();
+            if (songs is null) return;
             foreach (var item in songs)
             {
                 SongCardControl songCardControl = new(item.Id, item.Name, item.Description, (int)item.Difficulty, this);
                 SongCards.Children.Add(songCardControl);
             }
-
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4, this);
-            //    SongCards.Children.Add(songCardControl);
-            //}
         }
 
         private void MainMenu_Click(object sender, RoutedEventArgs e)

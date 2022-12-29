@@ -1,24 +1,20 @@
-﻿using BusinessLogic;
-using Controller;
+﻿using Controller;
+using Microsoft.Identity.Client;
 using Model.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Printing;
 using System.Security;
 using System.Security.RightsManagement;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfView
 {
@@ -28,145 +24,258 @@ namespace WpfView
     public partial class AccountPage : Page
     {
         private readonly MainMenu _mainMenu;
+        private readonly PracticePlayPiano? _practicePlayPiano;
 
-        private bool AllFieldsAreValid { get; set; }
-        public AccountPage(MainMenu mainMenu)
+        private StringBuilder? FinalErrorMessage { get; set; }
+
+        public bool Closed = false;
+
+        public AccountPage(MainMenu mainMenu, PracticePlayPiano? ppp)
         {
             _mainMenu = mainMenu;
+            _practicePlayPiano = ppp;
             DataContext = new DataContextSettings();
             InitializeComponent();
         }
 
-        private void Login_Button_Click(object sender, RoutedEventArgs e)
+        private async void Login_Button_Click(object sender, RoutedEventArgs e)
         {
-            Login_NameAndPassAreValid(Login_UsernameInput.Text, Login_PasswordInput.Password);
+            TextBox nameTextBox = Login_UsernameInput;
+            PasswordBox passwordBox = Login_PasswordInput;
+            User? existingUser = await DatabaseController.GetUserByName(nameTextBox.Text);
+            User? loggingInUser = await DatabaseController.GetLoggingInUser(nameTextBox.Text, passwordBox.Password);
+
+            Login_ValidateUsernameField(nameTextBox.Text, existingUser);
+            Login_ValidatePasswordField(passwordBox.Password, loggingInUser);
         }
 
-        private void Create_Button_Click(object sender, RoutedEventArgs e)
+        private async void Create_Button_Click(object sender, RoutedEventArgs e)
         {
-            //NewAccount_UsernameIsUnique(NewAccount_UsernameInput.Text);
-            NewAccount_NameAndPassAreUnique(NewAccount_UsernameInput.Text, NewAccount_PasswordInput.Password);
-            //NewAccount_PassAndConfirmPassAreEqual(NewAccount_PasswordInput.Password, NewAccount_ConfirmInput.Password);
-            NewAccount_UploadNewUser();
+            TextBox nameTextBox = NewAccount_UsernameInput;
+            TextBox emailTextBox = NewAccount_EmailInput;
+            PasswordBox passwordBox = NewAccount_PasswordInput;
+            PasswordBox confirmBox = NewAccount_ConfirmInput;
+            User? existingUser = await DatabaseController.GetUserByName(nameTextBox.Text);
+            User[]? allUsers = await DatabaseController.GetAllUsers();
+
+            NewAccount_ValidateUsernameField(nameTextBox.Text, existingUser);
+            NewAccount_ValidateEmailField(emailTextBox.Text, allUsers);
+            NewAccount_ValidatePasswordField(passwordBox.Password);
+            NewAccount_ValidateConfirmField(passwordBox.Password, confirmBox.Password);
+
         }
 
-        private async void NewAccount_UploadNewUser()
+        #region Login Validation Methods
+
+        private void Login_ValidateUsernameField(string? username, User? user)
         {
-            if(AllFieldsAreValid) 
+            string? errorMessage = ValidationController.AccountPage_Login_ValidateUsernameField(username, user);
+            if(errorMessage is null)
             {
-                User user = new();
-                user.Name = NewAccount_UsernameInput.Text;
-                user.Password = NewAccount_PasswordInput.Password;
-                user.Email = NewAccount_EmailInput.Text;
-                await DatabaseController.UploadNewUser(user);
+                SetFieldSuccesBackground(Login_UsernameInput);
+            }
+            else
+            {
+                SetFieldErrorBackground(Login_UsernameInput);
+                ClearField(Login_UsernameInput);
+                AddErrorMessageToMessageBox(errorMessage);
             }
         }
 
-        #region Validation Methods
-
-        private async void Login_NameAndPassAreValid(string usernameInput, string passwordInput)
+        private void Login_ValidatePasswordField(string? username, User? user)
         {
-            User? user = await DatabaseController.GetLoggingInUser(usernameInput, passwordInput);
-            if (ValidationController.AccountPage_Login_UserCredentialsAreValid(user))
+            string? errorMessage = ValidationController.AccountPage_Login_ValidatePasswordField(username, user);
+            if (errorMessage is null)
             {
-                Login_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-                Login_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-                _mainMenu.loggedInUser = user;
-                if (user is not null && user.IsAdmin) NavigationService?.Navigate(_mainMenu.AdminPanel);
+                Login(user);
+                if (user is not null && user.IsAdmin)
+                {
+                    NavigationService?.Navigate(_mainMenu.AdminPanel);
+                }
                 else
                 {
-                    NavigationService?.Navigate(_mainMenu); 
-                    _mainMenu.Account_ChangeIconBasedOnUser();
+                    CloseLogin();
                 }
             }
             else
             {
-                AllFieldsAreValid = false;
-                Login_UsernameInput.Text = string.Empty;
-                Login_PasswordInput.Password= string.Empty;
-                Login_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
-                Login_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+                SetFieldErrorBackground(Login_PasswordInput);
+                ClearField(Login_PasswordInput);
+                AddErrorMessageToMessageBox(errorMessage);
+                ShowErrorMessage();
+                ClearErrorMessage();
             }
         }
 
-        private async void NewAccount_UsernameIsUnique(string username)
+        private void Login(User user)
         {
-            User? user = await DatabaseController.GetUserByName(username);
-            if (ValidationController.AccountPage_NewAccount_UsernameIsUnique(user))
-            {
-                AllFieldsAreValid = true;
-                NewAccount_UsernameInput.Text = string.Empty;
-                NewAccount_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            }
-            else
-            {
-                AllFieldsAreValid = false;
-                NewAccount_UsernameInput.Text = string.Empty;
-                NewAccount_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
-            }
+            ClearAllFields();
+            SetFieldSuccesBackground(Login_PasswordInput);
+            _mainMenu.LoggedInUser = user;
         }
 
-        private async void NewAccount_NameAndPassAreUnique(string username, string password)
+        private void CloseLogin()
         {
-            User? user = await DatabaseController.GetLoggingInUser(username, password);
-            if (ValidationController.AccountPage_NewAccount_UserCredentialsAreValid(user))
-            {
-                AllFieldsAreValid = true;
-                NewAccount_UsernameInput.Text = string.Empty;
-                NewAccount_PasswordInput.Password = string.Empty;
-                NewAccount_ConfirmInput.Password = string.Empty;
-                NewAccount_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-                NewAccount_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-            }
-            else
-            {
-                AllFieldsAreValid = false;
-                NewAccount_UsernameInput.Text = string.Empty;
-                NewAccount_PasswordInput.Password = string.Empty;
-                NewAccount_ConfirmInput.Password = string.Empty;
-                NewAccount_UsernameInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
-                NewAccount_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
-            }
-            return;
-        }
+            _mainMenu.Account_ChangeIconBasedOnUser();
+            Closed = true;
 
-        private void NewAccount_PassAndConfirmPassAreEqual(string password, string confirmpass)
-        {
-            if (ValidationController.AccountPage_NewAccount_PassAndConfirmPassAreEqual(password, confirmpass))
+            if (_practicePlayPiano is null)
             {
-                AllFieldsAreValid = true;
-                NewAccount_ConfirmInput.Password = string.Empty;
-                NewAccount_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
-                NewAccount_ConfirmInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+                NavigationService?.Navigate(_mainMenu);
             }
             else
             {
-                AllFieldsAreValid = false;
-                NewAccount_PasswordInput.Password = string.Empty;
-                NewAccount_ConfirmInput.Password = string.Empty;
-                NewAccount_PasswordInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
-                NewAccount_ConfirmInput.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+                NavigationService?.Navigate(_practicePlayPiano);
             }
-            return;
+            ClearAllFields();
         }
 
         #endregion
 
-        #region Fields clear methods
+        #region New Account Validation Methods
 
-        private void ClearLoginFields()
+
+        private void NewAccount_ValidateUsernameField(string? username, User? user)
         {
-            Login_UsernameInput.Text = string.Empty;
-            Login_PasswordInput.Password = string.Empty;
+            string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateUsernameField(username, user);
+            if (errorMessage is null)
+            {
+                SetFieldSuccesBackground(NewAccount_UsernameInput);
+            }
+            else
+            {
+                SetFieldErrorBackground(NewAccount_UsernameInput);
+                ClearField(NewAccount_UsernameInput);
+                AddErrorMessageToMessageBox(errorMessage);
+            }
         }
 
-        private void ClearNewAccountFields()
+        private void NewAccount_ValidateEmailField(string? email, User[]? users)
         {
-            NewAccount_UsernameInput.Text = string.Empty;
-            NewAccount_EmailInput.Text = string.Empty;
-            NewAccount_PasswordInput.Password = string.Empty;
-            NewAccount_ConfirmInput.Password = string.Empty;
+            string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateEmailField(email, users);
+            if (errorMessage is null)
+            {
+                SetFieldSuccesBackground(NewAccount_EmailInput);
+            }
+            else
+            {
+                SetFieldErrorBackground(NewAccount_EmailInput);
+                ClearField(NewAccount_EmailInput);
+                AddErrorMessageToMessageBox(errorMessage);
+            }
         }
+
+        private void NewAccount_ValidatePasswordField(string? password)
+        {
+            string? errorMessage = ValidationController.AccountPage_NewAccount_ValidatePasswordField(password);
+            if (errorMessage is null)
+            {
+                SetFieldSuccesBackground(NewAccount_PasswordInput);
+            }
+            else
+            {
+                SetFieldErrorBackground(NewAccount_PasswordInput);
+                ClearField(NewAccount_PasswordInput);
+                AddErrorMessageToMessageBox(errorMessage);
+            }
+        }
+
+        private void NewAccount_ValidateConfirmField(string? password, string? confirmpass)
+        {
+            string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateConfirmField(password, confirmpass);
+            if (errorMessage is null)
+            {
+                SetFieldSuccesBackground(NewAccount_ConfirmInput);
+                UploadNewUser();
+            }
+            else
+            {
+                SetFieldErrorBackground(NewAccount_ConfirmInput);
+                ClearField(NewAccount_ConfirmInput);
+                AddErrorMessageToMessageBox(errorMessage);
+                ShowErrorMessage();
+                ClearErrorMessage();
+            }
+        }
+
+        private async void UploadNewUser()
+        {
+            User user = new();
+            user.Name = NewAccount_UsernameInput.Text;
+            user.Password = NewAccount_PasswordInput.Password;
+            user.Email = NewAccount_EmailInput.Text;
+            await DatabaseController.UploadNewUser(user);
+            ClearAllFields();
+            SetFieldSuccesBackground(NewAccount_PasswordInput);
+            MessageBox.Show("Use your new credentials to log in to Piano Hero!", "New user was succesfully created!", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+        }
+
+        #endregion
+
+        #region Validation Feedback Methods
+
+        private void SetFieldErrorBackground(TextBox textBox)
+        {
+            textBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+            textBox.Clear();
+        }
+
+        private void SetFieldErrorBackground(PasswordBox passwordBox)
+        {
+            passwordBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
+            passwordBox.Clear();
+        }
+
+        private void SetFieldSuccesBackground(TextBox textBox)
+        {
+            textBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+        }
+
+        private void SetFieldSuccesBackground(PasswordBox passwordBox)
+        {
+            passwordBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
+        }
+
+        private void ClearField(TextBox textBox)
+        {
+            textBox.Clear();
+        }
+
+        private void ClearField(PasswordBox passwordBox)
+        {
+            passwordBox.Clear();
+        }
+
+        private void AddErrorMessageToMessageBox(string errorMessage)
+        {
+            if (FinalErrorMessage is not null) FinalErrorMessage.AppendLine(errorMessage);
+            else { FinalErrorMessage = new StringBuilder(); FinalErrorMessage.AppendLine(errorMessage); }
+        }
+
+        private void ShowErrorMessage()
+        {
+            if(FinalErrorMessage is not null)
+            {
+                MessageBox.Show(FinalErrorMessage.ToString(), "Not all fields met the requirements...", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
+        private void ClearErrorMessage()
+        {
+            if(FinalErrorMessage is not null)
+            FinalErrorMessage.Clear();
+        }
+
+        private void ClearAllFields()
+        {
+            Login_UsernameInput.Clear();
+            Login_PasswordInput.Clear();
+            NewAccount_UsernameInput.Clear();
+            NewAccount_EmailInput.Clear();
+            NewAccount_PasswordInput.Clear();
+            NewAccount_ConfirmInput.Clear();
+        }
+
         #endregion
 
         #region Menubar event clicks
@@ -178,12 +287,8 @@ namespace WpfView
         /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
-            _mainMenu.Account_ChangeIconBasedOnUser();
-            NavigationService?.Navigate(_mainMenu);
-            ClearLoginFields();
-            ClearNewAccountFields();
+            CloseLogin();
         }
-
         #endregion
     }
 }

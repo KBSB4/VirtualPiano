@@ -51,7 +51,7 @@ namespace BusinessLogic.SoundPlayer
             var assembly = Assembly.GetExecutingAssembly();
             string[] names = assembly.GetManifestResourceNames();
 
-            foreach(string str in names)
+            foreach (string str in names)
             {
                 if (str.StartsWith(pianoFilesFolder)) return;
             }
@@ -164,24 +164,24 @@ namespace BusinessLogic.SoundPlayer
             SourceVoice? sourceVoice = GetSourceVoice(noteName, octave);
             if (sourceVoice is not null)
             {
-				sourceVoice?.SetVolume(volume * volume);
+                sourceVoice?.SetVolume(volume * volume);
 
-				return new FadingAudio(sourceVoice);
+                return new FadingAudio(sourceVoice);
             }
             return null;
         }
 
 
-		/// <summary>
-		/// Gets the currect pitchshift for each octave specifiek by <paramref name="octave"/>.
-		/// <para>
-		/// Min <paramref name="octave"/> = 2, Max <paramref name="octave"/> = 5 else returns 0
-		/// </para>
-		/// </summary>
-		/// <param name="octave"></param>
-		/// <returns></returns>
-		//TODO KEEP THIS FUNCTION?
-		private static float GetOctaveFrequencyRatio(int octave)
+        /// <summary>
+        /// Gets the currect pitchshift for each octave specifiek by <paramref name="octave"/>.
+        /// <para>
+        /// Min <paramref name="octave"/> = 2, Max <paramref name="octave"/> = 5 else returns 0
+        /// </para>
+        /// </summary>
+        /// <param name="octave"></param>
+        /// <returns></returns>
+        //TODO KEEP THIS FUNCTION?
+        private static float GetOctaveFrequencyRatio(int octave)
         {
             return octave switch
             {
@@ -192,5 +192,5 @@ namespace BusinessLogic.SoundPlayer
                 _ => 0,
             };
         }
-	}
+    }
 }

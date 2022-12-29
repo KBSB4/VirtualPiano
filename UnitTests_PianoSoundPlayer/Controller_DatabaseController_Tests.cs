@@ -9,9 +9,9 @@ namespace UnitTests
         [Test]
         public async Task GetHighscoresTestOfSong55()
         {
-            Highscore[] highscores = await DatabaseController.GetHighscores(55);
-            Highscore score = highscores.FirstOrDefault();
-            Assert.IsNotNull(score);
+            Highscore[]? highscores = await DatabaseController.GetHighscores(55);
+            Highscore? score = highscores.FirstOrDefault();
+            Assert.That(score, Is.Not.Null);
         }
 
         //[Test] //Unable to test this as we do not have a way of deleting existing scores
@@ -33,9 +33,9 @@ namespace UnitTests
             score.Score = -556;
             await DatabaseController.UpdateHighscore(score);
 
-            Highscore[] highscores = await DatabaseController.GetHighscores(57);
-            Highscore databasescore = highscores.Where(item => item.User.Id == score.User.Id).FirstOrDefault();
-            Assert.AreEqual(score.Score, databasescore.Score);
+            Highscore[]? highscores = await DatabaseController.GetHighscores(57);
+            Highscore? databasescore = highscores.Where(item => item.User.Id == score.User.Id).FirstOrDefault();
+            Assert.That(databasescore.Score, Is.EqualTo(score.Score));
         }
     }
 }

@@ -1,14 +1,10 @@
 ﻿using Melanchall.DryWetMidi.Multimedia;
 using Model.DatabaseModels;
-using SharpDX.Multimedia;
 using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WpfView
 {
@@ -23,7 +19,7 @@ namespace WpfView
         public AccountPage AccountPage { get; set; }
         public AdminPanel AdminPanel { get; set; }
 
-        public User? loggedInUser { get; set; }
+        public User? LoggedInUser { get; set; }
 
         //DO NOT REMOVE
         public IInputDevice? InputDevice;
@@ -34,9 +30,10 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
-            AccountPage = new AccountPage(this);
+            AccountPage = new AccountPage(this, null);
             AdminPanel = new(this);
             Account_ChangeIconBasedOnUser();
+            CheckInputDevice(1);
         }
 
         /// <summary>
@@ -115,7 +112,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void Practice_Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(AdminPanel);
+            NavigationService?.Navigate(SongSelectPage);
         }
 
         /// <summary>
@@ -126,13 +123,13 @@ namespace WpfView
         /// <param name="e"></param>
         private void Account_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (loggedInUser is null) NavigationService?.Navigate(AccountPage);
+            if (LoggedInUser is null) NavigationService?.Navigate(AccountPage);
             else
             {
-                MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if(result == MessageBoxResult.Yes) 
                 {
-                    loggedInUser= null;
+                    LoggedInUser = null;
                     Account_ChangeIconBasedOnUser();
                 }
             }
@@ -143,7 +140,7 @@ namespace WpfView
         /// </summary>
         public void Account_ChangeIconBasedOnUser()
         {
-            if (loggedInUser is null)
+            if (LoggedInUser is null)
             {
                 AccountIconImage.Source = new BitmapImage(new Uri("/Images/accountImage.png", UriKind.Relative));
                 AccountIconImage.Margin = new Thickness(20, 40, 20, 40);
