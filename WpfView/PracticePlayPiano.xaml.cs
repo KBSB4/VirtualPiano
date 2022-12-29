@@ -36,6 +36,8 @@ namespace WpfView
         private const int MAXNOTESCORE = 1000;
         private int maxTotalScore = 0;
 
+        private Song currentSong;
+
         public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
         {
             _mainMenu = mainMenu;
