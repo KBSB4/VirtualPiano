@@ -21,7 +21,7 @@ namespace WpfView
         {
             _mainMenu = mainMenu;
             PracticePiano = new PracticePlayPiano(_mainMenu, this);
-            _mainMenu.IsVisibleChanged += _mainMenu_IsVisibleChanged;
+            _mainMenu.IsVisibleChanged += MainMenu_IsVisibleChanged;
             InitializeComponent();
             AddSongs();
             KaraokeCheckBox.Checked += KaraokeCheckBox_Checked;
@@ -38,7 +38,7 @@ namespace WpfView
             SongController.DoKaroake = true;
         }
 
-        private void _mainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void MainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             AddSongs();
             CreateShowLeaderboard();
@@ -80,12 +80,12 @@ namespace WpfView
         {
             if (SelectedCard is not null)
             {
-                Highscore[] highscores = await DatabaseController.GetHighscores(SelectedCard.SongID);
-                //if (SelectedCard is not null)
-                //{
-                Leaderboard.Children.Clear();
-                Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores, SelectedCard.Description, _mainMenu.loggedInUser));
-                //}
+                Highscore[]? highscores = await DatabaseController.GetHighscores(SelectedCard.SongID);
+                if (highscores is not null)
+                {
+                    Leaderboard.Children.Clear();
+                    Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores, SelectedCard.Description, _mainMenu.LoggedInUser));
+                }
             }
         }
 

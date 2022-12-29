@@ -179,7 +179,7 @@ namespace BusinessLogic
         }
 
 
-        public static string AdminPanelValidateMidiFile(MidiFile file)
+        public static string AdminPanelValidateMidiFile()
         {
             string errorMessage = string.Empty;
             if (MidiLogic.CurrentMidi == null) errorMessage = "MidiFile required!";

@@ -22,10 +22,10 @@ namespace BusinessLogic
 			new Thread(new ThreadStart(Connect)).Start();
 		}
 
-        private void Connect()
-        {
+		private void Connect()
+		{
 			ProgramSSH.ExecuteSshConnection();
-        }
+		}
 
         #region Users
         public async Task<User?> GetUserByName(string username)
@@ -34,151 +34,142 @@ namespace BusinessLogic
             {
                 string query = "SELECT * FROM UserAccount WHERE username = @username";
 
-                await connection.OpenAsync();
+			await connection.OpenAsync();
 
-                SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
                 SqlParameter userNameParam = new("@username", SqlDbType.VarChar) { Value = username };
 
                 command.Parameters.Add(userNameParam);
 
-                SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-                User[] users = await ReadUsers(dataReader);
+			User[] users = await ReadUsers(dataReader);
 
-                await CloseAndDispose(connection, command, dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-                if (users.Length > 0)
-                    return users[0];
+			if (users.Length > 0)
+				return users[0];
 
-                return null;
-            }
-        }
+			return null;
+		}
 
-        public async Task<User?> GetUserById(int id)
-        {
-            using (SqlConnection connection = new(connectionString))
-            {
-                string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
+		public async Task<User?> GetUserById(int id)
+		{
+			using SqlConnection connection = new(connectionString);
+			string query = "SELECT * FROM UserAccount WHERE idUser = @userId";
 
-                await connection.OpenAsync();
+			await connection.OpenAsync();
 
-                SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-                SqlParameter userIdParam = new("@userId", SqlDbType.Int) { Value = id };
+			SqlParameter userIdParam = new("@userId", SqlDbType.Int) { Value = id };
 
-                command.Parameters.Add(userIdParam);
+			command.Parameters.Add(userIdParam);
 
-                SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-                User[] users = await ReadUsers(dataReader);
+			User[] users = await ReadUsers(dataReader);
 
-                await CloseAndDispose(connection, command, dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-                if (users.Length > 0)
-                    return users[0];
+			if (users.Length > 0)
+				return users[0];
 
-                return null;
-            }
-        }
+			return null;
+		}
 
-        public async Task<User?> GetLoggingInUser(string username, string password)
-        {
-            using (SqlConnection connection = new(connectionString))
-            {
-                string query = "SELECT * FROM UserAccount WHERE username = @username AND passphrase = @passphrase";
+		public async Task<User?> GetLoggingInUser(string username, string password)
+		{
+			using SqlConnection connection = new(connectionString);
+			string query = "SELECT * FROM UserAccount WHERE username = @username AND passphrase = @passphrase";
 
-                await connection.OpenAsync();
+			await connection.OpenAsync();
 
-                SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-                SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = username };
+			SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = username };
 
-                SqlParameter passwordParam = new("@passphrase", SqlDbType.VarChar) { Value = password };
+			SqlParameter passwordParam = new("@passphrase", SqlDbType.VarChar) { Value = password };
 
-                command.Parameters.Add(usernameParam);
+			command.Parameters.Add(usernameParam);
 
-                command.Parameters.Add(passwordParam);
+			command.Parameters.Add(passwordParam);
 
-                SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-                User[] users = await ReadUsers(dataReader);
+			User[] users = await ReadUsers(dataReader);
 
-                await CloseAndDispose(connection, command, dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-                if (users.Length > 0)
-                    if (username == users[0].Name && password == users[0].Password) return users[0];
-                return null;
-            }
-        }
+			if (users.Length > 0)
+				if (username == users[0].Name && password == users[0].Password) return users[0];
+			return null;
+		}
 
-        public async Task<User[]?> GetAllUsers()
-        {
-            using (SqlConnection connection = new(connectionString))
-            {
-                string query = "SELECT * FROM UserAccount";
+		public async Task<User[]?> GetAllUsers()
+		{
+			using SqlConnection connection = new(connectionString);
+			string query = "SELECT * FROM UserAccount";
 
-                await connection.OpenAsync();
+			await connection.OpenAsync();
 
-                SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-                SqlDataReader dataReader = await command.ExecuteReaderAsync();
+			SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-                User[] result = await ReadUsers(dataReader);
+			User[] result = await ReadUsers(dataReader);
 
-                await CloseAndDispose(connection, command, dataReader);
+			await CloseAndDispose(connection, command, dataReader);
 
-                return result;
-            }
-        }
+			return result;
+		}
 
-        private async Task<User[]> ReadUsers(SqlDataReader dataReader)
-        {
-            List<User> result = new();
+		private static async Task<User[]> ReadUsers(SqlDataReader dataReader)
+		{
+			List<User> result = new();
 
-            while (await dataReader.ReadAsync())
-            {
-                result.Add(new User()
-                {
-                    Name = await dataReader.GetFieldValueAsync<string>("username"),
-                    Id = await dataReader.GetFieldValueAsync<int>("idUser"),
-                    Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
-                    Email = await dataReader.GetFieldValueAsync<string>("email"),
-                    isAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
-                });
-            }
+			while (await dataReader.ReadAsync())
+			{
+				result.Add(new User()
+				{
+					Name = await dataReader.GetFieldValueAsync<string>("username"),
+					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
+					Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
+					Email = await dataReader.GetFieldValueAsync<string>("email"),
+					IsAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
+				});
+			}
 
-            return result.ToArray();
-        }
+			return result.ToArray();
+		}
 
-        public async Task UploadNewUser(User user)
-        {
+		public async Task UploadNewUser(User user)
+		{
 
-            using (SqlConnection connection = new(connectionString))
-            {
+			using SqlConnection connection = new(connectionString);
 
-                string query = "INSERT INTO UserAccount (username, passphrase, isAdmin, email) VALUES (@username, @passphrase, @isAdmin, @email)";
+			string query = "INSERT INTO UserAccount (username, passphrase, isAdmin, email) VALUES (@username, @passphrase, @isAdmin, @email)";
 
-                await connection.OpenAsync();
+			await connection.OpenAsync();
 
-                SqlCommand command = new(query, connection);
+			SqlCommand command = new(query, connection);
 
-                SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = user.Name };
+			SqlParameter usernameParam = new("@username", SqlDbType.VarChar) { Value = user.Name };
 
-                SqlParameter passwordParam = new("@passphrase", SqlDbType.VarChar) { Value = user.Password };
+			SqlParameter passwordParam = new("@passphrase", SqlDbType.VarChar) { Value = user.Password };
 
-                SqlParameter isAdminParam = new("@isAdmin", SqlDbType.TinyInt) { Value = user.isAdmin };
+			SqlParameter isAdminParam = new("@isAdmin", SqlDbType.TinyInt) { Value = user.IsAdmin };
 
-                SqlParameter emailParam = new("@email", SqlDbType.VarChar) { Value=user.Email };
+			SqlParameter emailParam = new("@email", SqlDbType.VarChar) { Value = user.Email };
 
-                command.Parameters.AddRange(new SqlParameter[] { usernameParam, passwordParam, isAdminParam, emailParam });
+			command.Parameters.AddRange(new SqlParameter[] { usernameParam, passwordParam, isAdminParam, emailParam });
 
-                await command.ExecuteNonQueryAsync();
+			await command.ExecuteNonQueryAsync();
 
-                await CloseAndDispose(connection, command);
-            }
-        }
-        #endregion
+			await CloseAndDispose(connection, command);
+		}
+		#endregion
 
 		#region Songs
 		/// <summary>
@@ -335,9 +326,9 @@ namespace BusinessLogic
 				});
 			}
 
-            return result.ToArray();
-        }
-        #endregion
+			return result.ToArray();
+		}
+		#endregion
 
 		#region Highscores
 		public async Task<Highscore[]?> GetHighscores(int songId)
@@ -359,10 +350,16 @@ namespace BusinessLogic
 
 			while (await dataReader.ReadAsync())
 			{
+				User? user = await GetUserById(await dataReader.GetFieldValueAsync<int>("idUser"));
+				Song? song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong"));
+				if (user is null || song is null)
+				{
+					continue;
+				}
 				Highscore highscore = new()
 				{
-					User = await GetUserById(await dataReader.GetFieldValueAsync<int>("idUser")),
-					Song = await GetSong(await dataReader.GetFieldValueAsync<int>("idSong")),
+					User = user,
+					Song = song,
 					Score = await dataReader.GetFieldValueAsync<int>("score")
 				};
 

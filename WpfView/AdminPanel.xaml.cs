@@ -20,7 +20,7 @@ namespace WpfView
         private byte[] lastOpenedFile;
 
         private List<Song> songList = new();
-        private MainMenu _mainMenu;
+        private readonly MainMenu _mainMenu;
         public AdminPanel(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
@@ -53,7 +53,6 @@ namespace WpfView
             }
         }
 
-
         /// <summary>
         /// Returns true if all fields are valid. 
         /// </summary>
@@ -61,9 +60,7 @@ namespace WpfView
         public bool Validator()
         {
             bool isValid = true;
-            string errorMessage = string.Empty;
-
-
+            string errorMessage;
             if (!ValidationController.AdminPanelValidationMessageTitle(titleTextBox.Text).Equals(string.Empty))
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageTitle(titleTextBox.Text);
@@ -80,9 +77,9 @@ namespace WpfView
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageDifficulty(difficultyTextBox.Text);
             }
-            else if (!ValidationController.AdminPanelValidationMessageMidiFile(MidiLogic.CurrentMidi).Equals(string.Empty))
+            else if (!ValidationController.AdminPanelValidationMessageMidiFile().Equals(string.Empty))
             {
-                errorMessage = ValidationController.AdminPanelValidationMessageMidiFile(MidiLogic.CurrentMidi);
+                errorMessage = ValidationController.AdminPanelValidationMessageMidiFile();
             }
             else
             {
@@ -95,13 +92,13 @@ namespace WpfView
             return isValid;
         }
 
+        //TODO: Terrible name, please change
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (Validator())
             {
                 Upload();
             }
-
         }
 
         /// <summary>
@@ -111,18 +108,25 @@ namespace WpfView
         {
             int difficulty = int.Parse(difficultyTextBox.Text);
             Difficulty d = (Difficulty)difficulty;
-            Song song = new Song() { Description = descriptionTextBox.Text, Difficulty = d, FullFile = lastOpenedFile, File = MidiLogic.CurrentMidi, Name = titleTextBox.Text };
+            Song song = new()
+            {
+                Description = descriptionTextBox.Text,
+                Difficulty = d,
+                FullFile = lastOpenedFile,
+                File = MidiLogic.CurrentMidi,
+                Name = titleTextBox.Text
+            };
             await DatabaseController.UploadSong(song);
             MakeSongVisible(song);
         }
-
 
         /// <summary>
         /// Gets all songs out of the database and displayes them on the screen.
         /// </summary>
         public async void GenerateSongList()
         {
-            Song[] songs = await DatabaseController.GetAllSongs();
+            Song[]? songs = await DatabaseController.GetAllSongs();
+            if (songs is null) return;
             songList = new List<Song>();
             songList = songs.ToList();
             foreach (Song song in songs)
@@ -137,14 +141,14 @@ namespace WpfView
         /// <param name="song"></param>
         public void MakeSongVisible(Song song)
         {
-            ListBoxItem one = new ListBoxItem() { Content = song.Name };
+            ListBoxItem one = new() { Content = song.Name };
             ListBoxItem del = new FemkesListBoxItem() { SongTitle = song.Name, Content = "X" };
             SongListAdminPanel.Items.Add(one);
             RemoveSongsList.Items.Add(del);
         }
 
 
-        public async void DeleteSong(string name)
+        public static async void DeleteSong(string name)
         {
             await DatabaseController.DeleteSong(name);
         }
@@ -166,9 +170,9 @@ namespace WpfView
 
         private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            FemkesListBoxItem deleteSong = null;
+            FemkesListBoxItem? deleteSong = null;
 
-            deleteSong = (FemkesListBoxItem)((ListBox)sender).SelectedItem;
+            deleteSong = ((ListBox)sender).SelectedItem as FemkesListBoxItem;
 
             if (deleteSong != null)
             {
@@ -196,16 +200,17 @@ namespace WpfView
             RemoveSongsList.Items.Clear();
             GenerateSongList();
         }
+
+        //TODO: Terrible name, please change
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (_mainMenu.loggedInUser is not null)
+            if (_mainMenu.LoggedInUser is not null)
             {
-                _mainMenu.loggedInUser = null;
+                _mainMenu.LoggedInUser = null;
             }
             _mainMenu.Account_ChangeIconBasedOnUser();
             NavigationService?.Navigate(_mainMenu);
         }
-
 
         class FemkesListBoxItem : ListBoxItem
         {

@@ -7,7 +7,7 @@ namespace BusinessLogic
     public static class SongLogic
     {
         private const int SONG_OFFSET = 2000;
-        private const int STARTTUNENOTES = 7;
+        private const int STARTTUNENOTES = 1;
 
         public static Playback? PlaybackDevice { get => playbackDevice; set => playbackDevice = value; }
         private static Playback? playbackDevice;
@@ -39,12 +39,12 @@ namespace BusinessLogic
             StartCountDown?.Invoke(null, new EventArgs());
 
             if (obj is not Song song) return;
-            song.SongTimerThread?.Start();
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
-
-            Thread.Sleep(SONG_OFFSET);
+            //Thread.Sleep(SONG_OFFSET);
             PlaybackDevice.Start();
+            Thread.Sleep(10);
+            song.SongTimerThread?.Start();
             SpinWait.SpinUntil(() => !PlaybackDevice.IsRunning);
 
             OutputDevice.Dispose();
