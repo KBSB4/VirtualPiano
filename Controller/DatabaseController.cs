@@ -2,47 +2,40 @@
 using Model;
 using Model.DatabaseModels;
 using Model.Interfaces;
-using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Controller
 {
     public static class DatabaseController
     {
         private static readonly IDatabaseManager databaseManager = new SQLDatabaseManager();
+        //TODO Summaries
+        public static async Task<User?> GetUserByID(int userID)
+        {
+            Task<User?> getUserByIDTask = databaseManager.GetUserById(userID);
 
-		public static async Task<User?> GetUserByID(int userID)
-		{
-			Task<User?> getUserByIDTask = databaseManager.GetUserById(userID);
+            User? result = await getUserByIDTask;
 
-			User? result = await getUserByIDTask;
+            return result;
+        }
 
-			return result;
-		}
+        public static async Task<User?> GetUserByName(string username)
+        {
+            Task<User?> getUserByName = databaseManager.GetUserByName(username);
 
-		public static async Task<User?> GetUserByName(string username)
-		{
-			Task<User?> getUserByName = databaseManager.GetUserByName(username);
+            User? result = await getUserByName;
 
-			User? result = await getUserByName;
+            return result;
+        }
 
-			return result;
-		}
+        public static async Task UploadNewUser(User user)
+        {
+            Task uploadNewUserTask = databaseManager.UploadNewUser(user);
 
-		public static async Task UploadNewUser(User user)
-		{
-			Task uploadNewUserTask = databaseManager.UploadNewUser(user);
+            await uploadNewUserTask;
+        }
 
-			await uploadNewUserTask;
-		}
-
-		public static async Task<User?> GetLoggingInUser(string username, string password)
-		{
+        public static async Task<User?> GetLoggingInUser(string username, string password)
+        {
             Task<User?> getLoggingInUserTask = databaseManager.GetLoggingInUser(username, password);
 
             User? result = await getLoggingInUserTask;
@@ -50,48 +43,48 @@ namespace Controller
             return result;
         }
 
-		public static async Task<User[]?> GetAllUsers()
-		{
-			Task<User[]?> getAllUsersTask = databaseManager.GetAllUsers();
+        public static async Task<User[]?> GetAllUsers()
+        {
+            Task<User[]?> getAllUsersTask = databaseManager.GetAllUsers();
 
-			User[]? result = await getAllUsersTask;
+            User[]? result = await getAllUsersTask;
 
-			return result;
-		}
+            return result;
+        }
 
-		/// <summary>
-		/// Deletes a song from a database using <see cref="databaseManager"/>
-		/// </summary>
-		/// <param name="songName"></param>
-		public static async Task DeleteSong(string songName)
-		{
-			Task deleteSongTask = databaseManager.DeleteSong(songName);
+        /// <summary>
+        /// Deletes a song from a database using <see cref="databaseManager"/>
+        /// </summary>
+        /// <param name="songName"></param>
+        public static async Task DeleteSong(string songName)
+        {
+            Task deleteSongTask = databaseManager.DeleteSong(songName);
 
-			await deleteSongTask;
-		}
+            await deleteSongTask;
+        }
 
-		/// <summary>
-		/// Finds a song with <paramref name="songName"/> from a database using <see cref="databaseManager"/>
-		/// </summary>
-		/// <param name="songName"></param>
-		/// <returns>New <see cref="Song"/> object, is null if not found in database</returns>
-		public static async Task<Song?> GetSong(string songName)
-		{
-			Task<Song?> getSongTask = databaseManager.GetSong(songName);
+        /// <summary>
+        /// Finds a song with <paramref name="songName"/> from a database using <see cref="databaseManager"/>
+        /// </summary>
+        /// <param name="songName"></param>
+        /// <returns>New <see cref="Song"/> object, is null if not found in database</returns>
+        public static async Task<Song?> GetSong(string songName)
+        {
+            Task<Song?> getSongTask = databaseManager.GetSong(songName);
 
-			Song? result = await getSongTask;
+            Song? result = await getSongTask;
 
-			return result;
-		}
+            return result;
+        }
 
-		/// <summary>
-		/// Finds a song with <paramref name="songId"/> from a database using <see cref="databaseManager"/>
-		/// </summary>
-		/// <param name="songId"></param>
-		/// <returns>New <see cref="Song"/> object, is null if not found in database</returns>
-		public static async Task<Song?> GetSong(int songId)
-		{
-			Task<Song?> getSongTask = databaseManager.GetSong(songId);
+        /// <summary>
+        /// Finds a song with <paramref name="songId"/> from a database using <see cref="databaseManager"/>
+        /// </summary>
+        /// <param name="songId"></param>
+        /// <returns>New <see cref="Song"/> object, is null if not found in database</returns>
+        public static async Task<Song?> GetSong(int songId)
+        {
+            Task<Song?> getSongTask = databaseManager.GetSong(songId);
 
             Song? result = await getSongTask;
 
@@ -108,19 +101,19 @@ namespace Controller
 
             Song[]? result = await getAllSongsTask;
 
-			return result;
-		}
+            return result;
+        }
 
-		/// <summary>
-		/// Adds a <paramref name="song"/> to a database using <see cref="databaseManager"/> 
-		/// </summary>
-		/// <param name="song"></param>
-		public static async Task UploadSong(Song song)
-		{
-			Task uploadSongTask = databaseManager.UploadSong(song);
+        /// <summary>
+        /// Adds a <paramref name="song"/> to a database using <see cref="databaseManager"/> 
+        /// </summary>
+        /// <param name="song"></param>
+        public static async Task UploadSong(Song song)
+        {
+            Task uploadSongTask = databaseManager.UploadSong(song);
 
-			await uploadSongTask;
-		}
+            await uploadSongTask;
+        }
 
         /// <summary>
         /// Gets highscores from a song found by <paramref name="songId"/> from a database using <see cref="databaseManager"/> 

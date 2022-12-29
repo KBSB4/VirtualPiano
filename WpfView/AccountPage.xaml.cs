@@ -1,17 +1,6 @@
 ﻿using Controller;
-using Microsoft.Identity.Client;
 using Model.DatabaseModels;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Printing;
-using System.Security;
-using System.Security.RightsManagement;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,12 +12,13 @@ namespace WpfView
     /// </summary>
     public partial class AccountPage : Page
     {
+        //TODO Summaries
         private readonly MainMenu _mainMenu;
         private readonly PracticePlayPiano? _practicePlayPiano;
 
         private StringBuilder? FinalErrorMessage { get; set; }
 
-        public bool Closed = false;
+        public bool Closed = false; //For UploadScore dialog
 
         public AccountPage(MainMenu mainMenu, PracticePlayPiano? ppp)
         {
@@ -70,7 +60,7 @@ namespace WpfView
         private void Login_ValidateUsernameField(string? username, User? user)
         {
             string? errorMessage = ValidationController.AccountPage_Login_ValidateUsernameField(username, user);
-            if(errorMessage is null)
+            if (errorMessage is null)
             {
                 SetFieldSuccesBackground(Login_UsernameInput);
             }
@@ -254,7 +244,7 @@ namespace WpfView
 
         private void ShowErrorMessage()
         {
-            if(FinalErrorMessage is not null)
+            if (FinalErrorMessage is not null)
             {
                 MessageBox.Show(FinalErrorMessage.ToString(), "Not all fields met the requirements...", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
@@ -262,8 +252,8 @@ namespace WpfView
 
         private void ClearErrorMessage()
         {
-            if(FinalErrorMessage is not null)
-            FinalErrorMessage.Clear();
+            if (FinalErrorMessage is not null)
+                FinalErrorMessage.Clear();
         }
 
         private void ClearAllFields()

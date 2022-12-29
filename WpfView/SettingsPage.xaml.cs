@@ -3,9 +3,7 @@ using Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using InputDevice = Melanchall.DryWetMidi.Multimedia.InputDevice;
@@ -20,31 +18,43 @@ namespace WpfView
         private int count = InputDevice.GetDevicesCount();
         public static int IndexInputDevice { get; set; }
 
+        /// <summary>
+        /// Constructor for settingspage, creates new datacontext
+        /// </summary>
+        /// <param name="mainMenu"></param>
         public SettingsPage(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
             DataContext = new DataContextSettings();
             InitializeComponent();
-			IsVisibleChanged += SettingsPage_IsVisibleChanged;
+            IsVisibleChanged += SettingsPage_IsVisibleChanged;
         }
 
-		private void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
+        /// <summary>
+        /// Generatelanguages and update UI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
             GenerateLanguages();
             UpdateUI();
-		}
+        }
 
-		private void UpdateUI()
-		{
+        /// <summary>
+        /// Translate labels
+        /// </summary>
+        private void UpdateUI()
+        {
             LanguageLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Language);
             VolumeLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Volume);
             InputDeviceLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_InputDevice);
-		}
+        }
 
-		/// <summary>
-		/// Shows all the available MIDI-keyboard input devices
-		/// </summary>
-		public void GenerateInputDevices()
+        /// <summary>
+        /// Shows all the available MIDI-keyboard input devices
+        /// </summary>
+        public void GenerateInputDevices()
         {
             if (count == InputDevice.GetDevicesCount())
             {
@@ -83,9 +93,9 @@ namespace WpfView
             {
                 IndexInputDevice = input.Items.IndexOf(sender);
             }
-            catch (Exception ex)
+            catch
             {
-
+                // Ignore
             }
         }
 
@@ -99,7 +109,6 @@ namespace WpfView
             NavigationService?.Navigate(_mainMenu);
         }
 
-
         /// <summary>
         /// Refreshes the ComboBoxItems when selected
         /// </summary>
@@ -110,18 +119,25 @@ namespace WpfView
             RefreshBoxes();
         }
 
+        /// <summary>
+        /// Refresh inputdevices
+        /// </summary>
         public void RefreshBoxes()
         {
             GenerateInputDevices();
             input.Items.Refresh();
-
         }
 
+        /// <summary>
+        /// If language selection has changed, update preferredlanguage and UI. Always refresh boxes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
 
-			if (comboBox.Equals(LanguageBox))
+            if (comboBox.Equals(LanguageBox))
             {
                 List<Language> languages = LanguageController.GetAllLanguages();
                 LanguageCode code = languages[comboBox.SelectedIndex].Code;
@@ -133,22 +149,24 @@ namespace WpfView
             RefreshBoxes();
         }
 
-		public void GenerateLanguages()
-		{
-			LanguageData languageData = LanguageController.GetLanguageData();
-			if (LanguageBox is null) return;
+        /// <summary>
+        /// Add all available langauges to the box
+        /// </summary>
+        public void GenerateLanguages()
+        {
+            LanguageData languageData = LanguageController.GetLanguageData();
+            if (LanguageBox is null) return;
 
-			foreach (Language language in languageData.languages)
-			{
+            foreach (Language language in languageData.languages)
+            {
                 if (LanguageBox.FindName(language.Name) is null)
                 {
                     ComboBoxItem ToAddLanguage = new() { Content = language.Name };
                     LanguageBox.Items.Add(ToAddLanguage);
                 }
-			}
-
+            }
             LanguageBox.SelectedIndex = (int)languageData.preferredLanguage;
-		}
+        }
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {

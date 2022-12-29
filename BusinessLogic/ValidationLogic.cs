@@ -1,19 +1,11 @@
-﻿using Melanchall.DryWetMidi.Core;
-using Microsoft.IdentityModel.Abstractions;
-using Model.DatabaseModels;
-using Renci.SshNet.Messages;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using Model.DatabaseModels;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
     public static class ValidationLogic
     {
+        //TODO summaries
         #region AccountPage Login Field Validation
 
         public static string? AccountPage_Login_ValidateUsernameField(string? username, User? user)
@@ -26,7 +18,7 @@ namespace BusinessLogic
             {
                 return "Please use an Username between 4 and 13 characters!";
             }
-            else if (user is null) 
+            else if (user is null)
             {
                 return "Please fill in an Username that exists!";
             }
@@ -102,8 +94,8 @@ namespace BusinessLogic
                         }
                     }
                 }
-                else 
-                { 
+                else
+                {
                     return "Please fill in an Email that matches the right format!";
                 }
                 return null;
@@ -142,8 +134,8 @@ namespace BusinessLogic
                 return "Please fill in a Confirm that matches the Password field!";
             }
             else
-            { 
-                return null; 
+            {
+                return null;
             }
         }
         #endregion

@@ -122,49 +122,12 @@ namespace BusinessLogic
 
 			Tempo x = Tempo.FromBeatsPerMinute(midiFile.GetTempoMap().GetTempoAtTime((MetricTimeSpan)TimeSpan.FromSeconds(20)).BeatsPerMinute);
 			double b = (60d / x.BeatsPerMinute) * 7.5d;
-			//double b = ((60d / 93d) * 5000d);
 			int y = (int)Math.Ceiling(b);
 
 			midiFileOut.ShiftEvents(new MetricTimeSpan(0, 0, y));
 
 			midiFileOut.Chunks.Add(trackChunk);
-			//return trackChunk;
-
-			//MidiFile midiFileOut = new()
-			//{
-			//	TimeDivision = midiFile.TimeDivision
-			//};
-
-			//var assembly = Assembly.GetExecutingAssembly();
-			//var file = assembly.GetManifestResourceStream(ProjectSettings.GetPath(PianoHeroPath.StartTune));
-			//MidiFile StartTune = MidiFile.Read(file);
-
-
-			// Add all parts after shifting them
-			//long addedSoFarMicroseconds = 0;
-
-			//List<MidiFile> lsToWrite = new()
-			//{
-			//StartTune,
-			//midiFile
-			//};
-
-			//Tempo x = Tempo.FromBeatsPerMinute(midiFile.GetTempoMap().GetTempoAtTime((MetricTimeSpan)TimeSpan.Zero).BeatsPerMinute);
-			//double b = (30d / x.BeatsPerMinute) * 5000d;
-			//double b = ((60d / 93d) * 5000d);
-			//int y = (int)Math.Ceiling(b);
-			//midiFile.ShiftEvents((MetricTimeSpan)TimeSpan.FromSeconds(y));
-
-			//foreach (MidiFile midiPart in lsToWrite)
-			//{
-			//MetricTimeSpan currentDuration = midiPart.GetDuration<MetricTimeSpan>();
-			//midiPart.ShiftEvents(new MetricTimeSpan(addedSoFarMicroseconds));
-			//midiFileOut.Chunks.AddRange(midiPart.Chunks);
-			//addedSoFarMicroseconds += currentDuration.TotalMicroseconds;
-			//}
-
-			//midiFileOut.Write("current-playing-song.mid", true);
-
+		
 			return midiFileOut;
 		}
 

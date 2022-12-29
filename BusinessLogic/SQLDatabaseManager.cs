@@ -17,6 +17,9 @@ namespace BusinessLogic
             "TrustServerCertificate=True;" +
             "Initial Catalog=PianoHero;";
 
+        /// <summary>
+        /// Start connection
+        /// </summary>
         public SQLDatabaseManager()
         {
             new Thread(new ThreadStart(Connect)).Start();
@@ -159,17 +162,17 @@ namespace BusinessLogic
         {
             List<User> result = new();
 
-			while (await dataReader.ReadAsync())
-			{
-				result.Add(new User()
-				{
-					Name = await dataReader.GetFieldValueAsync<string>("username"),
-					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
-					Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
-					Email = await dataReader.IsDBNullAsync("email") ? null : await dataReader.GetFieldValueAsync<string>("email"),
-					IsAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
-				});
-			}
+            while (await dataReader.ReadAsync())
+            {
+                result.Add(new User()
+                {
+                    Name = await dataReader.GetFieldValueAsync<string>("username"),
+                    Id = await dataReader.GetFieldValueAsync<int>("idUser"),
+                    Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
+                    Email = await dataReader.IsDBNullAsync("email") ? null : await dataReader.GetFieldValueAsync<string>("email"),
+                    IsAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
+                });
+            }
 
             return result.ToArray();
         }
@@ -193,7 +196,7 @@ namespace BusinessLogic
 
             SqlParameter passwordParam = new("@passphrase", SqlDbType.VarChar) { Value = user.Password };
 
-                SqlParameter isAdminParam = new("@isAdmin", SqlDbType.TinyInt) { Value = user.IsAdmin };
+            SqlParameter isAdminParam = new("@isAdmin", SqlDbType.TinyInt) { Value = user.IsAdmin };
 
             SqlParameter emailParam = new("@email", SqlDbType.VarChar) { Value = user.Email };
 
@@ -365,6 +368,11 @@ namespace BusinessLogic
         #endregion
 
         #region Highscores
+        /// <summary>
+        /// Gets all highscores of a song by <paramref name="songId"/>
+        /// </summary>
+        /// <param name="songId"></param>
+        /// <returns><see cref="Highscore"/> array</returns>
         public async Task<Highscore[]?> GetHighscores(int songId)
         {
             using SqlConnection connection = new(connectionString);
@@ -405,24 +413,29 @@ namespace BusinessLogic
             return highscores.ToArray();
         }
 
+        /// <summary>
+        /// Uploads score based on what is inside <paramref name="highscore"/>
+        /// </summary>
+        /// <param name="highscore"></param>
+        /// <returns><see cref="Task"/></returns>
         public async Task UploadHighscore(Highscore highscore)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = "INSERT INTO SongScore (idSong, idUser, score) VALUES (@songId, @userId, @score)";
 
-            await connection.OpenAsync();
+                await connection.OpenAsync();
 
-            SqlParameter songIdParam = new("@songId", SqlDbType.Int)
-            {
-                Value = highscore.Song.Id
-            };
+                SqlParameter songIdParam = new("@songId", SqlDbType.Int)
+                {
+                    Value = highscore.Song.Id
+                };
 
                 SqlParameter userIdParam = new SqlParameter("@userId", SqlDbType.Int) { Value = highscore.User.Id };
 
                 SqlParameter scoreParam = new SqlParameter("@score", SqlDbType.Int) { Value = highscore.Score };
 
-            SqlCommand command = new(query, connection);
+                SqlCommand command = new(query, connection);
 
                 command.Parameters.AddRange(new SqlParameter[] { songIdParam, userIdParam, scoreParam });
 
@@ -432,6 +445,11 @@ namespace BusinessLogic
             }
         }
 
+        /// <summary>
+        /// Updates highscore based on what is inside <paramref name="highscore"/>
+        /// </summary>
+        /// <param name="highscore"></param>
+        /// <returns><see cref="Task"/></returns>
         public async Task UpdateHighscore(Highscore highscore)
         {
             using SqlConnection connection = new(connectionString);
@@ -451,17 +469,30 @@ namespace BusinessLogic
 
             await command.ExecuteNonQueryAsync();
 
-				await CloseAndDispose(connection, command);
-			}
+            await CloseAndDispose(connection, command);
+        }
 
         #endregion
 
+        /// <summary>
+        /// Disposes SQL query with includes datareader
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="command"></param>
+        /// <param name="dataReader"></param>
+        /// <returns><see cref="Task"/></returns>
         private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)
         {
             await CloseAndDispose(connection, command);
             await dataReader.DisposeAsync();
         }
 
+        /// <summary>
+        /// Disposes SQL query
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="command"></param>
+        /// <returns><see cref="Task"/></returns>
         private async Task CloseAndDispose(SqlConnection connection, SqlCommand command)
         {
             await connection.CloseAsync();

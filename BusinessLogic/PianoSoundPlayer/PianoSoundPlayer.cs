@@ -9,7 +9,6 @@ namespace BusinessLogic.SoundPlayer
     public class PianoSoundPlayer
     {
         private readonly string pianoFilesFolder;
-        private readonly string pianoSoundPrefix;
         private readonly string pianoSoundSuffix;
 
         private readonly XAudio2 device;
@@ -34,7 +33,6 @@ namespace BusinessLogic.SoundPlayer
         /// <param name="pianoSoundSuffix"></param>
         public PianoSoundPlayer(string pianoSoundPrefix, string pianoSoundSuffix)
         {
-            this.pianoSoundPrefix = pianoSoundPrefix;
             this.pianoSoundSuffix = pianoSoundSuffix;
             pianoFilesFolder = ProjectSettings.GetPath(PianoHeroPath.PianoSoundsFolder) + pianoSoundPrefix;
             VerifyDirectory();
@@ -56,20 +54,6 @@ namespace BusinessLogic.SoundPlayer
                 if (str.StartsWith(pianoFilesFolder)) return;
             }
             throw new DirectoryNotFoundException(pianoFilesFolder + " was not found");
-        }
-
-        /// <summary>
-        /// Plays a single note until the length of the audio has been reached, using the <paramref name="noteName"/> to get the associated note, and <paramref name="octave"/> to increase / decrease octave by pitch
-        /// </summary>
-        /// <param name="noteName"></param>
-        /// <param name="octave"></param>
-        //TODO KEEP THIS FUNCTION?
-        public void PlayNote(NoteName noteName, int octave)
-        {
-            float frequency = GetOctaveFrequencyRatio(octave);
-            string pianoNoteString = noteName.ToString();
-            string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
-            PlaySoundOneshot(pathToFile, frequency);
         }
 
         /// <summary>
@@ -169,28 +153,6 @@ namespace BusinessLogic.SoundPlayer
                 return new FadingAudio(sourceVoice);
             }
             return null;
-        }
-
-
-        /// <summary>
-        /// Gets the currect pitchshift for each octave specifiek by <paramref name="octave"/>.
-        /// <para>
-        /// Min <paramref name="octave"/> = 2, Max <paramref name="octave"/> = 5 else returns 0
-        /// </para>
-        /// </summary>
-        /// <param name="octave"></param>
-        /// <returns></returns>
-        //TODO KEEP THIS FUNCTION?
-        private static float GetOctaveFrequencyRatio(int octave)
-        {
-            return octave switch
-            {
-                2 => 0.125f,
-                3 => 0.25f,
-                4 => 0.5f,
-                5 => 1,
-                _ => 0,
-            };
         }
     }
 }

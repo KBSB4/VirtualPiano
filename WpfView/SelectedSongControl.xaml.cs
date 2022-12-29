@@ -24,7 +24,7 @@ namespace WpfView
             InitializeComponent();
             int userId = 0;
 
-            if(loggeduser is not null)
+            if (loggeduser is not null)
             {
                 userId = loggeduser.Id;
             }

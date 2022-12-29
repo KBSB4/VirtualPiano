@@ -2,7 +2,6 @@
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.MusicTheory;
 using Model;
-using System.Reflection;
 using Octave = Model.Octave;
 
 namespace BusinessLogic

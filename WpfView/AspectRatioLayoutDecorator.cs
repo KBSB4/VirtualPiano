@@ -8,6 +8,7 @@ namespace WpfView
     /// </summary>
     public class AspectRatioLayoutDecorator : Decorator
     {
+        //TODO Summaries
         public static readonly DependencyProperty AspectRatioProperty =
            DependencyProperty.Register(
               "AspectRatio",

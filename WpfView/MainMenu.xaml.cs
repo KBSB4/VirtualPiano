@@ -38,11 +38,19 @@ namespace WpfView
 			IsVisibleChanged += MainMenu_IsVisibleChanged;
         }
 
+        /// <summary>
+        /// On page visibility change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void MainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
             UpdateUI();
 		}
 
+        /// <summary>
+        /// Translate labels
+        /// </summary>
 		private void UpdateUI()
 		{
             SettingsLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Settings);

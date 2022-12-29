@@ -22,11 +22,19 @@ namespace WpfView
 			IsVisibleChanged += UI_IsVisibleChanged;
 		}
 
+        /// <summary>
+        /// On visible changed page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			UpdateUI();
 		}
 
+        /// <summary>
+        /// Translate labels
+        /// </summary>
 		private void UpdateUI()
 		{
             TitleLabel.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_Title);
@@ -43,7 +51,6 @@ namespace WpfView
 		/// <param name="e"></param>
 		private void Upload_Click(object sender, RoutedEventArgs e)
         {
-            //TODO check if user is logged in
             this.DialogResult = true;
             Close();
         }

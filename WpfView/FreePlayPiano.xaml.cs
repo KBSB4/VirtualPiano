@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace WpfView
 {
@@ -41,16 +40,24 @@ namespace WpfView
                 IsBackground = true
             };
             updateVisualNoteThread.Start();
-			IsVisibleChanged += UI_IsVisibleChanged;
-		}
+            IsVisibleChanged += UI_IsVisibleChanged;
+        }
 
-		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			UpdateUI();
-		}
+        /// <summary>
+        /// Page navigated event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            UpdateUI();
+        }
 
-		private void UpdateUI()
-		{
+        /// <summary>
+        /// Translate labels
+        /// </summary>
+        private void UpdateUI()
+        {
             BackMenu.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
             SettingsMenuItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_Settings);
             OpenItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Open);
@@ -59,11 +66,11 @@ namespace WpfView
             KaraokeBox.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Karaoke);
         }
 
-		/// <summary>
-		/// Thread that updates the visual position of already placed notes
-		/// </summary>
-		/// <param name="obj"></param>
-		private void UpdateVisualNotes(object? obj)
+        /// <summary>
+        /// Thread that updates the visual position of already placed notes
+        /// </summary>
+        /// <param name="obj"></param>
+        private void UpdateVisualNotes(object? obj)
         {
             var next = DateTime.Now;
             while (true)
@@ -265,7 +272,7 @@ namespace WpfView
                 else
                 {
                     SongController.DoKaroake = KaraokeBox.IsChecked;
-					SongController.LoadSong();
+                    SongController.LoadSong();
                     SongController.PlaySong();
                 }
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;

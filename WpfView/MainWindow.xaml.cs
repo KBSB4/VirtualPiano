@@ -8,6 +8,9 @@ namespace WpfView
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Main window where all pages will be displayed
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();

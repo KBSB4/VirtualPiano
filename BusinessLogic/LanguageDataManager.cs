@@ -7,54 +7,91 @@ namespace BusinessLogic
     public class LanguageDataManager
     {
         private Language? currentLanguage;
-        private string JSONPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PianoHero\\LanguageData.json";
-        private string JSONDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PianoHero\\";
+        private readonly string JSONPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PianoHero\\LanguageData.json";
+        private readonly string JSONDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PianoHero\\";
 
-
+        /// <summary>
+        /// Get <see cref="currentLanguage"/> from <see cref="GetPreferredLanguage"/>.
+        /// </summary>
         public LanguageDataManager()
         {
             if (!File.Exists(JSONPath)) return;
             currentLanguage = GetLanguage(GetPreferredLanguage());
         }
 
-        public LanguageData GetLanguageData()
+        /// <summary>
+        /// Gets <see cref="LanguageData"/> from JSON.
+        /// </summary>
+        /// <returns><see cref="LanguageData"/></returns>
+        public LanguageData? GetLanguageData()
         {
             string openedjson = File.ReadAllText(JSONPath);
             return JsonConvert.DeserializeObject<LanguageData>(openedjson);
         }
 
+        /// <summary>
+        /// Set preferredlanguage inside <see cref="LanguageData"/> and <see cref="WriteLanguageData(LanguageData)"/>
+        /// </summary>
+        /// <param name="code"></param>
         public void SetPreferredLanguage(LanguageCode code)
         {
-            LanguageData languageData = GetLanguageData();
-            languageData.preferredLanguage = code;
-            WriteLanguageData(languageData);
-            currentLanguage = GetLanguage(GetPreferredLanguage());
+            LanguageData? languageData = GetLanguageData();
+            if (languageData is not null)
+            {
+                languageData.preferredLanguage = code;
+                WriteLanguageData(languageData);
+                currentLanguage = GetLanguage(GetPreferredLanguage());
+            }
         }
 
+        /// <summary>
+        /// Get preferred <see cref="LanguageCode"/> of the user
+        /// </summary>
+        /// <returns><see cref="LanguageCode"/></returns>
         public LanguageCode GetPreferredLanguage()
         {
-            LanguageData languageData = GetLanguageData();
-
+            LanguageData? languageData = GetLanguageData();
+            if (languageData is null) return LanguageCode.EN;
             return languageData.preferredLanguage;
         }
 
+        /// <summary>
+        /// Get language by <see cref="LanguageCode"/>
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns><see cref="Language"/></returns>
         private Language? GetLanguage(LanguageCode code)
         {
-            LanguageData languageData = GetLanguageData();
-
+            LanguageData? languageData = GetLanguageData();
+            if (languageData is null) return null;
             return languageData.languages.Where(lang => lang.Code == code).FirstOrDefault();
         }
 
-        public string GetTranslation(TranslationKey key)
+        /// <summary>
+        /// Get translation string based on <see cref="TranslationKey"/>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns><see cref="String"/> with translated text</returns>
+        public string? GetTranslation(TranslationKey key)
         {
+            if (currentLanguage is null) return null;
             return currentLanguage.Translations[key];
         }
 
-        public List<Language> GetAllLanguages()
+        /// <summary>
+        /// Returns a list of all available languages
+        /// </summary>
+        /// <returns>List of <see cref="Language"/></returns>
+        public List<Language>? GetAllLanguages()
         {
-            return GetLanguageData().languages;
+            LanguageData? languageData = GetLanguageData();
+            if (languageData is null) return null;
+            return languageData.languages;
         }
 
+        /// <summary>
+        /// Function that creates the JSON if it does not exist
+        /// </summary>
         public void CreateLanguages()
         {
             if (File.Exists(JSONPath)) return;
@@ -203,6 +240,10 @@ namespace BusinessLogic
             currentLanguage = GetLanguage(GetPreferredLanguage());
         }
 
+        /// <summary>
+        /// Write <see cref="LanguageData"/> to a JSON file
+        /// </summary>
+        /// <param name="languageData"></param>
         private void WriteLanguageData(LanguageData languageData)
         {
             string JSONSerialized = JsonConvert.SerializeObject(languageData, Formatting.Indented);

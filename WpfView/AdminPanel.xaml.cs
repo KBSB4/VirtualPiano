@@ -3,23 +3,12 @@ using Controller;
 using Melanchall.DryWetMidi.Core;
 using Microsoft.Win32;
 using Model;
-using Prism.Services.Dialogs;
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml.Linq;
-using static Azure.Core.HttpHeader;
 
 namespace WpfView
 {
@@ -28,24 +17,24 @@ namespace WpfView
     /// </summary>
     public partial class AdminPanel : Page
     {
+        //TODO Summaries
         private byte[] lastOpenedFile;
 
-		private List<Song> songList = new();
-		private readonly MainMenu _mainMenu;
-		public AdminPanel(MainMenu mainMenu)
-		{
-			_mainMenu = mainMenu;
-			GenerateSongList();
-			InitializeComponent();
-		}
+        private List<Song> songList = new();
+        private readonly MainMenu _mainMenu;
+        public AdminPanel(MainMenu mainMenu)
+        {
+            _mainMenu = mainMenu;
+            GenerateSongList();
+            InitializeComponent();
+        }
 
-
-		/// <summary>
-		///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        ///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
         {
             MidiLogic.CurrentMidi = null;
             var openFileDialog = new OpenFileDialog
@@ -104,8 +93,7 @@ namespace WpfView
             return isValid;
         }
 
-        //TODO: Terrible name, please change
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void UploadSongClick(object sender, RoutedEventArgs e)
         {
             if (Validator())
             {
@@ -158,7 +146,6 @@ namespace WpfView
             SongListAdminPanel.Items.Add(one);
             RemoveSongsList.Items.Add(del);
         }
-
 
         public async void DeleteSong(string name)
         {
@@ -213,8 +200,7 @@ namespace WpfView
             GenerateSongList();
         }
 
-        //TODO: Terrible name, please change
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void BackToMenuButtonClick(object sender, RoutedEventArgs e)
         {
             if (_mainMenu.LoggedInUser is not null)
             {
@@ -226,7 +212,7 @@ namespace WpfView
 
         class FemkesListBoxItem : ListBoxItem
         {
-            public string SongTitle { get; set; }
+            public string? SongTitle { get; set; }
         }
     }
 }

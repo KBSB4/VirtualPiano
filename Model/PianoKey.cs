@@ -29,6 +29,7 @@ namespace Model
         {
             KeyBind = bind;
         }
+
         public override string ToString() //Debug
         {
             return $"{Octave} | {Note} | {TimeStamp} | {Duration}";

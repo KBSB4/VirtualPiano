@@ -17,6 +17,10 @@ namespace WpfView
 
         private SongCardControl? SelectedCard { get; set; }
 
+        /// <summary>
+        /// Constructor for SongSelectPage
+        /// </summary>
+        /// <param name="mainMenu"></param>
         public SongSelectPage(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
@@ -26,33 +30,46 @@ namespace WpfView
             AddSongs();
             KaraokeCheckBox.Checked += KaraokeCheckBox_Checked;
             KaraokeCheckBox.Unchecked += KaraokeCheckBox_Unchecked;
-			IsVisibleChanged += UI_IsVisibleChanged;
-		}
+        }
 
-		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			UpdateUI();
-		}
-
-		private void UpdateUI()
+        /// <summary>
+        /// Translate labels
+        /// </summary>
+        private void UpdateUI()
         {
             TitleLabel.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_SelectSong);
             KaraokeLabel.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_Karaoke);
             StartButton.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_Start);
         }
 
-		private void KaraokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Uncheck Karaoke => karaoke false
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void KaraokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             SongController.DoKaroake = false;
         }
 
+        /// <summary>
+        /// Check Karaoke => karaoke true
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void KaraokeCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             SongController.DoKaroake = true;
         }
 
+        /// <summary>
+        /// On visible changed, update UI, Songs and Leaderboard
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            UpdateUI();
             AddSongs();
             CreateShowLeaderboard();
         }
@@ -89,6 +106,9 @@ namespace WpfView
             CreateShowLeaderboard();
         }
 
+        /// <summary>
+        /// Create and show leaderboard for the <see cref="SelectedCard"/>
+        /// </summary>
         public async void CreateShowLeaderboard()
         {
             if (SelectedCard is not null)
@@ -118,6 +138,11 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Back to menu click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);

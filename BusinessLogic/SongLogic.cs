@@ -41,7 +41,6 @@ namespace BusinessLogic
             if (obj is not Song song) return;
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
-            //Thread.Sleep(SONG_OFFSET);
             PlaybackDevice.Start();
             Thread.Sleep(10);
             song.SongTimerThread?.Start();
@@ -139,7 +138,6 @@ namespace BusinessLogic
                 if (PlaybackDevice is null || OutputDevice is null) return;
                 PlaybackDevice.PlaybackEnd = new MetricTimeSpan(0);
                 Thread.Sleep(500);
-                //TODO Is the accessviolationexception fixed yet???
                 PlaybackDevice.Dispose();
                 OutputDevice.Dispose();
             }

@@ -14,7 +14,7 @@ namespace Model
         public Thread? SongTimerThread { get; set; }
         public bool IsPlaying { get; set; }
         public string? Description { get; set; }
-        public byte[] FullFile { get; set; }
+        public byte[]? FullFile { get; set; }
 
         public event EventHandler<PianoKeyEventArgs>? NotePlayed;
 

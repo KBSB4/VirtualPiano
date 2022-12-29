@@ -13,10 +13,10 @@
         Menubar_MIDI_Karaoke,
 
         MainMenu_Settings,
-		MainMenu_FreePlay,
-		MainMenu_Play,
+        MainMenu_FreePlay,
+        MainMenu_Play,
 
-		Settings_Volume,
+        Settings_Volume,
         Settings_InputDevice,
         Settings_Language,
 
@@ -33,27 +33,25 @@
 
         AccountPage_RegisterTitle,
         AccountPage_RegisterUsername,
-		AccountPage_RegisterEmail,
-		AccountPage_RegisterPassword,
-		AccountPage_RegisterPasswordConfirm,
-		AccountPage_RegisterButton,
+        AccountPage_RegisterEmail,
+        AccountPage_RegisterPassword,
+        AccountPage_RegisterPasswordConfirm,
+        AccountPage_RegisterButton,
 
-		
         MessageBox_HighscoreHigherThanText,
-		MessageBox_HighscoreHigherThanCaption,
-		MessageBox_SelectSongBeforeStartText,
-		MessageBox_SelectSongBeforeStartCaption,
-		MessageBox_LogOutText,
-		MessageBox_LogOutCaptiom,
-		MessageBox_MidiStillPlayingText,
-		MessageBox_MidiStillPlayingCaption,
-		MessageBox_NoMidiSelectedText,
-		MessageBox_NoMidiSelectedCaption,
-		MessageBox_NoMidiPlayingText,
-		MessageBox_NoMidiPlayingCaption,
+        MessageBox_HighscoreHigherThanCaption,
+        MessageBox_SelectSongBeforeStartText,
+        MessageBox_SelectSongBeforeStartCaption,
+        MessageBox_LogOutText,
+        MessageBox_LogOutCaptiom,
+        MessageBox_MidiStillPlayingText,
+        MessageBox_MidiStillPlayingCaption,
+        MessageBox_NoMidiSelectedText,
+        MessageBox_NoMidiSelectedCaption,
+        MessageBox_NoMidiPlayingText,
+        MessageBox_NoMidiPlayingCaption,
 
-
-		Menubar_SongSelect_SelectSong,
+        Menubar_SongSelect_SelectSong,
         Menubar_SongSelect_Start,
         Menubar_SongSelect_Karaoke,
     }

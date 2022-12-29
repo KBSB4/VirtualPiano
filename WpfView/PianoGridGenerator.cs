@@ -38,7 +38,6 @@ namespace WpfView
         /// </summary>
         /// <param name="key"></param>
         /// <param name="colour"></param>
-        //TODO Colours for all ratings? - Ask PO
         public void DisplayPianoKey(PianoKey key, Rating? rating)
         {
             if (key is null) return;

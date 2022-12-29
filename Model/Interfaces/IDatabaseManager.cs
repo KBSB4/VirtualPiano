@@ -31,7 +31,7 @@ namespace Model.Interfaces
 		public Task<Highscore[]> GetHighscores(int songId);
 
 		public Task UploadHighscore(Highscore highscore);
-        public Task UpdateHighscore(Highscore score);
-        #endregion
-    }
+		public Task UpdateHighscore(Highscore score);
+		#endregion
+	}
 }
