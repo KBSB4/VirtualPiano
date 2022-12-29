@@ -35,7 +35,7 @@ namespace WpfView
             AccountPage = new AccountPage(this, null);
             AdminPanel = new(this);
             Account_ChangeIconBasedOnUser();
-			IsVisibleChanged += MainMenu_IsVisibleChanged;
+            IsVisibleChanged += MainMenu_IsVisibleChanged;
         }
 
         /// <summary>
@@ -44,15 +44,15 @@ namespace WpfView
         /// <param name="sender"></param>
         /// <param name="e"></param>
 		private void MainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
+        {
             UpdateUI();
-		}
+        }
 
         /// <summary>
         /// Translate labels
         /// </summary>
 		private void UpdateUI()
-		{
+        {
             SettingsLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Settings);
             PlayLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_Play);
             FreePlayLabel.Content = LanguageController.GetTranslation(TranslationKey.MainMenu_FreePlay);
@@ -149,7 +149,7 @@ namespace WpfView
             else
             {
                 MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if(result == MessageBoxResult.Yes) 
+                if (result == MessageBoxResult.Yes)
                 {
                     LoggedInUser = null;
                     Account_ChangeIconBasedOnUser();

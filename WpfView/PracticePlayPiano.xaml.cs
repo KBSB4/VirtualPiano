@@ -60,11 +60,19 @@ namespace WpfView
             IsVisibleChanged += UI_IsVisibleChanged;
         }
 
+        /// <summary>
+        /// If page gets navigates
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             UpdateUI();
         }
 
+        /// <summary>
+        /// Translate labels
+        /// </summary>
         private void UpdateUI()
         {
             MenuBackButton.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
@@ -144,31 +152,30 @@ namespace WpfView
                 NavigationService?.Navigate(_songSelectPage);
                 return;
             }
+
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Visible;
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownReady.png", UriKind.Relative));
             }));
+
             Tempo x = Tempo.FromBeatsPerMinute(SongController.CurrentSong.File.GetTempoMap().GetTempoAtTime((MetricTimeSpan)TimeSpan.FromSeconds(20)).BeatsPerMinute);
             double b = (60d / x.BeatsPerMinute) * 2.5d;
-            //double b = ((60d / 93d) * 5000d);
             double y = b;
-            //int y = (int)Math.Ceiling(b);
+
             Thread.Sleep(TimeSpan.FromSeconds(y));
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownSet.png", UriKind.Relative));
             }));
-            //Thread.Sleep(2000);
             Thread.Sleep(TimeSpan.FromSeconds(y));
-            //Thread.Sleep((MetricTimeSpan)TimeSpan.FromSeconds(y));
+
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownGo.png", UriKind.Relative));
             }));
             Thread.Sleep(TimeSpan.FromSeconds(y));
-            //Thread.Sleep(2000);
-            //Thread.Sleep((MetricTimeSpan)TimeSpan.FromSeconds(y));
+
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Hidden;
@@ -459,10 +466,11 @@ namespace WpfView
 
                     if (notesToBePressed is null) return;
 
-                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => {
+                    PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item =>
+                    {
                         if (item.TimeStamp is null) return 99999;
                         return Math.Abs(pressedAt.TotalSeconds - item.TimeStamp.TotalSeconds);
-                        }).FirstOrDefault();
+                    }).FirstOrDefault();
 
                     if (closestNote is not null && !closestNote.PressedDown)
                     {
@@ -541,7 +549,7 @@ namespace WpfView
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             stopVisualNoteThread = true;
-            Playing = false; //TODO rename name to be more clear
+            Playing = false;
             SongController.StopSong();
             NavigationService?.Navigate(_songSelectPage);
         }

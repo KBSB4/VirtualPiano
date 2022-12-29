@@ -30,6 +30,7 @@ namespace Model
         /// <summary>
         /// Empty song
         /// </summary>
+        //TODO Ignore due to it being quickly added?
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Song() //required
         {

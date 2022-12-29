@@ -79,6 +79,5 @@ namespace Controller
 		{
 			PianoLogic.Volume = volume;
 		}
-
 	}
 }

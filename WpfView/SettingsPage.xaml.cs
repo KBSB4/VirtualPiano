@@ -172,6 +172,11 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// If volumeslider gets moved, update volume
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             //Volume changed
