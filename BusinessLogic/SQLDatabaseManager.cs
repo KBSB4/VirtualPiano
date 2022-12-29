@@ -96,6 +96,36 @@ namespace BusinessLogic
         }
 
         /// <summary>
+        /// Gets <see cref="User"/> by the given <paramref name="email"/> from the SQL database.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>If <paramref name="email"/> exists in the database returns: New <see cref="User"/>. Otherwise returns null.</returns>
+        public async Task<User?> GetUserByEmail(string email)
+        {
+            using SqlConnection connection = new(connectionString);
+            string query = "SELECT * FROM UserAccount WHERE email = @email";
+
+            await connection.OpenAsync();
+
+            SqlCommand command = new(query, connection);
+
+            SqlParameter emailParam = new("@email", SqlDbType.VarChar) { Value = email };
+
+            command.Parameters.Add(emailParam);
+
+            SqlDataReader dataReader = await command.ExecuteReaderAsync();
+
+            User[] users = await ReadUsers(dataReader);
+
+            await CloseAndDispose(connection, command, dataReader);
+
+            if (users.Length > 0)
+                return users[0];
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the user with the corresponding <paramref name="username"/> and <paramref name="password"/> from the SQL database.
         /// </summary>
         /// <param name="username"></param>

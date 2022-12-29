@@ -25,15 +25,15 @@ namespace UnitTests
         {
             Highscore score = new()
             {
-                User = DatabaseController.GetUserByID(12).Result,
-                Song = await DatabaseController.GetSong(57),
+                User = DatabaseController.GetUserByID(30).Result,
+                Song = await DatabaseController.GetSong(7),
                 Score = -555
             };
             await DatabaseController.UpdateHighscore(score);
             score.Score = -556;
             await DatabaseController.UpdateHighscore(score);
 
-            Highscore[]? highscores = await DatabaseController.GetHighscores(57);
+            Highscore[]? highscores = await DatabaseController.GetHighscores(7);
             Highscore? databasescore = highscores.Where(item => item.User.Id == score.User.Id).FirstOrDefault();
             Assert.That(databasescore.Score, Is.EqualTo(score.Score));
         }

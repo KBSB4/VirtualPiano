@@ -8,7 +8,12 @@ namespace Controller
     public static class DatabaseController
     {
         private static readonly IDatabaseManager databaseManager = new SQLDatabaseManager();
-        //TODO Summaries
+
+        /// <summary>
+        /// Finds a user with corresponding <paramref name="userID"/> from a database using <see cref="databaseManager"/>.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         public static async Task<User?> GetUserByID(int userID)
         {
             Task<User?> getUserByIDTask = databaseManager.GetUserById(userID);
@@ -18,6 +23,11 @@ namespace Controller
             return result;
         }
 
+        /// <summary>
+        /// Finds a user with corresponding <paramref name="username"/> from a database using <see cref="databaseManager"/>.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public static async Task<User?> GetUserByName(string username)
         {
             Task<User?> getUserByName = databaseManager.GetUserByName(username);
@@ -27,6 +37,24 @@ namespace Controller
             return result;
         }
 
+        /// <summary>
+        /// Finds a user with corresponding <paramref name="email"/> from a database using <see cref="databaseManager"/>.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>New <see cref="User"/> object, is null if not found in database</returns>
+        public static async Task<User?> GetUserByEmail(string email)
+        {
+            Task<User?> getUserByEmail = databaseManager.GetUserByEmail(email);
+
+            User? result = await getUserByEmail;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Adds a <paramref name="user"/> to a database using <see cref="databaseManager"/> .
+        /// </summary>
+        /// <param name="user"></param>
         public static async Task UploadNewUser(User user)
         {
             Task uploadNewUserTask = databaseManager.UploadNewUser(user);
@@ -34,6 +62,12 @@ namespace Controller
             await uploadNewUserTask;
         }
 
+        /// <summary>
+        /// Finds a user with <paramref name="username"/> that matches the <paramref name="password"/> field from a database using <see cref="databaseManager"/>.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns>New <see cref="User"/> object, is null if not found in database</returns>
         public static async Task<User?> GetLoggingInUser(string username, string password)
         {
             Task<User?> getLoggingInUserTask = databaseManager.GetLoggingInUser(username, password);
@@ -43,6 +77,10 @@ namespace Controller
             return result;
         }
 
+        /// <summary>
+        /// Gets all users from a database using <see cref="databaseManager"/>.
+        /// </summary>
+        /// <returns>A new <see cref="User"/>[], could be an empty array</returns>
         public static async Task<User[]?> GetAllUsers()
         {
             Task<User[]?> getAllUsersTask = databaseManager.GetAllUsers();
@@ -53,7 +91,7 @@ namespace Controller
         }
 
         /// <summary>
-        /// Deletes a song from a database using <see cref="databaseManager"/>
+        /// Deletes a song from a database using <see cref="databaseManager"/>.
         /// </summary>
         /// <param name="songName"></param>
         public static async Task DeleteSong(string songName)
@@ -64,7 +102,7 @@ namespace Controller
         }
 
         /// <summary>
-        /// Finds a song with <paramref name="songId"/> from a database using <see cref="databaseManager"/>
+        /// Finds a song with <paramref name="songId"/> from a database using <see cref="databaseManager"/>.
         /// </summary>
         /// <param name="songId"></param>
         /// <returns>New <see cref="Song"/> object, is null if not found in database</returns>
@@ -78,7 +116,7 @@ namespace Controller
         }
 
         /// <summary>
-        /// Gets all songs from a database using <see cref="databaseManager"/>
+        /// Gets all songs from a database using <see cref="databaseManager"/>.
         /// </summary>
         /// <returns>A new <see cref="Song"/>[], could be an empty array</returns>
         public static async Task<Song[]?> GetAllSongs()
@@ -91,7 +129,7 @@ namespace Controller
         }
 
         /// <summary>
-        /// Adds a <paramref name="song"/> to a database using <see cref="databaseManager"/> 
+        /// Adds a <paramref name="song"/> to a database using <see cref="databaseManager"/>.
         /// </summary>
         /// <param name="song"></param>
         public static async Task UploadSong(Song song)
@@ -102,7 +140,7 @@ namespace Controller
         }
 
         /// <summary>
-        /// Gets highscores from a song found by <paramref name="songId"/> from a database using <see cref="databaseManager"/> 
+        /// Gets highscores from a song found by <paramref name="songId"/> from a database using <see cref="databaseManager"/>.
         /// </summary>
         /// <param name="songId"></param>
         /// <returns>New <see cref="Highscore"/>[], is empty if nothing found</returns>
@@ -116,7 +154,7 @@ namespace Controller
         }
 
         /// <summary>
-        /// Upload highscore with the <see cref="Highscore"/> class
+        /// Upload highscore with the <see cref="Highscore"/> class.
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
@@ -128,7 +166,7 @@ namespace Controller
         }
 
         /// <summary>
-        /// Update highscore with the <see cref="Highscore"/> class
+        /// Update highscore with the <see cref="Highscore"/> class.
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>

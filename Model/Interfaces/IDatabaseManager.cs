@@ -20,6 +20,7 @@ namespace Model.Interfaces
 		public Task<User?> GetUserByName(string username);
 		public Task<User?> GetUserById(int userID);
 
+		public Task<User?> GetUserByEmail(string email);
 		public Task UploadNewUser(User user);
 
 		public Task<User[]?> GetAllUsers();
