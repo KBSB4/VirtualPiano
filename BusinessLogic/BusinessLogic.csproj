@@ -7,6 +7,208 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="PianoSoundPlayer\Sounds\Piano\A2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\A3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\A4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\A5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\ASharp2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\ASharp3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\ASharp4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\ASharp5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\B2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\B3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\B4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\B5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\C2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\C3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\C4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\C5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\CSharp2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\CSharp3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\CSharp4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\CSharp5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\D2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\D3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\D4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\D5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\DSharp2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\DSharp3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\DSharp4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\DSharp5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\E2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\E3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\E4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\E5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\F2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\F3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\F4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\F5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\FSharp2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\FSharp3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\FSharp4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\FSharp5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\G2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\G3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\G4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\G5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\GSharp2.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\GSharp3.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\GSharp4.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\Piano\GSharp5.wav" />
+    <None Remove="PianoSoundPlayer\Sounds\StartTune.mid" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\A2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\A3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\A4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\A5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\ASharp2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\ASharp3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\ASharp4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\ASharp5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\B2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\B3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\B4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\B5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\C2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\C3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\C4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\C5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\CSharp2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\CSharp3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\CSharp4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\CSharp5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\D2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\D3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\D4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\D5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\DSharp2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\DSharp3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\DSharp4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\DSharp5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\E2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\E3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\E4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\E5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\F2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\F3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\F4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\F5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\FSharp2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\FSharp3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\FSharp4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\FSharp5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\G2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\G3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\G4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\G5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\GSharp2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\GSharp3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\GSharp4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\Piano\GSharp5.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PianoSoundPlayer\Sounds\StartTune.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Melanchall.DryWetMidi" Version="6.1.3" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
     <PackageReference Include="SharpDX.XAudio2" Version="4.2.0" />
@@ -15,156 +217,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="PianoSoundPlayer\Sounds\Piano\A2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\A3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\A4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\A5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\ASharp2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\ASharp3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\ASharp4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\ASharp5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\B2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\B3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\B4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\B5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\C2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\C3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\C4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\C5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\CSharp2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\CSharp3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\CSharp4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\CSharp5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\D2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\D3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\D4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\D5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\DSharp2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\DSharp3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\DSharp4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\DSharp5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\E2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\E3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\E4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\E5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\F2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\F3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\F4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\F5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\FSharp2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\FSharp3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\FSharp4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\FSharp5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\G2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\G3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\G4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\G5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\GSharp2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\GSharp3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\GSharp4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\Piano\GSharp5.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="PianoSoundPlayer\Sounds\StartTune.mid">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

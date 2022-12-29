@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfView"
         mc:Ignorable="d"
-        Title="Piano Hero" Height="540" Width="960" Icon="Images/PianoHeroLogo.png" 
+        Title="Piano Hero" Height="540" Width="960" Icon="pack://application:,,,/Images/PianoHeroLogo.png" 
         WindowState="Maximized" WindowStyle="SingleBorderWindow">
 
     <DockPanel>

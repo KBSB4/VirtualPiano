@@ -6,7 +6,12 @@ namespace WpfView
     /// </summary>
     public partial class UploadScoreDialog : Window
     {
-        public int Option { get; set; }
+
+        /// <summary>
+        /// Show score on screen
+        /// </summary>
+        /// <param name="score"></param>
+        /// <param name="maxscore"></param>
         public UploadScoreDialog(int score, int maxscore)
         {
             InitializeComponent();
@@ -14,12 +19,23 @@ namespace WpfView
             MaxScoreLabel.Content = maxscore;
         }
 
+        /// <summary>
+        /// Return true for upload
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
+            //TODO check if user is logged in
             this.DialogResult = true;
             Close();
         }
 
+        /// <summary>
+        /// Return false for main menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Menu_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;

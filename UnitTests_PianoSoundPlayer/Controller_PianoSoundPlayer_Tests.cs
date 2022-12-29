@@ -14,7 +14,7 @@ namespace UnitTests
 		[Test]
 		public void PianoSoundPlayer_GetFadingAudio_PlayTenNotesFor3Seconds()
 		{
-			PianoSoundPlayer? player = new("../../../../PianoSoundPlayer/Sounds/Piano/", "", ".wav");
+			PianoSoundPlayer? player = new("", ".wav");
 			FadingAudio[] fadingAudios = {
 				player.GetFadingAudio(NoteName.C, 5),
 				player.GetFadingAudio(NoteName.CSharp, 5),
@@ -68,7 +68,7 @@ namespace UnitTests
 			try
 			{
 				PianoSoundPlayer player;
-				player = new PianoSoundPlayer("", "", ".wav");
+				player = new PianoSoundPlayer("", ".wav");
 				Assert.Fail("No exception was given, while path was absolete");
 			}
 			catch (Exception ex)
@@ -83,7 +83,7 @@ namespace UnitTests
 			try
 			{
 				PianoSoundPlayer player;
-				player = new PianoSoundPlayer("../../../../PianoSoundPlayer/Sounds/Piano/", "testname", ".wav");
+				player = new PianoSoundPlayer("testname", ".wav");
 				player.PlayNote(NoteName.C, 5);
 				Assert.Fail("No exception was given, while the folder \"Piano\" only contains the note names " +
 					"without prefix \"testname\"");

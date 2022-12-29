@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using System.Windows;
-using BusinessLogic;
 
 namespace WpfView
 {

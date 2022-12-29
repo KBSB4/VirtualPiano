@@ -21,8 +21,26 @@ namespace WpfView
         {
             _mainMenu = mainMenu;
             PracticePiano = new PracticePlayPiano(_mainMenu, this);
+            IsVisibleChanged += _mainMenu_IsVisibleChanged;
             InitializeComponent();
-           // AddSongs();
+            AddSongs();
+            KaraokeCheckBox.Checked += KaraokeCheckBox_Checked;
+            KaraokeCheckBox.Unchecked += KaraokeCheckBox_Unchecked;
+        }
+
+        private void KaraokeCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            SongController.DoKaroake = false;
+        }
+
+        private void KaraokeCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            SongController.DoKaroake = true;
+        }
+
+        private void _mainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            AddSongs();
         }
 
         /// <summary>
@@ -41,7 +59,7 @@ namespace WpfView
                     SelectedCard = null;
                     Image nothingSelectedImage = new()
                     {
-                        Source = new ImageSourceConverter().ConvertFromString("../../../../WpfView/Images/PianoHeroLogo.png") as ImageSource
+                        Source = new ImageSourceConverter().ConvertFromString("pack://application:,,,/Images/PianoHeroLogo.png") as ImageSource
                     };
                     Leaderboard.Children.Clear();
                     Leaderboard.Children.Add(nothingSelectedImage);
@@ -72,6 +90,7 @@ namespace WpfView
         /// </summary>
         private async void AddSongs()
         {
+            SongCards.Children.Clear();
             Song[] songs = await DatabaseController.GetAllSongs();
 
             foreach (var item in songs)
@@ -79,18 +98,24 @@ namespace WpfView
                 SongCardControl songCardControl = new(item.Id, item.Name, item.Description, (int)item.Difficulty, this);
                 SongCards.Children.Add(songCardControl);
             }
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    SongCardControl songCardControl = new(i, "Song " + (i + 1).ToString(), i % 4, this);
+            //    SongCards.Children.Add(songCardControl);
+            //}
         }
 
-        /// <summary>
-        /// Return to main menu
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
         }
 
+        /// <summary>
+        /// Start the currently selected song, if no song selected show warning
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartButton_MouseLeftDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (SelectedCard is not null)
