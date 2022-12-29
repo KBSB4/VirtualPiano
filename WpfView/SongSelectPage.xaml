@@ -17,7 +17,7 @@
             <ColumnDefinition Width="3*"></ColumnDefinition>
             <ColumnDefinition Width="2*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Image Source="/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
+        <Image Source="pack://application:,,,/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
         <Label HorizontalAlignment="Center" FontSize="100" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Select a song</Label>
 
         <ScrollViewer Grid.Row="1" Grid.RowSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" >
@@ -37,20 +37,26 @@
             </Grid.RowDefinitions>
             <Viewbox Grid.RowSpan="2" Grid.ColumnSpan="2">
                 <WrapPanel Orientation="Horizontal" Name="Leaderboard">
-                    <Image Source="/Images/PianoHeroLogo.png" Name="nothingSelectedImage"></Image>
+                    <Image Source="pack://application:,,,/Images/PianoHeroLogo.png" Name="nothingSelectedImage"></Image>
                 </WrapPanel>
             </Viewbox>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+                <Label VerticalAlignment="Center" FontSize="30" Foreground="White" FontWeight="Bold">Karaoke mode</Label>
+                <CheckBox VerticalAlignment="Center" Name="KaraokeCheckBox" Style="{StaticResource CircleCheckbox}" Width="30" Height="30"/>
+            </StackPanel>
+
             <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource MenuButton}">
                 <Viewbox>
                     <Label x:Name="StartButton"  HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="center" FontWeight="Bold" Foreground="WhiteSmoke" MouseLeftButtonDown="StartButton_MouseLeftDown">Start</Label>
                 </Viewbox>
             </Button>
         </Grid>
-        
+
         <Menu Grid.Row="0" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#00ffffff">
             <MenuItem Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White">
                 <MenuItem.Icon>
-                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                    <Image Source="pack://application:,,,/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
             </MenuItem>
         </Menu>

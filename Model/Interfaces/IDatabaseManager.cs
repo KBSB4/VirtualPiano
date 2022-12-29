@@ -2,19 +2,19 @@
 
 namespace Model.Interfaces
 {
-    public interface IDatabaseManager
-    {
+	public interface IDatabaseManager
+	{
 		#region Songs
-        public Task<Song?> GetSong(string songname);
+		public Task<Song?> GetSong(string songname);
 
-		public Task<Song?> GetSong(int songId);
+        public Task<Song?> GetSong(int songId);
 
-		public Task<Song[]> GetAllSongs();
+		public Task<Song[]?> GetAllSongs();
 
-		public Task UploadSong(Song song);
+        public Task UploadSong(Song song);
 
-		public Task DeleteSong(string songname);
-		#endregion
+        public Task DeleteSong(string songname);
+        #endregion
 
 		#region Users
 		public Task<User> GetUserByName(string username);

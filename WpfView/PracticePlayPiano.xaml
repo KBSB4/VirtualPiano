@@ -31,7 +31,7 @@
         <Menu Grid.Row="0" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#FF292929" Panel.ZIndex="2">
             <MenuItem x:Name="MenuBackButton" Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White" IsEnabled="False">
                 <MenuItem.Icon>
-                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                    <Image Source="pack://application:,,,/Images/previous.png" Margin=" 3 -4 0,0" />
                 </MenuItem.Icon>
             </MenuItem>
             <Label x:Name="ScoreLabel" Content="Score = 0" Foreground="White"/>

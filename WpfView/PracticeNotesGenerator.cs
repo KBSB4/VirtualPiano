@@ -82,7 +82,7 @@ namespace WpfView
             }
             currentColumn = practiceNoteColumns[note];
 
-            RatingTextControl ratingText = new(rating, textrotationrandomiser.Next(-15,15));
+            RatingTextControl ratingText = new(rating, textrotationrandomiser.Next(-15, 15));
             currentColumn.Children.Add(ratingText);
         }
 

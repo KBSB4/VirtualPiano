@@ -26,7 +26,7 @@
                         <RowDefinition Height="2*"></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Image Source="/Images/SongCardBackground.png" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="3"></Image>
+                    <Image Source="pack://application:,,,/Images/SongCardBackground.png" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="3"></Image>
                     <Grid Grid.Row="2" Grid.Column="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*"></ColumnDefinition>

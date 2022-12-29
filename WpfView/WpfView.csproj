@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\PianoHeroLogo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +19,8 @@
     <None Remove="Images\DifficultyIconMedium.png" />
     <None Remove="Images\log-out.png" />
     <None Remove="Images\midi.png" />
+    <None Remove="Images\NoTrophy.png" />
+    <None Remove="Images\PianoHeroLogo.ico" />
     <None Remove="Images\PianoHeroLogo.png" />
     <None Remove="Images\PianoHeroMenuBackground.png" />
     <None Remove="Images\PianoHeroMenuBackground.psd" />
@@ -52,6 +55,8 @@
     <Resource Include="Images\DifficultyIconMedium.png" />
     <Resource Include="Images\log-out.png" />
     <Resource Include="Images\midi.png" />
+    <Resource Include="Images\NoTrophy.png" />
+    <Resource Include="Images\PianoHeroLogo.ico" />
     <Resource Include="Images\PianoHeroMenuBackground.png" />
   </ItemGroup>
 
@@ -74,27 +79,6 @@
     <Resource Include="Images\ThrophySilver.png" />
     <Resource Include="Images\ThropyBronze.png" />
     <Resource Include="Images\TrophyGold.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="DebugMidi\BEET.mid">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="DebugMidi\RUshE.mid">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="DebugMidi\silent_night_easy.mid">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="DebugMidi\sm64.mid">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="DebugMidi\test.mid">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="DebugMidi\test2.mid">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.MusicTheory;
 using Model;
+using System.Reflection;
 using Octave = Model.Octave;
 
 namespace BusinessLogic
@@ -15,7 +16,7 @@ namespace BusinessLogic
         //Used to play multiple keys at once, also tracks the playing keys
         public static Dictionary<PianoKey, FadingAudio> CurrentPlayingAudio { get => currentPlayingAudio; set => currentPlayingAudio = value; }
         private static Dictionary<PianoKey, FadingAudio> currentPlayingAudio = new();
-        
+
         private const int AmountOfKeys = 24;
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace BusinessLogic
         public static void CreatePiano()
         {
             Piano = new Piano();
-            SoundPlayer = new(ProjectSettings.GetPath(PianoHeroPath.PianoSoundsFolder), "", ".wav");
+            SoundPlayer = new("", ".wav");
             AssembleKeyBindings(Piano);
         }
 
@@ -47,7 +48,7 @@ namespace BusinessLogic
         /// <param name="octave"></param>
         /// <param name="note"></param>
         /// <returns></returns>
-        public static PianoKey CreateKey(Octave octave, NoteName note) 
+        public static PianoKey CreateKey(Octave octave, NoteName note)
         {
             return new PianoKey(octave, note);
         }

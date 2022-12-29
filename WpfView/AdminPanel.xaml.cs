@@ -11,12 +11,8 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -35,7 +31,7 @@ namespace WpfView
         private byte[] lastOpenedFile;
 
 		private List<Song> songList = new();
-		private MainMenu _mainMenu;
+		private readonly MainMenu _mainMenu;
 		public AdminPanel(MainMenu mainMenu)
 		{
 			_mainMenu = mainMenu;
@@ -115,17 +111,24 @@ namespace WpfView
 
         }
 
-        /// <summary>
-        /// Uploads a song to the databases and displays the song on the screen.
-        /// </summary>
-        public async void Upload()
-        {
-            int difficulty = int.Parse(difficultyTextBox.Text);
-            Difficulty d = (Difficulty)difficulty;
-            Song song = new Song() { Description = descriptionTextBox.Text, Difficulty = d, FullFile = lastOpenedFile, File = MidiLogic.CurrentMidi, Name = titleTextBox.Text };
-            await DatabaseController.UploadSong(song);
-            MakeSongVisable(song);
-        }
+		/// <summary>
+		/// Uploads a song to the databases and displays the song on the screen.
+		/// </summary>
+		public async void Upload()
+		{
+			int difficulty = int.Parse(difficultyTextBox.Text);
+			Difficulty d = (Difficulty)difficulty;
+			Song song = new()
+			{
+				Description = descriptionTextBox.Text,
+				Difficulty = d,
+				FullFile = lastOpenedFile,
+				File = MidiLogic.CurrentMidi,
+				Name = titleTextBox.Text
+			};
+			await DatabaseController.UploadSong(song);
+			MakeSongVisable(song);
+		}
 
 
         /// <summary>
@@ -142,17 +145,17 @@ namespace WpfView
             }
         }
 
-        /// <summary>
-        /// Fills a listbox with songs 
-        /// </summary>
-        /// <param name="song"></param>
-        public void MakeSongVisable(Song song)
-        {
-            ListBoxItem one = new ListBoxItem() { Content = song.Name };
-            ListBoxItem del = new FemkesListBoxItem() { songTitle = song.Name, Content = "X" };
-            SongListAdminPanel.Items.Add(one);
-            RemoveSongsList.Items.Add(del);
-        }
+		/// <summary>
+		/// Fills a listbox with songs 
+		/// </summary>
+		/// <param name="song"></param>
+		public void MakeSongVisable(Song song)
+		{
+			ListBoxItem one = new() { Content = song.Name };
+			ListBoxItem del = new FemkesListBoxItem() { SongTitle = song.Name, Content = "X" };
+			SongListAdminPanel.Items.Add(one);
+			RemoveSongsList.Items.Add(del);
+		}
 
 
         public async void DeleteSong(string name)
@@ -185,14 +188,17 @@ namespace WpfView
             {
                 var result = MessageBox.Show($"Are you sure u want to delete {deleteSong.songTitle}?", "Confirm Delete", MessageBoxButton.OKCancel);
 
-                if (result == MessageBoxResult.OK)
-                {
-                    DeleteSong(deleteSong.songTitle);
-                    Song? found = songList.Find(x => x.Name.Equals(deleteSong.songTitle));
-                    if (found != null) songList.Remove(found);
-                    RenewUploadedSongList();
-                }
-            }
+				if (result == MessageBoxResult.OK)
+				{
+					DeleteSong(deleteSong.SongTitle);
+					Song? found = songList.Find(x => x.Name.Equals(deleteSong.SongTitle));
+					if (found != null)
+					{
+						songList.Remove(found);
+						RenewUploadedSongList();
+					}
+				}
+			}
 
 
         }
@@ -207,16 +213,16 @@ namespace WpfView
             GenerateSongList();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            NavigationService?.Navigate(_mainMenu);
-        }
-    }
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			NavigationService?.Navigate(_mainMenu);
+		}
+	}
 
-    class FemkesListBoxItem : ListBoxItem
-    {
-        public string songTitle { get; set; }
-    }
+	class FemkesListBoxItem : ListBoxItem
+	{
+		public string SongTitle { get; set; }
+	}
 
 
 

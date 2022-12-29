@@ -35,12 +35,11 @@ namespace BusinessLogic.SoundPlayer
         /// <param name="fadeOutSpeed"></param>
         public void StopPlaying(float fadeOutSpeed)
         {
-            float sourceVoiceVolume = 0;
-            SourceVoice.GetVolume(out sourceVoiceVolume);
+            SourceVoice.GetVolume(out float sourceVoiceVolume);
 
-            fadeOutSpeed = fadeOutSpeed * sourceVoiceVolume;
+            fadeOutSpeed *= sourceVoiceVolume;
 
-			if (SourceVoice != null)
+            if (SourceVoice != null)
             {
                 if (fadeOutSpeed == 0 || fadeOutSpeed > 1000)
                 {
