@@ -16,11 +16,9 @@ namespace WpfView
     /// </summary>
     public partial class SettingsPage : Page
     {
-        //TODO PUT THIS BACK TO MAINMENU UNTIL ACCOUNT PAGE IS IMPLEMENTED
-        private readonly Page _mainMenu;
+        private readonly MainMenu _mainMenu;
         private int count = InputDevice.GetDevicesCount();
         public static int IndexInputDevice { get; set; }
-        public bool Closed = false;
 
         public SettingsPage(MainMenu mainMenu)
         {
@@ -159,10 +157,10 @@ namespace WpfView
             LanguageBox.SelectedIndex = (int)languageData.preferredLanguage;
 		}
 
-		private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-		{
+        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
             //Volume changed
             PianoController.SetVolume((float)(e.NewValue / ((Slider)e.Source).Maximum));
-		}
-	}
+        }
+    }
 }

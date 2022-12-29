@@ -47,6 +47,13 @@
                 </Grid>
             </Button>
             <Label x:Name="FreePlayLabel" Grid.Row="1" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" FontSize="50">Free-play</Label>
+            
+            <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource AccountButton}" Click="Account_Button_Click">
+                <Grid>
+                    <Rectangle Name="WhiteRectForIcon" Fill="White" Margin="32,55,32,55"></Rectangle>
+                    <Image Name="AccountIconImage"></Image>
+                </Grid>
+            </Button>
         </Grid>
     </Grid>
 </Page>

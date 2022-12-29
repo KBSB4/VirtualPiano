@@ -24,7 +24,7 @@ namespace WpfView
     public partial class PracticePlayPiano : Page
     {
         //Window properties
-        private readonly MainMenu? _mainMenu;
+        private readonly MainMenu _mainMenu;
         private readonly SongSelectPage _songSelectPage;
         private readonly PianoGridGenerator pianoGrid;
         readonly PracticeNotesGenerator practiceNotes;
@@ -39,15 +39,18 @@ namespace WpfView
         private const int MAXNOTESCORE = 1000;
         private int maxTotalScore = 0;
 
+        Thread? updateVisualNoteThread;
+
         //NOTE Temporary till we properly get current user for highscore
-        Song currentSong;
+        //Song currentSong;
+        private bool stopVisualNoteThread;
 
         public PracticePlayPiano(MainMenu mainMenu, SongSelectPage songSelectPage)
         {
             _mainMenu = mainMenu;
             _songSelectPage = songSelectPage;
             InitializeComponent();
-            _mainMenu?.CheckInputDevice(SettingsPage.IndexInputDevice);
+            _mainMenu.CheckInputDevice(SettingsPage.IndexInputDevice);
             PianoController.CreatePiano();
             pianoGrid = new PianoGridGenerator(WhiteKeysGrid, BlackKeysGrid, 28);
             practiceNotes = new PracticeNotesGenerator(PracticeColumnWhiteKeys, PracticeColumnBlackKeys, 28);
@@ -73,14 +76,15 @@ namespace WpfView
 		/// <param name="songID"></param>
 		public async void PlaySelectedSong(int songID)
         {
-            Song? x = await DatabaseController.GetSong(songID);
-            currentSong = x;
+            Song? selectedSong = await DatabaseController.GetSong(songID);
 
-            if (x is null) return;
+            if (selectedSong is null) return;
+            SongController.CurrentSong = selectedSong;
+            //currentSong = selectedSong;
 
             string path = "currentlyPlaying.mid";
 
-            await File.WriteAllBytesAsync(path, x.FullFile);
+            await File.WriteAllBytesAsync(path, selectedSong.FullFile);
             MidiController.OpenMidi(path);
 
             //Play
@@ -88,11 +92,15 @@ namespace WpfView
             SongLogic.StartCountDown += StartCountDown;
             SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
 
-            Thread updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
+            if (updateVisualNoteThread is null || !updateVisualNoteThread.IsAlive)
             {
-                IsBackground = true
-            };
-            updateVisualNoteThread.Start();
+                updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
+                {
+                    IsBackground = true
+                };
+                stopVisualNoteThread = false;
+                updateVisualNoteThread.Start();
+            }
 
             SongController.PlaySong();
             Playing = true;
@@ -110,10 +118,15 @@ namespace WpfView
 
             if (SongController.CurrentSong is null) return;
             notesToBePressed = SongController.CurrentSong.PianoKeys.ToList();
-            notesToBePressed.RemoveRange(0, 8);
+            if (notesToBePressed.Count > 0)
+            {
+                notesToBePressed.RemoveRange(0, 2);
+            }
 
             if (notesToBePressed.Count > 0)
+            {
                 maxTotalScore = notesToBePressed.Count * MAXNOTESCORE * 2;// * 2 because of pressing AND releasing
+            }
             else maxTotalScore = 0;
             score = 0;
             UpdateScoreVisual();
@@ -125,22 +138,36 @@ namespace WpfView
         /// <param name="obj"></param>
         private void CountDown(object? obj)
         {
+            if (SongController.CurrentSong is null)
+            {
+                NavigationService?.Navigate(_songSelectPage);
+                return;
+            }
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Visible;
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownReady.png", UriKind.Relative));
             }));
-            Thread.Sleep(2500);
+            Tempo x = Tempo.FromBeatsPerMinute(SongController.CurrentSong.File.GetTempoMap().GetTempoAtTime((MetricTimeSpan)TimeSpan.FromSeconds(20)).BeatsPerMinute);
+            double b = (60d / x.BeatsPerMinute) * 2.5d;
+            //double b = ((60d / 93d) * 5000d);
+            double y = b;
+            //int y = (int)Math.Ceiling(b);
+            Thread.Sleep(TimeSpan.FromSeconds(y));
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownSet.png", UriKind.Relative));
             }));
-            Thread.Sleep(2500);
+            //Thread.Sleep(2000);
+            Thread.Sleep(TimeSpan.FromSeconds(y));
+            //Thread.Sleep((MetricTimeSpan)TimeSpan.FromSeconds(y));
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Source = new BitmapImage(new Uri("/Images/CountdownGo.png", UriKind.Relative));
             }));
-            Thread.Sleep(2500);
+            Thread.Sleep(TimeSpan.FromSeconds(y));
+            //Thread.Sleep(2000);
+            //Thread.Sleep((MetricTimeSpan)TimeSpan.FromSeconds(y));
             Dispatcher.Invoke(new Action(() =>
             {
                 CountDownImage.Visibility = Visibility.Hidden;
@@ -172,6 +199,8 @@ namespace WpfView
                 }
 
                 UploadScoreDialog();
+                if (stopVisualNoteThread) // what im waiting for...
+                    break;
             }
         }
 
@@ -188,26 +217,25 @@ namespace WpfView
                 UploadScoreDialog? uploadScoreDialog = null;
                 Dispatcher.Invoke(new Action(() =>
                 {
-                    uploadScoreDialog = new(score, maxTotalScore); ;
+                    uploadScoreDialog = new(score, maxTotalScore);
                     dialogResult = uploadScoreDialog.ShowDialog();
                 }));
 
                 //If true, we upload
                 if ((bool)dialogResult)
                 {
-                    if (true) //TODO if logged in
+                    if (_mainMenu.LoggedInUser is not null)
                     {
-                        //TODO wait for log in to be implemented and do this better
                         Highscore highscore = new()
                         {
-                            User = DatabaseController.GetUserByID(7).Result,
-                            Song = currentSong,
+                            User = _mainMenu.LoggedInUser,
+                            Song = SongController.CurrentSong,
                             Score = score
                         };
 
                         //Check if score is already in the database so we just update it
-                        Highscore[] highscores = await DatabaseController.GetHighscores(currentSong.Id);
-                        Highscore? FoundScore = highscores.Where(score => score.User.Id == highscore.User.Id).FirstOrDefault();
+                        Highscore[]? highscores = await DatabaseController.GetHighscores(SongController.CurrentSong.Id);
+                        Highscore? FoundScore = highscores?.Where(score => score.User.Id == highscore.User.Id).FirstOrDefault();
 
                         if (FoundScore is null)
                         {
@@ -234,12 +262,10 @@ namespace WpfView
                     }
                     else
                     {
-                        //TODO Go to login, wait for a response then return here
-                        SettingsPage? accountPage = null;
+                        AccountPage? accountPage = null;
                         Dispatcher.Invoke(new Action(() =>
                         {
-                            //NOTE SETTINGS PAGE IS TEMPORARY
-                            accountPage = new SettingsPage(this);
+                            accountPage = new AccountPage(_mainMenu, this);
                             NavigationService?.Navigate(accountPage);
                         }));
 
@@ -371,7 +397,7 @@ namespace WpfView
 
                     if (notesToBePressed is null) return;
                     PianoKey? closestNote = notesToBePressed.Where(x => x.Octave == key.Octave && x.Note == key.Note).OrderBy(item => Math.Abs(releasedAt.TotalSeconds - (item.TimeStamp + item.Duration).TotalSeconds)).FirstOrDefault();
-                    if (closestNote is not null && !closestNote.PressedDown)
+                    if (closestNote is not null && closestNote.PressedDown)
                     {
                         Debug.WriteLine($"Original note: {key} released at: {releasedAt} [][][] Closest note: {closestNote}");
                         int timeDifference = TimeSpan.Compare(releasedAt, (closestNote.TimeStamp + closestNote.Duration));
@@ -383,7 +409,6 @@ namespace WpfView
                         };
 
                         noteScore = Math.Max(MAXNOTESCORE - difference, 0);
-                        closestNote.PressedDown = true;
                     }
                     else
                     {
@@ -449,6 +474,7 @@ namespace WpfView
 
                         noteScore = Math.Max(MAXNOTESCORE - difference, 0);
                         rating = GetRating(noteScore);
+                        closestNote.PressedDown = true;
                     }
                     else
                     {
@@ -510,6 +536,7 @@ namespace WpfView
         /// <param name="e"></param>
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
+            stopVisualNoteThread = true;
             Playing = false; //TODO rename name to be more clear
             SongController.StopSong();
             NavigationService?.Navigate(_songSelectPage);
