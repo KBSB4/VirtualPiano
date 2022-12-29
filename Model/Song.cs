@@ -6,7 +6,7 @@ namespace Model
     public class Song
     {
         public int Id { get; set; }
-        public MidiFile File { get; set; }
+        public MidiFile? File { get; set; }
         public string Name { get; set; }
         public Difficulty Difficulty { get; set; }
         public MetricTimeSpan Duration { get; set; }
@@ -27,9 +27,15 @@ namespace Model
             PianoKeys = pianoKeys;
         }
 
+        /// <summary>
+        /// Empty song
+        /// </summary>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Song() //required
         {
+            //Will no longer be null quickly after
         }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public static void InvokeNotePlayed(Song song, PianoKeyEventArgs pianoKeyEventArgs)
         {

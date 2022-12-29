@@ -9,13 +9,14 @@ namespace WpfView
     /// </summary>
     public partial class LeaderboardRecord : UserControl
     {
-        public LeaderboardRecord(int position, string userName, int score) : this(position, userName, score, false) { }
+        public LeaderboardRecord(int position, string? userName, int? score) : this(position, userName, score, false) { }
 
-        public LeaderboardRecord(int position, string userName, int score, bool CurrentUser)
+        public LeaderboardRecord(int position, string? userName, int? score, bool CurrentUser)
         {
             Position = (position + 1).ToString();
             UserName = userName;
             Score = score.ToString();
+
             InitializeComponent();
 
             //Change colour of top 3 and add trophy image
@@ -69,7 +70,7 @@ namespace WpfView
         public static readonly DependencyProperty PositionProperty =
             DependencyProperty.Register("Position", typeof(string), typeof(LeaderboardRecord), new PropertyMetadata("0"));
 
-        public string UserName
+        public string? UserName
         {
             get { return (string)GetValue(UserNameProperty); }
             set { SetValue(UserNameProperty, value); }
@@ -77,7 +78,7 @@ namespace WpfView
         public static readonly DependencyProperty UserNameProperty =
             DependencyProperty.Register("UserName", typeof(string), typeof(LeaderboardRecord), new PropertyMetadata("no name"));
 
-        public string Score
+        public string? Score
         {
             get { return (string)GetValue(ScoreProperty); }
             set { SetValue(ScoreProperty, value); }

@@ -18,7 +18,7 @@ namespace WpfView
     public partial class AdminPanel : Page
     {
         //TODO Summaries
-        private byte[] lastOpenedFile;
+        private byte[]? lastOpenedFile;
 
         private List<Song> songList = new();
         private readonly MainMenu _mainMenu;
@@ -147,8 +147,9 @@ namespace WpfView
             RemoveSongsList.Items.Add(del);
         }
 
-        public async void DeleteSong(string name)
+        public static async void DeleteSong(string? name)
         {
+            if (name is null) return;
             await DatabaseController.DeleteSong(name);
         }
 
@@ -173,7 +174,7 @@ namespace WpfView
 
             deleteSong = ((ListBox)sender).SelectedItem as FemkesListBoxItem;
 
-            if (deleteSong != null)
+            if (deleteSong is not null)
             {
                 var result = MessageBox.Show($"Are you sure u want to delete {deleteSong.SongTitle}?", "Confirm Delete", MessageBoxButton.OKCancel);
 

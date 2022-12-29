@@ -78,32 +78,33 @@ namespace WpfView
         {
             Song? selectedSong = await DatabaseController.GetSong(songID);
 
-            if (selectedSong is null) return;
-            SongController.CurrentSong = selectedSong;
-            //currentSong = selectedSong;
-
-            string path = "currentlyPlaying.mid";
-
-            await File.WriteAllBytesAsync(path, selectedSong.FullFile);
-            MidiController.OpenMidi(path);
-
-            //Play
-            if (SongController.CurrentSong is null) return;
-            SongLogic.StartCountDown += StartCountDown;
-            SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
-
-            if (updateVisualNoteThread is null || !updateVisualNoteThread.IsAlive)
+            if (selectedSong is not null && selectedSong?.FullFile is not null)
             {
-                updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
-                {
-                    IsBackground = true
-                };
-                stopVisualNoteThread = false;
-                updateVisualNoteThread.Start();
-            }
+                SongController.CurrentSong = selectedSong;
 
-            SongController.PlaySong();
-            Playing = true;
+                string path = "currentlyPlaying.mid";
+
+                await File.WriteAllBytesAsync(path, selectedSong.FullFile);
+                MidiController.OpenMidi(path);
+
+                //Play
+                if (SongController.CurrentSong is null) return;
+                SongLogic.StartCountDown += StartCountDown;
+                SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
+
+                if (updateVisualNoteThread is null || !updateVisualNoteThread.IsAlive)
+                {
+                    updateVisualNoteThread = new(new ParameterizedThreadStart(UpdateVisualNotes))
+                    {
+                        IsBackground = true
+                    };
+                    stopVisualNoteThread = false;
+                    updateVisualNoteThread.Start();
+                }
+
+                SongController.PlaySong();
+                Playing = true;
+            }
         }
 
         /// <summary>
@@ -235,7 +236,7 @@ namespace WpfView
 
                         //Check if score is already in the database so we just update it
                         Highscore[]? highscores = await DatabaseController.GetHighscores(SongController.CurrentSong.Id);
-                        Highscore? FoundScore = highscores?.Where(score => score.User.Id == highscore.User.Id).FirstOrDefault();
+                        Highscore? FoundScore = highscores?.Where(score => score?.User?.Id == highscore.User.Id).FirstOrDefault();
 
                         if (FoundScore is null)
                         {
@@ -257,7 +258,7 @@ namespace WpfView
                         //Go to menu
                         Dispatcher.Invoke(new Action(() =>
                         {
-                            if (uploadScoreDialog is not null) uploadScoreDialog.Close();
+                            uploadScoreDialog?.Close();
                         }));
                     }
                     else

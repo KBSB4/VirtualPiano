@@ -20,7 +20,7 @@ namespace Controller
                 CurrentSong = MidiController.Convert(file);
                 if (CurrentSong is null) return;
                 CurrentSong.SongTimerThread = new Thread(() => SongLogic.PlaySong(CurrentSong));
-                if (DoKaroake) CurrentSong.File = MidiController.RemovePiano(CurrentSong.File.Clone());
+                if (DoKaroake) CurrentSong.File = MidiController.RemovePiano(CurrentSong.File?.Clone());
             }
         }
 

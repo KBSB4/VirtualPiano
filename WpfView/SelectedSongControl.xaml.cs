@@ -39,7 +39,7 @@ namespace WpfView
                 foreach (Highscore score in scores)
                 {
                     int position = Array.FindIndex(scores, item => item.Equals(score)); //Find position in list
-                    if (score.User.Id == userId) //If current user logged in
+                    if (score?.User?.Id == userId) //If current user logged in
                     {
                         if (position > 10)
                         {
@@ -51,7 +51,7 @@ namespace WpfView
                     {
                         if (position < 10) //Prevents overwriting on leaderboard
                         {
-                            leaderBoard.Children.Add(new LeaderboardRecord(position, score.User.Name, score.Score));
+                            leaderBoard.Children.Add(new LeaderboardRecord(position, score?.User?.Name, score?.Score));
                         }
                     }
                 }

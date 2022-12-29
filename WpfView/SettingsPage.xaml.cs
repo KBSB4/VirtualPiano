@@ -139,11 +139,14 @@ namespace WpfView
 
             if (comboBox.Equals(LanguageBox))
             {
-                List<Language> languages = LanguageController.GetAllLanguages();
-                LanguageCode code = languages[comboBox.SelectedIndex].Code;
+                List<Language>? languages = LanguageController.GetAllLanguages();
+                if (languages is not null)
+                {
+                    LanguageCode code = languages[comboBox.SelectedIndex].Code;
 
-                LanguageController.SetPreferredLanguage(code);
-                UpdateUI();
+                    LanguageController.SetPreferredLanguage(code);
+                    UpdateUI();
+                }
             }
 
             RefreshBoxes();
@@ -154,18 +157,19 @@ namespace WpfView
         /// </summary>
         public void GenerateLanguages()
         {
-            LanguageData languageData = LanguageController.GetLanguageData();
-            if (LanguageBox is null) return;
-
-            foreach (Language language in languageData.languages)
+            LanguageData? languageData = LanguageController.GetLanguageData();
+            if (LanguageBox is not null && languageData?.languages is not null)
             {
-                if (LanguageBox.FindName(language.Name) is null)
+                foreach (Language language in languageData.languages)
                 {
-                    ComboBoxItem ToAddLanguage = new() { Content = language.Name };
-                    LanguageBox.Items.Add(ToAddLanguage);
+                    if (!LanguageBox.Items.Cast<ComboBoxItem>().Any(cbi => cbi.Content.Equals(language.Name)))
+                    {
+                        ComboBoxItem ToAddLanguage = new() { Content = language.Name };
+                        LanguageBox.Items.Add(ToAddLanguage);
+                    }
                 }
+                LanguageBox.SelectedIndex = (int)languageData.preferredLanguage;
             }
-            LanguageBox.SelectedIndex = (int)languageData.preferredLanguage;
         }
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

@@ -8,7 +8,6 @@ namespace WpfView
     /// </summary>
     public partial class UploadScoreDialog : Window
     {
-
         /// <summary>
         /// Show score on screen
         /// </summary>
@@ -19,8 +18,8 @@ namespace WpfView
             InitializeComponent();
             ScoreLabel.Content = score;
             MaxScoreLabel.Content = maxscore;
-			IsVisibleChanged += UI_IsVisibleChanged;
-		}
+            IsVisibleChanged += UI_IsVisibleChanged;
+        }
 
         /// <summary>
         /// On visible changed page
@@ -28,15 +27,15 @@ namespace WpfView
         /// <param name="sender"></param>
         /// <param name="e"></param>
 		private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			UpdateUI();
-		}
+        {
+            UpdateUI();
+        }
 
         /// <summary>
         /// Translate labels
         /// </summary>
 		private void UpdateUI()
-		{
+        {
             TitleLabel.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_Title);
             YourScoreLabel.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_YourScore);
             YourMaxScoreLabel.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_MaxScore);
@@ -44,12 +43,12 @@ namespace WpfView
             MenuButton.Content = LanguageController.GetTranslation(TranslationKey.Play_SongFinishedScreen_MenuButton);
         }
 
-		/// <summary>
-		/// Return true for upload
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Upload_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Return true for upload
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Upload_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
             Close();

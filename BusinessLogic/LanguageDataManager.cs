@@ -64,7 +64,7 @@ namespace BusinessLogic
         {
             LanguageData? languageData = GetLanguageData();
             if (languageData is null) return null;
-            return languageData.languages.Where(lang => lang.Code == code).FirstOrDefault();
+            return languageData.languages?.Where(lang => lang.Code == code).FirstOrDefault();
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace BusinessLogic
         public string? GetTranslation(TranslationKey key)
         {
             if (currentLanguage is null) return null;
-            return currentLanguage.Translations[key];
+            return currentLanguage.Translations?[key];
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace BusinessLogic
 		        {TranslationKey.Play_SongFinishedScreen_Title, "Upload?" },
                 {TranslationKey.Play_SongFinishedScreen_YourScore, "Uw score" },
                 {TranslationKey.Play_SongFinishedScreen_MaxScore, "Maximale Score" },
-                {TranslationKey.Play_SongFinishedScreen_UploadButton, "Score uploaden" },
+                {TranslationKey.Play_SongFinishedScreen_UploadButton, "Upload" },
                 {TranslationKey.Play_SongFinishedScreen_MenuButton, "Hoofdmenu" },
 
 				//Messagesboxes

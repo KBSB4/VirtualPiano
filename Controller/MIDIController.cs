@@ -39,8 +39,9 @@ namespace Controller
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static MidiFile RemovePiano(MidiFile file)
+        public static MidiFile? RemovePiano(MidiFile? file)
         {
+            if (file is null) return null;
             return MidiLogic.RemovePianoNotes(file);
         }
 

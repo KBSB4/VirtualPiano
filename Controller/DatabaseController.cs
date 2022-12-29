@@ -122,7 +122,7 @@ namespace Controller
         /// <returns>New <see cref="Highscore"/>[], is empty if nothing found</returns>
         public static async Task<Highscore[]?> GetHighscores(int songId)
         {
-            Task<Highscore[]?> getHighscoresTask = databaseManager.GetHighscores(songId);
+            Task<Highscore[]> getHighscoresTask = databaseManager.GetHighscores(songId);
 
             Highscore[]? result = await getHighscoresTask;
 

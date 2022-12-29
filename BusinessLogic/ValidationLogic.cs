@@ -14,7 +14,7 @@ namespace BusinessLogic
             {
                 return "Please fill in the Username field!";
             }
-            else if (username is not null && username.Length < 4 || username.Length > 13)
+            else if (username is not null && username.Length < 4 || username?.Length > 13)
             {
                 return "Please use an Username between 4 and 13 characters!";
             }
@@ -34,7 +34,7 @@ namespace BusinessLogic
             {
                 return "Please fill in the Password field!";
             }
-            else if (password is not null && password.Length < 4 || password.Length > 13)
+            else if (password is not null && password.Length < 4 || password?.Length > 13)
             {
                 return "Please fill in a Password between 4 and 13 characters!";
             }
@@ -58,7 +58,7 @@ namespace BusinessLogic
             {
                 return "Please fill in the Username field!";
             }
-            else if (username is not null && username.Length < 4 || username.Length > 13)
+            else if (username is not null && username.Length < 4 || username?.Length > 13)
             {
                 return "Please use an Username between 4 and 13 characters!";
             }
@@ -109,7 +109,7 @@ namespace BusinessLogic
             {
                 return "Please fill in the Password field!";
             }
-            else if (password is not null && password.Length < 4 || password.Length > 13)
+            else if (password is not null && password.Length < 4 || password?.Length > 13)
             {
                 return "Please use a Password between 4 and 13 characters!";
             }
@@ -125,7 +125,7 @@ namespace BusinessLogic
             {
                 return "Please fill in the Confirm field!";
             }
-            else if (confirmpass is not null && confirmpass.Length < 4 || confirmpass.Length > 13)
+            else if (confirmpass is not null && confirmpass.Length < 4 || confirmpass?.Length > 13)
             {
                 return "Please fill in a Confirm between 4 and 13 characters!";
             }

@@ -74,6 +74,7 @@ namespace WpfView
 
         private void Login_ValidatePasswordField(string? username, User? user)
         {
+            if (user is null) return;
             string? errorMessage = ValidationController.AccountPage_Login_ValidatePasswordField(username, user);
             if (errorMessage is null)
             {

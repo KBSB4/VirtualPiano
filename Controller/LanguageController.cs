@@ -8,7 +8,7 @@ namespace Controller
         private static LanguageDataManager languageDataManager = new();
 
         
-        public static string GetTranslation(TranslationKey translationKey)
+        public static string? GetTranslation(TranslationKey translationKey)
         {
             return languageDataManager.GetTranslation(translationKey);
         }
@@ -23,12 +23,12 @@ namespace Controller
             return languageDataManager.GetPreferredLanguage();
         }
 
-        public static LanguageData GetLanguageData()
+        public static LanguageData? GetLanguageData()
         {
             return languageDataManager.GetLanguageData();
         }
 
-        public static List<Language> GetAllLanguages()
+        public static List<Language>? GetAllLanguages()
         {
             return languageDataManager.GetAllLanguages();
         }
