@@ -16,25 +16,16 @@ namespace BusinessLogic
 			"Trusted_Connection=no;" +
 			"TrustServerCertificate=True;" +
 			"Initial Catalog=PianoHero;";
-    public class SQLDatabaseManager : IDatabaseManager
-    {
-        private const string connectionString = "Data Source=127.0.0.1;" +
-            "Initial Catalog=PianoHero;" +
-            "Persist Security Info=True;" +
-            "User ID=SA;" +
-            "Password=Backing-Crumpet4;" +
-            "TrustServerCertificate=True;";
 
 		public SQLDatabaseManager()
 		{
 			new Thread(new ThreadStart(Connect)).Start();
 		}
 
-		private void Connect()
-		public SQLDatabaseManager()
-		{
-			ProgramSSH.ExecuteSshConnection();
-		}
+            private void Connect() 
+            {
+                ProgramSSH.ExecuteSshConnection();
+            }
 
         #region Users
         public async Task<User> GetUserByName(string username)
@@ -153,7 +144,7 @@ namespace BusinessLogic
 					Id = await dataReader.GetFieldValueAsync<int>("idUser"),
 					Password = await dataReader.GetFieldValueAsync<string>("passphrase"),
 					Email = await dataReader.IsDBNullAsync("email") ? null : await dataReader.GetFieldValueAsync<string>("email"),
-					isAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
+					IsAdmin = await dataReader.GetFieldValueAsync<byte>("isAdmin") != 0
 				});
 			}
 
@@ -176,7 +167,7 @@ namespace BusinessLogic
 
                 SqlParameter passwordParam = new("@passphrase", SqlDbType.VarChar) { Value = user.Password };
 
-                SqlParameter isAdminParam = new("@isAdmin", SqlDbType.TinyInt) { Value = user.isAdmin };
+                SqlParameter isAdminParam = new("@isAdmin", SqlDbType.TinyInt) { Value = user.IsAdmin };
 
                 SqlParameter emailParam = new("@email", SqlDbType.VarChar) { Value=user.Email };
 
@@ -445,7 +436,7 @@ namespace BusinessLogic
 
 				await CloseAndDispose(connection, command);
 			}
-		}
+
         #endregion
 
         private async Task CloseAndDispose(SqlConnection connection, SqlCommand command, SqlDataReader dataReader)

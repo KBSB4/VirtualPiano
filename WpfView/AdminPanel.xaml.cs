@@ -186,7 +186,7 @@ namespace WpfView
 
             if (deleteSong != null)
             {
-                var result = MessageBox.Show($"Are you sure u want to delete {deleteSong.songTitle}?", "Confirm Delete", MessageBoxButton.OKCancel);
+                var result = MessageBox.Show($"Are you sure u want to delete {deleteSong.SongTitle}?", "Confirm Delete", MessageBoxButton.OKCancel);
 
 				if (result == MessageBoxResult.OK)
 				{
