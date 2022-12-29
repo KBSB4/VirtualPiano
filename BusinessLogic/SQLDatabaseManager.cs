@@ -478,7 +478,7 @@ namespace BusinessLogic
         /// <returns><see cref="Task"/></returns>
         public async Task UpdateHighscore(Highscore highscore)
         {
-            if (highscore is not null) return;
+            if (highscore is null) return;
             using SqlConnection connection = new(connectionString);
             string query = "UPDATE SongScore SET score = @score WHERE idSong = @songId AND idUser = @userId";
 

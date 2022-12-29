@@ -241,7 +241,7 @@ namespace WpfView
                         };
 
                         //Check if score is already in the database so we just update it
-                        Highscore[]? highscores = await DatabaseController.GetHighscores(SongController.CurrentSong.Id);
+                        Highscore[]? highscores = await DatabaseController.GetHighscores(highscore.Song.Id);
                         Highscore? FoundScore = highscores?.Where(score => score?.User?.Id == highscore.User.Id).FirstOrDefault();
 
                         if (FoundScore is null)
