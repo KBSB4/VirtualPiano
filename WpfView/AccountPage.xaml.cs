@@ -88,7 +88,7 @@ namespace WpfView
             if (errorMessage is null)
             {
                 Login(user);
-                if (user is not null && user.isAdmin)
+                if (user is not null && user.IsAdmin)
                 {
                     NavigationService?.Navigate(_mainMenu.AdminPanel);
                 }
@@ -111,7 +111,7 @@ namespace WpfView
         {
             ClearAllFields();
             SetFieldSuccesBackground(Login_PasswordInput);
-            _mainMenu.loggedInUser = user;
+            _mainMenu.LoggedInUser = user;
         }
 
         private void CloseLogin()
