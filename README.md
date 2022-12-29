@@ -8,9 +8,5 @@
 This (student) project has been commisioned by Windesheim
 
 ## Building
-Build a release executable with the following command: `dotnet publish -r win-x64 /p:PublishSingleFile=true /p:UseAppHost=true /p:IncludeNativeLibrariesForSelfExtract=true --output "C:\tmp\pianohero"`
-
-After that these files are required to run:
-* Wpfview.exe
-* SoundPlayer folder 
-* DEBUGmidi folder
+Build a release executable with the following command: </br>
+`dotnet publish -r win-x64 /p:PublishSingleFile=true /p:UseAppHost=true /p:IncludeNativeLibrariesForSelfExtract=true --output "C:\tmp\pianohero"`
