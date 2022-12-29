@@ -41,7 +41,7 @@
                         </Viewbox>
                         <Image Grid.Column="1" Grid.ColumnSpan="2" Source="{Binding DifficultyImageSource}" Margin="10"></Image>
                         <Viewbox Grid.Row="1" VerticalAlignment="Top">
-                            <TextBlock FontSize="10" TextWrapping="Wrap" Foreground="WhiteSmoke" Width="120" Text="Space for song info, highscore or other text. Or maybe an image might be cool. Lorem Ipsum Dolor set amet"></TextBlock>
+                            <TextBlock FontSize="10" TextWrapping="Wrap" Foreground="WhiteSmoke" Width="120" Text="{Binding Description}"></TextBlock>
                         </Viewbox>
                     </Grid>
                 </Grid>

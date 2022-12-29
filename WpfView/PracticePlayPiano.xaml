@@ -29,9 +29,15 @@
         </Grid>
 
         <Menu Grid.Row="0" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#FF292929" Panel.ZIndex="2">
+            <MenuItem x:Name="MenuBackButton" Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White" IsEnabled="False">
+                <MenuItem.Icon>
+                    <Image Source="/Images/previous.png" Margin=" 3 -4 0,0" />
+                </MenuItem.Icon>
+            </MenuItem>
             <Label x:Name="ScoreLabel" Content="Score = 0" Foreground="White"/>
-            <ProgressBar x:Name="ScoreBar" HorizontalAlignment="Right" Height="20" Width="700" Foreground="#FFF46524"/>
-
+            <Border CornerRadius="4" x:Name="PART_Indicator">
+                <ProgressBar x:Name="ScoreBar" HorizontalAlignment="Right" Height="20" Width="700" Foreground="#FFF46524"/>
+            </Border>
         </Menu>
     </Grid>
 </Page>

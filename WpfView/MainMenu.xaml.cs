@@ -18,8 +18,6 @@ namespace WpfView
 
         public AccountPage AccountPage { get; set; }
 
-        public AdminPanel AdminPanel { get; set; }
-
         //DO NOT REMOVE
         public IInputDevice? InputDevice;
 
@@ -29,7 +27,7 @@ namespace WpfView
             SettingsPage = new SettingsPage(this);
             FreePlay = new FreePlayPiano(this);
             SongSelectPage = new SongSelectPage(this);
-            AdminPanel = new();
+            AdminPanel = new(this);
         }
 
         /// <summary>
