@@ -16,6 +16,8 @@ namespace WpfView
         public SongSelectPage SongSelectPage { get; set; }
         public AdminPanel AdminPanel { get; set; }
 
+        public AccountPage AccountPage { get; set; }
+
         //DO NOT REMOVE
         public IInputDevice? InputDevice;
 
@@ -104,7 +106,12 @@ namespace WpfView
         /// <param name="e"></param>
         private void Practice_Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService?.Navigate(SongSelectPage);
+            NavigationService?.Navigate(AdminPanel);
+        }
+
+        private void Account_Button_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(AdminPanel);
         }
     }
 }

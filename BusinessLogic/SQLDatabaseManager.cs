@@ -282,9 +282,10 @@ namespace BusinessLogic
 				});
 			}
 
-            return result.ToArray();
-        }
-        #endregion
+			return result.ToArray();
+		}
+
+		#endregion
 
 		#region Highscores
 		public async Task<Highscore[]?> GetHighscores(int songId)
