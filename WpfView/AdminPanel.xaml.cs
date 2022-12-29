@@ -3,11 +3,13 @@ using Controller;
 using Melanchall.DryWetMidi.Core;
 using Microsoft.Win32;
 using Model;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,50 +23,50 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using static Azure.Core.HttpHeader;
 
 namespace WpfView
 {
-    /// <summary>
-    /// Interaction logic for AdminPanel.xaml
-    /// </summary>
-    public partial class AdminPanel : Page
-    {
-  
-        private List<Song> Songs= new List<Song>();
-        public AdminPanel()
-        {
-           // GenerateSongList();
-            InitializeComponent();
-        }
+	/// <summary>
+	/// Interaction logic for AdminPanel.xaml
+	/// </summary>
+	public partial class AdminPanel : Page
+	{
+		private byte[] lastOpenedFile;
 
-        private void ListViewItem_Selected(object sender, RoutedEventArgs e)
-        {
+		private List<Song> songList = new();
+		private MainMenu _mainMenu;
+		public AdminPanel(MainMenu mainMenu)
+		{
+			_mainMenu = mainMenu;
+			GenerateSongList();
+			InitializeComponent();
+		}
 
-        }
+		/// <summary>
+		///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
+		{
+			MidiLogic.CurrentMidi = null;
+			var openFileDialog = new OpenFileDialog
+			{
+				Filter = "MIDI Files (*.mid)|*.mid",
+				FilterIndex = 2,
+				RestoreDirectory = true
+			};
 
+			bool? fileOpened = openFileDialog.ShowDialog();
+			if (fileOpened == true)
+			{
+				//Get the path of specified file
+				MidiLogic.CurrentMidi = MidiFile.Read(openFileDialog.FileName);
 
-        /// <summary>
-        ///  Sets the midi-file that has been selected for <see cref=" MidiLogic.CurrentMidi"/>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UploadMidiFile_Click(object sender, RoutedEventArgs e)
-        {
-            MidiLogic.CurrentMidi = null;
-            var openFileDialog = new OpenFileDialog
-            {
-                Filter = "MIDI Files (*.mid)|*.mid",
-                FilterIndex = 2,
-                RestoreDirectory = true
-            };
-
-            bool? fileOpened = openFileDialog.ShowDialog();
-            if (fileOpened == true)
-            {
-                //Get the path of specified file
-                MidiLogic.CurrentMidi = MidiFile.Read(openFileDialog.FileName);
-            }
-        }
+				lastOpenedFile = File.ReadAllBytes(openFileDialog.FileName);
+			}
+		}
 
 
         /// <summary>
@@ -100,106 +102,124 @@ namespace WpfView
                 return isValid;
             }
 
-            MessageBox.Show(errorMessage, "Invalid value",MessageBoxButton.OK,MessageBoxImage.Error);
-            isValid= false;
-            return isValid;
-        }
+			MessageBox.Show(errorMessage, "Invalid value", MessageBoxButton.OK, MessageBoxImage.Error);
+			isValid = false;
+			return isValid;
+		}
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			if (Validator())
+			{
+				Upload();
+			}
+
+		}
+
+		/// <summary>
+		/// Uploads a song to the databases and displays the song on the screen.
+		/// </summary>
+		public async void Upload()
+		{
+			int difficulty = int.Parse(difficultyTextBox.Text);
+			Difficulty d = (Difficulty)difficulty;
+			Song song = new Song() { Description = descriptionTextBox.Text, Difficulty = d, FullFile = lastOpenedFile, File = MidiLogic.CurrentMidi, Name = titleTextBox.Text };
+			await DatabaseController.UploadSong(song);
+			MakeSongVisable(song);
+		}
+
+
+		/// <summary>
+		/// Gets all songs out of the database and displayes them on the screen.
+		/// </summary>
+		public async void GenerateSongList()
+		{
+			Song[] songs = await DatabaseController.GetAllSongs();
+			songList = new List<Song>();
+			songList = songs.ToList();
+			foreach (Song song in songs)
+			{
+				MakeSongVisable(song);
+			}
+		}
+
+		/// <summary>
+		/// Fills a listbox with songs 
+		/// </summary>
+		/// <param name="song"></param>
+		public void MakeSongVisable(Song song)
+		{
+			ListBoxItem one = new ListBoxItem() { Content = song.Name };
+			ListBoxItem del = new FemkesListBoxItem() { songTitle = song.Name, Content = "X" };
+			SongListAdminPanel.Items.Add(one);
+			RemoveSongsList.Items.Add(del);
+		}
+
+
+		public async void DeleteSong(string name)
+		{
+			await DatabaseController.DeleteSong(name);
+		}
+
+		/// <summary>
+		/// Returns true if song name is unique.
+		/// </summary>
+		/// <param name="song"></param>
+		/// <returns></returns>
+		public bool IsUniqueSongName(string song)
+		{
+		    foreach(ListBoxItem item in SongListAdminPanel.Items)
+			{
+				if (item.Content.Equals(song)) return false;
+			}
+			
+            return true;
+		}
+
+		private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
+		{
+			FemkesListBoxItem deleteSong = null;
+
+			deleteSong = (FemkesListBoxItem)((ListBox)sender).SelectedItem;
+
+			if (deleteSong != null)
+			{
+				var result = MessageBox.Show($"Are you sure u want to delete {deleteSong.songTitle}?", "Confirm Delete", MessageBoxButton.OKCancel);
+
+				if (result == MessageBoxResult.OK)
+				{
+					DeleteSong(deleteSong.songTitle);
+					Song? found = songList.Find(x => x.Name.Equals(deleteSong.songTitle));
+					if (found != null) songList.Remove(found);
+					RenewUploadedSongList();
+				}
+			}
+
+
+		}
+
+		/// <summary>
+		/// Updates the screen after a song has been deleted.
+		/// </summary>
+		public void RenewUploadedSongList()
+		{
+			SongListAdminPanel.Items.Clear();
+			RemoveSongsList.Items.Clear();
+			GenerateSongList();
+		}
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (Validator())
-            {
-               Upload();
-            }
-                
-        }
-
-        public async void Upload()
-        {
-            int difficulty = int.Parse(difficultyTextBox.Text);
-            Difficulty d = (Difficulty)difficulty;
-            Song song = new Song() { Description = descriptionTextBox.Text, Difficulty = d, File = MidiLogic.CurrentMidi, Name = titleTextBox.Text };
-            Songs.Add(song); // TODO REMOVE  USED FOR TESTING
-            MakeSongVisable(song);
-
-           // await DatabaseController.UploadSong(song);
-
-        }
-
-        /// <summary>
-        /// Retrieves all the songs that are stored in the database
-        /// </summary>
-        public async void GenerateSongList()
-        {
-           // Song[] songs = await DatabaseController.GetAllSongs();
-           // Debug.WriteLine(songs.Count());
-            foreach (Song song in Songs)
-            {
-                MakeSongVisable(song);
-            }
-
-        }
-
-        public void MakeSongVisable(Song song)
-        {
-            ListBoxItem one = new ListBoxItem() { Content = song.Name};
-            ListBoxItem del = new ListBoxItem() { Content = "X", Name = song.Name, };
-            SongListAdminPanel.Items.Add(one);
-            RemoveSongsList.Items.Add(del);
-        }
-
-      
-
-        private void RemoveSongsList_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            ListViewItem DeleteSong = (ListViewItem)sender;
-            //DatabaseController.DeleteSong(DeleteSong.Name);
-        }
-
-        private void RemoveSongsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            ListBoxItem DeleteSong = null; 
-            
-
-            foreach(ListBoxItem s in RemoveSongsList.Items)
-            {
-                if(s.IsSelected)
-                {
-                    DeleteSong= (ListBoxItem)s;
-                }
-            }
-           
-            
-            if(DeleteSong != null)
-            {
-               // SongListAdminPanel.Items.Remove(ItemDel(DeleteSong.Name));
-               Songs.Remove(ItemDel(DeleteSong.Name));
-               RemoveSongsList.Items.Clear();
-                SongListAdminPanel.Items.Clear();
-               GenerateSongList();
-            }
-            
-           
-            MessageBox.Show("worsk");
-        }
-
-        public Song ItemDel(string name)
-        {
-            foreach (var item in Songs)
-            {
-                if (item.Name.Equals(name))
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-        public void RenewList()
-        {
-            SongListAdminPanel.Items.Clear();
-            GenerateSongList();
+            NavigationService?.Navigate(_mainMenu);
         }
     }
 
-   
+    class FemkesListBoxItem : ListBoxItem
+	{
+		public string songTitle { get; set; }
+	}
+
+
+
+
 }

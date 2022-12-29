@@ -27,9 +27,13 @@
     <None Remove="Images\settingsIcon.png" />
     <None Remove="Images\SongCardBackground.png" />
     <None Remove="Images\SongSelectBackGround.png" />
+    <None Remove="Images\ThrophySilver.png" />
+    <None Remove="Images\ThropyBronze.png" />
+    <None Remove="Images\TrophyGold.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="Usb.Events" Version="10.0.1.1" />
   </ItemGroup>
@@ -61,6 +65,30 @@
     <Resource Include="Images\settingsIcon.png" />
     <Resource Include="Images\SongCardBackground.png" />
     <Resource Include="Images\SongSelectBackGround.png" />
+    <Resource Include="Images\ThrophySilver.png" />
+    <Resource Include="Images\ThropyBronze.png" />
+    <Resource Include="Images\TrophyGold.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DebugMidi\BEET.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\RUshE.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\silent_night_easy.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\sm64.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\test.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugMidi\test2.mid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

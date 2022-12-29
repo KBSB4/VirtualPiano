@@ -14,7 +14,7 @@ namespace UnitTests
 		[Test]
 		public void PianoSoundPlayer_GetFadingAudio_PlayTenNotesFor3Seconds()
 		{
-			PianoSoundPlayer? player = new PianoSoundPlayer("../../../../PianoSoundPlayer/Sounds/Piano/", "", ".wav");
+			PianoSoundPlayer? player = new("../../../../PianoSoundPlayer/Sounds/Piano/", "", ".wav");
 			FadingAudio[] fadingAudios = {
 				player.GetFadingAudio(NoteName.C, 5),
 				player.GetFadingAudio(NoteName.CSharp, 5),
@@ -28,7 +28,7 @@ namespace UnitTests
 				player.GetFadingAudio(NoteName.A, 5),
 			};
 
-			Thread? thr1 = new Thread(() =>
+			Thread? thr1 = new(() =>
 			{
 				foreach (FadingAudio audio in fadingAudios)
 				{
@@ -37,14 +37,7 @@ namespace UnitTests
 			});
 			thr1.Start();
 
-			Thread? thr2 = new Thread(() =>
-			{
-				Thread.Sleep(3000);
-				foreach (FadingAudio audio in fadingAudios)
-				{
-					audio.StopPlaying(0);
-				}
-			});
+			Thread? thr2 = new(() => { Thread.Sleep(3000); foreach (FadingAudio audio in fadingAudios) { audio.StopPlaying(0); } });
 			thr2.Start();
 
 			Thread.Sleep(3200);

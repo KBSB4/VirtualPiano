@@ -39,7 +39,6 @@ namespace BusinessLogic
             StartCountDown?.Invoke(null, new EventArgs());
 
             if (obj is not Song song) return;
-            //TODO Properly remake thread when song wants to be played again after it finishes
             song.SongTimerThread?.Start();
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
@@ -134,8 +133,13 @@ namespace BusinessLogic
                 //Stops the keys from appearing
                 song.PianoKeys = new();
 
+                //Remove event e
+                song.NotePlayed -= Song_NotePlayed;
+
                 if (PlaybackDevice is null || OutputDevice is null) return;
                 PlaybackDevice.PlaybackEnd = new MetricTimeSpan(0);
+                Thread.Sleep(500);
+                //TODO Is the accessviolationexception fixed yet???
                 PlaybackDevice.Dispose();
                 OutputDevice.Dispose();
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Controller;
+using System;
 using System.Data;
 using System.Linq;
 using System.Windows;
@@ -11,13 +12,23 @@ namespace WpfView
     /// </summary>
     public partial class SettingsPage : Page
     {
-        private readonly MainMenu _mainMenu;
+        //TODO PUT THIS BACK TO MAINMENU UNTIL ACCOUNT PAGE IS IMPLEMENTED
+        private readonly Page _mainMenu;
         private int count = InputDevice.GetDevicesCount();
         public static int IndexInputDevice { get; set; }
+        public bool Closed = false;
 
         public SettingsPage(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
+            DataContext = new DataContextSettings();
+            InitializeComponent();
+        }
+
+        //NOTE TEMPORARY, AWAITING FOR ACCOUNT
+        public SettingsPage(PracticePlayPiano ppp)
+        {
+            _mainMenu = ppp;
             DataContext = new DataContextSettings();
             InitializeComponent();
         }
@@ -81,6 +92,9 @@ namespace WpfView
         private void MainMenu_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
+            //TODO MOVE TO ACCOUNT PAGE
+            //Tell that we are closed to the page
+            Closed = true;
         }
 
         /// <summary>
@@ -101,9 +115,19 @@ namespace WpfView
         /// <param name="e"></param>
         private void Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _mainMenu?.CheckInputDevice(IndexInputDevice);
-            GenerateInputDevices();
-            input.Items.Refresh();
+            //TODO REMOVE IF ELSE WHEN ACCOUNT PAGE IS IMPLEMENTED
+            if (_mainMenu is MainMenu ls)
+            {
+                ls?.CheckInputDevice(IndexInputDevice);
+                GenerateInputDevices();
+                input.Items.Refresh();
+            }
         }
-    }
+
+		private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+            //Volume changed
+            PianoController.SetVolume((float)(e.NewValue / ((Slider)e.Source).Maximum));
+		}
+	}
 }
