@@ -41,13 +41,6 @@ namespace WpfView
             InputDeviceLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_InputDevice);
 		}
 
-		public SettingsPage(PracticePlayPiano ppp)
-        {
-            _mainMenu = ppp;
-            DataContext = new DataContextSettings();
-            InitializeComponent();
-        }
-
 		/// <summary>
 		/// Shows all the available MIDI-keyboard input devices
 		/// </summary>

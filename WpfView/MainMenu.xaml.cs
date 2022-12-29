@@ -1,6 +1,7 @@
 ﻿using Controller;
 using Melanchall.DryWetMidi.Multimedia;
 using Model;
+using Model.DatabaseModels;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -33,7 +34,7 @@ namespace WpfView
             SongSelectPage = new SongSelectPage(this);
             AccountPage = new AccountPage(this, null);
             AdminPanel = new(this);
-
+            Account_ChangeIconBasedOnUser();
 			IsVisibleChanged += MainMenu_IsVisibleChanged;
         }
 
