@@ -10,3 +10,6 @@ This (student) project has been commisioned by Windesheim
 ## Building
 Build a release executable with the following command: </br>
 `dotnet publish -r win-x64 /p:PublishSingleFile=true /p:UseAppHost=true /p:IncludeNativeLibrariesForSelfExtract=true --output "C:\tmp\pianohero"`
+
+## Database
+<img src="https://user-images.githubusercontent.com/16213031/210238156-5df3cbdc-706a-4103-b91a-61a51f54b2ba.png" width=50% height=50%>
