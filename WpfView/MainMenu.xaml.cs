@@ -110,7 +110,7 @@ namespace WpfView
         private void Settings_Button_Click(object sender, RoutedEventArgs e)
         {
             SettingsPage.RefreshBoxes();
-            NavigationService?.Navigate(SettingsPage);
+            NavigationService?.Navigate(AdminPanel);
         }
 
         /// <summary>

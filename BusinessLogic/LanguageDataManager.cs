@@ -197,8 +197,15 @@ namespace BusinessLogic
             CultureInfo ci = CultureInfo.InstalledUICulture;
             var r = new RegionInfo(ci.LCID);
             string regionName = r.TwoLetterISORegionName;
+            try
+            {
+                languageData.preferredLanguage = (LanguageCode)Enum.Parse(typeof(LanguageCode), regionName);
+            }
+            catch
+            {
+                languageData.preferredLanguage = LanguageCode.EN;
 
-            languageData.preferredLanguage = (LanguageCode)Enum.Parse(typeof(LanguageCode), regionName);
+			}
             WriteLanguageData(languageData);
             currentLanguage = GetLanguage(GetPreferredLanguage());
         }
