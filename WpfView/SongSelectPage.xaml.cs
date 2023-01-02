@@ -21,7 +21,7 @@ namespace WpfView
         {
             _mainMenu = mainMenu;
             PracticePiano = new PracticePlayPiano(_mainMenu, this);
-            IsVisibleChanged += MainMenu_IsVisibleChanged;
+            IsVisibleChanged += _mainMenu_IsVisibleChanged;
             InitializeComponent();
             AddSongs();
             KaraokeCheckBox.Checked += KaraokeCheckBox_Checked;
@@ -51,10 +51,9 @@ namespace WpfView
             SongController.DoKaroake = true;
         }
 
-        private void MainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void _mainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             AddSongs();
-            CreateShowLeaderboard();
         }
 
         /// <summary>
@@ -93,12 +92,9 @@ namespace WpfView
         {
             if (SelectedCard is not null)
             {
-                Highscore[]? highscores = await DatabaseController.GetHighscores(SelectedCard.SongID);
-                if (highscores is not null)
-                {
-                    Leaderboard.Children.Clear();
-                    Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores, SelectedCard.Description, _mainMenu.LoggedInUser));
-                }
+                Leaderboard.Children.Clear();
+                Highscore[] highscores = await DatabaseController.GetHighscores(SelectedCard.SongID);
+                Leaderboard.Children.Add(new SelectedSongControl(SelectedCard, highscores, SelectedCard.Description));
             }
         }
 
@@ -107,10 +103,9 @@ namespace WpfView
         /// </summary>
         private async void AddSongs()
         {
-            Song[]? songs = await DatabaseController.GetAllSongs();
-
             SongCards.Children.Clear();
-            if (songs is null) return;
+            Song[] songs = await DatabaseController.GetAllSongs();
+
             foreach (var item in songs)
             {
                 SongCardControl songCardControl = new(item.Id, item.Name, item.Description, (int)item.Difficulty, this);

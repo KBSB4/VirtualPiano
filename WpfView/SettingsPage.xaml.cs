@@ -16,9 +16,11 @@ namespace WpfView
     /// </summary>
     public partial class SettingsPage : Page
     {
-        private readonly MainMenu _mainMenu;
+        //TODO PUT THIS BACK TO MAINMENU UNTIL ACCOUNT PAGE IS IMPLEMENTED
+        private readonly Page _mainMenu;
         private int count = InputDevice.GetDevicesCount();
         public static int IndexInputDevice { get; set; }
+        public bool Closed = false;
 
         public SettingsPage(MainMenu mainMenu)
         {
@@ -40,6 +42,13 @@ namespace WpfView
             VolumeLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Volume);
             InputDeviceLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_InputDevice);
 		}
+
+		public SettingsPage(PracticePlayPiano ppp)
+        {
+            _mainMenu = ppp;
+            DataContext = new DataContextSettings();
+            InitializeComponent();
+        }
 
 		/// <summary>
 		/// Shows all the available MIDI-keyboard input devices
@@ -150,10 +159,10 @@ namespace WpfView
             LanguageBox.SelectedIndex = (int)languageData.preferredLanguage;
 		}
 
-        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
+		private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
             //Volume changed
             PianoController.SetVolume((float)(e.NewValue / ((Slider)e.Source).Maximum));
-        }
-    }
+		}
+	}
 }

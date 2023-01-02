@@ -22,7 +22,7 @@ namespace UnitTests
             PianoLogic.SwapOctave(piano);
             Octave pianoKey2 = piano.PianoKeys[0].Octave;
             PianoLogic.SwapOctave(piano);
-            _ = piano.PianoKeys[0].Octave;
+            Octave pianoKey3 = piano.PianoKeys[0].Octave;
             Assert.That(pianoKey, Is.Not.EqualTo(pianoKey2));
         }
 

@@ -82,11 +82,8 @@ namespace WpfView
             }
             currentColumn = practiceNoteColumns[note];
 
-            if (RatingTextControl.amounExisting < 4)//Make sure there are no more than 3 at a time, preventing a crash
-            {
-                RatingTextControl ratingText = new(rating, textrotationrandomiser.Next(-15, 15));
-                currentColumn.Children.Add(ratingText);
-            }
+            RatingTextControl ratingText = new(rating, textrotationrandomiser.Next(-15, 15));
+            currentColumn.Children.Add(ratingText);
         }
 
         /// <summary>

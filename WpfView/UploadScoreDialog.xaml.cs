@@ -43,7 +43,6 @@ namespace WpfView
 		/// <param name="e"></param>
 		private void Upload_Click(object sender, RoutedEventArgs e)
         {
-            //TODO check if user is logged in
             this.DialogResult = true;
             Close();
         }

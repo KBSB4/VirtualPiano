@@ -18,7 +18,7 @@ namespace Model
 
         public event EventHandler<PianoKeyEventArgs>? NotePlayed;
 
-        public Song(MidiFile file, string name, Difficulty difficulty, MetricTimeSpan duration, Queue<PianoKey> pianoKeys)
+        public Song(MidiFile file, string name, Difficulty difficulty, MetricTimeSpan? duration, Queue<PianoKey> pianoKeys)
         {
             File = file;
             Name = name;
