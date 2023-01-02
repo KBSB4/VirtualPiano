@@ -4,7 +4,6 @@ using Model;
 
 namespace UnitTests
 {
-
 	public class Controller_MIDIController_Tests
 	{
 		[Test]
@@ -30,7 +29,5 @@ namespace UnitTests
 
 			Assert.That(song, Is.Null);
 		}
-
-
 	}
 }

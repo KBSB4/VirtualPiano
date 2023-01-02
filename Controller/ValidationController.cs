@@ -54,16 +54,9 @@ namespace Controller
             return ValidationLogic.AdminPanelValidateDescription(desc);
         }
 
-        public static string AdminPanelValidationMessageDifficulty(string diff)
-        {
-            return ValidationLogic.AdminPanelValidateDifficulty(diff);
-        }
-
         public static string AdminPanelValidationMessageMidiFile()
         {
             return ValidationLogic.AdminPanelValidateMidiFile();
         }
-
-
     }
 }

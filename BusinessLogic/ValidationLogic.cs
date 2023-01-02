@@ -220,19 +220,6 @@ namespace BusinessLogic
         }
 
         /// <summary>
-        /// Validates on the <b>AdminPanel</b> the <paramref name="difficulty"/> field. <br></br>
-        /// Check 1: Checks if <paramref name="difficulty"/> is a value between 0 and 3.
-        /// </summary>
-        /// <param name="difficulty"></param>
-        /// <returns>If all checks came out true the <paramref name="difficulty"/> was valid and returns null. Otherwise returns corresponding error message.</returns>
-        public static string AdminPanelValidateDifficulty(string difficulty)
-        {
-            string errorMessage = string.Empty;
-            if (!int.TryParse(difficulty, out int difficultyValue) || !(difficultyValue > -1 && difficultyValue < 4)) errorMessage = "Difficulty must be a number between 0 {easy}, 1 {medium}, 2 {hard} or 3 {hero}.";
-            return errorMessage;
-        }
-
-        /// <summary>
         /// Validates on the <b>AdminPanel</b> the <see cref="MidiLogic.CurrentMidi"/>. <br></br>
         /// Check 1: Checks if <see cref="MidiLogic.CurrentMidi"/> is not null.
         /// </summary>

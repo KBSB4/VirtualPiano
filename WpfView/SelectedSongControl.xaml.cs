@@ -39,6 +39,7 @@ namespace WpfView
                 foreach (Highscore score in scores)
                 {
                     int position = Array.FindIndex(scores, item => item.Equals(score)); //Find position in list
+                    if (position >= 11) break; // Max 10 positions
                     if (score?.User?.Id == userId) //If current user logged in
                     {
                         if (position > 10)

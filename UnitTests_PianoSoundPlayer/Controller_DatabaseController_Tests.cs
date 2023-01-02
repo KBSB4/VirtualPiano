@@ -5,7 +5,6 @@ namespace UnitTests
 {
     internal class Controller_DatabaseController_Tests
     {
-        
         /// <summary>
         /// Get all highscores of a song that 100% has scores
         /// </summary>

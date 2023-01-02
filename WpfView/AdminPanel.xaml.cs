@@ -74,9 +74,9 @@ namespace WpfView
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageDescription(descriptionTextBox.Text);
             }
-            else if (!ValidationController.AdminPanelValidationMessageDifficulty(difficultyTextBox.Text).Equals(string.Empty))
+            else if (!ValidationController.AdminPanelValidationMessageDifficulty(difficultyComboBox.SelectedIndex.ToString()).Equals(string.Empty))
             {
-                errorMessage = ValidationController.AdminPanelValidationMessageDifficulty(difficultyTextBox.Text);
+                errorMessage = ValidationController.AdminPanelValidationMessageDifficulty(difficultyComboBox.Text);
             }
             else if (!ValidationController.AdminPanelValidationMessageMidiFile().Equals(string.Empty))
             {
@@ -106,7 +106,8 @@ namespace WpfView
         /// </summary>
         public async void Upload()
         {
-            int difficulty = int.Parse(difficultyTextBox.Text);
+            //int difficulty = int.Parse(difficultyTextBox.Text);
+            int difficulty = difficultyComboBox.SelectedIndex;
             Difficulty d = (Difficulty)difficulty;
             Song song = new()
             {
@@ -117,6 +118,7 @@ namespace WpfView
                 Name = titleTextBox.Text
             };
             await DatabaseController.UploadSong(song);
+            songList.Add(song);
             MakeSongVisible(song);
         }
 
@@ -180,9 +182,9 @@ namespace WpfView
 
                 if (result == MessageBoxResult.OK)
                 {
-                    DeleteSong(deleteSong.SongTitle);
                     Song? found = songList.Find(x => x.Name.Equals(deleteSong.SongTitle));
-                    if (found != null)
+                    DeleteSong(deleteSong.SongTitle);
+                    if (found is not null)
                     {
                         songList.Remove(found);
                         RenewUploadedSongList();
