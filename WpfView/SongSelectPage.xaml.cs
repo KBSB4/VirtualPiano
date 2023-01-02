@@ -37,6 +37,7 @@ namespace WpfView
         /// </summary>
         private void UpdateUI()
         {
+            BackMenu.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
             TitleLabel.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_SelectSong);
             KaraokeLabel.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_Karaoke);
             StartButton.Content = LanguageController.GetTranslation(TranslationKey.Menubar_SongSelect_Start);

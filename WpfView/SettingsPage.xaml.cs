@@ -46,6 +46,7 @@ namespace WpfView
         /// </summary>
         private void UpdateUI()
         {
+            BackMenu.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
             LanguageLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Language);
             VolumeLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Volume);
             InputDeviceLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_InputDevice);

@@ -45,6 +45,8 @@ namespace WpfView
         /// </summary>
 		private void UpdateUI()
         {
+            BackMenu.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
+
             LoginTitle.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_LoginTitle);
             UsernameLabel.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_LoginUsername);
             PasswordLabel.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_LoginPassword);

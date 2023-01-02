@@ -14,7 +14,7 @@
     <Grid>
         <Image Source="/Images/PianoHero_AccountPage_background.png" Stretch="Fill"/>
         <Menu DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="Transparent">
-            <MenuItem Focusable="False" Header="Back to Main Menu" Click="MainMenu_Click" Height="30" Foreground="White"  >
+            <MenuItem x:Name="BackMenu" Focusable="False" Header="Back to Main Menu" Click="MainMenu_Click" Height="30" Foreground="White"  >
                 <MenuItem.Icon>
                     <Image Source="Images/previous.png" Margin="3,-4,0,0" />
                 </MenuItem.Icon>
