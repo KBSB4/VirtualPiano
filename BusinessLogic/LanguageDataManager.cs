@@ -276,7 +276,15 @@ namespace BusinessLogic
             var r = new RegionInfo(ci.LCID);
             string regionName = r.TwoLetterISORegionName;
 
-            languageData.PreferredLanguage = (LanguageCode)Enum.Parse(typeof(LanguageCode), regionName);
+            //If langauge does not exist, default to EN
+            try
+            {
+                languageData.PreferredLanguage = (LanguageCode)Enum.Parse(typeof(LanguageCode), regionName);
+            } catch (ArgumentException)
+            {
+                languageData.PreferredLanguage = LanguageCode.EN;
+            }
+
             WriteLanguageData(languageData);
             currentLanguage = GetLanguage(GetPreferredLanguage());
         }
