@@ -1,4 +1,5 @@
 ﻿using Controller;
+using Model;
 using Model.DatabaseModels;
 using System.Text;
 using System.Windows;
@@ -26,6 +27,35 @@ namespace WpfView
             _practicePlayPiano = ppp;
             DataContext = new DataContextSettings();
             InitializeComponent();
+            IsVisibleChanged += MainMenu_IsVisibleChanged;
+        }
+
+        /// <summary>
+        /// On page visibility change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+		private void MainMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            UpdateUI();
+        }
+
+        /// <summary>
+        /// Translate labels
+        /// </summary>
+		private void UpdateUI()
+        {
+            LoginTitle.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_LoginTitle);
+            UsernameLabel.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_LoginUsername);
+            PasswordLabel.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_LoginPassword);
+            LoginButton.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_LoginButton);
+
+            NewAccountTitle.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_RegisterTitle);
+            NAUsernameLabel.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_RegisterUsername);
+            NAEmailLabel.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_RegisterEmail);
+            NAPasswordLabel.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_RegisterPassword);
+            NAConfirmPassLabel.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_RegisterPasswordConfirm);
+            CreateButton.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_RegisterButton);
         }
 
         private async void Login_Button_Click(object sender, RoutedEventArgs e)

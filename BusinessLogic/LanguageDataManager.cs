@@ -125,16 +125,16 @@ namespace BusinessLogic
 
 				//Account page
 				{TranslationKey.AccountPage_LoginButton, "Inloggen" },
-                {TranslationKey.AccountPage_LoginPassword, "Wachtwoord" },
-                {TranslationKey.AccountPage_LoginTitle, "Inloggen" },
-                {TranslationKey.AccountPage_LoginUsername, "Gebruikersnaam" },
+                {TranslationKey.AccountPage_LoginPassword, "Wwoord" },
+                {TranslationKey.AccountPage_LoginTitle, "Log in" },
+                {TranslationKey.AccountPage_LoginUsername, "Gebruiker" },
 
-                {TranslationKey.AccountPage_RegisterTitle, "Nieuwe gebruiker" },
-                {TranslationKey.AccountPage_RegisterButton, "Registreren" },
-                {TranslationKey.AccountPage_RegisterEmail, "Email-adres" },
-                {TranslationKey.AccountPage_RegisterPassword, "Wachtwoord" },
-                {TranslationKey.AccountPage_RegisterPasswordConfirm, "Bevestig wachtwoord" },
-                {TranslationKey.AccountPage_RegisterUsername, "Gebruikersnaam" },
+                {TranslationKey.AccountPage_RegisterTitle, "Nieuw account" },
+                {TranslationKey.AccountPage_RegisterButton, "Maken" },
+                {TranslationKey.AccountPage_RegisterEmail, "Email" },
+                {TranslationKey.AccountPage_RegisterPassword, "Wwoord" },
+                {TranslationKey.AccountPage_RegisterPasswordConfirm, "Bevestig" },
+                {TranslationKey.AccountPage_RegisterUsername, "Gebruiker" },
 
                 //SongSelect
                 {TranslationKey.Menubar_SongSelect_Karaoke, "Karaoke" },
@@ -208,9 +208,9 @@ namespace BusinessLogic
 
                 {TranslationKey.AccountPage_RegisterTitle, "New account" },
                 {TranslationKey.AccountPage_RegisterButton, "Sign up" },
-                {TranslationKey.AccountPage_RegisterEmail, "Emailadress" },
+                {TranslationKey.AccountPage_RegisterEmail, "Email" },
                 {TranslationKey.AccountPage_RegisterPassword, "Password" },
-                {TranslationKey.AccountPage_RegisterPasswordConfirm, "Confirm Password" },
+                {TranslationKey.AccountPage_RegisterPasswordConfirm, "Confirm" },
                 {TranslationKey.AccountPage_RegisterUsername, "Username" },
 
 				//Messagesboxes
