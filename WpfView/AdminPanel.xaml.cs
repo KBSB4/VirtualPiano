@@ -74,10 +74,6 @@ namespace WpfView
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageDescription(descriptionTextBox.Text);
             }
-            else if (!ValidationController.AdminPanelValidationMessageDifficulty(difficultyComboBox.SelectedIndex.ToString()).Equals(string.Empty))
-            {
-                errorMessage = ValidationController.AdminPanelValidationMessageDifficulty(difficultyComboBox.Text);
-            }
             else if (!ValidationController.AdminPanelValidationMessageMidiFile().Equals(string.Empty))
             {
                 errorMessage = ValidationController.AdminPanelValidationMessageMidiFile();
