@@ -10,12 +10,12 @@ namespace Controller
 
         public static string? AccountPage_Login_ValidateUsernameField(string? username, User? user)
         {
-            return ValidationLogic.AccountPage_Login_ValidateUsernameField(username, user);
+            return ValidationLogic.AccountPage_Login_ValidateUsernameField(username, user, LanguageController.GetLanguageDataManagerForAccountValid());
         }
 
         public static string? AccountPage_Login_ValidatePasswordField(string? password, User? user)
         {
-            return ValidationLogic.AccountPage_Login_ValidatePasswordField(password, user);
+            return ValidationLogic.AccountPage_Login_ValidatePasswordField(password, user, LanguageController.GetLanguageDataManagerForAccountValid());
         }
 
         #endregion
@@ -24,22 +24,22 @@ namespace Controller
 
         public static string? AccountPage_NewAccount_ValidateUsernameField(string? username, User? user)
         {
-            return ValidationLogic.AccountPage_NewAccount_ValidateUsernameField(username, user);
+            return ValidationLogic.AccountPage_NewAccount_ValidateUsernameField(username, user, LanguageController.GetLanguageDataManagerForAccountValid());
         }
 
         public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User[]? users)
         {
-            return ValidationLogic.AccountPage_NewAccount_ValidateEmailField(email, users);
+            return ValidationLogic.AccountPage_NewAccount_ValidateEmailField(email, users, LanguageController.GetLanguageDataManagerForAccountValid());
         }
 
         public static string? AccountPage_NewAccount_ValidatePasswordField(string? password)
         {
-            return ValidationLogic.AccountPage_NewAccount_ValidatePasswordField(password);
+            return ValidationLogic.AccountPage_NewAccount_ValidatePasswordField(password, LanguageController.GetLanguageDataManagerForAccountValid());
         }
 
         public static string? AccountPage_NewAccount_ValidateConfirmField(string? password, string? confirmpass)
         {
-            return ValidationLogic.AccountPage_NewAccount_ValidateConfirmField(password, confirmpass);
+            return ValidationLogic.AccountPage_NewAccount_ValidateConfirmField(password, confirmpass, LanguageController.GetLanguageDataManagerForAccountValid());
         }
 
         #endregion

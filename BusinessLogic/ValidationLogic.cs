@@ -1,4 +1,5 @@
-﻿using Model.DatabaseModels;
+﻿using Model;
+using Model.DatabaseModels;
 using System.Text.RegularExpressions;
 
 namespace BusinessLogic
@@ -16,19 +17,19 @@ namespace BusinessLogic
         /// <param name="username"></param>
         /// <param name="user"></param>
         /// <returns>If all checks came out true the <paramref name="username"/> was valid and returns null. Otherwise returns corresponding error message.</returns>
-        public static string? AccountPage_Login_ValidateUsernameField(string? username, User? user)
+        public static string? AccountPage_Login_ValidateUsernameField(string? username, User? user, LanguageDataManager LDM)
         {
             if (username is null || username.Length == 0)
             {
-                return "Please fill in the Username field!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_Account_NoUsername); 
             }
             else if (username is not null && username.Length < 4 || username?.Length > 13)
             {
-                return "Please use an Username between 4 and 13 characters!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_Account_UsernameNotEnoughChars);
             }
             else if (user is null)
             {
-                return "Please fill in an Username that exists!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_Account_UsernameDoesNotExist);
             }
             else
             {
@@ -45,19 +46,19 @@ namespace BusinessLogic
         /// <param name="password"></param>
         /// <param name="user"></param>
         /// <returns>If all checks came out true the <paramref name="password"/> was valid and returns null. Otherwise returns corresponding error message.</returns>
-        public static string? AccountPage_Login_ValidatePasswordField(string? password, User? user)
+        public static string? AccountPage_Login_ValidatePasswordField(string? password, User? user, LanguageDataManager LDM)
         {
             if (password is null || password.Length == 0)
             {
-                return "Please fill in the Password field!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_Account_NoPassword);
             }
             else if (password is not null && password.Length < 4 || password?.Length > 13)
             {
-                return "Please fill in a Password between 4 and 13 characters!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_Account_PasswordNotEnoughChars);
             }
             else if (user is null)
             {
-                return "Please fill in a Password that matches the username!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_Account_PasswordDoesNotExist);
             }
             else
             {
@@ -78,19 +79,19 @@ namespace BusinessLogic
         /// <param name="username"></param>
         /// <param name="user"></param>
         /// <returns>If all checks came out true the <paramref name="username"/> was valid and returns null. Otherwise returns corresponding error message.</returns>
-        public static string? AccountPage_NewAccount_ValidateUsernameField(string? username, User? user)
+        public static string? AccountPage_NewAccount_ValidateUsernameField(string? username, User? user, LanguageDataManager LDM)
         {
             if (username is null || username.Length == 0)
             {
-                return "Please fill in the Username field!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_NoUsername);
             }
             else if (username is not null && username.Length < 4 || username?.Length > 13)
             {
-                return "Please use an Username between 4 and 13 characters!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_UsernameNotEnoughChars);
             }
             else if (user is not null)
             {
-                return "Please fill in an Username that does not exist!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_UsernameDoesNotExist);
             }
             else
             {
@@ -107,7 +108,7 @@ namespace BusinessLogic
         /// <param name="email"></param>
         /// <param name="user"></param>
         /// <returns>If all checks came out true the <paramref name="email"/> was valid and returns null (note that email is not required). Otherwise returns corresponding error message.</returns>
-        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User[]? user)
+        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User[]? user, LanguageDataManager LDM)
         {
             string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
             @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
@@ -119,11 +120,11 @@ namespace BusinessLogic
             }
             else if (user is null)
             {
-                return "Please fill in an Email that is unique!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_EmailIsNotUnique);
             }
             else if (!re.IsMatch(email))
             {
-                return "Please fill in an Email that matches the right format!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_EmailIsWrongFormat);
             }
             else { return null; }
         }
@@ -135,15 +136,15 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="password"></param>
         /// <returns>If all checks came out true the <paramref name="password"/> was valid and returns null. Otherwise returns corresponding error message.</returns>
-        public static string? AccountPage_NewAccount_ValidatePasswordField(string? password)
+        public static string? AccountPage_NewAccount_ValidatePasswordField(string? password, LanguageDataManager LDM)
         {
             if (password is null || password.Length == 0)
             {
-                return "Please fill in the Password field!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_NoPassword);
             }
             else if (password is not null && password.Length < 4 || password?.Length > 13)
             {
-                return "Please use a Password between 4 and 13 characters!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_PasswordNotEnoughChars);
             }
             else
             {
@@ -160,19 +161,19 @@ namespace BusinessLogic
         /// <param name="password"></param>
         /// <param name="confirmpass"></param>
         /// <returns>If all checks came out true the <paramref name="confirmpass"/> was valid and returns null. Otherwise returns corresponding error message.</returns>
-        public static string? AccountPage_NewAccount_ValidateConfirmField(string? password, string? confirmpass)
+        public static string? AccountPage_NewAccount_ValidateConfirmField(string? password, string? confirmpass, LanguageDataManager LDM)
         {
             if (confirmpass is null || confirmpass.Length == 0)
             {
-                return "Please fill in the Confirm field!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_NoConfirmPass);
             }
             else if (confirmpass is not null && confirmpass.Length < 4 || confirmpass?.Length > 13)
             {
-                return "Please fill in a Confirm between 4 and 13 characters!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_ConfirmPassNotEnoughChars);
             }
             else if (password != confirmpass)
             {
-                return "Please fill in a Confirm that matches the Password field!";
+                return LDM.GetTranslation(TranslationKey.MessageBox_Account_ConfirmPassDoesNotExist);
             }
             else
             {

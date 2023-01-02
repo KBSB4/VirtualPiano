@@ -12,6 +12,10 @@
         Menubar_MIDI_Stop,
         Menubar_MIDI_Karaoke,
 
+        Menubar_SongSelect_SelectSong,
+        Menubar_SongSelect_Start,
+        Menubar_SongSelect_Karaoke,
+
         MainMenu_Settings,
         MainMenu_FreePlay,
         MainMenu_Play,
@@ -51,8 +55,22 @@
         MessageBox_NoMidiPlayingText,
         MessageBox_NoMidiPlayingCaption,
 
-        Menubar_SongSelect_SelectSong,
-        Menubar_SongSelect_Start,
-        Menubar_SongSelect_Karaoke,
+        MessageBox_Account_ErrorText,
+        MessageBox_Account_NoUsername,
+        MessageBox_Account_UsernameNotEnoughChars,
+        MessageBox_Account_UsernameDoesNotExist,
+        MessageBox_Account_NoPassword,
+        MessageBox_Account_PasswordNotEnoughChars,
+        MessageBox_Account_PasswordDoesNotExist,
+        MessageBox_NewAccount_NoUsername,
+        MessageBox_NewAccount_UsernameNotEnoughChars,
+        MessageBox_NewAccount_UsernameDoesNotExist,
+        MessageBox_NewAccount_EmailIsNotUnique,
+        MessageBox_NewAccount_EmailIsWrongFormat,
+        MessageBox_NewAccount_NoPassword,
+        MessageBox_NewAccount_PasswordNotEnoughChars,
+        MessageBox_NewAccount_NoConfirmPass,
+        MessageBox_NewAccount_ConfirmPassNotEnoughChars,
+        MessageBox_Account_ConfirmPassDoesNotExist,
     }
 }

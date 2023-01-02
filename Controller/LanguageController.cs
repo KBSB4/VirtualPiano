@@ -51,5 +51,14 @@ namespace Controller
         {
             languageDataManager.CreateLanguages();
         }
+
+        /// <summary>
+        /// Gets <see cref="LanguageDataManager"/> only to be used for account validation
+        /// </summary>
+        /// <returns><see cref="languageDataManager"/></returns>
+        public static LanguageDataManager GetLanguageDataManagerForAccountValid()
+        {
+            return languageDataManager;
+        }
     }
 }

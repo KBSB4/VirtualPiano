@@ -159,6 +159,25 @@ namespace BusinessLogic
                 {TranslationKey.MessageBox_NoMidiPlayingCaption, "Er speelt geen midi" },
                 {TranslationKey.MessageBox_NoMidiSelectedText, "Er is geen midi geselecteerd" },
                 {TranslationKey.MessageBox_NoMidiSelectedCaption, "Selecteer eerst een midi" },
+
+                //Messageboxes accountpage
+                {TranslationKey.MessageBox_Account_ErrorText, "Niet alle velden kloppen..." },
+                {TranslationKey.MessageBox_Account_NoUsername, "Vul gebruikersnaam in!" },
+                {TranslationKey.MessageBox_Account_UsernameNotEnoughChars, "Vul een gebruikersnaam in tussen 4 en 13 tekens!" },
+                {TranslationKey.MessageBox_Account_UsernameDoesNotExist, "Vul een gebruikersnaam in dat bestaat!" },
+                {TranslationKey.MessageBox_Account_NoPassword, "Vul wachtwoord in!" },
+                {TranslationKey.MessageBox_Account_PasswordNotEnoughChars, "Vul een wachtwoord in tussen 4 en 13 tekens!" },
+                {TranslationKey.MessageBox_Account_PasswordDoesNotExist, "Vul in een wachtwoord dat bij ingevulde gebruikersnaam hoort!" },
+                {TranslationKey.MessageBox_NewAccount_NoUsername, "Vul gebruikersnaam in!" },
+                {TranslationKey.MessageBox_NewAccount_UsernameNotEnoughChars, "Vul een gebruikersnaam in tussen 4 en 13 tekens!" },
+                {TranslationKey.MessageBox_NewAccount_UsernameDoesNotExist, "Vul een gebruikersnaam in dat niet bestaat!" },
+                {TranslationKey.MessageBox_NewAccount_EmailIsNotUnique, "Vul een uniek email in!" },
+                {TranslationKey.MessageBox_NewAccount_EmailIsWrongFormat, "Vul een email in het correct formaat in!" },
+                {TranslationKey.MessageBox_NewAccount_NoPassword, "Vul wachtwoord in!" },
+                {TranslationKey.MessageBox_NewAccount_PasswordNotEnoughChars, "Vul een wachtwoord in tussen 4 en 13 tekens!" },
+                {TranslationKey.MessageBox_NewAccount_NoConfirmPass, "Vul bevestigveld in!" },
+                {TranslationKey.MessageBox_NewAccount_ConfirmPassNotEnoughChars, "Vul een wachtwoord in het bevestigveld van tussen 4 en 13 tekens!" },
+                {TranslationKey.MessageBox_Account_ConfirmPassDoesNotExist, "Vul bevestigveld in met het wachtwoord van wachtwoordveld!" }
             }
             };
 
@@ -180,7 +199,7 @@ namespace BusinessLogic
                 {TranslationKey.Settings_Language, "Language" },
 
 				//MenuBar
-				{TranslationKey.Menubar_BackToMain, "Back to Mainmenu" },
+				{TranslationKey.Menubar_BackToMain, "Back to Main Menu" },
                 {TranslationKey.Menubar_Settings, "Settings" },
                 {TranslationKey.Menubar_MIDI_Play, "Play" },
                 {TranslationKey.Menubar_MIDI_Stop, "Stop" },
@@ -225,6 +244,24 @@ namespace BusinessLogic
                 {TranslationKey.MessageBox_NoMidiSelectedText, "No midi selected! " },
                 {TranslationKey.MessageBox_NoMidiSelectedCaption, "Select a midi first before playing" },
 
+                //Messageboxes accountpage
+                {TranslationKey.MessageBox_Account_ErrorText, "Not all fields met the requirements..." },
+                {TranslationKey.MessageBox_Account_NoUsername, "Please fill in the Username field!" },
+                {TranslationKey.MessageBox_Account_UsernameNotEnoughChars, "Please use an Username between 4 and 13 characters!" },
+                {TranslationKey.MessageBox_Account_UsernameDoesNotExist, "Please fill in an Username that exists!" },
+                {TranslationKey.MessageBox_Account_NoPassword, "Please fill in the Password field!" },
+                {TranslationKey.MessageBox_Account_PasswordNotEnoughChars, "Please fill in a Password between 4 and 13 characters!" },
+                {TranslationKey.MessageBox_Account_PasswordDoesNotExist, "Please fill in a Password that matches the username!" },
+                {TranslationKey.MessageBox_NewAccount_NoUsername, "Please fill in the Username field!" },
+                {TranslationKey.MessageBox_NewAccount_UsernameNotEnoughChars, "Please use an Username between 4 and 13 characters!" },
+                {TranslationKey.MessageBox_NewAccount_UsernameDoesNotExist, "Please fill in an Username that does not exist!" },
+                {TranslationKey.MessageBox_NewAccount_EmailIsNotUnique, "Please fill in an Email that is unique!" },
+                {TranslationKey.MessageBox_NewAccount_EmailIsWrongFormat, "Please fill in an Email that matches the right format!" },
+                {TranslationKey.MessageBox_NewAccount_NoPassword, "Please fill in the Password field!" },
+                {TranslationKey.MessageBox_NewAccount_PasswordNotEnoughChars, "Please use a Password between 4 and 13 characters!" },
+                {TranslationKey.MessageBox_NewAccount_NoConfirmPass, "Please fill in the Confirm field!" },
+                {TranslationKey.MessageBox_NewAccount_ConfirmPassNotEnoughChars, "Please fill in a Confirm between 4 and 13 characters!" },
+                {TranslationKey.MessageBox_Account_ConfirmPassDoesNotExist, "Please fill in a Confirm that matches the Password field!" }
             }
             };
 

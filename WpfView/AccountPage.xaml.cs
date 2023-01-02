@@ -282,7 +282,7 @@ namespace WpfView
         {
             if (FinalErrorMessage is not null)
             {
-                MessageBox.Show(FinalErrorMessage.ToString(), "Not all fields met the requirements...", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show(FinalErrorMessage.ToString(), LanguageController.GetTranslation(TranslationKey.MessageBox_Account_ErrorText), MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
