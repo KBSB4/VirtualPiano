@@ -84,7 +84,7 @@
 //			{
 //				PianoSoundPlayer player;
 //				player = new PianoSoundPlayer("testname", ".wav");
-//				player.PlayNote(NoteName.C, 5);
+//				//player.PlayNote(NoteName.C, 5);
 //				Assert.Fail("No exception was given, while the folder \"Piano\" only contains the note names " +
 //					"without prefix \"testname\"");
 //			}
