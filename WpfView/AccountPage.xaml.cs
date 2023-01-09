@@ -60,6 +60,11 @@ namespace WpfView
             CreateButton.Content = LanguageController.GetTranslation(TranslationKey.AccountPage_RegisterButton);
         }
 
+        /// <summary>
+        /// This method gets all the input from the "Login" section and validates it when the "Login" button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void Login_Button_Click(object sender, RoutedEventArgs e)
         {
             TextBox nameTextBox = Login_UsernameInput;
@@ -71,6 +76,11 @@ namespace WpfView
             Login_ValidatePasswordField(passwordBox.Password, loggingInUser);
         }
 
+        /// <summary>
+        /// This method gets all the filled in input from the "New Account" section and validates it when the "Create" button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void Create_Button_Click(object sender, RoutedEventArgs e)
         {
             TextBox nameTextBox = NewAccount_UsernameInput;
@@ -89,6 +99,11 @@ namespace WpfView
 
         #region Login Validation Methods
 
+        /// <summary>
+        /// Validates the username field when trying to log in.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="user"></param>
         private void Login_ValidateUsernameField(string? username, User? user)
         {
             string? errorMessage = ValidationController.AccountPage_Login_ValidateUsernameField(username, user);
@@ -104,6 +119,11 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Validates the password field when trying to log in.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="user"></param>
         private void Login_ValidatePasswordField(string? username, User? user)
         {
             string? errorMessage = ValidationController.AccountPage_Login_ValidatePasswordField(username, user);
@@ -130,12 +150,17 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Validates the username and password combination when trying to log in. When the combination is valid, logs the user in.
+        /// </summary>
+        /// <param name="user"></param>
         private void Login(User user)
         {
             ClearAllFields();
             SetFieldSuccesBackground(Login_PasswordInput);
             _mainMenu.LoggedInUser = user;
         }
+
 
         private void CloseLogin()
         {
@@ -158,6 +183,11 @@ namespace WpfView
         #region New Account Validation Methods
 
 
+        /// <summary>
+        /// Validates the username field when creating a new user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="user"></param>
         private void NewAccount_ValidateUsernameField(string? username, User? user)
         {
             string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateUsernameField(username, user);
@@ -173,6 +203,11 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Validates the email field when creating a new user.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="user"></param>
         private void NewAccount_ValidateEmailField(string? email, User? user)
         {
             if (user is null) return;
@@ -191,6 +226,10 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Validates the password field when creating a new user.
+        /// </summary>
+        /// <param name="password"></param>
         private void NewAccount_ValidatePasswordField(string? password)
         {
             string? errorMessage = ValidationController.AccountPage_NewAccount_ValidatePasswordField(password);
@@ -206,6 +245,11 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Validates the confirm password field when creating a new user.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="confirmpass"></param>
         private void NewAccount_ValidateConfirmField(string? password, string? confirmpass)
         {
             string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateConfirmField(password, confirmpass);
@@ -224,6 +268,9 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Uploads the user to the SQL Database.
+        /// </summary>
         private async void UploadNewUser()
         {
             User user = new()
