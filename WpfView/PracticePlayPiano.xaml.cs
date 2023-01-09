@@ -391,7 +391,6 @@ namespace WpfView
         /// Calculate score when played note is released and apply to <see cref="score"/>
         /// </summary>
         /// <param name="key"></param>
-        //TODO Merge with ApplyPressedScore
         private void ApplyReleasedScore(PianoKey key)
         {
             if (SongLogic.PlaybackDevice is not null && (SongLogic.PlaybackDevice.IsRunning || currentlyPlaying.Count > 0))
@@ -453,7 +452,6 @@ namespace WpfView
         /// Calculate score when played note is pressed and apply to <see cref="score"/>
         /// </summary>
         /// <param name="key"></param>
-        //TODO Merge with ApplyReleasedScore
         private void ApplyPressedScore(PianoKey key)
         {
             if (SongLogic.PlaybackDevice is not null && SongLogic.PlaybackDevice.IsRunning)

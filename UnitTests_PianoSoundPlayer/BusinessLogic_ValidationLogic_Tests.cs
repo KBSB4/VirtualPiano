@@ -1,13 +1,23 @@
-﻿namespace UnitTests
-{
-    internal class BusinessLogic_ValidationLogic_Tests
-    {
-        //private readonly User? existingUser = await DatabaseController.GetUserByName(nameTextBox.Text);
-        //private readonly User? loggingInUser = await DatabaseController.GetLoggingInUser(nameTextBox.Text, passwordBox.Password);
-        //[TestCase("", )]
-        //private void AccountPage_Login_UsernameGetsCheckedOnEmpty(string username, User user)
-        //{
+﻿using Controller;
+using Model.DatabaseModels;
 
-        //}
+namespace UnitTests
+{
+    public class BusinessLogic_ValidationLogic_Tests
+    {
+        private readonly User? existingUser = await DatabaseController.GetUserByName();
+        private readonly User? loggingInUser = await DatabaseController.GetLoggingInUser();
+        [SetUp]
+        public void SetUp()
+        {
+
+        }
+        
+        
+        [TestCase("", )]
+        private void AccountPage_Login_UsernameGetsCheckedOnEmpty(string username, User user)
+        {
+
+        }
     }
 }
