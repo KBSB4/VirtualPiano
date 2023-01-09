@@ -5,7 +5,6 @@ namespace Controller
 {
     public static class ValidationController
     {
-        //TODO Summaries
         #region AccountPage Login Validation Methods
 
         /// <summary>
