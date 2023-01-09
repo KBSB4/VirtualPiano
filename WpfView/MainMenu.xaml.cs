@@ -34,6 +34,8 @@ namespace WpfView
             SongSelectPage = new SongSelectPage(this);
             AccountPage = new AccountPage(this, null);
             AdminPanel = new(this);
+            SettingsPage.IndexInputDevice = 1;
+            CheckInputDevice(SettingsPage.IndexInputDevice);
             Account_ChangeIconBasedOnUser();
             IsVisibleChanged += MainMenu_IsVisibleChanged;
         }
