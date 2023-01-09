@@ -108,7 +108,7 @@ namespace BusinessLogic
         /// <param name="email"></param>
         /// <param name="user"></param>
         /// <returns>If all checks came out true the <paramref name="email"/> was valid and returns null (note that email is not required). Otherwise returns corresponding error message.</returns>
-        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User[]? user, LanguageDataManager LDM)
+        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User? user, LanguageDataManager LDM)
         {
             string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
             @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +

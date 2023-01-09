@@ -178,7 +178,7 @@ namespace WpfView
             if (user is null) return;
             User[] users = { user };
 
-            string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateEmailField(email, users);
+            string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateEmailField(email, user);
             if (errorMessage is null)
             {
                 SetFieldSuccesBackground(NewAccount_EmailInput);

@@ -27,7 +27,7 @@ namespace Controller
             return ValidationLogic.AccountPage_NewAccount_ValidateUsernameField(username, user, LanguageController.GetLanguageDataManagerForAccountValid());
         }
 
-        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User[]? users)
+        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User? users)
         {
             return ValidationLogic.AccountPage_NewAccount_ValidateEmailField(email, users, LanguageController.GetLanguageDataManagerForAccountValid());
         }
