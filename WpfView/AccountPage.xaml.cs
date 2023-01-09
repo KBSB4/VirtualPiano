@@ -161,7 +161,10 @@ namespace WpfView
             _mainMenu.LoggedInUser = user;
         }
 
-
+        /// <summary>
+        /// Changes the icon of the main menu and sets the <see cref="Closed"/> to true. 
+        /// Also navigates the user to the desired page based on the account.
+        /// </summary>
         private void CloseLogin()
         {
             _mainMenu.Account_ChangeIconBasedOnUser();
