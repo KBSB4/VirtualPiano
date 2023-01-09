@@ -292,44 +292,75 @@ namespace WpfView
 
         #region Validation Feedback Methods
 
+        /// <summary>
+        /// Sets the background of the <paramref name="textBox"/> to an error color. And clears the input.
+        /// </summary>
+        /// <param name="textBox"></param>
         private static void SetFieldErrorBackground(TextBox textBox)
         {
             textBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
             textBox.Clear();
         }
 
+        /// <summary>
+        /// Sets the background of the <paramref name="passwordBox"/> to an error color. And clears the input.
+        /// </summary>
+        /// <param name="passwordBox"></param>
         private static void SetFieldErrorBackground(PasswordBox passwordBox)
         {
             passwordBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFE25A3F"));
             passwordBox.Clear();
         }
 
+        /// <summary>
+        /// Sets the background of the <paramref name="textBox"/> to white.
+        /// </summary>
+        /// <param name="textBox"></param>
         private static void SetFieldSuccesBackground(TextBox textBox)
         {
             textBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
 
+        /// <summary>
+        /// Sets the background of the <paramref name="passwordBox"/> to white.
+        /// </summary>
+        /// <param name="passwordBox"></param>
         private static void SetFieldSuccesBackground(PasswordBox passwordBox)
         {
             passwordBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFFFF"));
         }
 
+        /// <summary>
+        /// Clears just one field based on the <paramref name="textBox"/>.
+        /// </summary>
+        /// <param name="textBox"></param>
         private static void ClearField(TextBox textBox)
         {
             textBox.Clear();
         }
 
+        /// <summary>
+        /// Clears just one field based on the <paramref name="passwordBox"/>.
+        /// </summary>
+        /// <param name="passwordBox"></param>
         private static void ClearField(PasswordBox passwordBox)
         {
             passwordBox.Clear();
         }
 
+        /// <summary>
+        /// Adds the error message to the messagebox.
+        /// </summary>
+        /// <param name="errorMessage"></param>
         private void AddErrorMessageToMessageBox(string errorMessage)
         {
             if (FinalErrorMessage is not null) FinalErrorMessage.AppendLine(errorMessage);
             else { FinalErrorMessage = new StringBuilder(); FinalErrorMessage.AppendLine(errorMessage); }
         }
 
+        /// <summary>
+        /// Shows the error message.
+        /// </summary>
         private void ShowErrorMessage()
         {
             if (FinalErrorMessage is not null)
@@ -338,11 +369,17 @@ namespace WpfView
             }
         }
 
+        /// <summary>
+        /// Clears the <see cref="FinalErrorMessage"/>.
+        /// </summary>
         private void ClearErrorMessage()
         {
             FinalErrorMessage?.Clear();
         }
 
+        /// <summary>
+        /// Clears all fields.
+        /// </summary>
         private void ClearAllFields()
         {
             Login_UsernameInput.Clear();
