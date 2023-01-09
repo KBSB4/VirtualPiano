@@ -6,6 +6,15 @@ namespace UnitTests
     internal class Controller_LanguageController_Tests
     {
         /// <summary>
+        /// Create JSON if it does not exist
+        /// </summary>
+        [SetUp]
+        public void Initialise()
+        {
+            LanguageController.CreateJSON();
+        }
+
+        /// <summary>
         /// Get translation and check if it is the right one
         /// </summary>
         [Test]

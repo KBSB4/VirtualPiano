@@ -195,6 +195,7 @@ namespace WpfView
             }
         }
 
+        //Jael was here :)
         /// <summary>
         /// Finds the right colour for the right note
         /// </summary>
