@@ -415,14 +415,16 @@ namespace WpfView
                             _ => 0,
                         };
 
-                        noteScore = Math.Max(MAXNOTESCORE - difference, 0);
+                        noteScore = Math.Max(MAXNOTESCORE - difference, -100);
                     }
                     else
                     {
-                        noteScore = 0;
+                        noteScore = -100;
                     }
                     currentlyPlaying.Remove(key);
                     score += noteScore;
+
+                    score = Math.Max(score, 0);
                 }
             }
             UpdateScoreVisual();
@@ -483,13 +485,13 @@ namespace WpfView
                             _ => 0,
                         };
 
-                        noteScore = Math.Max(MAXNOTESCORE - difference, 0);
+                        noteScore = Math.Max(MAXNOTESCORE - difference, -100);
                         rating = GetRating(noteScore);
                         closestNote.PressedDown = true;
                     }
                     else
                     {
-                        noteScore = 0;
+                        noteScore = -100;
                         rating = GetRating(0);
                     }
 
@@ -499,6 +501,7 @@ namespace WpfView
                         pianoGrid.DisplayPianoKey(key, rating);
                     }));
                     score += noteScore;
+                    score = Math.Max(score, 0);
 
                     Debug.WriteLine($"Score += {noteScore}");
                 }
