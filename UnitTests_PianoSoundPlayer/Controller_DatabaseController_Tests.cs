@@ -17,12 +17,6 @@ namespace UnitTests
             Assert.That(score, Is.Not.Null);
         }
 
-        //[Test] //Unable to test this as we do not have a way of deleting existing scores
-        //public void UploadScoreMinus555ToSong55()
-        //{
-        //    Highscore[] highscores = await DatabaseController.GetHighscores(55);
-        //}
-
         /// <summary>
         /// Update score of user 31 in song 7 to 0
         /// </summary>
