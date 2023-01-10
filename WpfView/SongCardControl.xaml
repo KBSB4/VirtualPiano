@@ -26,7 +26,7 @@
                         <RowDefinition Height="2*"></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Image Source="/Images/SongCardBackground.png" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="3"></Image>
+                    <Image Source="pack://application:,,,/Images/SongCardBackground.png" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="3"></Image>
                     <Grid Grid.Row="2" Grid.Column="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*"></ColumnDefinition>
@@ -41,7 +41,7 @@
                         </Viewbox>
                         <Image Grid.Column="1" Grid.ColumnSpan="2" Source="{Binding DifficultyImageSource}" Margin="10"></Image>
                         <Viewbox Grid.Row="1" VerticalAlignment="Top">
-                            <TextBlock FontSize="10" TextWrapping="Wrap" Foreground="WhiteSmoke" Width="120" Text="Space for song info, highscore or other text. Or maybe an image might be cool. Lorem Ipsum Dolor set amet"></TextBlock>
+                            <TextBlock FontSize="10" TextWrapping="Wrap" Foreground="WhiteSmoke" Width="120" Text="{Binding Description}"></TextBlock>
                         </Viewbox>
                     </Grid>
                 </Grid>

@@ -7,7 +7,7 @@ namespace BusinessLogic
     public static class SongLogic
     {
         private const int SONG_OFFSET = 2000;
-        private const int STARTTUNENOTES = 7;
+        private const int STARTTUNENOTES = 1;
 
         public static Playback? PlaybackDevice { get => playbackDevice; set => playbackDevice = value; }
         private static Playback? playbackDevice;
@@ -39,13 +39,11 @@ namespace BusinessLogic
             StartCountDown?.Invoke(null, new EventArgs());
 
             if (obj is not Song song) return;
-            //TODO Properly remake thread when song wants to be played again after it finishes
-            song.SongTimerThread?.Start();
             OutputDevice = OutputDevice.GetByIndex(0);
             PlaybackDevice = song.File.GetPlayback(OutputDevice);
-
-            Thread.Sleep(SONG_OFFSET);
             PlaybackDevice.Start();
+            Thread.Sleep(10);
+            song.SongTimerThread?.Start();
             SpinWait.SpinUntil(() => !PlaybackDevice.IsRunning);
 
             OutputDevice.Dispose();
@@ -134,8 +132,12 @@ namespace BusinessLogic
                 //Stops the keys from appearing
                 song.PianoKeys = new();
 
+                //Remove event e
+                song.NotePlayed -= Song_NotePlayed;
+
                 if (PlaybackDevice is null || OutputDevice is null) return;
                 PlaybackDevice.PlaybackEnd = new MetricTimeSpan(0);
+                Thread.Sleep(500);
                 PlaybackDevice.Dispose();
                 OutputDevice.Dispose();
             }

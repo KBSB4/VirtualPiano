@@ -10,11 +10,12 @@ namespace BusinessLogic
     {
         public static Piano? Piano { get; set; }
         public static PianoSoundPlayer? SoundPlayer { get; set; }
+        public static float Volume { get; set; }
 
         //Used to play multiple keys at once, also tracks the playing keys
         public static Dictionary<PianoKey, FadingAudio> CurrentPlayingAudio { get => currentPlayingAudio; set => currentPlayingAudio = value; }
         private static Dictionary<PianoKey, FadingAudio> currentPlayingAudio = new();
-        
+
         private const int AmountOfKeys = 24;
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace BusinessLogic
         public static void CreatePiano()
         {
             Piano = new Piano();
-            SoundPlayer = new(ProjectSettings.GetPath(PianoHeroPath.PianoSoundsFolder), "", ".wav");
+            SoundPlayer = new("", ".wav");
             AssembleKeyBindings(Piano);
         }
 
@@ -46,7 +47,7 @@ namespace BusinessLogic
         /// <param name="octave"></param>
         /// <param name="note"></param>
         /// <returns></returns>
-        public static PianoKey CreateKey(Octave octave, NoteName note) 
+        public static PianoKey CreateKey(Octave octave, NoteName note)
         {
             return new PianoKey(octave, note);
         }
@@ -59,11 +60,11 @@ namespace BusinessLogic
             for (int i = 0; i < AmountOfKeys; i++)
             {
                 PianoKey key = piano.PianoKeys[i];
-                if (piano.lowerOctaveActive) key.Octave += 2;
+                if (piano.LowerOctaveActive) key.Octave += 2;
                 else key.Octave -= 2;
             }
 
-            piano.lowerOctaveActive = !piano.lowerOctaveActive;
+            piano.LowerOctaveActive = !piano.LowerOctaveActive;
         }
 
         /// <summary>
@@ -143,7 +144,7 @@ namespace BusinessLogic
         {
             if (!CurrentPlayingAudio.ContainsKey(key))
             {
-                FadingAudio? fadingAudio = SoundPlayer?.GetFadingAudio(key.Note, (int)key.Octave);
+                FadingAudio? fadingAudio = SoundPlayer?.GetFadingAudio(key.Note, (int)key.Octave, Volume);
 
                 if (fadingAudio is not null)
                 {

@@ -5,9 +5,11 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\PianoHeroLogo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\accountImage.png" />
     <None Remove="Images\CountdownGo.png" />
     <None Remove="Images\CountdownReady.png" />
     <None Remove="Images\CountdownSet.png" />
@@ -15,25 +17,35 @@
     <None Remove="Images\DifficultyIconHard.png" />
     <None Remove="Images\DifficultyIconHero.png" />
     <None Remove="Images\DifficultyIconMedium.png" />
+    <None Remove="Images\log-out.png" />
     <None Remove="Images\midi.png" />
+    <None Remove="Images\NoTrophy.png" />
+    <None Remove="Images\PianoHeroLogo.ico" />
     <None Remove="Images\PianoHeroLogo.png" />
     <None Remove="Images\PianoHeroMenuBackground.png" />
     <None Remove="Images\PianoHeroMenuBackground.psd" />
     <None Remove="Images\PianoHeroMenuBackground.psd.crswap" />
     <None Remove="Images\PianoHeroMenuBackground_1.png" />
+    <None Remove="Images\PianoHero_AccountPage_background.png" />
     <None Remove="Images\pianoIcon.png" />
     <None Remove="Images\previous.png" />
     <None Remove="Images\settings.png" />
     <None Remove="Images\settingsIcon.png" />
     <None Remove="Images\SongCardBackground.png" />
     <None Remove="Images\SongSelectBackGround.png" />
+    <None Remove="Images\ThrophySilver.png" />
+    <None Remove="Images\ThropyBronze.png" />
+    <None Remove="Images\TrophyGold.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="Usb.Events" Version="10.0.1.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\accountImage.png" />
     <Resource Include="Images\CountdownGo.png" />
     <Resource Include="Images\CountdownReady.png" />
     <Resource Include="Images\CountdownSet.png" />
@@ -41,7 +53,10 @@
     <Resource Include="Images\DifficultyIconHard.png" />
     <Resource Include="Images\DifficultyIconHero.png" />
     <Resource Include="Images\DifficultyIconMedium.png" />
+    <Resource Include="Images\log-out.png" />
     <Resource Include="Images\midi.png" />
+    <Resource Include="Images\NoTrophy.png" />
+    <Resource Include="Images\PianoHeroLogo.ico" />
     <Resource Include="Images\PianoHeroMenuBackground.png" />
   </ItemGroup>
 
@@ -54,12 +69,16 @@
     <Resource Include="Images\PianoHeroLogo.png" />
     <Resource Include="Images\PianoHeroMenuBackground.psd" />
     <Resource Include="Images\PianoHeroMenuBackground_1.png" />
+    <Resource Include="Images\PianoHero_AccountPage_background.png" />
     <Resource Include="Images\pianoIcon.png" />
     <Resource Include="Images\previous.png" />
     <Resource Include="Images\settings.png" />
     <Resource Include="Images\settingsIcon.png" />
     <Resource Include="Images\SongCardBackground.png" />
     <Resource Include="Images\SongSelectBackGround.png" />
+    <Resource Include="Images\ThrophySilver.png" />
+    <Resource Include="Images\ThropyBronze.png" />
+    <Resource Include="Images\TrophyGold.png" />
   </ItemGroup>
 
 </Project>

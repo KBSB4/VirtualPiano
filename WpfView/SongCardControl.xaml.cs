@@ -14,13 +14,17 @@ namespace WpfView
     {
         readonly SongSelectPage? SongSelectPage;
         public SongCardControl(int id) : this(id, "No name") { }
-        public SongCardControl(int id, string songTitle) : this(id, songTitle, 0, null) { }
-        public SongCardControl(int id, string songTitle, int difficulty, SongSelectPage? songSelectPage)
+        public SongCardControl(int id, string songTitle) : this(id, songTitle, null, 0, null) { }
+        public SongCardControl(int id, string songTitle, string? description, int difficulty, SongSelectPage? songSelectPage)
         {
             InitializeComponent();
             SongID = id;
             SongTitle = songTitle;
+            //If no description, show nothing
+            Description = description ?? "";
             Difficulty = difficulty;
+
+            //Set difficulty icon
             DifficultyImageSource = Difficulty switch
             {
                 0 => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconEZ.png", UriKind.Relative)),
@@ -29,6 +33,8 @@ namespace WpfView
                 3 => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconHero.png", UriKind.Relative)),
                 _ => new BitmapImage(new Uri(ProjectSettings.GetPath(PianoHeroPath.ImagesFolder) + "DifficultyIconEZ.png", UriKind.Relative)),
             };
+
+            //For event click
             SongSelectPage = songSelectPage;
         }
 
@@ -39,6 +45,14 @@ namespace WpfView
         }
         public static readonly DependencyProperty SongTitleProperty =
             DependencyProperty.Register("SongTitle", typeof(string), typeof(SongCardControl), new PropertyMetadata("no name"));
+
+        public string Description
+        {
+            get { return (string)GetValue(DescriptionProperty); }
+            set { SetValue(DescriptionProperty, value); }
+        }
+        public static readonly DependencyProperty DescriptionProperty =
+            DependencyProperty.Register("Description", typeof(string), typeof(SongCardControl), new PropertyMetadata(""));
 
         public int SongID
         {
@@ -65,14 +79,14 @@ namespace WpfView
             DependencyProperty.Register("DifficultyImageSource", typeof(ImageSource), typeof(SongCardControl), new PropertyMetadata(default(ImageSource)));
 
         /// <summary>
-        /// Temporary - starts practice play
+        /// Select the card
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Button? button = sender as Button;
-            if (button is not null && SongSelectPage is not null) { SongSelectPage.SongCard_Click(SongID); }
+            if (button is not null && SongSelectPage is not null) { SongSelectPage.SongCard_Click(this); }
         }
     }
 }

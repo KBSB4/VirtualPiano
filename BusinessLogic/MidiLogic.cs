@@ -1,4 +1,5 @@
 ﻿using Melanchall.DryWetMidi.Common;
+using Melanchall.DryWetMidi.Composing;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 using Model;
@@ -108,31 +109,25 @@ namespace BusinessLogic
 		/// <returns></returns>
 		private static MidiFile AddStartTune(MidiFile midiFile)
 		{
-			MidiFile midiFileOut = new()
-			{
-				TimeDivision = midiFile.TimeDivision
-			};
+			tempoMap = midiFile.GetTempoMap();
+			MidiFile midiFileOut = midiFile;
 
-			MidiFile StartTune = MidiFile.Read(ProjectSettings.GetPath(PianoHeroPath.StartTune));
-			// Add all parts after shifting them
-			long addedSoFarMicroseconds = 0;
+			var trackChunk = new PatternBuilder()
+				.Note("C2", new MetricTimeSpan(0, 0, 2), (SevenBitNumber)0)
+				.Note("B5", new MetricTimeSpan(0, 0, 2), (SevenBitNumber)0)
+				// Insert a pause with length of 2 seconds
+				.StepForward(new MetricTimeSpan(0, 0, 2))
+				.Build()
+				.ToTrackChunk(tempoMap);
 
-			List<MidiFile> lsToWrite = new()
-			{
-				StartTune,
-				midiFile
-			};
+			Tempo x = Tempo.FromBeatsPerMinute(midiFile.GetTempoMap().GetTempoAtTime((MetricTimeSpan)TimeSpan.FromSeconds(20)).BeatsPerMinute);
+			double b = (60d / x.BeatsPerMinute) * 7.5d;
+			int y = (int)Math.Ceiling(b);
 
-			foreach (MidiFile midiPart in lsToWrite)
-			{
-				MetricTimeSpan currentDuration = midiPart.GetDuration<MetricTimeSpan>();
-				midiPart.ShiftEvents(new MetricTimeSpan(addedSoFarMicroseconds));
-				midiFileOut.Chunks.AddRange(midiPart.Chunks);
-				addedSoFarMicroseconds += currentDuration.TotalMicroseconds;
-			}
+			midiFileOut.ShiftEvents(new MetricTimeSpan(0, 0, y));
 
-			midiFileOut.Write("current-playing-song.mid", true);
-
+			midiFileOut.Chunks.Add(trackChunk);
+		
 			return midiFileOut;
 		}
 
@@ -143,7 +138,7 @@ namespace BusinessLogic
 		/// <returns></returns>
 		public static MidiFile RemovePianoNotes(MidiFile file)
 		{
-            List<TrackChunk> trackList = file.GetTrackChunks().ToList();
+			List<TrackChunk> trackList = file.GetTrackChunks().ToList();
 			tempoMap = file.GetTempoMap();
 			FourBitNumber pianoChannel = GetPianoChannel(trackList);
 			file.RemoveNotes(x => x.Channel == pianoChannel);

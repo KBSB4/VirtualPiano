@@ -11,6 +11,8 @@ namespace WpfView
     /// </summary>
     public partial class RatingTextControl : UserControl
     {
+        private static int amounExisting = 0;
+        public static int AmounExisting { get => amounExisting; set => amounExisting = value; }
         //Control properties
         public static readonly DependencyProperty RotationProperty =
         DependencyProperty.Register("Rotation", typeof(int), typeof(RatingTextControl), new PropertyMetadata(0));
@@ -37,6 +39,7 @@ namespace WpfView
         /// <param name="rotation"></param>
         public RatingTextControl(Rating rating, int rotation)
         {
+            AmounExisting++;
             RatingText = rating.ToString();
             Rotation = rotation;
             InitializeComponent();
@@ -51,6 +54,7 @@ namespace WpfView
         private void UpdateRatingText(object? obj)
         {
             Thread.Sleep(1000);
+            AmounExisting--;
             Dispatcher.Invoke(new Action(() =>
             {
                 ((Grid)Parent).Children.Remove(this);

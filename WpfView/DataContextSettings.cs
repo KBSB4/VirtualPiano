@@ -16,6 +16,9 @@ namespace WpfView
             set { _indexInputDevice = value; OnPropertyChanged(); }
         }
 
+        /// <summary>
+        /// Updates the index of the now selected inputdevice box
+        /// </summary>
         public void OnPropertyChanged()
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IndexinputDevice)));

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Controller;
+using Model;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows;
@@ -15,11 +18,38 @@ namespace WpfView
         private int count = InputDevice.GetDevicesCount();
         public static int IndexInputDevice { get; set; }
 
+        /// <summary>
+        /// Constructor for settingspage, creates new datacontext
+        /// </summary>
+        /// <param name="mainMenu"></param>
         public SettingsPage(MainMenu mainMenu)
         {
             _mainMenu = mainMenu;
             DataContext = new DataContextSettings();
             InitializeComponent();
+            IsVisibleChanged += SettingsPage_IsVisibleChanged;
+        }
+
+        /// <summary>
+        /// Generatelanguages and update UI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SettingsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            GenerateLanguages();
+            UpdateUI();
+        }
+
+        /// <summary>
+        /// Translate labels
+        /// </summary>
+        private void UpdateUI()
+        {
+            BackMenu.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
+            LanguageLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Language);
+            VolumeLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_Volume);
+            InputDeviceLabel.Content = LanguageController.GetTranslation(TranslationKey.Settings_InputDevice);
         }
 
         /// <summary>
@@ -64,12 +94,9 @@ namespace WpfView
             {
                 IndexInputDevice = input.Items.IndexOf(sender);
             }
-            catch (Exception ex)
+            catch
             {
-                if (ex is IndexOutOfRangeException)
-                {
-                    MessageBox.Show($"Selected item in combobox {input.Name} was out of range");
-                }
+                // Ignore
             }
         }
 
@@ -88,22 +115,73 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Input_DropDownOpened(object sender, EventArgs e)
+        private void DropDownOpened(object sender, EventArgs e)
+        {
+            RefreshBoxes();
+        }
+
+        /// <summary>
+        /// Refresh inputdevices
+        /// </summary>
+        public void RefreshBoxes()
         {
             GenerateInputDevices();
             input.Items.Refresh();
         }
 
         /// <summary>
-        /// Update inputdevices items in settings
+        /// If language selection has changed, update preferredlanguage and UI. Always refresh boxes
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _mainMenu?.CheckInputDevice(IndexInputDevice);
-            GenerateInputDevices();
-            input.Items.Refresh();
+            ComboBox comboBox = (ComboBox)sender;
+
+            if (comboBox.Equals(LanguageBox))
+            {
+                List<Language>? languages = LanguageController.GetAllLanguages();
+                if (languages is not null)
+                {
+                    LanguageCode code = languages[comboBox.SelectedIndex].Code;
+
+                    LanguageController.SetPreferredLanguage(code);
+                    UpdateUI();
+                }
+            }
+
+            RefreshBoxes();
+        }
+
+        /// <summary>
+        /// Add all available langauges to the box
+        /// </summary>
+        public void GenerateLanguages()
+        {
+            LanguageData? languageData = LanguageController.GetLanguageData();
+            if (LanguageBox is not null && languageData?.Languages is not null)
+            {
+                foreach (Language language in languageData.Languages)
+                {
+                    if (!LanguageBox.Items.Cast<ComboBoxItem>().Any(cbi => cbi.Content.Equals(language.Name)))
+                    {
+                        ComboBoxItem ToAddLanguage = new() { Content = language.Name };
+                        LanguageBox.Items.Add(ToAddLanguage);
+                    }
+                }
+                LanguageBox.SelectedIndex = (int)languageData.PreferredLanguage;
+            }
+        }
+
+        /// <summary>
+        /// If volumeslider gets moved, update volume
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            //Volume changed
+            PianoController.SetVolume((float)(e.NewValue / ((Slider)e.Source).Maximum));
         }
     }
 }

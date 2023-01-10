@@ -2,13 +2,13 @@
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace BusinessLogic.SoundPlayer
 {
     public class PianoSoundPlayer
     {
         private readonly string pianoFilesFolder;
-        private readonly string pianoSoundPrefix;
         private readonly string pianoSoundSuffix;
 
         private readonly XAudio2 device;
@@ -31,11 +31,10 @@ namespace BusinessLogic.SoundPlayer
         /// <param name="soundsFolder"></param>
         /// <param name="pianoSoundPrefix"></param>
         /// <param name="pianoSoundSuffix"></param>
-        public PianoSoundPlayer(string soundsFolder, string pianoSoundPrefix, string pianoSoundSuffix)
+        public PianoSoundPlayer(string pianoSoundPrefix, string pianoSoundSuffix)
         {
-            pianoFilesFolder = soundsFolder;
-            this.pianoSoundPrefix = pianoSoundPrefix;
             this.pianoSoundSuffix = pianoSoundSuffix;
+            pianoFilesFolder = ProjectSettings.GetPath(PianoHeroPath.PianoSoundsFolder) + pianoSoundPrefix;
             VerifyDirectory();
             device = new XAudio2();
             _ = new MasteringVoice(device);
@@ -47,22 +46,14 @@ namespace BusinessLogic.SoundPlayer
         /// <exception cref="DirectoryNotFoundException"></exception>
         private void VerifyDirectory()
         {
-            if (!Directory.Exists(pianoFilesFolder))
-                throw new DirectoryNotFoundException(pianoFilesFolder + " was not found");
-        }
+            var assembly = Assembly.GetExecutingAssembly();
+            string[] names = assembly.GetManifestResourceNames();
 
-        /// <summary>
-        /// Plays a single note until the length of the audio has been reached, using the <paramref name="noteName"/> to get the associated note, and <paramref name="octave"/> to increase / decrease octave by pitch
-        /// </summary>
-        /// <param name="noteName"></param>
-        /// <param name="octave"></param>
-        //TODO KEEP THIS FUNCTION?
-        public void PlayNote(NoteName noteName, int octave)
-        {
-            float frequency = GetOctaveFrequencyRatio(octave);
-            string pianoNoteString = noteName.ToString();
-            string pathToFile = pianoFilesFolder + pianoSoundPrefix + pianoNoteString + pianoSoundSuffix;
-            PlaySoundOneshot(pathToFile, frequency);
+            foreach (string str in names)
+            {
+                if (str.StartsWith(pianoFilesFolder)) return;
+            }
+            throw new DirectoryNotFoundException(pianoFilesFolder + " was not found");
         }
 
         /// <summary>
@@ -110,12 +101,17 @@ namespace BusinessLogic.SoundPlayer
         /// <returns></returns>
         public SourceVoice? GetSourceVoice(NoteName noteName, int octave)
         {
-            string file = pianoFilesFolder + pianoSoundPrefix + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
-            if (!File.Exists(file))
+            var assembly = Assembly.GetExecutingAssembly();
+            string[] names = assembly.GetManifestResourceNames();
+
+            string file = pianoFilesFolder + noteName.ToString() + ((uint)octave) + pianoSoundSuffix;
+
+            if (!names.Contains(file))
             {
                 return null;
             }
-            SoundStream stream = new(File.OpenRead(file));
+
+            SoundStream stream = new(assembly.GetManifestResourceStream(file));
             WaveFormat waveFormat = stream.Format;
             AudioBuffer buffer = new()
             {
@@ -147,35 +143,16 @@ namespace BusinessLogic.SoundPlayer
         /// <param name="noteName"></param>
         /// <param name="octave"></param>
         /// <returns></returns>
-        public FadingAudio? GetFadingAudio(NoteName noteName, int octave)
+        public FadingAudio? GetFadingAudio(NoteName noteName, int octave, float volume = 1)
         {
             SourceVoice? sourceVoice = GetSourceVoice(noteName, octave);
             if (sourceVoice is not null)
             {
+                sourceVoice.SetVolume(volume * volume);
+
                 return new FadingAudio(sourceVoice);
             }
             return null;
-        }
-
-        /// <summary>
-        /// Gets the currect pitchshift for each octave specifiek by <paramref name="octave"/>.
-        /// <para>
-        /// Min <paramref name="octave"/> = 2, Max <paramref name="octave"/> = 5 else returns 0
-        /// </para>
-        /// </summary>
-        /// <param name="octave"></param>
-        /// <returns></returns>
-        //TODO KEEP THIS FUNCTION?
-        private static float GetOctaveFrequencyRatio(int octave)
-        {
-            return octave switch
-            {
-                2 => 0.125f,
-                3 => 0.25f,
-                4 => 0.5f,
-                5 => 1,
-                _ => 0,
-            };
         }
     }
 }

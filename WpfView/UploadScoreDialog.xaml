@@ -1,0 +1,27 @@
+﻿<Window x:Class="WpfView.UploadScoreDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfView"
+        mc:Ignorable="d"
+        Title="UploadScoreDialog" Height="598" Width="1000" Background="{x:Null}" WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterScreen">
+    <Window.Effect>
+        <DropShadowEffect/>
+    </Window.Effect>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Image Source="pack://application:,,,/Images/SongSelectBackGround.png" Grid.ColumnSpan="3" Grid.RowSpan="3" Stretch="Fill"></Image>
+        <Label x:Name="TitleLabel" HorizontalAlignment="Center" FontSize="50" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="Bold" Foreground="WhiteSmoke">Upload Score?</Label>
+        <Label x:Name="YourScoreLabel" HorizontalAlignment="Center" FontSize="50" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,10,0,0" Grid.Row="1">Your Score</Label>
+        <Label x:Name="ScoreLabel" HorizontalAlignment="Center" FontSize="40" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,92,0,0" Grid.Row="1">0</Label>
+        <Label x:Name="YourMaxScoreLabel" HorizontalAlignment="Center" FontSize="30" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,174,0,0" Grid.Row="1">Max Score</Label>
+        <Label x:Name="MaxScoreLabel" HorizontalAlignment="Center" FontSize="25" VerticalAlignment="Top" FontWeight="Bold" Foreground="WhiteSmoke" Margin="0,224,0,0" Grid.Row="1">0</Label>
+        <Button x:Name="UploadButton" Content="Upload" HorizontalAlignment="Left" Margin="118,36,0,0" Grid.Row="2" VerticalAlignment="Top" Height="66" Width="180" FontSize="40" Click="Upload_Click" Foreground="White" Background="Black"/>
+        <Button x:Name="MenuButton" Content="Back to Menu" HorizontalAlignment="Left" Margin="697,36,0,0" Grid.Row="2" VerticalAlignment="Top" Height="66" Width="180" FontSize="25" Click="Menu_Click" Background="Black" Foreground="White"/>
+    </Grid>
+</Window>

@@ -12,11 +12,11 @@
     </Page.DataContext>
 
     <Grid>
-        <Image Source="/Images/PianoHeroMenuBackground_1.png" Stretch="Fill"/>
+        <Image Source="pack://application:,,,/Images/PianoHeroMenuBackground_1.png" Stretch="Fill"/>
         <Menu DockPanel.Dock="Top"  VerticalAlignment="Top"   Background="Transparent">
-                <MenuItem Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White"  >
+                <MenuItem x:Name="BackMenu" Header="Back to Main Menu" Height="30" Click="MainMenu_Click" Foreground="White"  >
                     <MenuItem.Icon>
-                        <Image Source="Images/previous.png" Margin="3,-4,0,0" />
+                    <Image Source="pack://application:,,,/Images/previous.png" Margin="3,-4,0,0" />
                     </MenuItem.Icon>
                 </MenuItem>
             </Menu>
@@ -48,11 +48,11 @@
                     </Grid.RowDefinitions>
                        
 
-                    <Label Grid.Row="1"  Content="Volume:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalContentAlignment="Center"></Label>
-                    <Slider Grid.Row="1" Grid.Column="1" Width="300"  HorizontalAlignment="Center" VerticalAlignment="Center" Maximum="100" TickPlacement="BottomRight" TickFrequency="20" IsSnapToTickEnabled="True" Foreground="White"></Slider>
-                    <Label Grid.Row="2"  Content="Input device:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalAlignment="Center"  ></Label>
+                    <Label x:Name="VolumeLabel" Grid.Row="1"  Content="Volume:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalContentAlignment="Center"></Label>
+                    <Slider x:Name="VolumeSlider" Grid.Row="1" Grid.Column="1" Width="300"  HorizontalAlignment="Center" VerticalAlignment="Center" Maximum="100" TickPlacement="BottomRight" TickFrequency="5" IsSnapToTickEnabled="True" Foreground="White" ValueChanged="VolumeSlider_ValueChanged" Value="50"></Slider>
+                    <Label x:Name="InputDeviceLabel" Grid.Row="2"  Content="Input device:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalAlignment="Center"  ></Label>
 
-                    <ComboBox Name="input" Grid.Row="2" Grid.Column="1" Height="50" Width="300" Background="Black" Opacity="0.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" FontWeight="Bold" SelectedIndex="{Binding IndexinputDevice}" DropDownOpened="Input_DropDownOpened" SelectionChanged="Input_SelectionChanged">
+                    <ComboBox Name="input" Grid.Row="2" Grid.Column="1" Height="50" Width="300" Background="Black" Opacity="0.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" FontWeight="Bold" SelectedIndex="{Binding IndexinputDevice}" DropDownOpened="DropDownOpened" SelectionChanged="SelectionChanged">
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="ComboBoxItem">
                                 <Setter Property="Background" Value="Black"/>
@@ -63,10 +63,22 @@
                             </Style>
                             
                         </ComboBox.ItemContainerStyle>
-                        <ComboBoxItem  Name="NoneSelected" Content="None"></ComboBoxItem>
+                        <ComboBoxItem Name="NoneSelected" Content="None"></ComboBoxItem>
                     </ComboBox>
+                        
+                    <Label x:Name="LanguageLabel" Grid.Row="3"  Content="Language:" Foreground="White" FontSize="60" FontWeight="Bold" VerticalAlignment="Center"></Label>
+                    <ComboBox Name="LanguageBox" Grid.Row="3" Grid.Column="1" Height="50" Width="300" Background="Black" Opacity="0.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" FontWeight="Bold" DropDownOpened="DropDownOpened" SelectionChanged="SelectionChanged">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            </Style>
 
-                    
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
 
                 </Grid>
              

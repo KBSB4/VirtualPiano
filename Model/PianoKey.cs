@@ -9,8 +9,6 @@ namespace Model
         public bool PressedDown { get; set; }
         public NoteName Note { get; set; }
         public KeyBind? KeyBind { get; set; }
-
-
         public MetricTimeSpan? TimeStamp { get; set; }
         public MetricTimeSpan? Duration { get; set; }
 
@@ -31,6 +29,7 @@ namespace Model
         {
             KeyBind = bind;
         }
+
         public override string ToString() //Debug
         {
             return $"{Octave} | {Note} | {TimeStamp} | {Duration}";

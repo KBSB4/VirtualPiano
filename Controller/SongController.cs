@@ -1,18 +1,18 @@
 ﻿using BusinessLogic;
 using Melanchall.DryWetMidi.Core;
 using Model;
-using System.Runtime.CompilerServices;
 
 namespace Controller
 {
     public static class SongController
     {
         public static Song? CurrentSong { get; set; }
+        public static bool DoKaroake { get; set; }
 
         /// <summary>
         /// Loads the current song for playing by a thread and conversion from the Midicontroller
         /// </summary>
-        public static void LoadSong(bool DoKaroake = false)
+        public static void LoadSong()
         {
             MidiFile? file = MidiController.GetMidiFile();
             if (file is not null)
@@ -20,7 +20,7 @@ namespace Controller
                 CurrentSong = MidiController.Convert(file);
                 if (CurrentSong is null) return;
                 CurrentSong.SongTimerThread = new Thread(() => SongLogic.PlaySong(CurrentSong));
-                if (DoKaroake) CurrentSong.File = MidiController.RemovePiano(CurrentSong.File.Clone());
+                if (DoKaroake) CurrentSong.File = MidiController.RemovePiano(CurrentSong.File?.Clone());
             }
         }
 

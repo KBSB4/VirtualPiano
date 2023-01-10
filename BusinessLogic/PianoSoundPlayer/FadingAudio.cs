@@ -35,12 +35,17 @@ namespace BusinessLogic.SoundPlayer
         /// <param name="fadeOutSpeed"></param>
         public void StopPlaying(float fadeOutSpeed)
         {
+            SourceVoice.GetVolume(out float sourceVoiceVolume);
+
+            fadeOutSpeed *= sourceVoiceVolume;
+
             if (SourceVoice != null)
             {
                 if (fadeOutSpeed == 0 || fadeOutSpeed > 1000)
                 {
-                    SourceVoice.Stop();
-                    SourceVoice.Dispose();
+                    SourceVoice.DestroyVoice();
+                    //SourceVoice.Stop();
+                    //SourceVoice.Dispose();
                 }
                 else
                 {
@@ -53,7 +58,7 @@ namespace BusinessLogic.SoundPlayer
         /// Selfexplanatory
         /// </summary>
         /// <param name="state"></param>
-        public static void DecreaseVolume(object? state)
+        private static void DecreaseVolume(object? state)
         {
             if (state is not object[] array)
             {
@@ -68,8 +73,9 @@ namespace BusinessLogic.SoundPlayer
                 sourceVoice.SetVolume(volume);
                 Thread.Sleep(10);
             }
-            sourceVoice.Stop();
-            sourceVoice.Dispose();
+            //sourceVoice.Stop();
+            //sourceVoice.Dispose();
+            sourceVoice.DestroyVoice();
         }
     }
 }

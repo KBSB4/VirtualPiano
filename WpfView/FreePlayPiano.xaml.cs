@@ -22,6 +22,8 @@ namespace WpfView
         private readonly PracticeNotesGenerator practiceNotes;
         private readonly MainMenu _mainMenu;
 
+        private bool BeenPlayed = false;
+
         public FreePlayPiano(MainMenu _mainMenu)
         {
             this._mainMenu = _mainMenu;
@@ -38,6 +40,30 @@ namespace WpfView
                 IsBackground = true
             };
             updateVisualNoteThread.Start();
+            IsVisibleChanged += UI_IsVisibleChanged;
+        }
+
+        /// <summary>
+        /// Page navigated event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UI_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            UpdateUI();
+        }
+
+        /// <summary>
+        /// Translate labels
+        /// </summary>
+        private void UpdateUI()
+        {
+            BackMenu.Header = LanguageController.GetTranslation(TranslationKey.Menubar_BackToMain);
+            SettingsMenuItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_Settings);
+            OpenItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Open);
+            PlayItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Play);
+            StopItem.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Stop);
+            KaraokeBox.Header = LanguageController.GetTranslation(TranslationKey.Menubar_MIDI_Karaoke);
         }
 
         /// <summary>
@@ -80,8 +106,6 @@ namespace WpfView
                     {
                         practiceNotes.StartExampleNote(e.Key);
                     }
-                    //TODO Add option to display keys live as if the piano is playing it
-                    //pianoGrid.DisplayPianoKey(e.Key);
                 }));
             }
             catch (TaskCanceledException) //Just in case
@@ -165,6 +189,7 @@ namespace WpfView
         private void MainMenu_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(_mainMenu);
+            StopMIDIFile(null, new RoutedEventArgs());
         }
 
         /// <summary>
@@ -176,6 +201,7 @@ namespace WpfView
         {
             _mainMenu.SettingsPage.GenerateInputDevices();
             NavigationService?.Navigate(_mainMenu.SettingsPage);
+            StopMIDIFile(null, new RoutedEventArgs());
         }
 
         #endregion
@@ -190,23 +216,25 @@ namespace WpfView
         {
             if (SongController.CurrentSong is null)
             {
-                StartDialog();
+                BeenPlayed = false;
+                StartDialog(KaraokeBox.IsChecked);
             }
             else if (SongController.CurrentSong.IsPlaying)
             {
-                MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
-                "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingText),
+                LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingCaption), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
-                StartDialog();
+                BeenPlayed = false;
+                StartDialog(KaraokeBox.IsChecked);
             }
         }
 
         /// <summary>
         /// Open dialog and prepares MIDI
         /// </summary>
-        private static void StartDialog()
+        private static void StartDialog(bool Karoake)
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -220,6 +248,7 @@ namespace WpfView
             {
                 //Get the path of specified file
                 MidiController.OpenMidi(openFileDialog.FileName);
+                SongController.DoKaroake = Karoake;
                 SongController.LoadSong();
             }
         }
@@ -231,26 +260,36 @@ namespace WpfView
         /// <param name="e"></param>
         private void PlayMIDIFile(object sender, RoutedEventArgs e)
         {
-            //Boolean isisolated = IsolatedPiano.IsChecked; Planned for later
             MidiFile? currentMidiFile = MidiController.GetMidiFile();
 
             if (currentMidiFile is not null && SongController.CurrentSong is not null && !SongController.CurrentSong.IsPlaying)
             {
+                if (!BeenPlayed)
+                {
+                    SongController.PlaySong();
+                    BeenPlayed = true;
+                }
+                else
+                {
+                    SongController.DoKaroake = KaraokeBox.IsChecked;
+                    SongController.LoadSong();
+                    SongController.PlaySong();
+                }
                 SongController.CurrentSong.NotePlayed += CurrentSong_NotePlayed;
-                SongController.PlaySong();
             }
             else
             {
                 if (currentMidiFile is null)
                 {
-                    MessageBox.Show("Select a MIDI File first before playing",
-                    "No MIDI selected", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiSelectedText),
+                                        LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiSelectedCaption), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 if (SongController.CurrentSong is not null && SongController.CurrentSong.IsPlaying)
                 {
-                    MessageBox.Show("There is a MIDI still playing! Stop the playback of the current playing MIDI to continue",
-                    "MIDI is still playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingText),
+                    LanguageController.GetTranslation(TranslationKey.MessageBox_MidiStillPlayingCaption), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -260,16 +299,17 @@ namespace WpfView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StopMIDIFile(object sender, RoutedEventArgs e)
+        private void StopMIDIFile(object? sender, RoutedEventArgs e)
         {
             if (SongController.CurrentSong is not null && SongController.CurrentSong.IsPlaying)
             {
+                SongController.CurrentSong.NotePlayed -= CurrentSong_NotePlayed;
                 SongController.StopSong();
             }
-            else
+            else if (sender is not null)
             {
-                MessageBox.Show("There is no MIDI playing right now.",
-                "No MIDI playing", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiPlayingText),
+                LanguageController.GetTranslation(TranslationKey.MessageBox_NoMidiPlayingCaption), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion

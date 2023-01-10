@@ -12,7 +12,6 @@ namespace UnitTests
         {
             Controller.PianoController.CreatePiano();
             piano = Controller.PianoController.Piano;
-
         }
 
         [TestCase(0, KeyBind.Z)]
@@ -39,12 +38,10 @@ namespace UnitTests
         [TestCase(21, KeyBind.Y)]
         [TestCase(22, KeyBind.D7)]
         [TestCase(23, KeyBind.U)]
-
-
         public void Piano_GetsCorrectKeys(int index, KeyBind m)
         {
 
-            KeyBind test = piano.PianoKeys[index].KeyBind;
+            KeyBind? test = piano.PianoKeys[index].KeyBind;
             Assert.That(test, Is.EqualTo(m));
 
         }
@@ -54,9 +51,8 @@ namespace UnitTests
         [TestCase(3, KeyBind.U)]
         public void IsInvalidKeyBind(int index, KeyBind m)
         {
-            KeyBind test = piano.PianoKeys[index].KeyBind;
+            KeyBind? test = piano.PianoKeys[index].KeyBind;
             Assert.That(test, Is.Not.EqualTo(m));
         }
-
     }
 }
