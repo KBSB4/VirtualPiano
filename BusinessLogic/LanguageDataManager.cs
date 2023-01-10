@@ -177,7 +177,11 @@ namespace BusinessLogic
                 {TranslationKey.MessageBox_NewAccount_PasswordNotEnoughChars, "Vul een wachtwoord in tussen 4 en 13 tekens!" },
                 {TranslationKey.MessageBox_NewAccount_NoConfirmPass, "Vul bevestigveld in!" },
                 {TranslationKey.MessageBox_NewAccount_ConfirmPassNotEnoughChars, "Vul een wachtwoord in het bevestigveld van tussen 4 en 13 tekens!" },
-                {TranslationKey.MessageBox_Account_ConfirmPassDoesNotExist, "Vul bevestigveld in met het wachtwoord van wachtwoordveld!" }
+                {TranslationKey.MessageBox_Account_ConfirmPassDoesNotExist, "Vul bevestigveld in met het wachtwoord van wachtwoordveld!" },
+                
+                //Messagebox logout  
+                {TranslationKey.MessageBox_MainMenu_Logout_Caption, "Weet u zeker dat u wilt uitloggen?"},
+                {TranslationKey.MessageBox_MainMenu_Logout_Text, "Uitloggen?"}
             }
             };
 
@@ -261,7 +265,11 @@ namespace BusinessLogic
                 {TranslationKey.MessageBox_NewAccount_PasswordNotEnoughChars, "Please use a Password between 4 and 13 characters!" },
                 {TranslationKey.MessageBox_NewAccount_NoConfirmPass, "Please fill in the Confirm field!" },
                 {TranslationKey.MessageBox_NewAccount_ConfirmPassNotEnoughChars, "Please fill in a Confirm between 4 and 13 characters!" },
-                {TranslationKey.MessageBox_Account_ConfirmPassDoesNotExist, "Please fill in a Confirm that matches the Password field!" }
+                {TranslationKey.MessageBox_Account_ConfirmPassDoesNotExist, "Please fill in a Confirm that matches the Password field!" },
+
+                //Messagebox logout  
+                {TranslationKey.MessageBox_MainMenu_Logout_Caption, "Are you sure you want to log out?"},
+                {TranslationKey.MessageBox_MainMenu_Logout_Text, "Logout?"}
             }
             };
 
@@ -280,7 +288,8 @@ namespace BusinessLogic
             try
             {
                 languageData.PreferredLanguage = (LanguageCode)Enum.Parse(typeof(LanguageCode), regionName);
-            } catch (ArgumentException)
+            }
+            catch (ArgumentException)
             {
                 languageData.PreferredLanguage = LanguageCode.EN;
             }

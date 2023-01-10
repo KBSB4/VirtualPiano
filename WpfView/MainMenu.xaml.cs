@@ -150,7 +150,8 @@ namespace WpfView
             if (LoggedInUser is null) NavigationService?.Navigate(AccountPage);
             else
             {
-                MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show(LanguageController.GetTranslation(TranslationKey.MessageBox_MainMenu_Logout_Caption),
+                    LanguageController.GetTranslation(TranslationKey.MessageBox_MainMenu_Logout_Text), MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
                     LoggedInUser = null;
