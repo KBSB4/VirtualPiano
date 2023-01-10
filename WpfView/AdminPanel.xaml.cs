@@ -17,7 +17,6 @@ namespace WpfView
     /// </summary>
     public partial class AdminPanel : Page
     {
-        //TODO Summaries
         private byte[]? lastOpenedFile;
 
         private List<Song> songList = new();
@@ -209,6 +208,9 @@ namespace WpfView
             NavigationService?.Navigate(_mainMenu);
         }
 
+        /// <summary>
+        /// Used to show songs in the list
+        /// </summary>
         class FemkesListBoxItem : ListBoxItem
         {
             public string? SongTitle { get; set; }

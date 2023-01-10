@@ -72,5 +72,8 @@
         MessageBox_NewAccount_NoConfirmPass,
         MessageBox_NewAccount_ConfirmPassNotEnoughChars,
         MessageBox_Account_ConfirmPassDoesNotExist,
+
+        MessageBox_MainMenu_Logout_Text,
+        MessageBox_MainMenu_Logout_Caption
     }
 }

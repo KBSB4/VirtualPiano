@@ -13,7 +13,6 @@ namespace WpfView
     /// </summary>
     public partial class AccountPage : Page
     {
-        //TODO Summaries
         private readonly MainMenu _mainMenu;
         private readonly PracticePlayPiano? _practicePlayPiano;
 

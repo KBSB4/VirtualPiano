@@ -391,7 +391,6 @@ namespace WpfView
         /// Calculate score when played note is released and apply to <see cref="score"/>
         /// </summary>
         /// <param name="key"></param>
-        //TODO Merge with ApplyPressedScore
         private void ApplyReleasedScore(PianoKey key)
         {
             if (SongLogic.PlaybackDevice is not null && (SongLogic.PlaybackDevice.IsRunning || currentlyPlaying.Count > 0))
@@ -415,14 +414,16 @@ namespace WpfView
                             _ => 0,
                         };
 
-                        noteScore = Math.Max(MAXNOTESCORE - difference, 0);
+                        noteScore = Math.Max(MAXNOTESCORE - difference, -100);
                     }
                     else
                     {
-                        noteScore = 0;
+                        noteScore = -100;
                     }
                     currentlyPlaying.Remove(key);
                     score += noteScore;
+
+                    score = Math.Max(score, 0);
                 }
             }
             UpdateScoreVisual();
@@ -451,7 +452,6 @@ namespace WpfView
         /// Calculate score when played note is pressed and apply to <see cref="score"/>
         /// </summary>
         /// <param name="key"></param>
-        //TODO Merge with ApplyReleasedScore
         private void ApplyPressedScore(PianoKey key)
         {
             if (SongLogic.PlaybackDevice is not null && SongLogic.PlaybackDevice.IsRunning)
@@ -483,13 +483,13 @@ namespace WpfView
                             _ => 0,
                         };
 
-                        noteScore = Math.Max(MAXNOTESCORE - difference, 0);
+                        noteScore = Math.Max(MAXNOTESCORE - difference, -100);
                         rating = GetRating(noteScore);
                         closestNote.PressedDown = true;
                     }
                     else
                     {
-                        noteScore = 0;
+                        noteScore = -100;
                         rating = GetRating(0);
                     }
 
@@ -499,6 +499,7 @@ namespace WpfView
                         pianoGrid.DisplayPianoKey(key, rating);
                     }));
                     score += noteScore;
+                    score = Math.Max(score, 0);
 
                     Debug.WriteLine($"Score += {noteScore}");
                 }
