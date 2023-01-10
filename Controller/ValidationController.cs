@@ -48,11 +48,10 @@ namespace Controller
         /// Validate Email for New Account
         /// </summary>
         /// <param name="email"></param>
-        /// <param name="users"></param>
         /// <returns></returns>
-        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User? users)
+        public static string? AccountPage_NewAccount_ValidateEmailField(string? email)
         {
-            return ValidationLogic.AccountPage_NewAccount_ValidateEmailField(email, users, LanguageController.GetLanguageDataManagerForAccountValid());
+            return ValidationLogic.AccountPage_NewAccount_ValidateEmailField(email, LanguageController.GetLanguageDataManagerForAccountValid());
         }
 
         /// <summary>

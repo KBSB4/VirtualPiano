@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using Melanchall.DryWetMidi.Core;
+using Model;
 using Model.DatabaseModels;
 using System.Text.RegularExpressions;
 
@@ -102,13 +103,12 @@ namespace BusinessLogic
         /// <summary>
         /// Validates on the <b>AccountPage</b> from the <b>NewAccount</b> section the <paramref name="email"/> field.<br></br>
         /// Check 1: Checks if <paramref name="email"/> field is empty. <b>If so returns null.</b><br></br>
-        /// Check 2: Checks if <paramref name="email"/> is unique. (by checking if <paramref name="user"/> is not null)<br></br> 
-        /// Check 3: Checks if <paramref name="email"/> matches the given format using: <see cref="Regex"/>.
+        /// Check 2: Checks if <paramref name="email"/> matches the given format using: <see cref="Regex"/>.
         /// </summary>
         /// <param name="email"></param>
         /// <param name="user"></param>
         /// <returns>If all checks came out true the <paramref name="email"/> was valid and returns null (note that email is not required). Otherwise returns corresponding error message.</returns>
-        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, User? user, LanguageDataManager LDM)
+        public static string? AccountPage_NewAccount_ValidateEmailField(string? email, LanguageDataManager LDM)
         {
             string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
             @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
@@ -117,10 +117,6 @@ namespace BusinessLogic
             if (email is null || email.Length == 0)
             {
                 return null;
-            }
-            else if (user is not null)
-            {
-                return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_EmailIsNotUnique);
             }
             else if (!re.IsMatch(email))
             {

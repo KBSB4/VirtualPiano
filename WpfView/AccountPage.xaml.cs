@@ -87,10 +87,9 @@ namespace WpfView
             PasswordBox passwordBox = NewAccount_PasswordInput;
             PasswordBox confirmBox = NewAccount_ConfirmInput;
             User? existingUser = await DatabaseController.GetUserByName(nameTextBox.Text);
-            User? existingUserByEmail = await DatabaseController.GetUserByEmail(emailTextBox.Text);
 
             NewAccount_ValidateUsernameField(nameTextBox.Text, existingUser);
-            NewAccount_ValidateEmailField(emailTextBox.Text, existingUserByEmail);
+            NewAccount_ValidateEmailField(emailTextBox.Text);
             NewAccount_ValidatePasswordField(passwordBox.Password);
             NewAccount_ValidateConfirmField(passwordBox.Password, confirmBox.Password);
 
@@ -210,9 +209,9 @@ namespace WpfView
         /// </summary>
         /// <param name="email"></param>
         /// <param name="user"></param>
-        private void NewAccount_ValidateEmailField(string? email, User? user)
+        private void NewAccount_ValidateEmailField(string? email)
         {
-            string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateEmailField(email, user);
+            string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateEmailField(email);
             if (errorMessage is null)
             {
                 SetFieldSuccesBackground(NewAccount_EmailInput);

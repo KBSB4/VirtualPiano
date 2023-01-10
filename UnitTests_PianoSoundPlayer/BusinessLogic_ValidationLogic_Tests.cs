@@ -114,21 +114,9 @@ namespace UnitTests
         {
             LanguageDataManager languageManager = new LanguageDataManager();
             languageManager.SetPreferredLanguage(Model.LanguageCode.EN);
-            User? user = await DatabaseController.GetUserByName("kees");
-            string? error = ValidationLogic.AccountPage_NewAccount_ValidateEmailField(email, user, languageManager);
+            User[]? users = await DatabaseController.GetAllUsers();
+            string? error = ValidationLogic.AccountPage_NewAccount_ValidateEmailField(email, languageManager);
             Assert.That(error, Is.EqualTo("Please fill in an Email that matches the right format!"));
-        }
-
-        [TestCase("test@t.com")]
-        [TestCase("something@.com")]
-        [TestCase("kees@kees.nl")]
-        public async Task AccountPage_NewAccount_EmailIsUniqueCheck(string email)
-        {
-            LanguageDataManager languageManager = new LanguageDataManager();
-            languageManager.SetPreferredLanguage(Model.LanguageCode.EN);
-            User? user = await DatabaseController.GetUserByName("kees");
-            string? error = ValidationLogic.AccountPage_NewAccount_ValidateEmailField(email, user, languageManager);
-            Assert.That(error, Is.EqualTo("Please fill in an Email that is unique!"));
         }
 
         [TestCase(null)]
