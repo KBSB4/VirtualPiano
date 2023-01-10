@@ -60,7 +60,7 @@ namespace BusinessLogic
             await CloseAndDispose(connection, command, dataReader);
 
             if (users.Length > 0)
-                return users[0];
+                if (username == users[0].Name) return users[0];
 
             return null;
         }

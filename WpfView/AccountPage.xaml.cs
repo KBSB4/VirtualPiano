@@ -213,9 +213,6 @@ namespace WpfView
         /// <param name="user"></param>
         private void NewAccount_ValidateEmailField(string? email, User? user)
         {
-            if (user is null) return;
-            User[] users = { user };
-
             string? errorMessage = ValidationController.AccountPage_NewAccount_ValidateEmailField(email, user);
             if (errorMessage is null)
             {

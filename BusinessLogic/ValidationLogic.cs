@@ -23,7 +23,7 @@ namespace BusinessLogic
             {
                 return LDM.GetTranslation(TranslationKey.MessageBox_Account_NoUsername); 
             }
-            else if (username is not null && username.Length < 4 || username?.Length > 13)
+            else if (username is not null && username.Length < 4 || username.Length > 13)
             {
                 return LDM.GetTranslation(TranslationKey.MessageBox_Account_UsernameNotEnoughChars);
             }
@@ -101,7 +101,7 @@ namespace BusinessLogic
 
         /// <summary>
         /// Validates on the <b>AccountPage</b> from the <b>NewAccount</b> section the <paramref name="email"/> field.<br></br>
-        /// Check 1: Checks if <paramref name="email"/> field is empty.<br></br>
+        /// Check 1: Checks if <paramref name="email"/> field is empty. <b>If so returns null.</b><br></br>
         /// Check 2: Checks if <paramref name="email"/> is unique. (by checking if <paramref name="user"/> is not null)<br></br> 
         /// Check 3: Checks if <paramref name="email"/> matches the given format using: <see cref="Regex"/>.
         /// </summary>
@@ -118,7 +118,7 @@ namespace BusinessLogic
             {
                 return null;
             }
-            else if (user is null)
+            else if (user is not null)
             {
                 return LDM.GetTranslation(TranslationKey.MessageBox_NewAccount_EmailIsNotUnique);
             }

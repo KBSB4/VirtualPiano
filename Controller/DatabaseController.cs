@@ -30,6 +30,7 @@ namespace Controller
         /// <returns></returns>
         public static async Task<User?> GetUserByName(string username)
         {
+            if(username == null || username == string.Empty) { return null; }
             Task<User?> getUserByName = databaseManager.GetUserByName(username);
 
             User? result = await getUserByName;
@@ -70,6 +71,7 @@ namespace Controller
         /// <returns>New <see cref="User"/> object, is null if not found in database</returns>
         public static async Task<User?> GetLoggingInUser(string username, string password)
         {
+            if (username == null || username == string.Empty || password == null || password == string.Empty) { return null; }
             Task<User?> getLoggingInUserTask = databaseManager.GetLoggingInUser(username, password);
 
             User? result = await getLoggingInUserTask;
